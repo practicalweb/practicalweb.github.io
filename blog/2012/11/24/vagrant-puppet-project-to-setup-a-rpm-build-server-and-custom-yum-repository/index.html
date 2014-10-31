@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Vagrant / Puppet Project to Setup a RPM Build Server and Custom Yum Repository - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I've published a project on github https://github.com/practicalweb/vagrant-rpmbuild The project contains a Vagrant config file, and Puppet manifests &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2012/11/24/vagrant-puppet-project-to-setup-a-rpm-build-server-and-custom-yum-repository">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Vagrant / Puppet Project to Setup a RPM Build Server and Custom Yum Repository</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-11-24T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&#8217;ve published a project on github <a href="https://github.com/practicalweb/vagrant-rpmbuild">https://github.com/practicalweb/vagrant-rpmbuild</a></p>
+
+
+
+
+<p>The project contains a Vagrant config file, and Puppet manifests that together with an appropriate basebox will create a VM setup to build RPMS and host them on a Custom Yum repository</p>
+
+
+
+
+<p>To run this</p>
+
+
+
+
+<ol>
+<li><p>Install vagrant <a href="http://vagrantup.com/">http://vagrantup.com/</a> (on Ubuntu just <code>apt-get install vagrant</code>)</p></li>
+<li><p>Install Virtualbox <a href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a> (again on Ubuntu <code>apt-get install virtualbox</code>)</p></li>
+<li><p>Clone this reporitory <code>git clone git@github.com:practicalweb/vagrant-rpmbuild.git</code></p></li>
+<li><p>run <code>vagrant up</code> from the root of your cloned repository (NB the first time you do the a 600Mb base image will be downloaded)</p></li>
+<li><p>run <code>vagrant ssh</code> to connect to the new VM  </p></li>
+<li><p>To build the demo rpm and publish it locally run <code>/vagrant/build-rpm.sh</code> the key password is &#8216;secret&#8217;</p></li>
+<li><p>To install the demo package on the VM run <code>sudo yum install demo</code></p></li>
+</ol>
+
+
+<p>There is a Vagrant port forwarding rule, and firewall setup to allow the yum repo to be accessed on the host machine as http://localhos:8088/repo</p>
+
+
+
+
+<p>This project is intended as documentation of how to setup this build environment, and as a starting point for further customisation, I&#8217;m sure it isn&#8217;t perfect, I hope it is useful.</p>
+
+
+
+
+<p>It&#8217;s all released under GPL with no promise that it is fot for any purpose - see LICENCE.txt </p>
+
+
+
+
+<p>I&#8217;ve tried to group the code logically, there are 4 modules</p>
+
+
+
+
+<dl>
+<dt>base</dt>
+    <dd>This contains some generic stuff, pulling in a couple of packages not in the minimal centos install but that I find essential.</dd><dd>
+    </dd><dd>The idea is that I would use this base module on every server I setup.</dd>
+
+  
+
+<dt>rpmbuild</dt>
+    <dd>Just what is needed to actually build the RPMs</dd><dd>
+  
+  </dd>
+
+<dt>tomyumrepo</dt>
+     <dd>Just what is needed to serve a custom yum repository, the packages could be built elsewhere</dd>
+  <dt>usemyrepo</dt>
+     <dd>Config to setup a machine to consume yum packages.</dd>
+     <dd>This could be added to the setup for any machine that needs to use the custom packages</dd>
+</dl>
+
+
+<p>I&#8217;ve included a minimal RPM project to get things rolling, it just installs a single text file.</p>
+
+
+
+
+<p>I&#8217;ve built a GPG key to sign packages with, and also included a script ( generate-gpg-key.sh ) which shows how to generate a new one, edit this file to make your own key.</p>
+
+
+
+
+<p>The base box I&#8217;ve defined is a minimal install of CentOS 6.3 (64 bit) with the dependencies required for vagrant.</p>
+
+
+
+
+<p>Base boxes are quite a heavy download, but you only need to do it once and then you can have as many VMs as you want based on them, because the base is minimal and all extra config is done in puppet each of these VMs can serve a very differnt purpose - just by changing the Vagrantfile and puppet config.</p>
+
+
+
+
+<p>The Vagrantfile runs puppet in standalone mode, but the modules <em>should</em> work with a client/server Puppet setup - so hopefully migrating the Vagrant setup to any Puppet manged system should be easy.</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2012-11-24T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/centos/'>centos</a>, <a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/puppet/'>puppet</a>, <a class='category' href='/blog/categories/redhat/'>redhat</a>, <a class='category' href='/blog/categories/rpm/'>rpm</a>, <a class='category' href='/blog/categories/vagrant/'>vagrant</a>, <a class='category' href='/blog/categories/yum/'>yum</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2012/11/24/vagrant-puppet-project-to-setup-a-rpm-build-server-and-custom-yum-repository/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2012/11/24/vagrant-puppet-project-to-setup-a-rpm-build-server-and-custom-yum-repository/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/11/22/varnish-on-two-ports-with-separate-backends/" title="Previous Post: Varnish on two ports, with separate backends">&laquo; Varnish on two ports, with separate backends</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/11/26/git-submodules-and-subtrees/" title="Next Post: Git submodules and subtrees">Git submodules and subtrees &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2012/11/24/vagrant-puppet-project-to-setup-a-rpm-build-server-and-custom-yum-repository/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2012/11/24/vagrant-puppet-project-to-setup-a-rpm-build-server-and-custom-yum-repository/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

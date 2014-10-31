@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Programming | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/programming/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Optimising PHP]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/03/12/optimising-php/"/>
+    <updated>2009-03-12T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/03/12/optimising-php</id>
+    <content type="html"><![CDATA[<p>
+I came across this PDF slideshow from a talk on optimising PHP, it&#8217;s well balanced and fairly thorough overview.
+</p>
+
+
+<p>
+ <a href="http://ilia.ws/files/phpquebec_2009.pdf">phpquebec_2009.pdf</a>
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Handy One-liners]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/11/22/handy-one-liners/"/>
+    <updated>2008-11-22T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/11/22/handy-one-liners</id>
+    <content type="html"><![CDATA[<p>While creating websites I often find the need to manipulate files in all sorts of ad-hoc ways.</p>
+
+<p>Things that are hard to do by hand, but you don&rsquo;t want to write a whole program for - you&rsquo;ll just use it once and throw it away.</p>
+
+<p>Linux/Unix excels at this sort of task - there is a rich selection of tools and plenty of ready made recipes.</p>
+
+<p>From:</p>
+
+<p><a href="http://www.ibm.com/developerworks/linux/library/l-p101/">http://www.ibm.com/developerworks/linux/library/l-p101/</a></p>
+
+<p>I often use</p>
+
+<pre><code class="bash">&gt; cat test
+aaa
+bbb
+ccc
+ddd
+aaa
+&gt; perl -pi -e's/aaa/bbb/' test
+&gt; cat test
+bbb
+bbb
+ccc
+ddd
+bbb
+</code></pre>
+
+<p><a href="http://student.northpark.edu/pemente/sed/sed1line.txt">http://student.northpark.edu/pemente/sed/sed1line.txt</a> gives me a way to print out just the lines near an error is being generated (handy when there is one error line in a gigabyte of data)</p>
+
+<pre><code class="bash">sed -n '7560,7570p' my_big_file.txt
+</code></pre>
+
+<p>Though day to day grep, find, locate and thier friends  usually do all I need.</p>
+
+<p>I tried working on Windows a while ago - but found I just couldn&rsquo;t work effectively without these tools.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Svnversion]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/10/16/svnversion/"/>
+    <updated>2008-10-16T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/10/16/svnversion</id>
+    <content type="html"><![CDATA[<p>
+I just discovered a nifty little utility
+</p>
+
+
+<p>
+Often working copies are only partially updated, this command gives a very quick command-line summary of the state of the working copy.
+</p>
+
+
+<p>
+It&#8217;s not as rich an output as kdesvn which will colour code all the updateable files, but its a standard part of svn so should always be available. 
+</p>
+
+
+
+
+<h2>Name</h2>
+
+
+<p>
+svnversion — Summarize the local revision(s) of a working                    copy.
+</p>
+
+
+<div class="refsect1">
+<h2>Synopsis</h2>
+<pre class="programlisting">
+svnversion [OPTIONS] WC_PATH [TRAIL_URL]
+</pre>
+</div>
+
+
+<div class="refsect1">
+<h2>Description</h2>
+<p>
+<span><strong class="command">svnversion</strong></span> is a program for
+summarizing the revision mixture of a working copy.  The
+resultant revision number, or revision range, is written to
+standard output.
+</p>
+<p>
+TRAIL_URL, if present, is the trailing portion of the
+URL used to determine if WC_PATH itself is switched
+(detection of switches within WC_PATH does not rely on
+TRAIL_URL).
+</p>
+</div>
+
+
+<p><strong>Examples</strong><br /></p>
+
+<div class="refsect1">
+<p>
+If the working copy is all at the same revision (for
+example, immediately after an update), then that revision is
+printed out:
+</p>
+<pre class="screen">
+$ svnversion .
+4168
+</pre>
+<p>
+For a mixed-revision working copy, the range of
+revisions present is printed:
+</p>
+<pre class="screen">
+$ svnversion .
+4123:4168
+</pre>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Eclipse 3.4 (Ganymede) First Impressions]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/07/06/eclipse-3-4-ganymede-first-impressions/"/>
+    <updated>2008-07-06T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/07/06/eclipse-3-4-ganymede-first-impressions</id>
+    <content type="html"><![CDATA[<p>
+Well the new version of Eclipse (3.4 or Ganymede) is out and I&#8217;ve been trying it out. So far I&#8217;ve just installed it, adding in the components I want; and generally trying to see what&#8217;s new. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<div style="text-align: center">
+<img src="http://www.practicalweb.co.uk/sites/default/files/u1/eclipse-splash_0.png" alt="Eclipse Splash Screen" width="300" height="195" />
+</div>
+
+
+<h2>
+Installation 
+</h2>
+
+
+<p>
+I&#8217;m running Linux (Ubuntu 8.04) 
+</p>
+
+
+<p>
+Installing Eclipse 3.4 was a pain: it turns out that Eclipse requires web browser components form Firefox - and didn&#8217;t work with the default Ubuntu package that I had.  Once I found out that I needed to upgrade my xulrunner-1.9 package things were OK.
+</p>
+
+
+<p>
+If you have these problems see
+</p>
+
+
+<ul>
+    <li><a href="http://www.eclipse.org/swt/faq.php#browserlinux">www.eclipse.org/swt/faq.php</a></li>
+    <li><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=213194">bug 213194</a> (and it&#8217;s duplicates)</li>
+</ul>
+
+
+<p>
+Then I needed to install various components, the Eclipse  software updates management is much improved on earlier version, dependencies are resolved automatically. But I still found it hard to work out which packages provide which features. There was quite a lot of back and forth - install, test, install some more &#8230;
+</p>
+
+
+<p>
+Particularly tricky was the subversive svn connector. 
+</p>
+
+
+<h2>Core Eclipse</h2>
+
+
+<p>
+While there appear to be lots of small improvements (better updates UI, case preserving search and replace regex&#8230;) there doesn&#8217;t seem to be anything here to get me to upgrade in itself.
+</p>
+
+
+<h2>PDT - PHP Development</h2>
+
+
+<p>
+This isn&#8217;t actually part of Ganymede, but I downloaded and installed a nightly build as this is the part of Eclipse that I use the most heavily.
+</p>
+
+
+<p>
+Again the changes are incremental - but as this is stuff I use so much small changes can make a big difference.
+</p>
+
+
+<p>
+See <a href="http://wiki.eclipse.org/PDT/1.1_Plan">PDT 1.1 Plan</a>
+</p>
+
+
+<dl><dt>Mark Occurrences</dt>
+<dd>Select a variable or function and all other occurrences of this in the current editor are highlighted (those offscreen are shown in the &#8216;ruler&#8217;</dd>
+<dt>Better OO support</dt>
+<dd>I haven&#8217;t tested this out enough yet - but there seems to be better support for showing the relationship between classes</dd>
+<dt>Code Completion</dt><dt>
+<br />
+</dt><dd>Previous versions of PDT have relied almost entirely on doc comments for code completion, it looks like this version does a better job where there are no doc comments</dd>
+</dl>
+
+
+<p>
+This doesn&#8217;t look like a whole heap of changes, I&#8217;d really hoped for some better refactoring support, but what is there is welcome.
+</p>
+
+
+<h2>Subversive</h2>
+
+
+<p>
+I&#8217;ve always used subclipse before - after reading <a href="http://www.barneyb.com/barneyblog/2006/10/26/subclipse-vs-subversive/">subclipse-vs-subversive</a> and going with the recommendation - but that was a couple of years ago.
+</p>
+
+
+<p>
+Now subversive is a standard part of Eclipse - but annoyingly you do have to download the SVN connectors separately - and the documentation is clearly written by a non-english speaker.
+</p>
+
+
+<p>
+Adding the SVNKit component from Polarion finally got things working for me.
+</p>
+
+
+<p>
+It doesn&#8217;t look all that different so far - except it does recognise the trunk/tags/branches convention which is nice.
+</p>
+
+
+<h2>Mylyn</h2>
+
+
+<p>
+This does appear to have major advances with far deeper integration to Eclipse.
+</p>
+
+
+<blockquote>
+    Mylyn is a Task-Focused Interface for Eclipse that reduces information overload and makes multi-tasking easy.
+</blockquote>
+
+
+<p>
+If you haven&#8217;t used Mylyn yet - you&#8217;re missing out.
+</p>
+
+
+<p>
+Mylyn integrates with your task list or ticketing system, keeps track of the files you open for a task, filters out irrelevant info, reopens the right files if you re-open a task, and fills out half the ticket comment for you when you commit work.
+</p>
+
+
+<p>
+There&#8217;s too long a list of great stuff - see <a href="http://www.eclipse.org/mylyn/new/">Mylyn 3.0 new and noteworthy</a>
+</p>
+
+
+<h2>Communication Framework</h2>
+
+
+<p>
+This part of eclipse is completely new to me; I love the idea of being able to jointly edit a file with a colleague.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<ul>
+    <li><a href="http://codesurgeonblog.com/2008/06/cola-real-time-shared-editing.html">screencast</a></li>
+    <li><a href="http://wiki.eclipse.org/RT_Shared_Editing">Real Time Shared Editing</a></li>
+    <li><a href="http://wiki.eclipse.org/DocShare_Plugin">Doc Share Plugin</a></li>
+    <li><a href="http://wiki.eclipse.org/ECF_Servers">ECF Servers</a></li>
+</ul>
+
+
+<p>
+I have yet to get this working (requires a suitable colleague and server).
+</p>
+
+
+<p>
+It&#8217;s also possible to run an IRC client inside eclipse (and several proprietary chat protocols) - though I&#8217;m less convinced this is useful.
+</p>
+
+
+<h2>Datatools</h2>
+
+
+<p>
+So far this seems like a step backwards, there is an SQL query builder (but I&#8217;m happy on the command line); but I found the new connection wizard really confusing, and while I have connected to a database - I can&#8217;t seem to browse the tables.
+</p>
+
+
+<h2>Web Tools</h2>
+
+
+<p>
+Seems like more incremental improvements, lots of little productivity gains.
+</p>
+
+
+<p>
+<a href="http://www.eclipse.org/webtools/releases/3.0.0/newandnoteworthy/sourceediting.php">webtools source code editing new and noteworthy</a>
+</p>
+
+
+<h2>Summary</h2>
+
+
+<p>
+So far it doesn&#8217;t seem like there are any compelling reasons to upgrade: if you&#8217;re happy with Eclipse as you have it - stay with it. If the upgrade path was easier maybe I&#8217;d have a different answer.
+</p>
+
+
+<p>
+Having got this far though the improvements look generally useful; I&#8217;ll go ahead and start using Ganymede for day-to-day use.
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Configure Squid Proxy Server for Subversion Access]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/06/24/configure-squid-proxy-server-for-subversion-access/"/>
+    <updated>2008-06-24T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/06/24/configure-squid-proxy-server-for-subversion-access</id>
+    <content type="html"><![CDATA[<p>
+To configure the Squid proxy server to work for subversion access you will need to tell it to recognise some non-standard methods.
+</p>
+
+
+<p>
+Add the following to squid.conf 
+</p>
+
+
+<p><code>extension_methods MKACTIVITY CHECKOUT REPORT MERGE</code></p>
+
+<p>
+Without these settings I could browse the repository - but I couldn&#8217;t commit to it. Now commit works too :-)
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

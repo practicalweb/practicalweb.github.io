@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Orm | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/orm/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Drupal Schema API Has Problems]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/06/22/drupal-schema-api-has-problems/"/>
+    <updated>2009-06-22T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/06/22/drupal-schema-api-has-problems</id>
+    <content type="html"><![CDATA[<p>
+<a href="http://www.lullabot.com/articles/drupocalypse-now-or-dangerous-integer-handling-drupal-write-record">An interesting post from Lullabot today</a> on problems with Drupal&#8217;s Schema API and the <a href="http://www.google.co.uk/search?q=Twitpocalypse">Twitpocalypse</a>
+</p>
+
+
+<p>
+It turns out that <a href="http://drupal.org/node/333788">the Schema API doesn&#8217;t properly understand the difference between different types of integers</a> 
+</p>
+
+
+<p>I was already concerned that
+<a href="http://drupal.org/node/200953">Schema API lacks the &lsquo;time&rsquo; and &lsquo;date&rsquo; type</a></p>
+
+<p>
+I don&#8217;t really understand why the Drupal team has decided to try and roll it&#8217;s own database abstraction layer, and make it a core part of the system in the current state. 
+</p>
+
+
+<p>
+There seem to be <a href="http://drupal.org/project/issues/search/drupal?text=&amp;assigned=&amp;submitted=&amp;participant=&amp;status[]=Open&amp;priorities[]=1&amp;priorities[]=2&amp;categories[]=bug&amp;version[]=6.x&amp;component[]=database+system&amp;issue_tags=">quite a few bugs</a>
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

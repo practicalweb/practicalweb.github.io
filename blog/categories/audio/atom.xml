@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Audio | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/audio/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu 10.04 Bluetooth Audio]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/06/ubuntu-10-04-bluetooth-audio/"/>
+    <updated>2010-10-06T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/06/ubuntu-10-04-bluetooth-audio</id>
+    <content type="html"><![CDATA[<p>It wasn&rsquo;t immediately obvious to me</p>
+
+<p>What I needed to do to get blutooth audio working was to install the blueman package</p>
+
+<p>After that configuration via GUI was pretty straightforward</p>
+
+<p>Now I have fantastic sound via my bluetooth enabled HIFI :-)</p>
+]]></content>
+  </entry>
+  
+</feed>

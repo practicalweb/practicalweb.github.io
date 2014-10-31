@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Best Practice | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/best-practice/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Drupal Wishlist]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/11/05/drupal-wishlist/"/>
+    <updated>2009-11-05T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/11/05/drupal-wishlist</id>
+    <content type="html"><![CDATA[<p><p>Drupal has a lot of great strengths and some weaknesses<p></p>
+
+<p><p>The following are the key areas of Drupal that (as a programmer) I would like to see improved.<p></p>
+
+<p><h2>
+Negative testing 
+</h2>
+<p>
+Drupal only seems to
+test the positive path, that is that given the right inputs you get
+the right results and apart from security nothing else matters.
+</p>
+<p>
+The result of this is
+that incorrect inputs result in silent failures that can be very hard
+to debug.
+</p>
+<p>
+By testing that
+incorrect inputs also provide dependable results with clear error
+messages bug fixing becomes much easier and development time can be
+reduced.
+</p>
+<p>
+Of course it isn&rsquo;t
+possible top test for all possible bad inputs – but just catching
+some of the likely errors can be very helpful.
+</p>
+<h2>Database abstraction</h2>
+<p>
+If Drupal (and
+contributed modules) could provide functions to manage their data,
+thereby removing the need for developers to either access data
+directly or work via the GUI – then many development tasks would
+become easier.
+</p>
+<p>
+This would have
+particular benefit for the deployment of upgrades to large sites as
+all the changes could be written into update hooks.
+</p>
+<h2>Stronger encapsulation</h2>
+<p>
+I find it particularly
+noticeable when writing “unit” tests for Drupal that the
+encapsulation could be stronger. Pervasive use of globals, direct
+database access, and static variables for caching make it very hard
+to test Drupal at the unit level – most tests end up running at the
+integration level which while still useful is much slower and harder
+to integrate into the regular development cycle (code, test, repeat –
+then commit).
+</p>
+<h2>Upgrades with backwards compatibility</h2>
+<p>
+Major Drupal upgrades
+are not compatible, and minor upgrades don&rsquo;t add features.
+</p>
+<p>
+The biggest impact this
+has had on me and other professional developers I know is that it
+removes the main incentive to contribute – namely to fix problems
+in Drupal projects currently in progress.
+</p>
+<h2>Define hooks</h2>
+<p>
+“<a href="http://api.drupal.org/api/group/hooks">A hook is a PHP
+function that is named foo_bar()</a>”
+</p>
+<p>
+Well I know that, and I
+know how to use them and even create new ones – but I think a more
+complete definition would help clarify the purpose of hooks and
+perhaps more importantly better named hooks would provide the
+developer with a better idea of when hooks are called.
+</p>
+<p>
+I think that hooks
+probably provide more than one service, some hooks are really event
+handlers (hook_cron() hook_validate() ) others are a kind of
+interface (hook_view(), hook_update(), hook_insert() etc).
+</p>
+<p>
+If you think of
+hook_form_alter() as an event handler rather than for what work is
+typically done at that event you might rename it hook_form_build()
+which might help developers learn when it is fired and also provide
+hints as to other ways it might be used (eg you could use it to log
+the number of times a form is displayed on a site).
+</p>
+<h2>Separate the toolkit from the components</h2>
+<p>
+I love the way that
+drush isn&rsquo;t a Drupal module, its independent of production code – I
+think it would be great of more tools provided this ability.
+</p>
+<p>
+ With a
+strong API it would even be possible to use just the API of something
+like CCK and remove the GUI entirely from production – thus
+removing one way that a client who demands the admin password can
+break the site.
+</p>
+<h2>Choose
+a target</h2>
+<p>
+Drupal
+tries to be all things to everyone: but this isn&rsquo;t possible.
+</p>
+<p>
+I
+don&rsquo;t think you can have a product that runs on low end servers with
+out of date versions of PHP, works the same on any database (even
+SQLite) and still meets the needs of enterprise level teams.
+</p>
+<p>
+Drupal
+needs to pick a target and focus on that – otherwise other products
+will come along and do a much better job for specific sectors of the
+market.
+</p>
+<p>
+It
+seems like there is a <a href="http://www.disambiguity.com/designing-for-the-wrong-target-audience/">similar issue with the user interface
+</a>
+</p>
+<h2>Conclusion</h2>
+<p>Generally I&rsquo;d like to see a much tighter Drupal with more focus on best practise and a clean API.</p></p>
+
+<p><p>Whether that is what the rest of the Drupal community wants is another thing.</p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Is Drupal a Standard?]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/11/02/is-drupal-a-standard/"/>
+    <updated>2009-11-02T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/11/02/is-drupal-a-standard</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve been working in the CMS arena for 10 years, and the whole time I&#8217;ve been expecting one or more “industry standard” CMS&#8217;s to come along, but instead we&#8217;ve seen thousands of competing products with almost every web agency claiming to have CMS product.
+</p>
+
+
+<p>
+While development costs have come down a long way due to greater experience and code re-use they still haven&#8217;t come down anywhere close to the level that people are used to from purchasing shrink-wrapped mass market software.
+</p>
+
+
+<p>
+<strong>
+Clients have been getting fed up of high costs and vendor lock-in.</strong>
+</p>
+
+
+<p>
+In this context I&#8217;ve seen many clients specifying Drupal as a requirement when putting projects out to tender – in the hope of saving cost and avoiding lock in.
+</p>
+
+
+<p>
+<strong>
+</strong>It&#8217;s really exciting to see an open source project taking on this role.
+</p>
+
+
+<p>
+However, having used Drupal on projects like this for the last couple of years I have to question whether it actually fits the bill.
+</p>
+
+
+<p>
+<strong>Drupal has ben seen to promise a standard solution</strong> such that if the current development team were run over by the proverbial bus any other team familiar with Drupal could be parachuted in and pick up where the previous lot left off.
+</p>
+
+
+<p>
+Having taken over quite a few projects in my time (both Drupal and others) I have to say that I haven&#8217;t found the Drupal projects any easier to pick up. 
+</p>
+
+
+<p>
+Drupal does offer a large amount of code that other developers may be familiar with but Drupal is very flexible, one Drupal website can be very different from the next.
+</p>
+
+
+<p>
+Drupal does not follow many common programming conventions and experienced developers faced with Drupal for the first time sometimes resort to some ugly solutions because “the Drupal way” is not an obvious one.
+</p>
+
+
+<p>
+<strong>I&#8217;d certainly rather take over a &#8216;custom&#8217; project that followed best practise than a Drupal project that&#8217;s been put together by a team that didn&#8217;t know what they were doing.</strong>
+</p>
+
+
+<p>
+If you want to keep your development team up to date, able to work on other systems and ready for future changes in technology – then Drupal&#8217;s idiosyncratic patterns are a barrier to be considered. There is a danger that they will spend their time learning Drupal, rather than gaining experience of programming (OO, design patterns etc) that is more likely to be applicable on other systems or even in other programming languages.
+</p>
+
+
+<p>
+<strong>A Drupal project only remains standard if it can be implemented with relatively little customisation, otherwise Drupal&#8217;s idiocyncratic programming practises together with heavy reliance of the database for composition and integration of modules can rapidly erode the benefits of standardisation.  </strong>
+</p>
+
+
+<p>
+There is also the problem that Drupal releases are not compatible with each other, each new release is in effect a completely new product. There is enough commonality between releases that the development team does not have to learn a whole new system from scratch (though there is significant re-learning required). However clients may easily find themselves with an out of date system, or facing an expensive &#8216;upgrade&#8217; process.
+</p>
+
+
+<p>
+I&#8217;m reflecting my own experience here, which has all been on highly customised Drupal installations with either a lot of custom functionality or unusual design requirements. I&#8217;ve picked up quite a few Drupal projects part way through.
+</p>
+
+
+<p>
+I&#8217;m sure that for more standard websites which can use readily available modules Drupal can offer a good degree of standardisation.
+</p>
+
+
+<p>
+<strong>The point I would like to make is that Drupal is not a silver bullet for standardisation – you still need to take care to ensure that Drupal is actually a good fit for your project, that the team know what they are doing, and that best practises are adhered to.</strong><br />
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Number Crunching : Database vs OOP]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/10/05/number-crunching-database-vs-oop/"/>
+    <updated>2008-10-05T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/10/05/number-crunching-database-vs-oop</id>
+    <content type="html"><![CDATA[<p>
+For the last few months I&#8217;ve been working on a project that is part website and part data processing.
+</p>
+
+
+<p>
+In theory the website is the bulk of the project, but in practice processing the data has taken a disproportionate amount of resources.
+</p>
+
+
+<p>
+Data exchange with another organisation is always tricky - and in this case we have incoming data that doesn&#8217;t conform to specification, business rules that change, and a daily data import to run.
+</p>
+
+
+<p>
+The code I&#8217;ve been working on has been through a couple of versions, and now I have in mind a third 
+</p>
+
+
+<ol>
+    <li>process data from file a line at a time, comparing each record with the database individually</li>
+    <li>load all data from file into a temporary table, apply all rules as SQL updates to the whole table - joined to other tables where comparisons are needed.</li>
+    <li>load all data from file into a temporary table, retrieving data joined with the comparison data - process in batches say 1000 lines at a time.</li>
+</ol>
+
+
+<p>
+Version 1 was impossibly slow, and it was bad code we inherited so it had to go.
+</p>
+
+
+<p>
+Version 2 is much faster, but as the business rules are documented per record and we&#8217;re performing set based operations it has proved very hard to verify that the code matches the required logic.  It&#8217;s also very hard to unit test as all the logic is performed in the database.
+</p>
+
+
+<p>
+Version 3 probably won&#8217;t get written now - as is the way of programming - you always learn how you&#8217;d do it next time.
+</p>
+
+
+<p>
+I have one colleague in particular who thinks that the database should do the heavy lifting as that is what it is optimised for, and to an extent I agree. But the more I get into unit testing the more I want to write code that neatly packages up logic in a testable way.
+</p>
+
+
+<p>
+It has also become apparent just how important it is to have code that follows business rules in a clear way. It&#8217;s not enough that the output should be right. I recently handed this code to a very capable developer - he&#8217;s normally so polite - but trying to reconcile a flowchart with a long series of SQL queries tested his patience.
+</p>
+
+
+<p>
+In the end leaning so hard on the database has made the system much harder to read, test, change, and maintain.
+</p>
+
+
+<p>
+I wonder if version 3 would be any slower anyway - it might even be faster. In fact version 3 could be run multithreaded - or split into multiple processes&#8230;. 
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Testing Websites in IE - Verions 6 to 8]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/04/04/testing-websites-in-ie-verions-6-to-8/"/>
+    <updated>2008-04-04T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/04/04/testing-websites-in-ie-verions-6-to-8</id>
+    <content type="html"><![CDATA[<p>
+When developing a website it&#8217;s important to test it in as many different web browsers as possible. 
+</p>
+
+
+<p>
+If a client has a problem viewing the page there&#8217;s little point saying &quot;but it works on my machine&quot;
+</p>
+
+
+<p>
+ 
+I have found that the differences between different versions of firefox to be small enough that testing in one version is sufficient.
+</p>
+
+
+<p>
+Internet Explorer is so different between versions that each target version must be tested seperately.
+</p>
+
+
+<p>
+There is a <a href="http://tredosoft.com/Multiple_IE">package for multiple IEs</a>.
+</p>
+
+
+<p>
+But you can&#8217;t then install the developer toolbar, and I&#8217;m not quite convinced that install is 100% the same as having a standard browser.
+</p>
+
+
+<p>
+Fortunately Microsoft are aware of the problem and make a test virtual machine available.
+</p>
+
+
+<p>
+I&#8217;ve used this for a while for testing IE6 - and it works very well.
+They have now released a verion of IE8 - time to check that my websites won&#8217;t break when users start updating.
+</p>
+
+
+<p>
+<a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=6D58729D-DFA8-40BF-AFAF-20BCB7F01CD1&amp;displaylang=en">the virtual machine</a>
+<a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=21EABB90-958F-4B64-B5F1-73D0A413C8EF&amp;displaylang=en">images for ie6, ie7 and ie8</a>
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Debugging Multiple Concurrent Sessions (AJAX/SOAP)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/03/03/debugging-multiple-concurrent-sessions-ajax-soap/"/>
+    <updated>2008-03-03T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/03/03/debugging-multiple-concurrent-sessions-ajax-soap</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve recently been working with AJAX and SOAP which both result in multiple sessions running concurrently.
+</p>
+
+
+<p>
+For example if you have an AJAX progress bar for a large file upload one session is uploading the file while a series of shorter sessions check on progress and update the bar.
+</p>
+
+
+<p>
+How to track both parts of this cleanly has had me scratching my head a bit - but the solution is fiendishly simple.
+</p>
+
+
+<p>
+It turns out that there is a buried configuration setting in Eclipse (my IDE of choice) which allows you to debug multiple sessions.
+</p>
+
+
+<p>
+in Eclipse go to:
+</p>
+
+
+<p>
+Window | Preferences &#8230; | PHP | Debug | Installed Debuggers | XDebug | Configure
+</p>
+
+
+<p>
+Then check the box that says &#8216;Use Multisession&#8217;
+</p>
+
+
+<p>
+<img src="http://www.practicalweb.co.uk/sites/default/files/multisession.png" alt="screenshot" />
+</p>
+
+
+<p>
+Lo and Behold the debug pane now has a multisession manager and allows you to see what is happening on both sessions.
+</p>
+
+
+<p>
+see also
+<br />
+http://dev.eclipse.org/newslists/news.eclipse.tools.pdt/msg01476.html
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

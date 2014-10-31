@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mysql | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/mysql/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[MySQL AUTO_INCREMENT Updates]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/03/24/mysql-auto_increment-updates/"/>
+    <updated>2010-03-24T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/03/24/mysql-auto_increment-updates</id>
+    <content type="html"><![CDATA[<p>I just found out the painful way that if you manually update a column which is normally calculated automatically as an auto_increment it seems to work at first ..</p>
+
+<p>but MySQL doesn&rsquo;t update the auto_increment value for the table - so subsequent inserts can fail.</p>
+
+<p>The solution seems to be to delete and re-insert the row.</p>
+
+<p><a href="http://bugs.mysql.com/bug.php?id=12434">http://bugs.mysql.com/bug.php?id=12434</a></p>
+
+<p>Test code:
+<code>
+mysql> create table test (id int(10) unsigned NOT NULL, col1 varchar(255), PRIMARY KEY (id));
+Query OK, 0 rows affected (0.00 sec)</p>
+
+<p>mysql> insert into test (col1) VALUES (&lsquo;test1&rsquo;);
+Query OK, 1 row affected, 1 warning (0.00 sec)</p>
+
+<p>mysql> select * from test;
++&mdash;-+&mdash;&mdash;-+
+| id | col1  |
++&mdash;-+&mdash;&mdash;-+
+|  0 | test1 |
++&mdash;-+&mdash;&mdash;-+
+1 row in set (0.00 sec)</p>
+
+<p>mysql> update test set id= 1  where id=0;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0</p>
+
+<p>mysql> insert into test (col1) VALUES (&lsquo;test2&rsquo;);
+Query OK, 1 row affected, 1 warning (0.00 sec)</p>
+
+<p>mysql> select * from test;
++&mdash;-+&mdash;&mdash;-+
+| id | col1  |
++&mdash;-+&mdash;&mdash;-+
+|  1 | test1 |
+|  0 | test2 |
++&mdash;-+&mdash;&mdash;-+
+2 rows in set (0.00 sec)</p>
+
+<p>mysql> insert into test (col1) VALUES (&lsquo;test3&rsquo;);
+ERROR 1062 (23000): Duplicate entry &lsquo;0&rsquo; for key 1</p>
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SQL Greatest and Least]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/07/21/sql-greatest-and-least/"/>
+    <updated>2009-07-21T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/07/21/sql-greatest-and-least</id>
+    <content type="html"><![CDATA[<p>
+Most of the time I can get what I want out of SQL using the standard aggregate functions, but today I needed to find the latest timestamp from any one of three columns.
+</p>
+
+
+<p>
+I achieved this using the GREATEST() function, it&#8217;s not party of the SQL standard but is commonly available.
+</p>
+
+
+<p>
+GREATEST(<em>value</em> [<span class="OPTIONAL">, &#8230;</span>])<br />
+</p>
+
+
+<pre class="SYNOPSIS">
+LEAST(<em>value</em> [<span class="OPTIONAL">, ...</span>])
+</pre>
+
+
+<p>
+The GREATEST and LEAST
+functions select the largest or smallest value from a list of any
+number of expressions. 
+</p>
+
+
+<p><br /></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Adding More Data Types to Schema API for Drupal 7]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/06/07/adding-more-data-types-to-schema-api-for-drupal-7/"/>
+    <updated>2009-06-07T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/06/07/adding-more-data-types-to-schema-api-for-drupal-7</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve written a patch for Drupal 7 to enable date and time data types to be defined for the schema API.</p>
+
+<p><a href="http://drupal.org/node/200953">http://drupal.org/node/200953</a></p>
+
+<p>Update : <a href="https://www.drupal.org/node/866340">it got removed</a></p>
+
+<!--break-->
+
+
+<p>There seems to be some resistance to this idea due to concerns about compatibility between database versions (Drupal now supports MySQL, PostgreSQL and sqlite).</p>
+
+<p>Personally I don&rsquo;t think Drupal can afford to work at lowest common denominator level if the aim is to be a serious option for the enterprise</p>
+
+<p>Most professionally developed Drupal sites will have some (maybe a lot of) custom coding - this code is written with full awareness of which database will be used - and vendor specific SQL may be appropriate.</p>
+
+<p>For publicly available modules vendor neutral code is desirable but can&rsquo;t be guaranteed with the current schema API.</p>
+
+<p>Sqlite is never going to be able to do all the things &lsquo;real&rsquo; databases can do, there may be some cases that some of the work can be done in PHP instead, or it may be that some modules just won&rsquo;t work for all systems.</p>
+
+<p>Having said all this date and time data types are pretty standard stuff and hopefully my patch can be included in Drupal without rocking the boat.</p>
+
+<p>I used a git mirror of the Drupal repository to develop this patch, and I&rsquo;m pretty impressed with git - it is blazingly fast - it was great to be able to make local commits - and then to &lsquo;rebase&rsquo; these wrapping several small commits into one really cleanup up my repository history.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Updating Drupal]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/12/15/updating-drupal/"/>
+    <updated>2008-12-15T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/12/15/updating-drupal</id>
+    <content type="html"><![CDATA[<p>
+For most of 2008 I&#8217;ve been working on a large Drupal installation (around 10 developers,  something like 100 custom modules, 17 languages, split over 2 sites).
+</p>
+
+
+<p>
+This all adds up to a lot of updates, and schema changes.
+</p>
+
+
+<p>
+Drupal&#8217;s hook_install, and hook_update_N functions are pretty good, but not perfect at bringing order to this chaos.
+</p>
+
+
+<p>
+These functions provide a basic way for developers to provide database installation and update functions, it&#8217;s great that these can combine full code functionality (eg for data migration) synchronised with schema changes. 
+</p>
+
+
+<p>
+As we have  something like 10 Drupal installs fro various, stage, test and UAT purposes, plus 2 per developer - having these updates scripted is essential. 
+</p>
+
+
+<p>
+But all too frequently we have issues 
+</p>
+
+
+<ul>
+    <li>Loading a MySQL backup on top of an existing database leaves newly created  tables in place even though they don&#8217;t exist in the backup (solution - always drop and recreate the database before loading a backup).</li>
+    <li>A developer changes an update hook - assuming incorrectly that it hasn&#8217;t been run yet.</li>
+    <li>An update hook misses some functionality that the developer added to their own database - but forgot to put in the hook.</li>
+</ul>
+
+
+<p>
+Another problem is that the update interface gives no warning of the changes about to be enacted - you get a list of SQL command run afterwards. 
+</p>
+
+
+<p>
+In short I&#8217;ve found that this update system is targeted more at distribution of open source code to the public, and doesn&#8217;t work so smoothly for rapid development amongst a largish team. 
+</p>
+
+
+<p>
+We&#8217;re still on Drupal 5 and are not likely to upgrade - the benefits just aren&#8217;t worth the costs for such a large codebase.
+</p>
+
+
+<p>
+I&#8217;m curious though about Drupal 6&#8217;s schema API, it seems like it ought to be possible to use this to run an update that doesn&#8217;t just make changes based on version numbers. It could actually examine the existing schema, compare this to the required one - report changes it suggests and run them after they are approved.
+</p>
+
+
+<p>
+It could also be used in development to verify that the developers altered schema is properly recorded in the code. 
+</p>
+
+
+<p>
+I expect that level of functionality may be some way off though. 
+</p>
+
+
+<p>
+http://drupal.org/project/schema
+</p>
+
+
+<p>
+http://drupal.org/node/146843 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[MySQL Restore Is Very Slow]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/08/04/mysql-restore-is-very-slow/"/>
+    <updated>2008-08-04T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/08/04/mysql-restore-is-very-slow</id>
+    <content type="html"><![CDATA[<p>
+It seems there is a bug in MySQL which is causing restores to run very slowly (hours instead of minutes)
+</p>
+
+
+<p>
+<a href="http://bugs.mysql.com/bug.php?id=33057">http://bugs.mysql.com/bug.php?id=33057</a>
+</p>
+
+
+<p>
+The bug is fixed in <a href="http://dev.mysql.com/doc/refman/5.0/en/releasenotes-cs-5-0-67.html">release 5.0.67</a>
+</p>
+
+
+<p>
+But Ubuntu hasn&#8217;t updated yet&#8230;.
+</p>
+
+
+<p>
+Fortunately this bug is specific to the command line client. 
+</p>
+
+
+<p>
+Workaround: use the MySQL Administrator GUI instead. 
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

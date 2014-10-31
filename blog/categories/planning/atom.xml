@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Planning | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/planning/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Hope Is Not a Risk Management Strategy]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/07/23/hope-is-not-a-risk-management-strategy/"/>
+    <updated>2009-07-23T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/07/23/hope-is-not-a-risk-management-strategy</id>
+    <content type="html"><![CDATA[<p>
+This is a great post by Cory Foy
+</p>
+
+
+<p>
+http://blog.cornetdesign.com/2009/06/hope-is-not-a-risk-management-strategy/
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

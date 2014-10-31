@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Eclipse | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/eclipse/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Eclipse Hangs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/03/11/eclipse-hangs/"/>
+    <updated>2013-03-11T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/03/11/eclipse-hangs</id>
+    <content type="html"><![CDATA[<p>This worked for me today - saving it here so I can find it again</p>
+
+
+
+
+<p><a href="http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/">http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/</a></p>
+
+
+
+
+<pre>
+cd .metadata/.plugins
+mv org.eclipse.core.resources org.eclipse.core.resources.bak
+Start eclipse. (It should show an error message or an empty workspace because no project is found.)
+Close all open editors tabs.
+Exit eclipse.
+rm -rf org.eclipse.core.resources (Delete the newly created directory.)
+mv org.eclipse.core.resources.bak/ org.eclipse.core.resources (Restore the original directory.)
+Start eclipse and start working. :-)
+</pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Debugging SOAP With Xdebug and Eclipse]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse/"/>
+    <updated>2010-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s been a while since I&rsquo;ve worked on a project which is providing as well as consuming web services.</p>
+
+<p>In this case I need to debug incoming requests that are not initiated from with the browser (I&rsquo;m using <a href="http://www.soapui.org/">soapui</a> as a test tool).</p>
+
+<p>In order to allow Eclipse to pick up xdebug responses triggered by requests from soapui I just needed to</p>
+
+<ul>
+<li>start a debuging session within eclipse as normal</li>
+<li>ensure that the query string ?XDEBUG_SESSION_START=ECLIPSE_DBGP is appended to all requests by editing the WSDL file so that the address looks like
+<code>
+<soap:address location="http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP"/>
+</code>
+</li>
+
+<li>make requests via soapui</li>
+</ul>
+
+
+<p>Now eclipse is picking up the soap requests and I can step through as normal (some tools apply a timeout which can be a nuisance while debugging - I haven&rsquo;t been using soapui long enough yet to see if that&rsquo;s the case here)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Xdebug and Eclipse]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/07/21/xdebug-and-eclipse/"/>
+    <updated>2009-07-21T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/07/21/xdebug-and-eclipse</id>
+    <content type="html"><![CDATA[<p>
+xdebug is an immensely powerful tool for exploring what your code really does.
+</p>
+
+
+<p>
+You can get a long way using print_r  but ultimately this always requires that you predict the path your code will take - and the tricky bit about debugging is you need it when your predications have gone wrong.
+</p>
+
+
+<p>
+It&#8217;s generally pretty easy to set up
+</p>
+
+
+<ul>
+    <li> install the php5-xdebug package</li>
+    <li>check that the Eclipse PHP preferences have xdebug as an option</li>
+    <li>if you&#8217;re debugging locally the default settings should be OK</li>
+    <li>create a site configuration in the debug dialog</li>
+    <li>set a break point</li>
+    <li>start debugging</li>
+</ul>
+
+
+<p>
+If it doesn&#8217;t work at first restart Eclipse
+</p>
+
+
+<p>
+Check that you have a browser configured in Eclipse
+</p>
+
+
+<p>
+Not all settings seem to be picked up immediately  
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Eclipse PDT and Subversion]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/11/02/eclipse-pdt-and-subversion/"/>
+    <updated>2008-11-02T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/11/02/eclipse-pdt-and-subversion</id>
+    <content type="html"><![CDATA[<h2>
+Version conflicts to be aware of
+</h2>
+
+
+<p>
+Ubuntu 8.10 (Intrepid Ibex) now ships with Subversion 1.5 
+</p>
+
+
+<p>
+You can&#8217;t use a svn 1.4 client and a svn 1.5 client on the same working copy.
+</p>
+
+
+<p>
+While the subversion integration in Eclipse is great I still prefer to do some things on the command line and some with kdesvn.
+</p>
+
+
+<p>
+Then you need to upgrade your subclipse plugin to subclipse 1.4
+</p>
+
+
+<p>
+If you can - then upgrade to Eclipse 3.4 
+</p>
+
+
+<p>
+But Eclipse 3.4 doesn&#8217;t run the latest stable version of PDT - and last time I tried to use an Integration build it was unusable - I may try again sometime but right now I want a small upgrade.
+</p>
+
+
+<p>
+I followed this instructions here http://subclipse.tigris.org/install.html
+</p>
+
+
+<p>
+But Eclipse reported a &quot;Network problem&quot;
+</p>
+
+
+<p>
+So I downloaded the zip file<br />
+http://subclipse.tigris.org/files/documents/906/43792/site-1.4.5.zip
+</p>
+
+
+<p>
+Unpacked it in a folder on my local webserver, pointed Eclipse at this location and the installation worked!
+</p>
+
+
+<p>
+Phew - I have a working Eclipse for PHP development on Ubuntu 8.10 
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu 8.10]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/11/01/ubuntu-8-10/"/>
+    <updated>2008-11-01T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/11/01/ubuntu-8-10</id>
+    <content type="html"><![CDATA[<p>
+Having just upgraded to Ubuntu 8.10 my key observation is that it&#8217;s important to read the release notes first.
+</p>
+
+
+<p>
+http://www.ubuntu.com/getubuntu/releasenotes/810
+</p>
+
+
+<p>
+There are a few bugs which have affected me
+</p>
+
+
+<ul>
+    <li>there is no bluetooth support in KDE</li>
+    <li>my wifi card only works in the US<br />
+    (there&#8217;s a workaround and I&#8217;m back online)</li>
+    <li> Dual head display with xrandr is causing problems<br />
+    (my screen flashes and KDE is putting widgets in parts of the screen I can&#8217;t see)</li>
+    <li>Subversion has moved to version 1.5 and getting Eclipse to use a compatible svn library is proving tricky</li>
+</ul>
+
+
+<p>
+On the plus side KDE 4.1 is looking very pretty, and the move to subversion 1.5 will be very useful in the long run.
+</p>
+
+
+<p>
+I had hoped to get my 3G connection working as a previous update seems to have broken it - but so far still no joy. 
+</p>
+
+
+<p>
+update:<br />
+There&#8217;s a solution for the Kubuntu Intrepid Dual Monitor Blinking<br />
+issue here: http://blog.nixternal.com/2008.10.22/kubuntu-intrepid-dual-monitor-blinking/ 
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

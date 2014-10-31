@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Nova | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/nova/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Nova Client for Rackspace Servers]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/07/02/nova-client-for-rackspace-servers/"/>
+    <updated>2013-07-02T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/07/02/nova-client-for-rackspace-servers</id>
+    <content type="html"><![CDATA[<p>This took me a little while to figure out how to get the right parameters</p>
+
+<p>I used password instead of API key and account ID instead of tenant ID which seemed to work&lt;</p>
+
+<pre><code class="bash">nova --username $username --apikey $password --os_tenant_name $accountID --os_auth_url https://auth.api.rackspacecloud.com --os_region_name ORD  list
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

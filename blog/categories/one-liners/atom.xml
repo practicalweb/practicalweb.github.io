@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: One-liners | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/one-liners/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Insert Line to All Files When Missing]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/22/insert-line-to-all-files-when-missing/"/>
+    <updated>2014-10-22T16:31:31+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/22/insert-line-to-all-files-when-missing</id>
+    <content type="html"><![CDATA[<p>In this case to turn on comments in all posts for this blog</p>
+
+<p>All files that don&rsquo;t have comments at the start of a line get &ldquo;comments: true&rdquo; inserted on the 5th line</p>
+
+<pre><code class="bash">for f in * ; do grep -q "^comments" $f || sed -i '5 i\
+comments: true' $f ; done
+</code></pre>
+
+<p>Maybe Octopress has a way to globally enable comments - but I didn&rsquo;t find it and this was quick</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Grub | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/grub/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Reinstall Grub After Windows Breaks It]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/02/12/reinstall-grub-after-windows-breaks-it/"/>
+    <updated>2013-02-12T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/02/12/reinstall-grub-after-windows-breaks-it</id>
+    <content type="html"><![CDATA[<p>One of those things that happens from time to time on a dual boot system&#8230;</p>
+
+
+
+
+<p>Windows breaks grub, usually if I&#8217;ve reinstalled windows, this can lead to a unbootable system.</p>
+
+
+
+
+<p>Boot from a Ubuntu (or other distro) live disk or USB stick.</p>
+
+
+
+
+<p>Figure out which your disks and partitions are.</p>
+
+
+<p><code></p>
+
+<pre><code>sudo mount /dev/sdXY /mnt
+</code></pre>
+
+<h1>if there is a boot partition</h1>
+
+<pre><code>sudo mount /dev/sdUV /mnt/boot
+sudo grub-install --recheck --root-directory=/mnt /dev/sdZ 
+</code></pre>
+
+<p></code></p>
+
+<p>When you reboot grub should be back to normal.</p>
+
+]]></content>
+  </entry>
+  
+</feed>

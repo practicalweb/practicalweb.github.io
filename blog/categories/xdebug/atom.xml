@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Xdebug | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/xdebug/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Debugging SOAP With Xdebug and Eclipse]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse/"/>
+    <updated>2010-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s been a while since I&rsquo;ve worked on a project which is providing as well as consuming web services.</p>
+
+<p>In this case I need to debug incoming requests that are not initiated from with the browser (I&rsquo;m using <a href="http://www.soapui.org/">soapui</a> as a test tool).</p>
+
+<p>In order to allow Eclipse to pick up xdebug responses triggered by requests from soapui I just needed to</p>
+
+<ul>
+<li>start a debuging session within eclipse as normal</li>
+<li>ensure that the query string ?XDEBUG_SESSION_START=ECLIPSE_DBGP is appended to all requests by editing the WSDL file so that the address looks like
+<code>
+<soap:address location="http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP"/>
+</code>
+</li>
+
+<li>make requests via soapui</li>
+</ul>
+
+
+<p>Now eclipse is picking up the soap requests and I can step through as normal (some tools apply a timeout which can be a nuisance while debugging - I haven&rsquo;t been using soapui long enough yet to see if that&rsquo;s the case here)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Debugging Drush Updb]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/06/25/debugging-drush-updb/"/>
+    <updated>2010-06-25T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/06/25/debugging-drush-updb</id>
+    <content type="html"><![CDATA[<p>If you&rsquo;ve ever tried to debug your update hooks via drush you may (like me) have been puzzled as to why your breakpoints don&rsquo;t seem to work.</p>
+
+<p>It seems that proc_open() is used to avoid memory issues <a href="http://drupal.org/node/687724">http://drupal.org/node/687724</a> (effectively resetting all the Drupal static variables??) and this separate process isn&rsquo;t available to the debugger.</p>
+
+<p>After stepping though the drush update process I found where this happens and have a bypass that is basically functional (drush reporting seems broken - but I can step through my code).</p>
+
+<p>This patch is the change I&rsquo;ve made.</p>
+
+<p>I bypass the patch process and go direct to the update.</p>
+
+<p><code></p>
+
+<p>&mdash; commands/core/drupal/update_6.inc   (revision 547)
++++ commands/core/drupal/update_6.inc   (working copy)
+@@ -424,10 +424,7 @@
+       &lsquo;error_message&rsquo; => &lsquo;An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.&rsquo;,
+       &lsquo;finished&rsquo; => &lsquo;update_finished&rsquo;,
+     );
+-    batch_set($batch);
+-    $batch =&amp; batch_get();
+-    $batch[&lsquo;progressive&rsquo;] = FALSE;
+-    drush_backend_batch_process(&lsquo;updatedb-batch-process&rsquo;);
++    _update_do_one($module, $version, $batch);
+   }
+   else {
+     drush_log(dt(&ldquo;No database updates required&rdquo;), &lsquo;success&rsquo;);</p>
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Xdebug and Eclipse]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/07/21/xdebug-and-eclipse/"/>
+    <updated>2009-07-21T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/07/21/xdebug-and-eclipse</id>
+    <content type="html"><![CDATA[<p>
+xdebug is an immensely powerful tool for exploring what your code really does.
+</p>
+
+
+<p>
+You can get a long way using print_r  but ultimately this always requires that you predict the path your code will take - and the tricky bit about debugging is you need it when your predications have gone wrong.
+</p>
+
+
+<p>
+It&#8217;s generally pretty easy to set up
+</p>
+
+
+<ul>
+    <li> install the php5-xdebug package</li>
+    <li>check that the Eclipse PHP preferences have xdebug as an option</li>
+    <li>if you&#8217;re debugging locally the default settings should be OK</li>
+    <li>create a site configuration in the debug dialog</li>
+    <li>set a break point</li>
+    <li>start debugging</li>
+</ul>
+
+
+<p>
+If it doesn&#8217;t work at first restart Eclipse
+</p>
+
+
+<p>
+Check that you have a browser configured in Eclipse
+</p>
+
+
+<p>
+Not all settings seem to be picked up immediately  
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mobile | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/mobile/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Phonegap]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/03/24/phonegap/"/>
+    <updated>2009-03-24T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/03/24/phonegap</id>
+    <content type="html"><![CDATA[<p>
+Phonegap is an open source compatibility layer for mobile development.
+</p>
+
+
+<p>
+It provides access to common mobile functionality such as geolocation, sound, contacts etc via a JavaScript API
+</p>
+
+
+<p>
+The idea is to make phone development more like web development, and to make deploying cross platform pas much easier.
+</p>
+
+
+<p>
+This project looks to be in fairly early stages, but already very powerful.
+</p>
+
+
+<p>
+<a href="http://www.phonegap.com/">www.phonegap.com</a>  
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Google Android]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/01/18/google-android/"/>
+    <updated>2009-01-18T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/01/18/google-android</id>
+    <content type="html"><![CDATA[<p>I have just got the new gphone, the G1 which is a collaborative venture: google provide the OS, HTC make the hardware, T-Mobile provide the netwwork, and loads of software is written by many people - and made available via Google marketplace.</p>
+
+<p>While a few things feel a little beta still; on the whole it all hangs together very well indeed.</p>
+
+<p>First of all it&rsquo;s worth saying the actual phone works very well, something all too easily overlooked.</p>
+
+<p>The rest of the gadgets work great - well enogh for me to write this on the bus.</p>
+]]></content>
+  </entry>
+  
+</feed>

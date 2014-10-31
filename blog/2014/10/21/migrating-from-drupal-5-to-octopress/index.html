@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Migrating From Drupal 5 to Octopress - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I&rsquo;ve been running this blog (or some version of it) for almost 10 years now. I write to help clarify my own thoughts, or to note down technical &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2014/10/21/migrating-from-drupal-5-to-octopress">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Migrating From Drupal 5 to Octopress</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-21T15:41:17+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>3:41 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&rsquo;ve been running this blog (or some version of it) for almost 10 years now.</p>
+
+<p>I write to help clarify my own thoughts, or to note down technical details of a task that I have struggled to figure out. I often found myself coming back and have saved many hours of trying to figure out the same thing again a year or more later.</p>
+
+<p>For a long time this site was running Drupal 5, I set it up at a time when I was getting to know Drupal, starting out as an independant, and had plenty of time to spend on it. At the time this was a very useful excercise, installing lots of modules, and writing some code was good experience. But when Drupal 6 came out and I was busy <a href="/blog/2008/07/18/time-to-upgrade-to-drupal-6}">it wasnt worth upgrading</a>, then when drupal 7 was released and Drupal 5 no longer supported, upgrading was even more difficult as I would have had to upgrade in two steps. Besides Drupal didn&rsquo;t seem like such a good fit for my blog any more.</p>
+
+<p>I don&rsquo;t want to have to apply security updates on a site I&rsquo;m not getting paid for: so a static html site is a great fit for me.</p>
+
+<p>I lose integrated comments, but spam had already killed those for me - I&rsquo;ll try disqus and see how that goes (the need to enable comments in the yaml for each post threw me at first).</p>
+
+<p>Search was useful - but I can grep the source files myself.</p>
+
+<p>I had all sorts of Drupal plugins before - but really I don&rsquo;t think they were very important.</p>
+
+<p>Jekyll seems great, especially because with github&rsquo;s patronage it seems unlikely to become unsupported; and at the end of the day it is just a bunch of simple files so importing to another system should be easy.</p>
+
+<p>Exporting from Drupal 5 needed a <a href="https://github.com/practicalweb/jekyll-import/commit/cfa72281147fd37ce527d2dab1f3ae916e066b04">small patch on the importer</a> without this the categories were seen as some kind of binary object in yaml. The import reads direct from the database, so doesn&rsquo;t run all Drupal&rsquo;s filters and I suspect a drupal export module from drupal would do a much better job. I still need to pull over some old comments and formatting could do with a tidy up, but I need to move to a system that gets me writing new content, and not worry too much about the old.</p>
+
+<p>Jekyll itself didn&rsquo;t use tags in the way I wanted - I find the ability to cross link from one post to similar ones very useful so I am using Octopress which seem to do what I want out of the box.</p>
+
+<p>To get the content in Octopress I just did</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cp jekyll/mysite/_posts/* octopress/source/_posts
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I have switched from pygments highlighter to linguist (this seems to be what github use and supports code highlighting well)</p>
+
+<p>I added a twitter aside for which I just copy pasted the twitter widget into <code>source/_includes/asides/twitter.html</code> and enabled this in _config.yml</p>
+
+<p>I&rsquo;m not a ruby coder, so instaling all the required ruby gems and figuring out how to run a modified version of the jekyll importer took a little while, in the end I think it was just a case of getting all the gems installed that I needed. I didn&rsquo;t blog soon enough!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-10-21T15:41:17+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>3:41 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/blogging/'>blogging</a>, <a class='category' href='/blog/categories/drupal/'>drupal</a>, <a class='category' href='/blog/categories/long-term/'>long-term</a>, <a class='category' href='/blog/categories/octopress/'>octopress</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2014/10/21/migrating-from-drupal-5-to-octopress/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2014/10/21/migrating-from-drupal-5-to-octopress/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/10/14/static-export-of-drupal-site/" title="Previous Post: Static export of Drupal site">&laquo; Static export of Drupal site</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/10/22/insert-line-to-all-files-when-missing/" title="Next Post: Insert line to all files when missing">Insert line to all files when missing &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2014/10/21/migrating-from-drupal-5-to-octopress/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2014/10/21/migrating-from-drupal-5-to-octopress/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

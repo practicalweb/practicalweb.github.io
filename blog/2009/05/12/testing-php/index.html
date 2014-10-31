@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Testing PHP - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I had fun this weekend at the PHP London Test Fest, it was a great opportunity to learn something new and meet some great programmers. The tests our &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2009/05/12/testing-php">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Testing PHP</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-05-12T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>
+I had fun this weekend at the <a href="http://www.phplondon.org/" mce_href="http://www.phplondon.org/">PHP London</a> Test Fest, it was a great opportunity to learn something new and meet some great programmers.
+</p>
+
+
+<p>
+The tests our team took on were based around the <a href="http://www.php.net/%7Ehelly/php/ext/spl/main.html" mce_href="http://www.php.net/~helly/php/ext/spl/main.html">SPL</a> <a href="http://uk.php.net/manual/en/spl.iterators.php" mce_href="http://uk.php.net/manual/en/spl.iterators.php">iterators</a> I hadn&#8217;t used this part of PHP before and it was a great way to learn about it, especially as many of the functions we tested aren&#8217;t documented yet.
+</p>
+
+
+<p>
+What we did was :
+</p>
+
+
+<ol>
+    <li>Take a copy of <a href="http://www.php.net/anoncvs.php" mce_href="http://www.php.net/anoncvs.php">PHP source code <br>
+    </a></li>
+    <li>extract this and run ./configure</li>
+    <li> create a short script to run tests</li>
+    <li>and another to run the checked out version of PHO</li>
+    <li> Check the <a href="http://gcov.php.net/PHP_5_3/lcov_html/spl/spl_iterators.c.gcov.php" mce_href="http://gcov.php.net/PHP_5_3/lcov_html/spl/spl_iterators.c.gcov.php">test coverage reports</a></li>
+    <li>Find an untested section of code (in red)</li>
+    <li>Figure out what it does</li>
+    <li>Write a test to run this part of code</li>
+    <li>go to 5 </li>
+</ol>
+
+
+<p>
+More details on how to write tests are at http://qa.php.net/write-test.php&nbsp;
+</p>
+
+
+<p>
+I found the hardest bit was interpreting the C source code of PHP - this was made much easier by the mentors at the test fest, and once pointed in the right direction we were able to get going easily enough.
+</p>
+
+
+<p>
+This does give me another reason to read this book: <br /><a href="/review/extending-and-embedding-php" mce_href="/review/extending-and-embedding-php"><img src="http://ecx.images-amazon.com/images/I/415rN3jdDvL._SL160_.jpg" mce_src="http://ecx.images-amazon.com/images/I/415rN3jdDvL._SL160_.jpg" alt="Extending and Embedding PHP Sara Golemon" width="125" height="160"></a>
+</p>
+
+
+<p>
+One thing I didn&#8217;t figure out on the day - in order to regenerate the coverage reports and check that the new tests do add coverage I needed to&nbsp; 
+</p>
+
+
+<p><code>
+aptitude install lcov</p>
+
+<p>make lcov TESTS=./path-to tests
+</code></p>
+
+<p>
+NB you can either run all tests or just a subdirectory
+</p>
+
+
+<p>
+The script to run tests was 
+</p>
+
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<p>export TEST_PHP_EXECUTABLE=/path-to/php5.3-200905081030/sapi/cli/php
+$TEST_PHP_EXECUTABLE /path-to/php5.3-200905081030/run-tests.php $*
+</code></p>
+
+<p>
+I also created an alias to sapi/cli/php so that I could run the tests as simple PHP scripts
+</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2009-05-12T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/php/'>php</a>, <a class='category' href='/blog/categories/phplondon/'>phplondon</a>, <a class='category' href='/blog/categories/testfest/'>testfest</a>, <a class='category' href='/blog/categories/testing/'>testing</a>, <a class='category' href='/blog/categories/unit-testing/'>unit testing</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2009/05/12/testing-php/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2009/05/12/testing-php/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2009/05/06/simpletest-vs-phpunit/" title="Previous Post: simpletest vs phpunit">&laquo; simpletest vs phpunit</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2009/05/25/module-to-make-the-title-of-node-add-pages-editable-in-drupal/" title="Next Post: Module to make the Title of node/add pages editable in Drupal">Module to make the Title of node/add pages editable in Drupal &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2009/05/12/testing-php/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2009/05/12/testing-php/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

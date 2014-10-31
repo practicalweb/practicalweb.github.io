@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Collaboration | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/collaboration/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA["Backport Small Changes to Stable Releases"]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/09/backport-small-changes-to-stable-releases/"/>
+    <updated>2010-10-09T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/09/backport-small-changes-to-stable-releases</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve found the recent thread on distribution support very interesting.</p>
+
+<p>An I&rsquo;m especially excited by the prospects hinted at here</p>
+
+<p><a href="http://drupal.org/node/933846#comment-3545110">http://drupal.org/node/933846#comment-3545110</a></p>
+
+<blockquote>
+#42
+webchick - October 7, 2010 - 21:40
+
+For those who haven&#8217;t read it, http://buytaert.net/8-steps-for-drupal-8 is worth a read. In it, step 6 is &#8220;Backport small changes to stable releases&#8221;. Drupal 7 is the first release we&#8217;ve been able to entertain the idea, since we have a testing framework with 25K tests and a version-specific dependency system. What the boundaries are of such changes isn&#8217;t quite defined yet, because Dries and I have kept pretty busy with, you know, getting Drupal 7 out the door. :P~
+
+</blockquote>
+
+
+<p>For a long time I&rsquo;ve felt that Drupal could get a great deal more engagement from contractors, freelances and other somewhat mercenary entities (myself included) if contributions could have an impact on a smaller timescale.</p>
+
+<p>By allowing changes to core within major releases it potentially becomes possible to contribute patches that get released within months rather than years.</p>
+
+<p>On this timescale it becomes much easier to justify the time spent to a client as there is a reasonable change of it benifitting thier project.</p>
+
+<p><a href="http://drupal.org/node/200953#comment-1674372>I submitted a patch</a> that&rsquo;s actually in Drupal 7 - I may get to use in within 2 years of writing it - but that&rsquo;s several clients on.</p>
+
+<p>I think it&rsquo;s especially an opportunity to flesh out the API and add missing functions</p>
+]]></content>
+  </entry>
+  
+</feed>

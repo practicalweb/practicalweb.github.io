@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Linux | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/linux/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Headless VPN on Linux With Minimal VPN Traffic and Selective DNS]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/03/12/headless-vpn-on-linux-with-minimal-vpn-traffic-and-selective-dns/"/>
+    <updated>2013-03-12T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/03/12/headless-vpn-on-linux-with-minimal-vpn-traffic-and-selective-dns</id>
+    <content type="html"><![CDATA[<p>I needed to setup a VPN client connection on a headless system where the VPN is slow and so I want to route the minimal amount of traffic through it. I need DNS to use the VPN but only for one domain.</p>
+
+<p>This is my setup using pptp and dnsmasq (tested on centOS)</p>
+
+<p>Basic VPN config is here</p>
+
+<p><code>/etc/ppp/peers/office</code></p>
+
+<pre><code># written by pptpsetup
+pty "pptp vpn.example.com --nolaunchpppd"
+lock
+noauth
+nobsdcomp
+nodeflate
+refuse-eap
+usepeerdns
+defaultroute
+name sean.burlington
+remotename office
+ipparam office
+require-mppe-128
+</code></pre>
+
+<p>Startup script adds a default route for the network I need to access via vpn and adds the DNS server to dnsmasq config</p>
+
+<p><code>/etc/ppp/ip-up.local</code></p>
+
+<pre><code class="bash">#!/bin/bash
+
+for net in 192.168.128.0/17 ; do
+  /sbin/route -v add -net $net dev $IFNAME
+  logger -t pppd "added route for $net"
+done
+
+
+cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
+
+echo "server=/example.com/${DNS1}" &gt;&gt; /etc/dnsmasq.conf
+
+service dnsmasq restart
+</code></pre>
+
+<p>When disconnecting VPN reset dnsmasq, in my case I need the public DNS for example.com when not on VPN</p>
+
+<p><code>/etc/ppp/ip-down.local</code></p>
+
+<pre><code class="bash">#!/bin/bash
+
+cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
+
+service dnsmasq restart
+</code></pre>
+
+<p>My <code>/etc/resolv.conf</code> points first to localhost where dnsmaq runs, then to my router which provides the upstream DNS</p>
+
+<pre><code>nameserver 127.0.0.1
+nameserver 192.168.0.1
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Reinstall Grub After Windows Breaks It]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/02/12/reinstall-grub-after-windows-breaks-it/"/>
+    <updated>2013-02-12T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/02/12/reinstall-grub-after-windows-breaks-it</id>
+    <content type="html"><![CDATA[<p>One of those things that happens from time to time on a dual boot system&#8230;</p>
+
+
+
+
+<p>Windows breaks grub, usually if I&#8217;ve reinstalled windows, this can lead to a unbootable system.</p>
+
+
+
+
+<p>Boot from a Ubuntu (or other distro) live disk or USB stick.</p>
+
+
+
+
+<p>Figure out which your disks and partitions are.</p>
+
+
+<p><code></p>
+
+<pre><code>sudo mount /dev/sdXY /mnt
+</code></pre>
+
+<h1>if there is a boot partition</h1>
+
+<pre><code>sudo mount /dev/sdUV /mnt/boot
+sudo grub-install --recheck --root-directory=/mnt /dev/sdZ 
+</code></pre>
+
+<p></code></p>
+
+<p>When you reboot grub should be back to normal.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to Create a Custom Yum Repository on Centos 6]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/11/21/how-to-create-a-custom-yum-repository-on-centos-6/"/>
+    <updated>2012-11-21T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/11/21/how-to-create-a-custom-yum-repository-on-centos-6</id>
+    <content type="html"><![CDATA[<p>If you want to create custom rpms and install then with the usual automated dependency management you&rsquo;ll need your own yum repository. This is just the RPMS and metadata in the format of static xml files served by a webserver.</p>
+
+<h2>First you need a GPG key to sign your packages.</h2>
+
+<pre><code class="bash"># make some randomness if running headless 
+sudo rngd -r /dev/urandom 
+# start the agent
+gpg-agent --use-standard-socket --daemon
+# interactive key generation (accept the defaults for key type, provide your name and email when promted)
+gpg --gen-key
+# 
+gpg --export -a 'My Name' &gt; MY-RPM-GPG-KEY
+</code></pre>
+
+<p>You won&rsquo;t need the random generator if you do this on a desktop, but on a headless system I found I needed this. These actions will store a private key in your keyring, and a public key in the specified file.</p>
+
+<h2>Build your rpm</h2>
+
+<p>First configure rpm to use the key you just added to your key ring, checing you don&rsquo;t oveerwrite earlier configuration).</p>
+
+<pre><code class="bash">[ ! -f ~/.rpmmacros ] &amp;&amp; echo '%_signature gpg
+%_gpg_name  My Name
+' &gt; ~/.rpmmacros
+</code></pre>
+
+<p>Now build your RPM (assuming you are already setup to do this).</p>
+
+<pre><code class="bash">rpmbuild -bb --sign ~/rpmbuild/SPECS/my-project.spec
+</code></pre>
+
+<h2>Setup the Yum Repo</h2>
+
+<p>Setup apache, make the directory structure, with teh repo files. This can be the same or a different server to your build machine.</p>
+
+<pre><code class="bash">
+# make the repo base url
+sudo mkdir -p /var/www/html/myrepo
+# make it wrietable by you normal account
+sudo chown $(id -un).$(id -gn) /var/www/html/myrepo 
+# copy you rpm files
+cp *rpm /var/www/html/myrepo
+# create the metadata
+createrepo /var/www/html/myrepo
+
+# Setup an apache Alias for this directory
+echo 'Alias /myrepo/ /var/www/html/myrepo/
+' &gt; /etc/httpd/conf.d/my-yum-repo 
+
+# restart Apache to pickup the change
+service restart httpd
+</code></pre>
+
+<h2>Configure the system that will use the custom repo</h2>
+
+<p>Copy over the GPG key, and import it into the  rpm database.</p>
+
+<pre><code class="bash">sudo rpm --import MY-RPM-GPG-KEY
+</code></pre>
+
+<p>Configure yum to use the new repo.</p>
+
+<pre><code class="bash">echo '[my-repo]
+name=My Custom Packages
+baseurl=http://yum.example.com/myrepo
+&gt; /etc/yum.repos.d/my.repo 
+</code></pre>
+
+<p>Now you should be able to install your custom packages with regular yum commands. When you update your rpms just re-run the createrepo command to update the metadata.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Monitor Filesystem for Deletions]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/09/28/monitor-filesystem-for-deletions/"/>
+    <updated>2012-09-28T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/09/28/monitor-filesystem-for-deletions</id>
+    <content type="html"><![CDATA[<p>On a project I&#8217;m working on at the moment we have a problem, files are going missing.</p>
+
+
+
+
+<p>We don&#8217;t know which part of the system could be trashing these files (user uploaded images in this case) and they are on a shared filesystem so there are plenty of places to point fingers.</p>
+
+
+
+
+<p>I&#8217;ve discovered a very handy toolset <a href="https://github.com/rvoicilas/inotify-tools/wiki">inotify-tools</a> Which hooks into the linix kernel and allows you to monitor actions like file deletion.</p>
+
+
+
+
+<p>I my case all I need to do right now is monitor the files on each sytem that has access - and I&#8217;m hoping to catch which one does the delete</p>
+
+
+<p><In my build script is now the code</p></p>
+
+<p><code></p>
+
+<h1>stop monitoring for deletes through the build</h1>
+
+<p>[ -f ~/inotifywait.pid ] &amp;&amp; kill $(cat ~/inotifywait.pid)</p>
+
+<p>git pull
+./build.sh</p>
+
+<h1>if the tool is installed - monitor file delets</h1>
+
+<p>which inotifywait &amp;&amp;
+{
+ nohup inotifywait -mr &ndash;timefmt &lsquo;%d/%m/%y %H:%M&rsquo; &ndash;format &lsquo;%T %w %f %e&rsquo; -e delete /var/www/sites/default/files/ &amp;> ~/build-${JOB_NAME}-$(BUILD_NUMBER)-delete.log  &amp;
+ echo $! > ~/inotifywait.pid
+}</p>
+
+<p></code></p>
+
+<p>This should create a log of any user files that get deleted between builds</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Device Eth0 Does Not Seem to Be Present, Delaying Initialization.]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/05/02/device-eth0-does-not-seem-to-be-present-delaying-initialization/"/>
+    <updated>2012-05-02T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/05/02/device-eth0-does-not-seem-to-be-present-delaying-initialization</id>
+    <content type="html"><![CDATA[<p>
+I had a centos VM that I hadn&#8217;t used in a while, I think I cloned it from another version.
+</p>
+
+
+<p>
+When I came to use it again I had no network andtrying to start the network I got the error message in the title.
+</p>
+
+
+<p>
+There seem to be a few issues
+</p>
+
+
+<p>
+Firstly netowrking isn&#8217;t endabled by default 
+</p>
+
+
+<p>
+<a href="http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90">http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90</a> 
+</p>
+
+
+<p>
+Secondly the cloned image appears to get a different mac address for the network card, but theconfig doesn&#8217;t auto detect this
+</p>
+
+
+<p>
+Thirdly the new machine seemed to have eth1 instead of eth0
+</p>
+
+
+<p>
+and finally I needed to enable dhcp
+</p>
+
+
+<p>
+What this meant was copying the new mac address from the virtualbox network settings tab (inserting a colon every second charecter  to match the format required)
+</p>
+
+
+<p>
+I placed this in both 
+</p>
+
+
+<p>
+/etc/udev/rules.d/70-persistant-net.rules
+</p>
+
+
+<p>
+and  
+</p>
+
+
+<p>
+/etc/sysconfig/network-scripts/ifcfg-eth0
+</p>
+
+
+<p>
+Where I also set 
+</p>
+
+
+<p>
+ONBOOT=&quot;yes&quot;  <br />
+BOOTPROTO=&quot;dhcp&quot;
+</p>
+
+
+<p>
+Finally /etc/init.d/networking restart got my network up 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

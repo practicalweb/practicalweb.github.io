@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Exim | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/exim/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Upgrading Debian Etch to Lenny]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/01/21/upgrading-debian-etch-to-lenny/"/>
+    <updated>2010-01-21T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/01/21/upgrading-debian-etch-to-lenny</id>
+    <content type="html"><![CDATA[<p>Debian Etch has been serving me well for a few years with wonderfully easy and infrequent maintenance.</p>
+
+<p>However it&rsquo;s at the end of its life</p>
+
+<p><a href="http://www.debian.org/News/2010/20100121">http://www.debian.org/News/2010/20100121</a></p>
+
+<p>So I&rsquo;ve upgraded to Lenny following these instructions</p>
+
+<p><a href="http://www.debian.org/releases/lenny/i386/release-notes/ch-upgrading.en.html">http://www.debian.org/releases/lenny/i386/release-notes/ch-upgrading.en.html</a></p>
+
+<p>It was remarkably painless</p>
+
+<p>One small problem with the mail system.</p>
+
+<p><code>
+Errors were encountered while processing:
+ exim4-config
+ imapproxy
+ exim4-base
+ exim4-daemon-light
+ courier-imap
+ at
+ bsd-mailx
+ courier-imap-ssl
+ mailx
+</code></p>
+
+<p>But scrolling upwards I got a more helpful error message</p>
+
+<p><code>
+A package failed to install.  Trying to recover:
+Setting up exim4-config (4.69-9) &hellip;
+DEBCONFsomethingDEBCONF found in exim configuration. This is most probably
+caused by you upgrading to exim4 4.67-3 or later without accepting the
+suggested conffile changes. Please read
+/usr/share/doc/exim4-config/NEWS.Debian.gz for 4.67-2 and 4.67-4
+</code></p>
+
+<p>So I purged exim, deleted the config files, reinstalled it and now everything seems good.</p>
+]]></content>
+  </entry>
+  
+</feed>

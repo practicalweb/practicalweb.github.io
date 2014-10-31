@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Virtualbox | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/virtualbox/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Creating New Vagrant Base Boxes With Veewee]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/"/>
+    <updated>2014-10-28T16:08:14+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee</id>
+    <content type="html"><![CDATA[<p>Creating your own base box for vagrant is a great thing to do, you get to undestand exactly what is on that box and to choose exactly what base OS you use.</p>
+
+<p>After all one of the big draws of vagrant is keeping your dev environment close to what production looks like - and for that you need to know what is in the base box.</p>
+
+<p>When I first started using vagrant I wrote a post <a href="/blog/2012/10/16/how-to-build-a-centos-6-base-box-for-vagrant/">How to build a Centos 6 base Box for vagrant</a> whcih details the manual steps needed. At the time I was busy learning puppet, vagrant and related tools - veewee was just one tool too many and a manual build seemed the best way to get my head around what a base box was.</p>
+
+<p>While the base box isn&rsquo;t something I have needed to repeat much, it is beneficial to update the base image from time to time and here veewee is brilliant. It also makes shareing the reponnsbibility for the base box within a team easy.</p>
+
+<p>Here&rsquo;s what I did</p>
+
+<ul>
+<li>fork <a href="https://github.com/jedi4ever/veewee">https://github.com/jedi4ever/veewee</a> (in my case to a private repo)</li>
+<li>check that out</li>
+<li>install veewee according to its install notes</li>
+</ul>
+
+
+<pre><code class="bash">veewee vbox tenplates | grep -i centos
+</code></pre>
+
+<p>This told me that the template I wanted was CentOS-6.5-x86_64-minimal</p>
+
+<pre><code class="bash ">veewee vbox define centos65 CentOS-6.5-x86_64-minimal
+</code></pre>
+
+<p>Now I made some edits to customise the base box how I wanted</p>
+
+<pre><code class="bash">vim definitions/centos65/definition.rb # comment out the chef line
+vim definitions/centos65/cleanup.sh # remove build packages like gcc
+vim definitions/centos65/vagrant.sh # remove insecure vagrant key and add your own public key
+</code></pre>
+
+<p>Build</p>
+
+<pre><code class="bash">veewee vbox build centos65
+veewee vbox export centos65
+</code></pre>
+
+<p>add to my local vagrant so I can test</p>
+
+<pre><code class="bash">vagrant box add centos65 ./centos65.box
+</code></pre>
+
+<p>Now I can copy the base box to a team-accessible server</p>
+
+<p>And push my custom definition to my veewee fork so anyone from the team can build an updated box.</p>
+
+<pre><code class="bash">vim .gitignore # remove definitions/*
+git add .gitignore 
+git add definitions/
+git commit -m "added my definition"
+git push
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Device Eth0 Does Not Seem to Be Present, Delaying Initialization.]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/05/02/device-eth0-does-not-seem-to-be-present-delaying-initialization/"/>
+    <updated>2012-05-02T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/05/02/device-eth0-does-not-seem-to-be-present-delaying-initialization</id>
+    <content type="html"><![CDATA[<p>
+I had a centos VM that I hadn&#8217;t used in a while, I think I cloned it from another version.
+</p>
+
+
+<p>
+When I came to use it again I had no network andtrying to start the network I got the error message in the title.
+</p>
+
+
+<p>
+There seem to be a few issues
+</p>
+
+
+<p>
+Firstly netowrking isn&#8217;t endabled by default 
+</p>
+
+
+<p>
+<a href="http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90">http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90</a> 
+</p>
+
+
+<p>
+Secondly the cloned image appears to get a different mac address for the network card, but theconfig doesn&#8217;t auto detect this
+</p>
+
+
+<p>
+Thirdly the new machine seemed to have eth1 instead of eth0
+</p>
+
+
+<p>
+and finally I needed to enable dhcp
+</p>
+
+
+<p>
+What this meant was copying the new mac address from the virtualbox network settings tab (inserting a colon every second charecter  to match the format required)
+</p>
+
+
+<p>
+I placed this in both 
+</p>
+
+
+<p>
+/etc/udev/rules.d/70-persistant-net.rules
+</p>
+
+
+<p>
+and  
+</p>
+
+
+<p>
+/etc/sysconfig/network-scripts/ifcfg-eth0
+</p>
+
+
+<p>
+Where I also set 
+</p>
+
+
+<p>
+ONBOOT=&quot;yes&quot;  <br />
+BOOTPROTO=&quot;dhcp&quot;
+</p>
+
+
+<p>
+Finally /etc/init.d/networking restart got my network up 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Perils of Virtualisation]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/04/28/the-perils-of-virtualisation/"/>
+    <updated>2009-04-28T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/04/28/the-perils-of-virtualisation</id>
+    <content type="html"><![CDATA[<p>
+I just read an interesting article about Windows 7 - it will include a virtual machine to run windows XP for backwards compatibility. 
+</p>
+
+
+<p>
+http://www.computerworld.com/action/article.do?command=viewArticleBasic&amp;articleId=9132177
+</p>
+
+
+<p>
+The article points out that this has the drawback of extra maintenance.
+</p>
+
+
+<p>
+I&#8217;d have to agree with this - it&#8217;s one of the big downsides of using virtual machines for testing -  with three virtual Windows&#8217; I find myslef constantly having to run updates.
+</p>
+
+
+<p>
+One of the big wins of Linux systems is centralised updates for all applications - having to update windows, office, flash, firefox, java - all separately is a real pain even when you only have one machine to look after. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nework Error After VirtualBox Upgrade]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/04/27/nework-error-after-virtualbox-upgrade/"/>
+    <updated>2009-04-27T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/04/27/nework-error-after-virtualbox-upgrade</id>
+    <content type="html"><![CDATA[<p>
+I decided to upgrade  VirtualBox because the newer versions have much better support for networks that allow virtual computer to be visible on the real network.
+</p>
+
+
+<p>
+But after upgrade I encountered the error
+</p>
+
+
+<p>
+&quot;HostInterface&#8217;: The attribute &#8216;name&#8217; is required but missing.&quot;
+</p>
+
+
+<p>
+It seems others have had similar issues
+</p>
+
+
+<p>
+http://forums.virtualbox.org/viewtopic.php?p=58720&amp;sid=f3759d4d938c30120502ad5610833caa
+</p>
+
+
+<p>
+I resolved this by deleting this entry: 
+</p>
+
+
+<p><code>
+<HostInterface/>  
+</code></p>
+
+<p>
+from the config file, in my case this was 
+</p>
+
+
+<p><code>
+.VirtualBox/Machines/WinXP/WinXP.xml
+</code></p>
+
+<p>
+After this the virtual machine worked fine - and the new network settings are great. 
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Cross Platform Testing With Selenium and VirtualBox]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/04/27/cross-platform-testing-with-selenium-and-virtualbox/"/>
+    <updated>2009-04-27T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/04/27/cross-platform-testing-with-selenium-and-virtualbox</id>
+    <content type="html"><![CDATA[<p>
+As well as following standards such as those laid down by www.w3.org I always try and test websites I develop across a range of browsers. Despite improvements in compatibility in recent years, browsers do still vary in implementation and even relatively minor browsers are still used by large numbers of people.
+</p>
+
+
+<p>
+However all this testing can be hard to keep on top of and sometimes I just have to push out what seems like a small code change with only limited testing.
+</p>
+
+
+<p>
+I&#8217;m aiming to automate as much testing as possible, this is a little more work up front - but makes re-running tests trivial and so more likely to happen.
+</p>
+
+
+<p>
+I use VirtualBox to run multiple environments, and am happy to find that the newer releases (2.1 and up) support improved networking.
+</p>
+
+
+<p>
+So I have installed <a href="http://seleniumhq.org/projects/remote-control/">Selenium RC</a> on a virtual machine, and by running this simple script I can test on Internet Explorer - from my Linux development machine.
+</p>
+
+
+<p>&lt;?php</p>
+
+<p>set_include_path(get_include_path() . PATH_SEPARATOR . &lsquo;./PEAR/&rsquo;);
+require_once &lsquo;Testing/Selenium.php&rsquo;;</p>
+
+<p>$selenium = new Testing_Selenium(&ldquo;*iexplore&rdquo;, &ldquo;<a href="http://www.google.com">http://www.google.com</a>&rdquo;, &lsquo;192.168.0.7&rsquo;);</p>
+
+<p>$selenium->start();</p>
+
+<p>$selenium->open(&ldquo;/&rdquo;);
+$selenium->type(&ldquo;q&rdquo;, &ldquo;hello world&rdquo;);
+$selenium->click(&ldquo;btnG&rdquo;);
+$selenium->waitForPageToLoad(10000);
+print (preg_match(&ldquo;/Google Search/&rdquo;, $selenium->getTitle())) ? &ldquo;pass\n&rdquo; : &ldquo;fail\n&rdquo;;
+$selenium->stop();</p>
+
+<p>?></p>
+
+<p>Note that I can specify which Virtual Machine to test on just by providing the appropriate IP address.</p>
+
+
+
+
+<p>This example is in PHP because that&#8217;s what I use, it requires the Pear package Testing_Selenium which I installed on Ubuntu by the command</p>
+
+
+<p><code>
+sudo pear install channel://pear.php.net/Testing_Selenium-0.4.3
+</code></p>
+
+<p>
+Now all I need to do is integrate this into my unit testing framework and add some scripts to start up and shut down the virtual machines.
+</p>
+
+
+
+
+<p>There is also Selenium Grid which is aimed at distributing tests across multiple machines in parallel - but as this is all running on one physical machine (my laptop) I don&#8217;t really want parallelisation here.</p>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,775 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I find a lot of clients use skype For me the biggest frustration is the limited search But it turns out the data is stored using sqlite - and so you &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/posts/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/14/search-skype-history-across-chats/">Search Skype History Across Chats</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-10-14T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I find a lot of clients use skype</p>
+
+<p>For me the biggest frustration is the limited search</p>
+
+<p>But it turns out the data is stored using sqlite - and so you can search using sql directly on the sqlite db files.</p>
+
+<div><script src='https://gist.github.com/740d136e58d8b87d057f.js'></script>
+<noscript><pre><code>#!/bin/bash
+
+export username=skype.name
+sqlite3 -column ~/.Skype/$username/main.db \
+&quot;SELECT displayname, from_dispname, datetime(Messages.timestamp, 'unixepoch') as date, body_xml 
+             FROM Messages, Conversations 
+             WHERE Conversations.id=Messages.convo_id and body_xml like '%$searchterm%' 
+             ORDER BY Messages.timestamp;&quot;
+
+</code></pre></noscript></div>
+
+
+<p>or for all your chats from a given day</p>
+
+<div><script src='https://gist.github.com/85e282537f6f2f631414.js'></script>
+<noscript><pre><code>export username=skype.name
+export thedate=$(date +%Y-%m-%d)
+sqlite3 ~/.Skype/${username}/main.db \
+&quot;SELECT displayname, datetime(Messages.timestamp, 'unixepoch') as date, body_xml 
+           FROM Messages, Conversations 
+           WHERE Conversations.id=Messages.convo_id and date(Messages.timestamp, 'unixepoch') == '${thedate}' and author='${username}' 
+           ORDER BY Messages.timestamp;&quot;</code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/15/blocking-git-commits-from-future-merges/">Blocking Git Commits From Future Merges</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-08-15T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I used to use subversion and <a href="http://www.orcaware.com/svn/wiki/Svnmerge.py">svnmerge</a> a lot, and there&#8217;s just one thing I miss about it. Now svnmerge is a tool to bolt on merge tracking to svn, and gits merge tracking is vastly better in many ways. But the one thing that svnmerge allowed me to do that was cool and doesn&#8217;t have a real equivalent in git is to block commits</p>
+
+
+
+
+<p>I use release branches as well as feature branches, so for each release we support we have a barcnh, new features are developed in feature branches off this - and merged back to it when complete. The branch for release x gets merged forwards to release x+1 periodically - to ensure that any features or bugfixes make it to the latest release.</p>
+
+
+
+
+<p>Sometimes we make a commit to an older release that we don&#8217;t want to merge forwards to newer releases - typically this is a quick and dirty bugfix/workaround that is superseded by a proper fix in the next release.</p>
+
+
+
+
+<p>Svnmerge allowed you to &quot;block&quot; these commits so that they did not get merged forwards, with git you could cherry-pick around these commits - but you&#8217;d loose the ability to do regular merges.</p>
+
+
+
+
+<p><p>What you can do it git is to merge the commit - but keep the files unchanged, this looks a bit weird but works OK.<p></p>
+
+<p><code>git cherry-pick -e &ndash;strategy=ours $hash</code></p>
+
+<p><p>The strategy=ours bit means keep the code as it was in this branch. -e lets you edit the commit message to indicate it isn&rsquo;t a normal merge</p></p>
+
+<p><p>Now sometimes this doesn&rsquo;t seem to work, git complains that the commit is empty, I think this is when there is a conflict - in this case the only way I have worked around it is to do a regular cherry-pick and resolve the conflict manually - effectively undoing the commit. Then <code>commit &ndash;allow-empty</code></p>
+
+<p></p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/07/github-jenkins-hook-multiple-endpoints-and-api/">Github Jenkins Hook - Multiple Endpoints and API</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-08-07T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I wanted to trigger multiple jenkins servers from a github hook.</p>
+
+<p>I found <a href="https://github.com/github/github-services/pull/604M/">this pull request</a> which led me to look at the API</p>
+
+<p>useful docs</p>
+
+<ul>
+<li><a href="http://developer.github.com/v3/repos/hooks">http://developer.github.com/v3/repos/hooks</a></li>
+<li><a href="https://gist.github.com/caspyin/2288960">https://gist.github.com/caspyin/2288960</a></li>
+</ul>
+
+
+<p>My code</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>  curl --user <span class="s2">&quot;me:mypassword&quot;</span> --request POST --data @jenkins.json  https://api.github.com/repos/myorg/myproject/hooks
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>here jenkins.json is like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jenkins&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nt">&quot;active&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>      <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span class='line'>        <span class="s2">&quot;push&quot;</span>
+</span><span class='line'>      <span class="p">],</span>
+</span><span class='line'>      <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nt">&quot;jenkins_hook_url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://jenkins.mydomain/github-webhook/&quot;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What I found was that this just replaces my jenkins hook - which isn&rsquo;t what I wanted.</p>
+
+<p>But the more I looked at the service hooks the more it looked like the jenkins one just passes a standard payload to a url, which is the same as the generic webhook, so I tried adding the jenkins webhook URL as a standard webhook ( you are allowed multiples of these) and that seems to work.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/02/nova-client-for-rackspace-servers/">Nova Client for Rackspace Servers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-07-02T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This took me a little while to figure out how to get the right parameters</p>
+
+<p>I used password instead of API key and account ID instead of tenant ID which seemed to work&lt;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>nova --username <span class="nv">$username</span> --apikey <span class="nv">$password</span> --os_tenant_name <span class="nv">$accountID</span> --os_auth_url https://auth.api.rackspacecloud.com --os_region_name ORD  list
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/10/script-to-download-all-jenkins-job-configs/">Script to Download All Jenkins Job Configs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-05-10T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script src="https://gist.github.com/practicalweb/5554803.js"></script>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/18/jenkins-publish-over-ssh-parameterized/">Jenkins Publish Over Ssh - Parameterized</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-04-18T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To have a jenkins job which acts on a remote server via ssh - and has a parameter to choose which server(s) to use.</p>
+
+
+
+
+<ol>
+<li>check <i>This build is parameterized</i></li>
+
+<li>Make the parameter name something like TARGET_SERVER</li>
+<li>add build step <i>Send files or execute commands over SSH</i></li>
+<li>Add server</li>
+<li>In server details click <i>advanced</i></li>
+<li>add a value for <i>Label</i></li>
+<li>at the end of the ssh section check <i>Parameterized publishing</i></li>
+<li>specify the  <i>Parameter name</i> from earlier (TARGET_SERVER)</li>
+
+</ol>
+
+
+
+
+<p><p>Now when you run the job supply a value for the TARGET_SERVER parameter that can be a regex, the job will run the ssh sections on any servers that have a matching label.<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/25/git-files-with-local-changes-i-dont-want-committed/">Git Files With Local Changes I Don&#8217;t Want Committed</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-25T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;m working on a project where I find I want to semi-regularly adjust a config file for local testing, but want to be sure I don&#8217;t commit that file by mistake.</p>
+
+
+
+
+<p>Seems the best approach is</p>
+
+
+<p><code>git update-index &ndash;skip-worktree $filename</code></p>
+
+<p>This tells git to skip this file when I push, if the remote file changes it will warn me </p>
+
+
+
+
+<p>To switch back</p>
+
+
+<p><code>git update-index &ndash;no-skip-worktree $filename</code></p>
+
+<p>There is also a assume-unchanged option - but this is aimed more at performance and bug workarounds - it realy does assume the file is unchanged - which in my case is incorrect.</p>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/12/headless-vpn-on-linux-with-minimal-vpn-traffic-and-selective-dns/">Headless VPN on Linux With Minimal VPN Traffic and Selective DNS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-12T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I needed to setup a VPN client connection on a headless system where the VPN is slow and so I want to route the minimal amount of traffic through it. I need DNS to use the VPN but only for one domain.</p>
+
+<p>This is my setup using pptp and dnsmasq (tested on centOS)</p>
+
+<p>Basic VPN config is here</p>
+
+<p><code>/etc/ppp/peers/office</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># written by pptpsetup
+</span><span class='line'>pty "pptp vpn.example.com --nolaunchpppd"
+</span><span class='line'>lock
+</span><span class='line'>noauth
+</span><span class='line'>nobsdcomp
+</span><span class='line'>nodeflate
+</span><span class='line'>refuse-eap
+</span><span class='line'>usepeerdns
+</span><span class='line'>defaultroute
+</span><span class='line'>name sean.burlington
+</span><span class='line'>remotename office
+</span><span class='line'>ipparam office
+</span><span class='line'>require-mppe-128</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Startup script adds a default route for the network I need to access via vpn and adds the DNS server to dnsmasq config</p>
+
+<p><code>/etc/ppp/ip-up.local</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">for</span> net in 192.168.128.0/17 <span class="p">;</span> <span class="k">do</span>
+</span><span class='line'>  /sbin/route -v add -net <span class="nv">$net</span> dev <span class="nv">$IFNAME</span>
+</span><span class='line'>  logger -t pppd <span class="s2">&quot;added route for $net&quot;</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
+</span><span class='line'>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;server=/example.com/${DNS1}&quot;</span> &gt;&gt; /etc/dnsmasq.conf
+</span><span class='line'>
+</span><span class='line'>service dnsmasq restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When disconnecting VPN reset dnsmasq, in my case I need the public DNS for example.com when not on VPN</p>
+
+<p><code>/etc/ppp/ip-down.local</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'>cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
+</span><span class='line'>
+</span><span class='line'>service dnsmasq restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>My <code>/etc/resolv.conf</code> points first to localhost where dnsmaq runs, then to my router which provides the upstream DNS</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>nameserver 127.0.0.1
+</span><span class='line'>nameserver 192.168.0.1
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/11/puppet-apache-virtualhost-docroot-provided-by-rpm/">Puppet - Apache Virtualhost Docroot Provided by Rpm</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-11T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This has been annoying to work out.</p>
+
+
+
+
+<p>The <a href="https://forge.puppetlabs.com/puppetlabs/apache">puppet apache module</a> will by default create the document root for a virtualhost if it is not already defined. But since I wanted the documentroot to be managed by a custom   RPM I don&#8217;t have a reference to the actual directory in puppet.</p>
+
+
+
+
+<p>It seems the thing to do is to create file named after the document root - but with an alternate path property. This way puppet/apache knows not to create the documentroot, and the one I make in puppet doesn&#8217;t then get in the way of the RPM one.</p>
+
+
+<p><code></p>
+
+<p>  apache::vhost { &lsquo;www.vagrant&rsquo;:
+    priority        => &lsquo;10&rsquo;,
+    port            => &lsquo;80&rsquo;,
+    docroot         => &ldquo;/var/www/html/foo&rdquo;,
+    docroot_owner   => &lsquo;root&rsquo;,
+    docroot_group   => &lsquo;root&rsquo;,
+    override        => &lsquo;All&rsquo;,
+    require         => Package[&lsquo;foo&rsquo;],
+  }</p>
+
+<p>  file {&lsquo;/var/www/html/foo&rsquo;:
+      path => &ldquo;/usr/share/doc/foo&rdquo;,
+      content => &ldquo;Puppet needs a file with an object name of teh docroot defined, this is that dummy file, the real docroot is defined in an rpm\n &rdquo;,
+      owner => root,
+  }</p>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/11/eclipse-hangs/">Eclipse Hangs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-11T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This worked for me today - saving it here so I can find it again</p>
+
+
+
+
+<p><a href="http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/">http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/</a></p>
+
+
+
+
+<pre>
+cd .metadata/.plugins
+mv org.eclipse.core.resources org.eclipse.core.resources.bak
+Start eclipse. (It should show an error message or an empty workspace because no project is found.)
+Close all open editors tabs.
+Exit eclipse.
+rm -rf org.eclipse.core.resources (Delete the newly created directory.)
+mv org.eclipse.core.resources.bak/ org.eclipse.core.resources (Restore the original directory.)
+Start eclipse and start working. :-)
+</pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/3">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/index.html">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

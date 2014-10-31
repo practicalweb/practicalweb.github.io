@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Android | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/android/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Going Google]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/11/25/going-google/"/>
+    <updated>2009-11-25T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/11/25/going-google</id>
+    <content type="html"><![CDATA[<p>
+I seem to be progressivly going Google, it started with search but for a long time I resisted the lure of Googles other treats.
+</p>
+
+
+<p>
+However since I got an Android phone I&#8217;ve been getting slowly sucked in with accounts on Gmail, Picassa, Google, Calender, and now Google Apps 
+</p>
+
+
+<p>
+One thing I found out is that you <a href="http://www.google.com/support/forum/p/Google+Apps/thread?tid=5e6502d85823b15f&amp;hl=en&amp;fid=5e6502d85823b15f000479078747d294">can&#8217;t upgrade from a Gmail account to a Google Apps one</a> what you have to do is create a new account and do a lot of exporting/importing.
+</p>
+
+
+<p>
+A Google apps account allows you to use your own domain name for email, and manage all accounts at that domain but is otherwise not so different to a Gmail account.
+</p>
+
+
+<p>
+The lack of upgrade path is a pain but the actual account creation and migration process was easy; I had my email going to the new account within half an hour.
+</p>
+
+
+<p>
+The next snag was updating my Android phone to use the new account; there is no obvious way to do this but a bit of googling gave me the answer:
+</p>
+
+
+<p>
+Go to Setting &gt; Application &gt; Manage Application 
+</p>
+
+
+<p>
+Then for each of 
+</p>
+
+
+<ul>
+    <li>Gmail</li>
+    <li>Gmail storage</li>
+    <li>Google apps</li>
+    <li>Google search</li>
+</ul>
+
+
+<p>
+&quot;clear data&quot;
+</p>
+
+
+<p>
+You should shortly be prompted to enter your new account details.
+</p>
+
+
+<p>
+Make sure you have imported your contacts and calender to the new account before doing this so that your cleared data gets restored quickly. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Phonegap]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/03/24/phonegap/"/>
+    <updated>2009-03-24T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/03/24/phonegap</id>
+    <content type="html"><![CDATA[<p>
+Phonegap is an open source compatibility layer for mobile development.
+</p>
+
+
+<p>
+It provides access to common mobile functionality such as geolocation, sound, contacts etc via a JavaScript API
+</p>
+
+
+<p>
+The idea is to make phone development more like web development, and to make deploying cross platform pas much easier.
+</p>
+
+
+<p>
+This project looks to be in fairly early stages, but already very powerful.
+</p>
+
+
+<p>
+<a href="http://www.phonegap.com/">www.phonegap.com</a>  
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

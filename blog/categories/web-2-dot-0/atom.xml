@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Web 2.0 | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/web-2-dot-0/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Free Services May Have Hidden Costs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/12/08/free-services-may-have-hidden-costs/"/>
+    <updated>2008-12-08T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/12/08/free-services-may-have-hidden-costs</id>
+    <content type="html"><![CDATA[<p>
+There are many great services online that can help build fantastic websites at little cost.
+</p>
+
+
+<p>
+In particular Google maps and you tube offer facilities that may not otherwise be available at no financial cost.
+</p>
+
+
+<p>
+There has always been a bit of doubt with these services, what if your site depends on them and then Google changes the way they work.
+</p>
+
+
+<p>
+Interesting to see adverts now appearing over images in You Tube
+</p>
+
+
+<p>
+<img src="http://www.practicalweb.co.uk/sites/default/files/u1/google-video-ads.png" width="500" height="364" /> (Found while looking for Christmas presents for my nephew!) This also shows an oddity of contextual advertising - where inappropriate adverts may be shown.
+</p>
+
+
+<p>
+I used to work for a charity who still use you tube video on their site, it would be quite odd if this became overlaid with adverts.
+</p>
+
+
+<p>
+There&#8217;s an <a href="http://www.nearby.org.uk/blog/2008/12/08/between-a-rock-and-a-hard-place/">interesting post on Google Maps API license</a> the key concern here is the extent of rights to your data that Google take in return for their service.
+</p>
+
+
+<p>
+Casual users may not bother reading the full terms and conditions of these services; but business users should take the time. 
+</p>
+
+
+<p>
+These services are valuable, and it may well be worth taking the risk after all Maps and videos have now been available without ads for some years. On the other hand some sites may choose  to host their own mapping or video to keep full control.
+</p>
+
+
+<p>
+I&#8217;ve worked on a couple of projects that built thier own mapping (<a href="http://www.practicalweb.co.uk/project/project-ramblers-walks-finder">Walks finder</a> and <a href="http://www.practicalweb.co.uk/project/project-use-your-paths">Use Your Paths</a> )
+</p>
+
+
+<p>
+Incorporating video in a Drupal site without a third party service seems fairly standard, there are several good flash video players available. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mobile Internet Reaching Critical Mass?]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/07/10/mobile-internet-reaching-critical-mass/"/>
+    <updated>2008-07-10T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/07/10/mobile-internet-reaching-critical-mass</id>
+    <content type="html"><![CDATA[<p>
+Interesting report on the state of mobile internet
+</p>
+
+
+<blockquote>
+    We offer that mobile Internet is today at a point of sufficient mass to sustain a chain reaction of rapid growth in consumer adoption and, in turn, mobile Internet marketing.
+</blockquote>
+
+
+<p>
+According to this in the UK 16% of mobile phone users use their phones to access the internet.
+</p>
+
+
+<p>
+These users access a much smaller range of sites on their phones than desktop users do.
+</p>
+
+
+
+
+<p>
+But the key thing is that there may be enough mobile users to encourage website development to accommodate mobile users, and as the user experience gets better more people will use the mobile net, and from there it all explodes (keeping the critical mass analogy).
+</p>
+
+
+<p>
+What this means for web development is an interesting question. Well managed websites using systems like Drupal will be well placed to take advantage of the new opportunities, reaching new audiences for little extra outlay.
+</p>
+
+
+<ul>
+    <li><a href="http://www.nielsenmobile.com/documents/CriticalMass.pdf">Full report</a> (pdf)</li>
+    <li><a href="http://news.bbc.co.uk/1/hi/technology/7499340.stm">Summary at the BBC</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

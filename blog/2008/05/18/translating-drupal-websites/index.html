@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Translating Drupal Websites - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I've worked on a few internationalised sites in the past and it always raises challenges, Drupal makes some things easy - this post provides some &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2008/05/18/translating-drupal-websites">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Translating Drupal Websites</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-05-18T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>
+I&#8217;ve worked on a few internationalised sites in the past and it always raises challenges, Drupal makes some things easy - this post provides some simple tips for planning your translation process.
+</p>
+
+
+<p>
+This advice is aimed at sizeable sites with formal release processes.
+</p>
+
+
+
+
+<!--break-->
+
+
+<h2>General tips for any website translation project</h2>
+
+
+<dl>
+<dt>Plan</dt>
+<dd>
+<p>
+This is the key for any translation project, talk to all the people involved, make sure you know all the stages, and that everyone is comfortable that they can play their part.
+</p>
+</dd>
+<dt>Check your design</dt>
+<dd>
+<p>
+A common problem with CMS driven websites is that the design if often produced by a designer more familiar with print layout (fixed amounts of content).
+</p>
+<p>
+Translation makes this even more challenging, you have to really check that your design can cope with varying amount of content: compared to English: German words are long, Norwegian words very long - and Korean characters may need a larger font to be legible.
+</p>
+</dd>
+<dt>Introduce standards early</dt>
+<dd>
+<p>
+Make sure the coding team are all doing things the same way - whatever the specifics for your project!
+</p>
+</dd> 
+<dt>Translate late</dt>
+<dd>
+<p>
+Wait as long as possible before starting on translation to ensure all phrases are finalised. It&#8217;s amazing how late in a project you can find whole extra pages that need writing - error pages especially; but all sorts of pieces of text get revised once you start testing.
+</p>
+<p>
+Ideally I&#8217;d translate after testing is complete - and then test the translations separately.
+</p>
+</dd>
+</dl>
+
+
+<h2>Drupal Specific translation tips</h2>
+
+
+<p></p>
+
+<p>
+Drupal provides the &#8216;t&#8217; function ( http://api.drupal.org/api/function/t/5 ) which does a lot of work for you.
+</p>
+
+
+<p>
+Generally, in Drupal you write code using literal strings that you want to appear as output but &#8216;wrap&#8217; them in the t function. This makes for readable code which hooks into the &#8216;translate strings&#8217; interface that Drupal provides.
+</p>
+
+
+<p>
+When using the t function:
+</p>
+
+
+<dl>
+<dt>
+<br />
+</dt><dt>
+<p>
+Don&#8217;t include leading or trailing whitespace in your strings - it&#8217;s really easy to miss and this mess up your layout (or if working with exported translation files to miss whitespace differences in the &#8216;original&#8217; language and find that your translations don&#8217;t appear).
+</p>
+</dt>
+<dt>Consider using placeholder text</dt>
+<dd>
+<p>
+(eg &#8216;ENTER_NAME&#8217; instead of &#8216;Enter name&#8217;) as your standard language.<br />
+This may make for a slightly harder early proofing process but would make it easy to see which strings are translated, avoid problems with case sensitivity.
+</p>
+</dd>
+<dt>Don&#8217;t display the default text in any language</dt>
+<dd>
+<p>
+If you&#8217;re running more than one language anyway it pays to &#8216;translate&#8217; English as well: this way you can easily override Drupal defaults.
+</p>
+</dd><dt>Don&#8217;t correct the spelling in your code</dt>
+<dd>Following on from the point above - just update your translations which are in the database.<br />
+This avoids updating your (thoroughly tested) code just to correct a typo.
+<p>
+&nbsp;
+</p>
+</dd>
+<dt>You can only translate a phase once.</dt>
+<dd>
+<p>
+You can&#8217;t have an English word translated one way in one place and another way in another place - but if you use placeholder text you could use ENTER and USER_LOGIN_PAGE_ENTER
+- translate both to &#8216;Enter&#8217; for the English locale and you&#8217;re still free to differentiate in other languages.
+</p>
+</dd>
+</dl>
+
+
+<p>
+Finally a quick note about the localiser module (http://drupal.org/project/localizer )
+- this creates new nodes to hold translations - don&#8217;t forget to allow for this when planning your database schema. If your database constraints prevent duplication of some content you may end up with a broken schema.
+</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2008-05-18T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/drupal/'>drupal</a>, <a class='category' href='/blog/categories/internationalisation/'>internationalisation</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2008/05/18/translating-drupal-websites/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2008/05/18/translating-drupal-websites/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2008/05/18/reading-a-unicode-excel-file-in-php/" title="Previous Post: Reading a unicode Excel file in PHP">&laquo; Reading a unicode Excel file in PHP</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2008/05/23/how-to-enter-a-multibyte-unicode-string-in-php/" title="Next Post: How to enter a multibyte Unicode string in PHP">How to enter a multibyte Unicode string in PHP &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2008/05/18/translating-drupal-websites/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2008/05/18/translating-drupal-websites/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

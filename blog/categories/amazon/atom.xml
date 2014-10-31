@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Amazon | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/amazon/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Amazon MP3 Downloads for Linux]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/12/17/amazon-mp3-downloads-for-linux/"/>
+    <updated>2009-12-17T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/12/17/amazon-mp3-downloads-for-linux</id>
+    <content type="html"><![CDATA[<p>
+It&#8217;s great that Amazon actually offer a version of thier MP3 downloader for Linux - just a shame that it doesn&#8217;t work for many distributions.
+</p>
+
+
+<p>
+Fortunately <a href="http://code.google.com/p/clamz/">clamz</a> is available  
+</p>
+
+
+<p>
+It&#8217;s a great little command line utility with a very forgetable name. 
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Snippet | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/snippet/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Programatically Delete a Content Type in Drupal]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/05/05/programatically-delete-a-content-type-in-drupal/"/>
+    <updated>2011-05-05T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/05/05/programatically-delete-a-content-type-in-drupal</id>
+    <content type="html"><![CDATA[<p>&lt;?php</p>
+
+<p>$result = db_query(&ldquo;SELECT nid FROM node where type=&lsquo;mytype&rsquo;&rdquo;);
+while ($row = db_fetch_object($result)) {
+    node_delete($row->nid);
+}
+node_type_delete(&lsquo;mytype&rsquo;);
+?></p>
+]]></content>
+  </entry>
+  
+</feed>

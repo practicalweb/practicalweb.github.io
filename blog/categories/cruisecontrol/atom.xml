@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Cruisecontrol | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/cruisecontrol/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Continuous Integration Testing for Drupal With CruiseControl (Part 1)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1/"/>
+    <updated>2009-04-08T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1</id>
+    <content type="html"><![CDATA[<p>
+I recently finished work on a project that really suffered from a lack of build tools.
+</p>
+
+
+<p>
+It was a large project, and while many of us were keen on writing tests we weren&#8217;t able to get management sign of to spend some time automating the test process. So even though we did some of the work we didn&#8217;t get all the benefits.
+</p>
+
+
+<p>
+It was really frustrating to come back to a piece of work that was well covered by unit tests, only to find those tests broken  
+</p>
+
+
+<p>
+Well, right now I&#8217;ve decided to take some time to explore automated testing a bit more. I&#8217;ve got a Drupal site and a bunch of simpletest tests - I want the tests run on every commit, and while I&#8217;m at it I want to run some other checks too.
+</p>
+
+
+<p>
+The following records what I&#8217;ve done so far, problems I encountered, and how I solved them.
+</p>
+
+
+<p>
+Download 
+</p>
+
+
+<ul>
+    <li><a href="http://cruisecontrol.sourceforge.net/">cruisecontrol</a> <a href="http://phpundercontrol.org/about.html"><br />
+    </a></li>
+    <li><a href="http://phpundercontrol.org/about.html">phpundercontrol</a></li>
+    <li><a href="http://demo.codesetter.com/drupal5-macgyver-cruisecontrol">simpletest runner for cruise control</a> (thanks Adnan)</li>
+</ul>
+
+
+<p>
+Checkout and configure my Drupal site, create the settings for this as a CruiseControl project.
+</p>
+
+
+<p>
+At this point I had CruiseControl setup, I could see my project, but no useful reports.
+</p>
+
+
+<p>
+Debugging
+</p>
+
+
+<ul>
+    <li>read the logfiles (doh!)</li>
+    <li>run each process separately</li>
+</ul>
+
+
+<p>
+CruiseControl is a big beast and trying to debug small parts of it by running it all wasn&#8217;t much fun.
+</p>
+
+
+<p>
+CruiseControl runs each step of a build via <a href="http://ant.apache.org/">ant</a>  - this is a fairly standard tool (available via apt-get if you&#8217;re a Debian user) 
+</p>
+
+
+<p>
+Running ant manually gave me much greater visibility of errors that were occuring at this stage (I&#8217;d put my test runner script in the wrong place).
+</p>
+
+
+<p>$ cd cruisecontrol/projects/myproject
+$ ant </p>
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+This gives nice easy to read output for each step of the build.
+</p>
+
+
+<p>
+Once CruiseControl has built your project it merges the xml logfiles; the merged file is stored in cruisecontrol/logs/myproject/
+</p>
+
+
+<p>
+The web application part of CruiseControl uses xsl to transform these logfiles into output, and a little jsp to select which xsl files to use. Again I found it easier to debug the xsl part of the process by running the xsl manually (either on the combined logfile - or individual ones wrapped in &lt;cruisecontrol&gt; tags).
+</p>
+
+
+<p>$ xsltproc webapps/cruisecontrol/xsl/checkstyle.xsl  projects/myproject/build/logs/checkstyle.xml</p>
+
+<p>
+And what I found was that my xml log wasn&#8217;t xml after all (I&#8217;d hit a <a href="http://pear.php.net/bugs/bug.php?id=14409">bug in phpcodesniffer</a> which was outputting error messages at the top of the file). 
+</p>
+
+
+<p>
+Right now I have a continuous integration server up and running. It&#8217;s not quite how I want it yet but now I understand how CruiseControl works I don&#8217;t think it&#8217;ll take too long to get right - but it&#8217;s the sort of thing that I expect to grow and tweak as I go along.
+</p>
+
+
+<p>
+I&#8217;ve found CruiseControl hard to setup, seen too many Java stacktraces, and blank screens when xsl didn&#8217;t work as expected.
+</p>
+
+
+<p>
+Some things could probably be done better via svn commit hooks (if you have access to the svn server), and certainly it would have been faster to cobble together some cron jobs.
+</p>
+
+
+<p>
+But I&#8217;ve persevered because CruiseControl comes with a wealth of plugins including many version control systems, and many notification methods. I&#8217;m hoping that I&#8217;ve overcome the initial learning curve and will start to reap the rewards.
+</p>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

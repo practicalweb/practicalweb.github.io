@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Shorturl | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/shorturl/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Drupal as URL Shortener]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/02/22/drupal-as-url-shortener/"/>
+    <updated>2010-02-22T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/02/22/drupal-as-url-shortener</id>
+    <content type="html"><![CDATA[<p>Drupal has a couple of modules which allow you to produce your own tinyurl.com type website - complete with your own tracking etc.</p>
+
+<p>This has been extended for use by the US government at <a href="http://go.usa.com/">http://go.usa.com/</a> and the code re-released to the community.</p>
+
+<p>This mainly adds statistics gathering and reporting</p>
+
+<p>Unfortunately the module maintainer has chosen not to integrate these changes back into the module at drupal.org  - issue here : <a href="http://drupal.org/node/520588">http://drupal.org/node/520588</a></p>
+
+<p>So now the patch doesn&rsquo;t apply cleanly unless you checkout an old version of the module from CVS like this</p>
+
+<p>NB the password for anonymous access to CVS is &ldquo;anonymous&rdquo;</p>
+
+<p><code>
+cvs -d :pserver:anonymous@cvs.drupal.org:/cvs/drupal-contrib login
+cvs -d:pserver:anonymous@cvs.drupal.org:/cvs/drupal-contrib co contributions/modules/shorturl
+cd contributions/modules/shorturl/
+cvs update -r DRUPAL-6&ndash;1  -D 2009-12-01
+wget <a href="http://drupal.org/files/issues/shorturl_1.patch">http://drupal.org/files/issues/shorturl_1.patch</a>
+patch -p0 &lt; shorturl_1.patch
+</code></p>
+
+<p>Update:</p>
+
+<p>I&rsquo;ve managed to merge both branches of development and the bugfix at <a href="http://drupal.org/node/627668">http://drupal.org/node/627668</a></p>
+
+<p>This module is very much a development version - I&rsquo;ve incorporated several people work and the result seems to work OK - but test before using.</p>
+
+<p>Download an updated version of the module</p>
+]]></content>
+  </entry>
+  
+</feed>

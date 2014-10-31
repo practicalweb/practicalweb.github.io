@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Web Development | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/web-development/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Website Costs, Fixed Price, and Bugs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/08/04/website-costs-fixed-price-and-bugs/"/>
+    <updated>2009-08-04T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/08/04/website-costs-fixed-price-and-bugs</id>
+    <content type="html"><![CDATA[<p>
+Three interesting posts I&#8217;ve read recently
+</p>
+
+
+<p>
+http://www.contenthere.net/2009/08/fixed-bid-implementation-work-a-marriage-made-in-vegas.html
+</p>
+
+
+<p>
+Large fixed bid projects are very hard to get right.
+</p>
+
+
+<p>
+http://www.teamlalala.com/blog/2008/11/12/how-much-do-websites-cost/
+</p>
+
+
+<p>
+How much do websites cost? Well it&#8217;s hard to say.
+</p>
+
+
+<p>
+http://www.codinghorror.com/blog/archives/001239.html
+</p>
+
+
+<p>
+You&#8217;re gonna have bugs - plan for it and log them so that you can analyse the most common ones and  target your budget effectively.  
+</p>
+
+
+<p>
+Developing websites is a real challenge, and putting a business process around it so that all parties make a fair profit is hard too. 
+</p>
+
+
+<p>
+But it&#8217;s an exciting business to be in and there are profits to be made. 
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[IE6 on VirtualBox - Installing the Network Driver]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/11/02/ie6-on-virtualbox-installing-the-network-driver/"/>
+    <updated>2008-11-02T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/11/02/ie6-on-virtualbox-installing-the-network-driver</id>
+    <content type="html"><![CDATA[<p>
+One of the trial of web development is ensuring that your site works across a range of browsers.
+</p>
+
+
+<p>
+Standards compliance is an important part of this - but testing cannot be avoided.
+</p>
+
+
+<p>
+I work on Ubuntu, and use VirtualBox together with a licensed copy of Windows XP to test in a Windows environment, which also allows me to at least test the Windows version of Safari. 
+</p>
+
+
+<p>
+Unfortunately Microsoft&#8217;s decision to tie Internet Explorer closely with the operating system means that it isn&#8217;t possible to install IE6 alongside IE7.  
+</p>
+
+
+<p>
+(<a href="http://tredosoft.com/Multiple_IE">Multiple IEs</a> gets close but doesn&#8217;t exactly replicate each version, and isn&#8217;t compatible with the IE developer toolbar)
+</p>
+
+
+<p>
+<a href="http://blogs.msdn.com/ie/archive/2006/11/30/ie6-and-ie7-running-on-a-single-machine.aspx%22">Microsoft have recognised the problem</a> and do provide an <a href="http://blogs.msdn.com/ie/archive/2006/11/30/ie6-and-ie7-running-on-a-single-machine.aspx">Internet Explorer Application Compatibility VPC Image</a> which allows you to create a virtual Windows with IE6 installed
+</p>
+
+
+<p>
+It is possible to <a href="http://blog.mozmonkey.com/2008/vpc-ie6-ie7-ie8-on-mac-os-x/">convert this image for use in VirtualBox</a>
+</p>
+
+
+<p>
+But I couldn&#8217;t initially get the network working. What I had missed is that you have to
+</p>
+
+
+<ul>
+    <li>go into the VirtualBox settings for this virtual machine </li>
+    <li>in the to select the network section </li>
+    <li>specify the &quot;PCnet-PCI II (am79C970A)&quot; network adpator </li>
+    <li>boot up the vitual machine</li>
+    <li>Windows will try and install the Driver</li>
+    <li>Specify a location manually</li>
+    <li>Browse to D:\32Bit\Windows\3rdParty\AMD_PCnet</li>
+</ul>
+
+
+<p>
+The above assumes you have already installed the Guest Additions.
+</p>
+
+
+<p>
+This should succesfuly install the network driver - it worked for me.
+</p>
+
+
+<p>
+I now have a true copy of IE6 on Ubuntu and can test away.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

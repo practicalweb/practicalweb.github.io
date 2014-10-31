@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Documentation | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/documentation/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Read Compressed Apache Docs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/10/18/how-to-read-compressed-apache-docs/"/>
+    <updated>2008-10-18T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/10/18/how-to-read-compressed-apache-docs</id>
+    <content type="html"><![CDATA[<p>
+One of the great things about Debian/Ubuntu is the consistency with which system documentation is placed in /usr/share/doc/
+</p>
+
+
+<p>
+Assuming you have a web server installed this documentation is then available at http://localhost/doc/
+</p>
+
+
+<p>
+But to keep filesize down - many files are compressed and have to be decompressed before you can read them.
+</p>
+
+
+<p>
+The browser can actually do that compression on the fly - if it receives the right headers - what it needs to be told is that the content is compressed plain text. 
+</p>
+
+
+<p>
+To achieve this add the following lines to your default apache config for the docs directory (there should already be a docs section)
+</p>
+
+
+<p>
+&lt;Directory &quot;/usr/share/doc/&quot;&gt;<br />
+AddEncoding x-gzip gz tgz<br />
+AddType text/plain .gz<br />
+&lt;/Direcory&gt;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Adding Comments to the Database]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/07/31/adding-comments-to-the-database/"/>
+    <updated>2008-07-31T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/07/31/adding-comments-to-the-database</id>
+    <content type="html"><![CDATA[<p>Comments in code are widely used and generally (but not universally) accepted as a good thing.</p>
+
+<p>Databases can also accommodate comments - but these seem to be very rarely used.</p>
+
+<p>I&rsquo;m of the opinion that database comments are very useful.</p>
+
+<p>It&rsquo;s often hard to determine the exact meaning of a column - maybe it would be ideal to rename the column but you don&rsquo;t want to risk breaking code.</p>
+
+<p>I&rsquo;ve also worked on a few projects where tables retain redundant columns just in case a query somewhere selects this column. Then every now and again a developer (like me) gets tripped up and thinks this column is meaningful.</p>
+
+<p>For a really simple table
+<code>
+Create Table: CREATE TABLE <code>phonebook</code> (
+  <code>number</code> int(11) NOT NULL COMMENT &lsquo;phone number&rsquo;,
+  <code>name</code> varchar(255) default NULL,
+  PRIMARY KEY  (<code>number</code>)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1
+</code></p>
+
+<p>To add a comment to a table
+<code>
+alter table phonebook comment=&lsquo;an example table&rsquo;
+</code></p>
+
+<p>To add a comment to a column
+repeat the existing column definition and add the comment at the end
+<code>
+alter table phonebook change column name name varchar(255) default NULL comment &lsquo;full name&rsquo;
+</code></p>
+
+<p>The comments are then displayed when you <code>show create table</code></p>
+
+<p>It&rsquo;s even easier to put the comments in at the start.</p>
+
+<p><code></p>
+
+<p>mysql&gt; create table phonebook (number int(11) primary key comment &lsquo;phone number&rsquo;, name varchar(255) comment &lsquo;full name&rsquo;) comment &lsquo;an example table&rsquo;;
+Query OK, 0 rows affected (0.05 sec)</p>
+
+<p> show create table phonebook\G
+<strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em> 1. row </em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong>
+       Table: phonebook
+Create Table: CREATE TABLE <code>phonebook</code> (
+  <code>number</code> int(11) NOT NULL COMMENT &lsquo;phone number&rsquo;,
+  <code>name</code> varchar(255) default NULL COMMENT &lsquo;full name&rsquo;,
+  PRIMARY KEY  (<code>number</code>)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT=&lsquo;an example table&rsquo;
+1 row in set (0.00 sec)</p>
+
+<p></code></p>
+
+<p>The above is an example based on MySQL.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Drupal Api Module]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/06/03/drupal-api-module/"/>
+    <updated>2008-06-03T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/06/03/drupal-api-module</id>
+    <content type="html"><![CDATA[<p>
+The Drupal api module is very useful. It&#8217;s also quite strict in the formats it recognises.
+</p>
+
+
+<p>
+If you are having trouble getting it to reconise your doc-comments make sure you are following the Drupal coding standards
+</p>
+
+
+<p>
+<a href="http://drupal.org/coding-standards">drupal.org/coding-standards</a>
+</p>
+
+
+<!--break-->
+
+
+<p>
+In particular function declarations must be like
+</p>
+
+
+<p>&lt;?php
+function my_function($param) {
+?></p>
+
+<p>
+Any missing (or extra) spaces will cause the papi parser to ignore the function.
+</p>
+
+
+<p>
+You can also include html files in your documentation (just save them anywhere the api module has been set to index).
+</p>
+
+
+<p>
+The &lt;title&gt; will be used as the &quot;docblock title&quot; and the &lt;body&gt; of the html will be displayed formatted within your site template.<br/>I haven&#8217;t figured out yet where/if the &quot;docblock title&quot; is displayed</p>
+
+
+<p>Again the parser is quite strict - you must have an &lt;h1&gt; element in the page.</p>
+
+
+<p>Everything up untill the end of the first &lt;h1&gt; element is ignored (which seems odd to me) - and the rest as the body of the documentation.  
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Doc-comments and Auto-completion in Eclipse]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/05/18/doc-comments-and-auto-completion-in-eclipse/"/>
+    <updated>2008-05-18T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/05/18/doc-comments-and-auto-completion-in-eclipse</id>
+    <content type="html"><![CDATA[<p>
+Using <a href="http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.pkg.html">doc-comments</a> in Eclipse really helps productivity by providing lots of tool-tip help and auto completion.
+</p>
+
+
+<p>
+A colleague recently pointed out that Eclipse can auto-complete object properties (as long as you use the @property tag). I&#8217;ve found this really helpful and have been creating objects to return pass around - and found it a vwery neat way of working.
+</p>
+
+
+<p>
+I&#8217;ve also been writing functions that may be used on the command line via <a href="http://drupal.org/project/drush">drush</a>, Drupal cron, or via pages.
+</p>
+
+
+<p>
+A pleasant side effect of this is that the MVC pattern is starting to appear much clearer within Drupal. The Controller may be cron, drush, or the menu system, this calls the Model, and triggers a theme function for the View.
+</p>
+
+
+<p>
+Thanks to <a href="http://www.nobleprog.co.uk/">Bernard at NobelProg</a>
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Documenting Drupal Websites]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/05/09/documenting-drupal-websites/"/>
+    <updated>2008-05-09T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/05/09/documenting-drupal-websites</id>
+    <content type="html"><![CDATA[<p>
+With any sizeable project maintaining good documentation is a challenge - it&#8217;s all to easy to skimp on documentation, or to start with good intentions but allow the documentation to get out of date.
+</p>
+
+
+<p>
+The <a href="http://drupal.org/project/api">Drupal API project</a> allows you to set up a documentation website for your project like <a href="http://api.drupal.org">api.drupal.org</a> that covers all your code.
+<br />
+The way this works is that you add doc comments to your code, and the Drupal API module extracts these to create the searchable and cross-referenced documentation.
+</p>
+
+
+<p>
+Because doc comments are in the code it is easier to remember to update the documentation when you make a change.
+To install the API module:
+</p>
+
+
+<ul>
+    <li>Install Drupal</li>
+    <li>add <a href="http://drupal.org/project/api">the api module</a></li>
+    <li>configure the api module<br />
+    <ul>
+        <li>short name is used in urls</li>
+        <li>Long name is displayed as the title</li>
+        <li>Directory is the absolute path to the code you want indexed</li>
+    </ul>
+    </li>
+    <li>
+    <p>
+    Add the special doc comment @mainpage {title} somewhere appropriate, this can either be a dediciated documentation page (with nothing but doc comments) or a doc comment in a logical place within your code.
+    </p>
+    <p>
+    The key thing is that the {title} must be the same as the &quot;long name&quot; you chose earlier.
+    </p>
+    </li>
+    <li>go to the administer blocks page</li>
+    <li>enable the API search and API navigation blocks</li>
+    <li>run cron a few times to get some pages indexed (by default only 10 pages are indexed at a time)</li>
+    <li>That should be it</li>
+</ul>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

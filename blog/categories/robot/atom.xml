@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Robot | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/robot/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How Sure Are You That Your Code Doesn't Have Bugs?]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/04/29/how-sure-are-you-that-your-code-doesnt-have-bugs/"/>
+    <updated>2009-04-29T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/04/29/how-sure-are-you-that-your-code-doesnt-have-bugs</id>
+    <content type="html"><![CDATA[<p>There are times you really really want to be sure your code doesn&rsquo;t have any bugs at all.</p>
+
+<p>This is one of those times.</p>
+
+<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/yln_IGDuOCo&hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/yln_IGDuOCo&hl=en&fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>
+
+
+<p>I really hope they had a good set of tests running on thier software before doing that!</p>
+]]></content>
+  </entry>
+  
+</feed>

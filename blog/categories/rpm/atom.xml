@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rpm | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/rpm/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Puppet - Apache Virtualhost Docroot Provided by Rpm]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/03/11/puppet-apache-virtualhost-docroot-provided-by-rpm/"/>
+    <updated>2013-03-11T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/03/11/puppet-apache-virtualhost-docroot-provided-by-rpm</id>
+    <content type="html"><![CDATA[<p>This has been annoying to work out.</p>
+
+
+
+
+<p>The <a href="https://forge.puppetlabs.com/puppetlabs/apache">puppet apache module</a> will by default create the document root for a virtualhost if it is not already defined. But since I wanted the documentroot to be managed by a custom   RPM I don&#8217;t have a reference to the actual directory in puppet.</p>
+
+
+
+
+<p>It seems the thing to do is to create file named after the document root - but with an alternate path property. This way puppet/apache knows not to create the documentroot, and the one I make in puppet doesn&#8217;t then get in the way of the RPM one.</p>
+
+
+<p><code></p>
+
+<p>  apache::vhost { &lsquo;www.vagrant&rsquo;:
+    priority        => &lsquo;10&rsquo;,
+    port            => &lsquo;80&rsquo;,
+    docroot         => &ldquo;/var/www/html/foo&rdquo;,
+    docroot_owner   => &lsquo;root&rsquo;,
+    docroot_group   => &lsquo;root&rsquo;,
+    override        => &lsquo;All&rsquo;,
+    require         => Package[&lsquo;foo&rsquo;],
+  }</p>
+
+<p>  file {&lsquo;/var/www/html/foo&rsquo;:
+      path => &ldquo;/usr/share/doc/foo&rdquo;,
+      content => &ldquo;Puppet needs a file with an object name of teh docroot defined, this is that dummy file, the real docroot is defined in an rpm\n &rdquo;,
+      owner => root,
+  }</p>
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Vagrant / Puppet Project to Setup a RPM Build Server and Custom Yum Repository]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/11/24/vagrant-puppet-project-to-setup-a-rpm-build-server-and-custom-yum-repository/"/>
+    <updated>2012-11-24T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/11/24/vagrant-puppet-project-to-setup-a-rpm-build-server-and-custom-yum-repository</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve published a project on github <a href="https://github.com/practicalweb/vagrant-rpmbuild">https://github.com/practicalweb/vagrant-rpmbuild</a></p>
+
+
+
+
+<p>The project contains a Vagrant config file, and Puppet manifests that together with an appropriate basebox will create a VM setup to build RPMS and host them on a Custom Yum repository</p>
+
+
+
+
+<p>To run this</p>
+
+
+
+
+<ol>
+<li><p>Install vagrant <a href="http://vagrantup.com/">http://vagrantup.com/</a> (on Ubuntu just <code>apt-get install vagrant</code>)</p></li>
+<li><p>Install Virtualbox <a href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a> (again on Ubuntu <code>apt-get install virtualbox</code>)</p></li>
+<li><p>Clone this reporitory <code>git clone git@github.com:practicalweb/vagrant-rpmbuild.git</code></p></li>
+<li><p>run <code>vagrant up</code> from the root of your cloned repository (NB the first time you do the a 600Mb base image will be downloaded)</p></li>
+<li><p>run <code>vagrant ssh</code> to connect to the new VM  </p></li>
+<li><p>To build the demo rpm and publish it locally run <code>/vagrant/build-rpm.sh</code> the key password is &#8216;secret&#8217;</p></li>
+<li><p>To install the demo package on the VM run <code>sudo yum install demo</code></p></li>
+</ol>
+
+
+<p>There is a Vagrant port forwarding rule, and firewall setup to allow the yum repo to be accessed on the host machine as http://localhos:8088/repo</p>
+
+
+
+
+<p>This project is intended as documentation of how to setup this build environment, and as a starting point for further customisation, I&#8217;m sure it isn&#8217;t perfect, I hope it is useful.</p>
+
+
+
+
+<p>It&#8217;s all released under GPL with no promise that it is fot for any purpose - see LICENCE.txt </p>
+
+
+
+
+<p>I&#8217;ve tried to group the code logically, there are 4 modules</p>
+
+
+
+
+<dl>
+<dt>base</dt>
+    <dd>This contains some generic stuff, pulling in a couple of packages not in the minimal centos install but that I find essential.</dd><dd>
+    </dd><dd>The idea is that I would use this base module on every server I setup.</dd>
+
+  
+
+<dt>rpmbuild</dt>
+    <dd>Just what is needed to actually build the RPMs</dd><dd>
+  
+  </dd>
+
+<dt>tomyumrepo</dt>
+     <dd>Just what is needed to serve a custom yum repository, the packages could be built elsewhere</dd>
+  <dt>usemyrepo</dt>
+     <dd>Config to setup a machine to consume yum packages.</dd>
+     <dd>This could be added to the setup for any machine that needs to use the custom packages</dd>
+</dl>
+
+
+<p>I&#8217;ve included a minimal RPM project to get things rolling, it just installs a single text file.</p>
+
+
+
+
+<p>I&#8217;ve built a GPG key to sign packages with, and also included a script ( generate-gpg-key.sh ) which shows how to generate a new one, edit this file to make your own key.</p>
+
+
+
+
+<p>The base box I&#8217;ve defined is a minimal install of CentOS 6.3 (64 bit) with the dependencies required for vagrant.</p>
+
+
+
+
+<p>Base boxes are quite a heavy download, but you only need to do it once and then you can have as many VMs as you want based on them, because the base is minimal and all extra config is done in puppet each of these VMs can serve a very differnt purpose - just by changing the Vagrantfile and puppet config.</p>
+
+
+
+
+<p>The Vagrantfile runs puppet in standalone mode, but the modules <em>should</em> work with a client/server Puppet setup - so hopefully migrating the Vagrant setup to any Puppet manged system should be easy.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to Create a Custom Yum Repository on Centos 6]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/11/21/how-to-create-a-custom-yum-repository-on-centos-6/"/>
+    <updated>2012-11-21T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/11/21/how-to-create-a-custom-yum-repository-on-centos-6</id>
+    <content type="html"><![CDATA[<p>If you want to create custom rpms and install then with the usual automated dependency management you&rsquo;ll need your own yum repository. This is just the RPMS and metadata in the format of static xml files served by a webserver.</p>
+
+<h2>First you need a GPG key to sign your packages.</h2>
+
+<pre><code class="bash"># make some randomness if running headless 
+sudo rngd -r /dev/urandom 
+# start the agent
+gpg-agent --use-standard-socket --daemon
+# interactive key generation (accept the defaults for key type, provide your name and email when promted)
+gpg --gen-key
+# 
+gpg --export -a 'My Name' &gt; MY-RPM-GPG-KEY
+</code></pre>
+
+<p>You won&rsquo;t need the random generator if you do this on a desktop, but on a headless system I found I needed this. These actions will store a private key in your keyring, and a public key in the specified file.</p>
+
+<h2>Build your rpm</h2>
+
+<p>First configure rpm to use the key you just added to your key ring, checing you don&rsquo;t oveerwrite earlier configuration).</p>
+
+<pre><code class="bash">[ ! -f ~/.rpmmacros ] &amp;&amp; echo '%_signature gpg
+%_gpg_name  My Name
+' &gt; ~/.rpmmacros
+</code></pre>
+
+<p>Now build your RPM (assuming you are already setup to do this).</p>
+
+<pre><code class="bash">rpmbuild -bb --sign ~/rpmbuild/SPECS/my-project.spec
+</code></pre>
+
+<h2>Setup the Yum Repo</h2>
+
+<p>Setup apache, make the directory structure, with teh repo files. This can be the same or a different server to your build machine.</p>
+
+<pre><code class="bash">
+# make the repo base url
+sudo mkdir -p /var/www/html/myrepo
+# make it wrietable by you normal account
+sudo chown $(id -un).$(id -gn) /var/www/html/myrepo 
+# copy you rpm files
+cp *rpm /var/www/html/myrepo
+# create the metadata
+createrepo /var/www/html/myrepo
+
+# Setup an apache Alias for this directory
+echo 'Alias /myrepo/ /var/www/html/myrepo/
+' &gt; /etc/httpd/conf.d/my-yum-repo 
+
+# restart Apache to pickup the change
+service restart httpd
+</code></pre>
+
+<h2>Configure the system that will use the custom repo</h2>
+
+<p>Copy over the GPG key, and import it into the  rpm database.</p>
+
+<pre><code class="bash">sudo rpm --import MY-RPM-GPG-KEY
+</code></pre>
+
+<p>Configure yum to use the new repo.</p>
+
+<pre><code class="bash">echo '[my-repo]
+name=My Custom Packages
+baseurl=http://yum.example.com/myrepo
+&gt; /etc/yum.repos.d/my.repo 
+</code></pre>
+
+<p>Now you should be able to install your custom packages with regular yum commands. When you update your rpms just re-run the createrepo command to update the metadata.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ajax | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/ajax/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Drupal Forms Require a Submit Button]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/07/06/drupal-forms-require-a-submit-button/"/>
+    <updated>2009-07-06T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/07/06/drupal-forms-require-a-submit-button</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;m working on an AJAX heavy site for a defined audience who all have JavaScript - so I have a form with no submit button that gets submitted by an change handler. 
+</p>
+
+
+<p>
+Normally I&#8217;d make sure the site was fully accessible - but not on this project so I just got rid of the submit button. I got the JavaScript submit working only to find my Drupal form no longer worked.
+</p>
+
+
+<p>
+It seems that the Drupal submit handlers are not called if the form doesn&#8217;t have a submit button. I can&#8217;t see any reference to this in the Drupal API, but adding the  button back in and hiding it via CSS works fine.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Debugging Multiple Concurrent Sessions (AJAX/SOAP)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/03/03/debugging-multiple-concurrent-sessions-ajax-soap/"/>
+    <updated>2008-03-03T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/03/03/debugging-multiple-concurrent-sessions-ajax-soap</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve recently been working with AJAX and SOAP which both result in multiple sessions running concurrently.
+</p>
+
+
+<p>
+For example if you have an AJAX progress bar for a large file upload one session is uploading the file while a series of shorter sessions check on progress and update the bar.
+</p>
+
+
+<p>
+How to track both parts of this cleanly has had me scratching my head a bit - but the solution is fiendishly simple.
+</p>
+
+
+<p>
+It turns out that there is a buried configuration setting in Eclipse (my IDE of choice) which allows you to debug multiple sessions.
+</p>
+
+
+<p>
+in Eclipse go to:
+</p>
+
+
+<p>
+Window | Preferences &#8230; | PHP | Debug | Installed Debuggers | XDebug | Configure
+</p>
+
+
+<p>
+Then check the box that says &#8216;Use Multisession&#8217;
+</p>
+
+
+<p>
+<img src="http://www.practicalweb.co.uk/sites/default/files/multisession.png" alt="screenshot" />
+</p>
+
+
+<p>
+Lo and Behold the debug pane now has a multisession manager and allows you to see what is happening on both sessions.
+</p>
+
+
+<p>
+see also
+<br />
+http://dev.eclipse.org/newslists/news.eclipse.tools.pdt/msg01476.html
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

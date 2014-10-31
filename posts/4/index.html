@@ -1,0 +1,988 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="My build script has been getting more complex lately and I&rsquo;m quite pleased with it. We tend to have several versions of code on the go,
+version &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/posts/4">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs/">Jenkins Build Script for Drupal - Multistep With Changelogs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-09-28T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><p>My build script has been getting more complex lately and I&rsquo;m quite pleased with it.<p></p>
+
+<p><p>We tend to have several versions of code on the go,
+version x is live, x+1 is in UAT, and x+2 is in development. With all these versions around it&rsquo;s important to keep track of changelogs, and to upgrade correctly x to x+1, and then x+1 to x+2 as we have found that going direct from x to x+2 can fail to uncover some bugs. Specifically this happens if a drupal update hook gets edited after it has been released to the client, but before it has run on live. Our builds always start from a copy of the live site.</p></p>
+
+<p><p>I have also posted a <a href="/blog/12/07/12/check-drupal-update-hook-changes">script to review these update hooks</a> but this two step upgrade fits more easily into a continuous integration setup.</p></p>
+
+<p><p>Each release has it&rsquo;s own branch, any hotfixes to branch x get merged forwards to x+1</p></p>
+
+<p><p>This code is in jenkins - and is run remotely using the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Publish+Over+SSH+Plugin">publish over ssh plugin</a></p></p>
+
+<p><p>The jenkins job has two parameters, the target branch and the intermediate branch (where the HEAD of the intermediate branch is the code in UAT or x+1, and head of the target branch is the latest dev code - x +2</p></p>
+
+<p><p>While this might sound complex, I find it easy to use in practice, partly because the complexity is there   anyway, even if you just code direct in master all the time, it&rsquo;s just that this way you can see it all, and see what is going on.</p></p>
+
+<p><code></p>
+
+<p>cd /var/www/</p>
+
+<h1>there should be any changes on the server - but stash them just in case</h1>
+
+<p>git stash</p>
+
+<h1>get the latest code from upstream - but don&rsquo;t change our version yet</h1>
+
+<p>git fetch</p>
+
+<h1>check what branch we are on - in case this build also changes the test server to a new release</h1>
+
+<p>current_branch=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
+current_branch=${current_branch##refs/heads/}</p>
+
+<h1>get the commit we are on and the one we will be on at the end</h1>
+
+<p>current_id=$(git rev-parse &ndash;short origin/develop)
+new_id=$(git rev-parse &ndash;short origin/branch)</p>
+
+<h1>email a nice log to myself (TODO - pull this back into jenkins)</h1>
+
+<p>git log &ndash;oneline &ndash;graph ${current_branch}..origin/$branch | mail -s &ldquo;updating $(hostname) from $current_branch $current_id to $branch $new_id&rdquo;   <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#109;&#101;&#64;&#101;&#120;&#97;&#x6d;&#112;&#108;&#101;&#x2e;&#x63;&#111;&#109;">&#x6d;&#x65;&#x40;&#101;&#x78;&#97;&#109;&#112;&#108;&#101;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+
+<h1>update the code to the latest on the dev branch</h1>
+
+<p>git checkout $branch
+git merge origin/branch</p>
+
+<h1>now build</h1>
+
+<p>./build.sh ${intermediate}</p>
+
+<p></code></p>
+
+<p><p>The build script itself is used on developer machines as well as on the test server.<p></p>
+
+<p><p>We use cronjobs to ensure we always have the latest backup from live available</p></p>
+
+<p><code></p>
+
+<h1>!/bin/bash -ex</h1>
+
+<p>export COLUMNS=80
+cd $(dirname $0)/www</p>
+
+<h1>drop and reload the database</h1>
+
+<p>drush -y sql-drop
+type -P zcat &amp;>/dev/null &amp;&amp; {
+  # if we have zcat leave db dump compressed
+  zcat ../database_backups/www-latest.sql.gz | drush sqlc
+} || {
+  # otherwise unzip
+  gunzip ../database_backups/www-latest.sql.gz
+  drush sqlc &lt; ../database_backups/www-latest.sql</p>
+
+<p>}</p>
+
+<h1>get rid of production watchdog messages - so we can see any new ones easily</h1>
+
+<p>drush watchdog-delete all -y</p>
+
+<h1>put site offline</h1>
+
+<p>drush -y vset maintenance_mode 1</p>
+
+<h1>delete user files and replace with fresh ones from live - checking user permissions</h1>
+
+<h1>NB I use umask and groups to ensure the files remain writable by apache and CLI</h1>
+
+<p>if [ -d ../files_from_live/www ]
+  then
+   rm -Rf sites/default/files</p>
+
+<p>   cp -R ../files_from_live/www/sites/default/files sites/default
+   # cater for debian, ubuntu or mac
+   groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
+   groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;
+   groups | grep <em>www > /dev/null &amp;&amp; find sites/default/files/ ! -group </em>www -exec chgrp _www {} \;
+fi</p>
+
+<p>   # put code version info online so we can easily check what is in the test site
+echo &ldquo;$(git describe)&rdquo; > CODE-VERSION.TXT
+echo &ldquo;$(git log &ndash;oneline -n 1 | sed &rsquo;s/ .*//&lsquo;)&rdquo; > CODE-HASH.TXT</p>
+
+<h1>if this script is passed a intermediate version, check that out - upgrade and then checkout back to where we were</h1>
+
+<p>if ! [ -z &ldquo;$1&rdquo; ]<br/>
+  then
+  branch_name=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
+  branch_name=${branch_name##refs/heads/}
+  git checkout $1
+  drush -y updb
+  #
+  git checkout $branch_name
+fi</p>
+
+<h1>take site fully offline</h1>
+
+<p>mv index.php bak-index.php
+drush -y updb</p>
+
+<h1>if the current user is a member of the www-data group we can make the files owned by this group</h1>
+
+<h1>as long as apache has umask 002 files should now be writeable by us and apache</h1>
+
+<p>groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
+groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;
+groups | grep <em>www > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp </em>www {} \;</p>
+
+<p>drush cc all</p>
+
+<h1>any tasks that have to be done at the end of each deploy go in this drush hook</h1>
+
+<p>drush helper-post-deploy</p>
+
+<h1>on dev sites rewrite any user emails so we can&rsquo;t spam  customers by mistake</h1>
+
+<p>drush helper-rewrite-emails</p>
+
+<h1>set the admin password to one the devs know</h1>
+
+<p>drush upwd admin &ndash;password=secret</p>
+
+<h1>put the site online again</h1>
+
+<p>drush -y vset maintenance_mode 0
+mv bak-index.php index.php
+drush cc all</p>
+
+<h1>final permission reset just in case the last commands changed anything</h1>
+
+<p>find sites/default/files/ -user $USER -type d -exec chmod 775 {} \;
+find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/01/why-i-dont-like-gitflow/">Why I Don&#8217;t Like Gitflow</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-08-01T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been looking into <a href="https://github.com/nvie/gitflow/">gitflow</a> recently, it&#8217;s an interesting set of scripts to facilitate <a href="http://nvie.com/posts/a-successful-git-branching-model/">a succesful git branching model</a> which some of the people I work with rave about.
+</p>
+
+
+<p>
+In the end I&#8217;ve decided I don&#8217;t like the tool or the model, though both are interesting.
+</p>
+
+
+<p>
+I think this is because I&#8217;m used to working in fairly large teams where we may have some people working on one release and others working on the next, in this situation I want release branches that are fairly long lived, and to create topic branches from them.
+</p>
+
+
+<p>
+In fact in one project we dropped the master branch altogether and just used a series or release barnches, always merging the older release branches into the newer (further from launch) ones. 
+</p>
+
+
+<p>
+The other main reason is that gitflow hides some of the mechanics of git in a way that seems to me to hinder peoples understanding of what they are doing, it&#8217;s a shame it down&#8217;t output the git commands it uses - that would allow people to use it to get started then move on later if they want.
+</p>
+
+
+<p>
+The commands also seem very slow to me which is odd when you are used to git being fast.
+</p>
+
+
+<p>
+Documentation on gitflow seems sparse, with some commands incomplete (git flow support * , gitflow feature checkout)
+</p>
+
+
+<p>
+ The best I could find is the source, and particularly the &quot;summary&quot; bits
+</p>
+
+
+<p>
+ <a href="https://github.com/nvie/gitflow/blob/develop/git-flow-release#L177">https://github.com/nvie/gitflow/blob/develop/git-flow-release#L177</a>
+</p>
+
+
+<p>
+The project wiki does have some addiutional info on command line options 
+</p>
+
+
+<p>
+ <a href="https://github.com/nvie/gitflow/wiki/Command-Line-Arguments">https://github.com/nvie/gitflow/wiki/Command-Line-Arguments</a>
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/16/git-log-of-live-site-vs-master/">Git Log of Live Site vs Master</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-07-16T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One liner to grab a git log summarising what will change when you push teh next release.</p>
+
+<p>For this to work you need to keep the deployed tag in VERSION.TXT</p>
+
+<p><code>git log &ndash;oneline &ndash;graph $(GET <a href="http://www.example.com/VERSION.TXT">http://www.example.com/VERSION.TXT</a>)..$(git describe &ndash;abbrev=0 &ndash;tags origin/master)</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/12/script-to-email-git-log-as-part-of-a-dev-deploy/">Script to Email Git Log as Part of a Dev Deploy</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-07-12T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This script makes sure the dev site is clean, emails a log summary of updates about to be applied, updates the site and emails me so I know what changed.</p>
+
+<p>I&rsquo;m using this on a dev site which is periodically updated to the latest master for testing.</p>
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<p>cd /var/www/site</p>
+
+<p>git stash
+git checkout master
+git fetch
+git log &ndash;oneline master..origin/master | mail -s &ldquo;site updated &rdquo; <a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x6d;&#101;&#x40;&#x65;&#x78;&#x61;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;">&#109;&#x65;&#64;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#109;</a>
+mit merge origin/master
+./build.sh</p>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/12/log-output-of-a-script-to-a-file/">Log Output of a Script to a File</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-07-12T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Nice bit of bash fu I discovered today</p>
+
+<p>Add this snippet to the top of scripts and the output of lines below will be tee&rsquo;d to a logfile.</p>
+
+<p>Handy for those scripts you always want a log of</p>
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<h1>log all output</h1>
+
+<p>[ -d ~/logs/ ] || mkdir ~/logs/
+exec > >(tee -a ~/logs/${release}.log)
+exec 2> >(tee -a ~/logs/${release}.log)</p>
+
+<h1>do stuff &hellip;</h1>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/12/check-drupal-for-update-hook-changes/">Check Drupal for Update Hook Changes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-07-12T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In a busy team, with ongoing testing I often find we have a production version of the site, a version under test, and another version being actively developed.</p>
+
+<p>In fact it can be less clear than this if release planning isn&rsquo;t a priority, some teams simply churn out releases some of which get tested and eventually released.</p>
+
+<p>This can lead to developers being unsure which update hooks have actually run on production (or will have run by the time the next release goes live).</p>
+
+<p>In this case it&rsquo;s important for somebody to manually review all install files that have been edited and check that we don&rsquo;t end up releasing update hooks that have been edited after they have been run.</p>
+
+<p>This script fires up a visual diff tool for the changed files.</p>
+
+<p>test_tag = the tag of the release currently under test and close to being launched</p>
+
+<p>future_release_tag = the tag of the subsequent expected release</p>
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<p>test_tag=$1
+future_release_tag=$2</p>
+
+<p>git checkout ${test_tag}
+./download-database.sh
+./build.sh</p>
+
+<h1>make a note of update hooks run</h1>
+
+<p>for f in $(git log &ndash;oneline &ndash;name-only ${test_tag}..${future_release_tag}  | sort | uniq | grep \.install | sed &ldquo;s/.<em>\/(.</em>).install/\1/&rdquo;) ; do echo &ldquo;select name, schema_version from system where name =&lsquo;$f&rsquo;&rdquo; | drush sqlc  ; done</p>
+
+<h1>this tells you the schema version at the end of the first update for modules that have edited install files</h1>
+
+<p>for f in $(git log &ndash;oneline &ndash;name-only ${test_tag}..${future_release_tag}  | sort | uniq | grep \.install) ; do git difftool -y ${test_tag} ${future_release_tag} &ndash; $f ; done</p>
+
+<h1>review update hook edits</h1>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/01/jenkins-build-artifacts-subdirectories/">Jenkins Build Artifacts - Subdirectories</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-06-01T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It took me an unreasonable amount of guesswork to figure out how to get jenkins to archive files at multiple folder levels</p>
+
+<p>In the end this line worked for me</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Webdriver-framework/target/surefire-reports/*,Webdriver-framework/target/surefire-reports/**/*.png </span></code></pre></td></tr></table></div></figure>
+
+
+<p>This grabs a report in one level - and images it references in subdirectories</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/02/selenium-webdriver-annotations-and-firefox-connection-trouble/">Selenium WebDriver Annotations and Firefox Connection Trouble</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-05-02T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I needed to run some selenium tests written by a Java team using maven
+</p>
+
+
+<p>
+I ran into a couple of errors
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+<strong>Annotations are not supported in -source 1.3
+</strong>
+</p>
+
+
+<p>
+This error is because by default maven comples code to be compatible with an older version of Java
+</p>
+
+
+<p>
+To fix I had to add the foloowing to then pom.xml file
+</p>
+
+
+<p>
+ &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;<br />
+&lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;<br />
+&lt;version&gt;2.3.2&lt;/version&gt;<br />
+&lt;configuration&gt;<br />
+&lt;source&gt;1.6&lt;/source&gt;<br />
+&lt;target&gt;1.6&lt;/target&gt;&lt;/configuration&gt;<br />
+&lt;/plugin&gt;
+</p>
+
+
+<p>
+This allows the use of more recent code constructs 
+</p>
+
+
+<p>
+Next I had a firefox error 
+</p>
+
+
+<p>
+<strong>org.openqa.selenium.firefox.NotConnectedException: Unable to connect to host 127.0.0.1 on port 7055 after 45000 ms. Firefox console output:</strong>
+</p>
+
+
+<p>
+It seems that maven was targetting an older version of firefox than I am using, this time I changed the selenium version number in the config as below
+</p>
+
+
+<p>
+             &lt;dependency&gt;<br />
+                 &lt;groupId&gt;org.seleniumhq.selenium&lt;/groupId&gt;<br />
+                 &lt;artifactId&gt;selenium-java&lt;/artifactId&gt;<br />
+-                &lt;version&gt;2.14.0&lt;/version&gt;<br />
++                &lt;version&gt;2.19.0&lt;/version&gt;<br />
+             &lt;/dependency&gt;  
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/02/device-eth0-does-not-seem-to-be-present-delaying-initialization/">Device Eth0 Does Not Seem to Be Present, Delaying Initialization.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-05-02T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I had a centos VM that I hadn&#8217;t used in a while, I think I cloned it from another version.
+</p>
+
+
+<p>
+When I came to use it again I had no network andtrying to start the network I got the error message in the title.
+</p>
+
+
+<p>
+There seem to be a few issues
+</p>
+
+
+<p>
+Firstly netowrking isn&#8217;t endabled by default 
+</p>
+
+
+<p>
+<a href="http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90">http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90</a> 
+</p>
+
+
+<p>
+Secondly the cloned image appears to get a different mac address for the network card, but theconfig doesn&#8217;t auto detect this
+</p>
+
+
+<p>
+Thirdly the new machine seemed to have eth1 instead of eth0
+</p>
+
+
+<p>
+and finally I needed to enable dhcp
+</p>
+
+
+<p>
+What this meant was copying the new mac address from the virtualbox network settings tab (inserting a colon every second charecter  to match the format required)
+</p>
+
+
+<p>
+I placed this in both 
+</p>
+
+
+<p>
+/etc/udev/rules.d/70-persistant-net.rules
+</p>
+
+
+<p>
+and  
+</p>
+
+
+<p>
+/etc/sysconfig/network-scripts/ifcfg-eth0
+</p>
+
+
+<p>
+Where I also set 
+</p>
+
+
+<p>
+ONBOOT=&quot;yes&quot;  <br />
+BOOTPROTO=&quot;dhcp&quot;
+</p>
+
+
+<p>
+Finally /etc/init.d/networking restart got my network up 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/25/cant-login-to-drupal-404/">Can&#8217;t Login to Drupal (404)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-25T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been working on a project for a while on my main dev machine, but needed to run it on my laptop too.
+</p>
+
+
+<p>
+Usually copying a sitre across is quick but this time I re-installed the OS too, everything wnet OK except for some reason I couldn&#8217;t log in to my drupal site.
+</p>
+
+
+<p>
+Eventually I noticed that while the site appeared to be working, every page was being served with a 404 header.
+</p>
+
+
+<p>
+What happpend is that I hadn&#8217;t enabled mod_rewrite
+</p>
+
+
+<p>
+The .htaccess had been configured to serve drupal 404 pages, but in this case Drupal (once started as a 404 handler) correctly processed the URL - but presumably without the form data.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/5">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/3">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

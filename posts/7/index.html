@@ -1,0 +1,677 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="Reading Greg&rsquo;s post on security upgrades and a few mentions of patches in the following discussion got me thinking about upgrade methods. The &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/posts/7">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/09/drupal-upgrades-and-patches/">Drupal Upgrades and Patches</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-09T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Reading <a href="http://www.drupaler.co.uk/users/gregharvey">Greg</a>&rsquo;s <a href="http://www.drupaler.co.uk/blog/security-releases-dont-work/504">post on security upgrades</a> and a few mentions of patches in the following discussion got me thinking about upgrade methods.</p>
+
+<p>The standard Drupal method is to delete existing files and unpack a tarball to replace the old version - I find this method unappealing because: I keep my code in subversion so don&rsquo;t want to delete the .svn subdirectories, and sometimes I have patches applied that I don&rsquo;t want to loose.</p>
+
+<p>Drush provides a significant step up for managing updates, it&rsquo;s really easy to use and replaces just files not the directory structure so it plays well with subversion.</p>
+
+<p>So I had a look around for methods to upgrade Drupal via patches (I really don&rsquo;t understand why this isn&rsquo;t the default) and I found</p>
+
+<p>A whole lot of ready made patches
+<a href="http://fuerstnet.de/en/drupal-upgrade-easier">http://fuerstnet.de/en/drupal-upgrade-easier</a></p>
+
+<p>A handbook page about patch upgrades
+<a href="http://drupal.org/node/359234">http://drupal.org/node/359234</a></p>
+
+<p>And a script to generate patch files
+<a href="http://2bits.com/articles/upgrading-drupal-5-2-installations-to-5-3-security-releases-using-a-single-patch.html">http://2bits.com/articles/upgrading-drupal-5-2-installations-to-5-3-security-releases-using-a-single-patch.html</a></p>
+
+<p>Which is really cool - but all aimed at core - so I&rsquo;ve created a modified version which also works for modules (attached)</p>
+
+<p>The main advantage of this method is that when patches have been applied to a live site but these patches haven&rsquo;t been accepted upstream - then it is still easy to upgrade to new releases - and should the patch later be accepted upstream the new release will generate a patch conflict alerting you to the relevant changes - and allowing you to choose how to proceed.</p>
+
+<p>I don&rsquo;t recommend this technique for newbies, for most people drush updates are the way to go.</p>
+
+<p>But if you find yourself maintaining patches on core or contrib modules that aren&rsquo;t moving through the issue queue - then maybe this may be helpful.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/09/backport-small-changes-to-stable-releases/">&#8220;Backport Small Changes to Stable Releases&#8221;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-09T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve found the recent thread on distribution support very interesting.</p>
+
+<p>An I&rsquo;m especially excited by the prospects hinted at here</p>
+
+<p><a href="http://drupal.org/node/933846#comment-3545110">http://drupal.org/node/933846#comment-3545110</a></p>
+
+<blockquote>
+#42
+webchick - October 7, 2010 - 21:40
+
+For those who haven&#8217;t read it, http://buytaert.net/8-steps-for-drupal-8 is worth a read. In it, step 6 is &#8220;Backport small changes to stable releases&#8221;. Drupal 7 is the first release we&#8217;ve been able to entertain the idea, since we have a testing framework with 25K tests and a version-specific dependency system. What the boundaries are of such changes isn&#8217;t quite defined yet, because Dries and I have kept pretty busy with, you know, getting Drupal 7 out the door. :P~
+
+</blockquote>
+
+
+<p>For a long time I&rsquo;ve felt that Drupal could get a great deal more engagement from contractors, freelances and other somewhat mercenary entities (myself included) if contributions could have an impact on a smaller timescale.</p>
+
+<p>By allowing changes to core within major releases it potentially becomes possible to contribute patches that get released within months rather than years.</p>
+
+<p>On this timescale it becomes much easier to justify the time spent to a client as there is a reasonable change of it benifitting thier project.</p>
+
+<p><a href="http://drupal.org/node/200953#comment-1674372>I submitted a patch</a> that&rsquo;s actually in Drupal 7 - I may get to use in within 2 years of writing it - but that&rsquo;s several clients on.</p>
+
+<p>I think it&rsquo;s especially an opportunity to flesh out the API and add missing functions</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/06/ubuntu-10-04-bluetooth-audio/">Ubuntu 10.04 Bluetooth Audio</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-06T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It wasn&rsquo;t immediately obvious to me</p>
+
+<p>What I needed to do to get blutooth audio working was to install the blueman package</p>
+
+<p>After that configuration via GUI was pretty straightforward</p>
+
+<p>Now I have fantastic sound via my bluetooth enabled HIFI :-)</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/05/varnish-logs-twice/">Varnish Logs Twice</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-05T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The default configuration of varnish logs every request twice, once for the client and once for the backend communication</p>
+
+<p>edit the line in /etc/init.d/varnishncsa to something like</p>
+
+<p><code>
+DAEMON_OPTS=&ldquo;-c -a -w $logfile -D -P $pidfile&rdquo;
+</code></p>
+
+<p>from the varnishncsa man page</p>
+
+<blockquote>
+     -c          Include log entries which result from communication with a client.  If neither -b nor -c is specified, varnishncsa acts as if they both were.
+</blockquote>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/01/varnish-acl/">Varnish ACL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-01T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To setup an IP based access control list so that only allowed users may access the site.</p>
+
+<p><code>
+sub vcl_recv {</p>
+
+<p>  if (!(client.ip ~ testers)) {
+    error 403 &ldquo;Access Denied - server in test mode (IP not in ACL)&rdquo;;
+  }</p>
+
+<p>}</p>
+
+<p>acl testers {
+    &ldquo;localhost&rdquo;;
+    &ldquo;www.example.com&rdquo;;
+    &ldquo;192.168.0.1&rdquo;;
+}
+</code></p>
+
+<p>In my case I need to be able to test a dev site but don&rsquo;t want to make it public, we tried using password authentication but that made it harder to test varnish as the authentication headers affected caching.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/09/06/ubuntu-on-a-samsung-n150-netbook/">Ubuntu on a Samsung N150 Netbook</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-09-06T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Installing Ubuntu on a new netbook proved remarkably easy once I got past a couple of hurdles
+</p>
+
+
+<ul>
+    <li>BIOS settings - in order to install a new OS I needed to configure the BIOS to boot from a USB key. At first it seemed like the netbook didn&#8217;t offer this option and I found several posts online from people having similar problems - but posts from others who had succeeded encouraged me and in the end I just had to guess the right points in the boot sequence to press the escape key and see a BIOS menu</li>
+    <li>Bootable USB key, I followed the instructions at http://www.ubuntu.com/desktop/get-ubuntu/download but no matter what the USB key wouldn&#8217;t boot.<br />
+    So I repartitioned and reformatted it on an existing Linux system, ran the USB Installer software again and this time it worked.</li>
+    <li>Wireless network driver, I needed to update the system (over a wired network) before this worked - just following onscreen prompts.</li>
+</ul>
+
+
+<p>
+As far as I can see everything now works (video, audio, webcam, wifi, power management etc)
+</p>
+
+
+<p>
+I have a dev version of my current web project running with MySQL and Apache, MP3s play, I have a full office suite and all the utilities I could wish for.
+</p>
+
+
+<p>
+I was impressed by the USB installers live mode allowing me to run Linux on the system before installing it fully, and then to repartition the hard drive leaving me with a dual boot system.
+</p>
+
+
+<p>
+I wasn&#8217;t impressed with Windows though - very slow to get up and running (an hour of installs, updates and reboots - on a pre-installed system?!)  Constant alerts from the security software - and no useful software installed on the base system.
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/02/delete-drupal-view-programatically/">Delete Drupal View Programatically</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-07-02T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Quick function to delete a view.</p>
+
+<p>This is basically what the UI form submit does.</p>
+
+<p>&lt;?php</p>
+
+<p>function delete_view($name) {</p>
+
+<pre><code>$view = views_ui_cache_load($name);
+$view-&gt;delete();
+views_object_cache_clear('view', $view-&gt;name);
+</code></pre>
+
+<p>}</p>
+
+<p>?></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/25/programatically-altering-a-cck-node-type/">Programatically Altering a CCK Node Type</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-06-25T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve found altering CCK node types as part of a fully scripted deployment phase to be quite challenging.</p>
+
+<p>The best I&rsquo;ve come up with is to use features for the main config changes and adding fields, but this won&rsquo;t remove any fields - but CCK provides functions for this.</p>
+
+<p>Oddly installing the features module doesn&rsquo;t make the database schema changes until after caches are cleared.</p>
+
+<p>The following code updates my CCK type, with new fields and settings.</p>
+
+<p>I want to change a text field to a link field - there doesn&rsquo;t seem to be a direct way to do this so I add the new link field in features, copy the data via SQL, then delete the old field.</p>
+
+<p>The one thing I can&rsquo;t see a way to do is to delete a field group.</p>
+
+<p>None of this is fully tested yet - I&rsquo;m writing up as I go and will update if I hit issues.</p>
+
+<p>&lt;?php</p>
+
+<p>// update CCK type via features module
+drupal_install_modules(array( &lsquo;features&rsquo;, &lsquo;mytype&rsquo;));</p>
+
+<p>// flush caches to make schema change take effect
+drupal_flush_all_caches();</p>
+
+<p>// copy data from old text field to link
+$items[] = update_sql(&ldquo;update content_type_mytype set field_mytype_link_url=field_mytype_url_value&rdquo;);</p>
+
+<p>// delete old text field
+content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytype&rsquo;, FALSE);</p>
+
+<p>// I&rsquo;d like to delete a group but THIS DOESN&rsquo;T WORK!
+//  content_field_instance_delete(&lsquo;group_groupname_info&rsquo;, &lsquo;mytype&rsquo;, TRUE);</p>
+
+<p>?></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/25/debugging-drush-updb/">Debugging Drush Updb</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-06-25T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you&rsquo;ve ever tried to debug your update hooks via drush you may (like me) have been puzzled as to why your breakpoints don&rsquo;t seem to work.</p>
+
+<p>It seems that proc_open() is used to avoid memory issues <a href="http://drupal.org/node/687724">http://drupal.org/node/687724</a> (effectively resetting all the Drupal static variables??) and this separate process isn&rsquo;t available to the debugger.</p>
+
+<p>After stepping though the drush update process I found where this happens and have a bypass that is basically functional (drush reporting seems broken - but I can step through my code).</p>
+
+<p>This patch is the change I&rsquo;ve made.</p>
+
+<p>I bypass the patch process and go direct to the update.</p>
+
+<p><code></p>
+
+<p>&mdash; commands/core/drupal/update_6.inc   (revision 547)
++++ commands/core/drupal/update_6.inc   (working copy)
+@@ -424,10 +424,7 @@
+       &lsquo;error_message&rsquo; => &lsquo;An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.&rsquo;,
+       &lsquo;finished&rsquo; => &lsquo;update_finished&rsquo;,
+     );
+-    batch_set($batch);
+-    $batch =&amp; batch_get();
+-    $batch[&lsquo;progressive&rsquo;] = FALSE;
+-    drush_backend_batch_process(&lsquo;updatedb-batch-process&rsquo;);
++    _update_do_one($module, $version, $batch);
+   }
+   else {
+     drush_log(dt(&ldquo;No database updates required&rdquo;), &lsquo;success&rsquo;);</p>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/10/is-git-now-a-mature-toolset/">Is Git Now a Mature Toolset?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-06-10T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been looking into git for a while, the core toolset has been mature for ages but it just didn&#8217;t seem to have the wider support I wanted.
+</p>
+
+
+<p>
+Now I look again and the egit plugin for eclipse has improved massively with full eclipse integration http://wiki.eclipse.org/EGit/User_Guide
+</p>
+
+
+<p>
+There is a git plugin for trac http://trac-hacks.org/wiki/GitPlugin
+</p>
+
+
+<p>
+It looks like it&#8217;s time for me to dive into git properly :-) 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/8">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/6">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Jenkins Build Script for Drupal - Multistep With Changelogs - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="My build script has been getting more complex lately and I&rsquo;m quite pleased with it. We tend to have several versions of code on the go,
+version &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Jenkins Build Script for Drupal - Multistep With Changelogs</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-09-28T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><p>My build script has been getting more complex lately and I&rsquo;m quite pleased with it.<p></p>
+
+<p><p>We tend to have several versions of code on the go,
+version x is live, x+1 is in UAT, and x+2 is in development. With all these versions around it&rsquo;s important to keep track of changelogs, and to upgrade correctly x to x+1, and then x+1 to x+2 as we have found that going direct from x to x+2 can fail to uncover some bugs. Specifically this happens if a drupal update hook gets edited after it has been released to the client, but before it has run on live. Our builds always start from a copy of the live site.</p></p>
+
+<p><p>I have also posted a <a href="/blog/12/07/12/check-drupal-update-hook-changes">script to review these update hooks</a> but this two step upgrade fits more easily into a continuous integration setup.</p></p>
+
+<p><p>Each release has it&rsquo;s own branch, any hotfixes to branch x get merged forwards to x+1</p></p>
+
+<p><p>This code is in jenkins - and is run remotely using the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Publish+Over+SSH+Plugin">publish over ssh plugin</a></p></p>
+
+<p><p>The jenkins job has two parameters, the target branch and the intermediate branch (where the HEAD of the intermediate branch is the code in UAT or x+1, and head of the target branch is the latest dev code - x +2</p></p>
+
+<p><p>While this might sound complex, I find it easy to use in practice, partly because the complexity is there   anyway, even if you just code direct in master all the time, it&rsquo;s just that this way you can see it all, and see what is going on.</p></p>
+
+<p><code></p>
+
+<p>cd /var/www/</p>
+
+<h1>there should be any changes on the server - but stash them just in case</h1>
+
+<p>git stash</p>
+
+<h1>get the latest code from upstream - but don&rsquo;t change our version yet</h1>
+
+<p>git fetch</p>
+
+<h1>check what branch we are on - in case this build also changes the test server to a new release</h1>
+
+<p>current_branch=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
+current_branch=${current_branch##refs/heads/}</p>
+
+<h1>get the commit we are on and the one we will be on at the end</h1>
+
+<p>current_id=$(git rev-parse &ndash;short origin/develop)
+new_id=$(git rev-parse &ndash;short origin/branch)</p>
+
+<h1>email a nice log to myself (TODO - pull this back into jenkins)</h1>
+
+<p>git log &ndash;oneline &ndash;graph ${current_branch}..origin/$branch | mail -s &ldquo;updating $(hostname) from $current_branch $current_id to $branch $new_id&rdquo;   <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#109;&#101;&#64;&#101;&#120;&#97;&#x6d;&#112;&#108;&#101;&#x2e;&#x63;&#111;&#109;">&#x6d;&#x65;&#x40;&#101;&#x78;&#97;&#109;&#112;&#108;&#101;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+
+<h1>update the code to the latest on the dev branch</h1>
+
+<p>git checkout $branch
+git merge origin/branch</p>
+
+<h1>now build</h1>
+
+<p>./build.sh ${intermediate}</p>
+
+<p></code></p>
+
+<p><p>The build script itself is used on developer machines as well as on the test server.<p></p>
+
+<p><p>We use cronjobs to ensure we always have the latest backup from live available</p></p>
+
+<p><code></p>
+
+<h1>!/bin/bash -ex</h1>
+
+<p>export COLUMNS=80
+cd $(dirname $0)/www</p>
+
+<h1>drop and reload the database</h1>
+
+<p>drush -y sql-drop
+type -P zcat &amp;>/dev/null &amp;&amp; {
+  # if we have zcat leave db dump compressed
+  zcat ../database_backups/www-latest.sql.gz | drush sqlc
+} || {
+  # otherwise unzip
+  gunzip ../database_backups/www-latest.sql.gz
+  drush sqlc &lt; ../database_backups/www-latest.sql</p>
+
+<p>}</p>
+
+<h1>get rid of production watchdog messages - so we can see any new ones easily</h1>
+
+<p>drush watchdog-delete all -y</p>
+
+<h1>put site offline</h1>
+
+<p>drush -y vset maintenance_mode 1</p>
+
+<h1>delete user files and replace with fresh ones from live - checking user permissions</h1>
+
+<h1>NB I use umask and groups to ensure the files remain writable by apache and CLI</h1>
+
+<p>if [ -d ../files_from_live/www ]
+  then
+   rm -Rf sites/default/files</p>
+
+<p>   cp -R ../files_from_live/www/sites/default/files sites/default
+   # cater for debian, ubuntu or mac
+   groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
+   groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;
+   groups | grep <em>www > /dev/null &amp;&amp; find sites/default/files/ ! -group </em>www -exec chgrp _www {} \;
+fi</p>
+
+<p>   # put code version info online so we can easily check what is in the test site
+echo &ldquo;$(git describe)&rdquo; > CODE-VERSION.TXT
+echo &ldquo;$(git log &ndash;oneline -n 1 | sed &rsquo;s/ .*//&lsquo;)&rdquo; > CODE-HASH.TXT</p>
+
+<h1>if this script is passed a intermediate version, check that out - upgrade and then checkout back to where we were</h1>
+
+<p>if ! [ -z &ldquo;$1&rdquo; ]<br/>
+  then
+  branch_name=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
+  branch_name=${branch_name##refs/heads/}
+  git checkout $1
+  drush -y updb
+  #
+  git checkout $branch_name
+fi</p>
+
+<h1>take site fully offline</h1>
+
+<p>mv index.php bak-index.php
+drush -y updb</p>
+
+<h1>if the current user is a member of the www-data group we can make the files owned by this group</h1>
+
+<h1>as long as apache has umask 002 files should now be writeable by us and apache</h1>
+
+<p>groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
+groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;
+groups | grep <em>www > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp </em>www {} \;</p>
+
+<p>drush cc all</p>
+
+<h1>any tasks that have to be done at the end of each deploy go in this drush hook</h1>
+
+<p>drush helper-post-deploy</p>
+
+<h1>on dev sites rewrite any user emails so we can&rsquo;t spam  customers by mistake</h1>
+
+<p>drush helper-rewrite-emails</p>
+
+<h1>set the admin password to one the devs know</h1>
+
+<p>drush upwd admin &ndash;password=secret</p>
+
+<h1>put the site online again</h1>
+
+<p>drush -y vset maintenance_mode 0
+mv bak-index.php index.php
+drush cc all</p>
+
+<h1>final permission reset just in case the last commands changed anything</h1>
+
+<p>find sites/default/files/ -user $USER -type d -exec chmod 775 {} \;
+find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
+
+<p></code></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2012-09-28T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ci/'>ci</a>, <a class='category' href='/blog/categories/drupal/'>drupal</a>, <a class='category' href='/blog/categories/jenkins/'>jenkins</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/08/01/why-i-dont-like-gitflow/" title="Previous Post: Why I don't like gitflow">&laquo; Why I don&#8217;t like gitflow</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/09/28/monitor-filesystem-for-deletions/" title="Next Post: Monitor filesystem for deletions">Monitor filesystem for deletions &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

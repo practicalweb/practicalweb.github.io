@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rdf | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/rdf/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Henri Bergius' Secret Agenda for PHP Content Management Systems]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/07/13/henri-bergius-secret-agenda-for-php-content-management-systems/"/>
+    <updated>2011-07-13T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/07/13/henri-bergius-secret-agenda-for-php-content-management-systems</id>
+    <content type="html"><![CDATA[<p>I read this post the other day and found it really inspiring - so many things to do and learn&hellip;</p>
+
+<p><a href="http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/">http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/</a></p>
+
+<p>Links within that blog that I found especially interesting</p>
+
+<p><a href="https://github.com/indeyets/appserver-in-php">https://github.com/indeyets/appserver-in-php</a></p>
+
+<p><a href="http://documentcloud.github.com/backbone/">http://documentcloud.github.com/backbone/</a></p>
+
+<p><a href="https://github.com/bergie/VIE">https://github.com/bergie/VIE</a></p>
+
+<p><a href="http://phpcr.github.com/">http://phpcr.github.com/</a></p>
+]]></content>
+  </entry>
+  
+</feed>

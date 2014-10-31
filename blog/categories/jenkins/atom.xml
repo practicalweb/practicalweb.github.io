@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Jenkins | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/jenkins/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Github Jenkins Hook - Multiple Endpoints and API]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/08/07/github-jenkins-hook-multiple-endpoints-and-api/"/>
+    <updated>2013-08-07T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/08/07/github-jenkins-hook-multiple-endpoints-and-api</id>
+    <content type="html"><![CDATA[<p>I wanted to trigger multiple jenkins servers from a github hook.</p>
+
+<p>I found <a href="https://github.com/github/github-services/pull/604M/">this pull request</a> which led me to look at the API</p>
+
+<p>useful docs</p>
+
+<ul>
+<li><a href="http://developer.github.com/v3/repos/hooks">http://developer.github.com/v3/repos/hooks</a></li>
+<li><a href="https://gist.github.com/caspyin/2288960">https://gist.github.com/caspyin/2288960</a></li>
+</ul>
+
+
+<p>My code</p>
+
+<pre><code class="bash">  curl --user "me:mypassword" --request POST --data @jenkins.json  https://api.github.com/repos/myorg/myproject/hooks
+</code></pre>
+
+<p>here jenkins.json is like</p>
+
+<pre><code class="json">
+    {
+      "name": "jenkins",
+      "active": true,
+      "events": [
+        "push"
+      ],
+      "config": {
+        "jenkins_hook_url": "http://jenkins.mydomain/github-webhook/"
+      }
+    }
+</code></pre>
+
+<p>What I found was that this just replaces my jenkins hook - which isn&rsquo;t what I wanted.</p>
+
+<p>But the more I looked at the service hooks the more it looked like the jenkins one just passes a standard payload to a url, which is the same as the generic webhook, so I tried adding the jenkins webhook URL as a standard webhook ( you are allowed multiples of these) and that seems to work.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Script to Download All Jenkins Job Configs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/05/10/script-to-download-all-jenkins-job-configs/"/>
+    <updated>2013-05-10T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/05/10/script-to-download-all-jenkins-job-configs</id>
+    <content type="html"><![CDATA[<script src="https://gist.github.com/practicalweb/5554803.js"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkins Publish Over Ssh - Parameterized]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/04/18/jenkins-publish-over-ssh-parameterized/"/>
+    <updated>2013-04-18T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/04/18/jenkins-publish-over-ssh-parameterized</id>
+    <content type="html"><![CDATA[<p>To have a jenkins job which acts on a remote server via ssh - and has a parameter to choose which server(s) to use.</p>
+
+
+
+
+<ol>
+<li>check <i>This build is parameterized</i></li>
+
+<li>Make the parameter name something like TARGET_SERVER</li>
+<li>add build step <i>Send files or execute commands over SSH</i></li>
+<li>Add server</li>
+<li>In server details click <i>advanced</i></li>
+<li>add a value for <i>Label</i></li>
+<li>at the end of the ssh section check <i>Parameterized publishing</i></li>
+<li>specify the  <i>Parameter name</i> from earlier (TARGET_SERVER)</li>
+
+</ol>
+
+
+
+
+<p><p>Now when you run the job supply a value for the TARGET_SERVER parameter that can be a regex, the job will run the ssh sections on any servers that have a matching label.<p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkins Build Script for Drupal - Multistep With Changelogs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs/"/>
+    <updated>2012-09-28T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs</id>
+    <content type="html"><![CDATA[<p><p>My build script has been getting more complex lately and I&rsquo;m quite pleased with it.<p></p>
+
+<p><p>We tend to have several versions of code on the go,
+version x is live, x+1 is in UAT, and x+2 is in development. With all these versions around it&rsquo;s important to keep track of changelogs, and to upgrade correctly x to x+1, and then x+1 to x+2 as we have found that going direct from x to x+2 can fail to uncover some bugs. Specifically this happens if a drupal update hook gets edited after it has been released to the client, but before it has run on live. Our builds always start from a copy of the live site.</p></p>
+
+<p><p>I have also posted a <a href="http://www.practicalweb.co.uk/blog/12/07/12/check-drupal-update-hook-changes">script to review these update hooks</a> but this two step upgrade fits more easily into a continuous integration setup.</p></p>
+
+<p><p>Each release has it&rsquo;s own branch, any hotfixes to branch x get merged forwards to x+1</p></p>
+
+<p><p>This code is in jenkins - and is run remotely using the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Publish+Over+SSH+Plugin">publish over ssh plugin</a></p></p>
+
+<p><p>The jenkins job has two parameters, the target branch and the intermediate branch (where the HEAD of the intermediate branch is the code in UAT or x+1, and head of the target branch is the latest dev code - x +2</p></p>
+
+<p><p>While this might sound complex, I find it easy to use in practice, partly because the complexity is there   anyway, even if you just code direct in master all the time, it&rsquo;s just that this way you can see it all, and see what is going on.</p></p>
+
+<p><code></p>
+
+<p>cd /var/www/</p>
+
+<h1>there should be any changes on the server - but stash them just in case</h1>
+
+<p>git stash</p>
+
+<h1>get the latest code from upstream - but don&rsquo;t change our version yet</h1>
+
+<p>git fetch</p>
+
+<h1>check what branch we are on - in case this build also changes the test server to a new release</h1>
+
+<p>current_branch=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
+current_branch=${current_branch##refs/heads/}</p>
+
+<h1>get the commit we are on and the one we will be on at the end</h1>
+
+<p>current_id=$(git rev-parse &ndash;short origin/develop)
+new_id=$(git rev-parse &ndash;short origin/branch)</p>
+
+<h1>email a nice log to myself (TODO - pull this back into jenkins)</h1>
+
+<p>git log &ndash;oneline &ndash;graph ${current_branch}..origin/$branch | mail -s &ldquo;updating $(hostname) from $current_branch $current_id to $branch $new_id&rdquo;   <a href="&#109;&#97;&#x69;&#108;&#116;&#111;&#58;&#109;&#x65;&#x40;&#x65;&#120;&#x61;&#x6d;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#109;">&#x6d;&#x65;&#64;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;</a></p>
+
+<h1>update the code to the latest on the dev branch</h1>
+
+<p>git checkout $branch
+git merge origin/branch</p>
+
+<h1>now build</h1>
+
+<p>./build.sh ${intermediate}</p>
+
+<p></code></p>
+
+<p><p>The build script itself is used on developer machines as well as on the test server.<p></p>
+
+<p><p>We use cronjobs to ensure we always have the latest backup from live available</p></p>
+
+<p><code></p>
+
+<h1>!/bin/bash -ex</h1>
+
+<p>export COLUMNS=80
+cd $(dirname $0)/www</p>
+
+<h1>drop and reload the database</h1>
+
+<p>drush -y sql-drop
+type -P zcat &amp;>/dev/null &amp;&amp; {
+  # if we have zcat leave db dump compressed
+  zcat ../database_backups/www-latest.sql.gz | drush sqlc
+} || {
+  # otherwise unzip
+  gunzip ../database_backups/www-latest.sql.gz
+  drush sqlc &lt; ../database_backups/www-latest.sql</p>
+
+<p>}</p>
+
+<h1>get rid of production watchdog messages - so we can see any new ones easily</h1>
+
+<p>drush watchdog-delete all -y</p>
+
+<h1>put site offline</h1>
+
+<p>drush -y vset maintenance_mode 1</p>
+
+<h1>delete user files and replace with fresh ones from live - checking user permissions</h1>
+
+<h1>NB I use umask and groups to ensure the files remain writable by apache and CLI</h1>
+
+<p>if [ -d ../files_from_live/www ]
+  then
+   rm -Rf sites/default/files</p>
+
+<p>   cp -R ../files_from_live/www/sites/default/files sites/default
+   # cater for debian, ubuntu or mac
+   groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
+   groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;
+   groups | grep <em>www > /dev/null &amp;&amp; find sites/default/files/ ! -group </em>www -exec chgrp _www {} \;
+fi</p>
+
+<p>   # put code version info online so we can easily check what is in the test site
+echo &ldquo;$(git describe)&rdquo; > CODE-VERSION.TXT
+echo &ldquo;$(git log &ndash;oneline -n 1 | sed &rsquo;s/ .*//&lsquo;)&rdquo; > CODE-HASH.TXT</p>
+
+<h1>if this script is passed a intermediate version, check that out - upgrade and then checkout back to where we were</h1>
+
+<p>if ! [ -z &ldquo;$1&rdquo; ]<br/>
+  then
+  branch_name=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
+  branch_name=${branch_name##refs/heads/}
+  git checkout $1
+  drush -y updb
+  #
+  git checkout $branch_name
+fi</p>
+
+<h1>take site fully offline</h1>
+
+<p>mv index.php bak-index.php
+drush -y updb</p>
+
+<h1>if the current user is a member of the www-data group we can make the files owned by this group</h1>
+
+<h1>as long as apache has umask 002 files should now be writeable by us and apache</h1>
+
+<p>groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
+groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;
+groups | grep <em>www > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp </em>www {} \;</p>
+
+<p>drush cc all</p>
+
+<h1>any tasks that have to be done at the end of each deploy go in this drush hook</h1>
+
+<p>drush helper-post-deploy</p>
+
+<h1>on dev sites rewrite any user emails so we can&rsquo;t spam  customers by mistake</h1>
+
+<p>drush helper-rewrite-emails</p>
+
+<h1>set the admin password to one the devs know</h1>
+
+<p>drush upwd admin &ndash;password=secret</p>
+
+<h1>put the site online again</h1>
+
+<p>drush -y vset maintenance_mode 0
+mv bak-index.php index.php
+drush cc all</p>
+
+<h1>final permission reset just in case the last commands changed anything</h1>
+
+<p>find sites/default/files/ -user $USER -type d -exec chmod 775 {} \;
+find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkins Build Artifacts - Subdirectories]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/06/01/jenkins-build-artifacts-subdirectories/"/>
+    <updated>2012-06-01T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/06/01/jenkins-build-artifacts-subdirectories</id>
+    <content type="html"><![CDATA[<p>It took me an unreasonable amount of guesswork to figure out how to get jenkins to archive files at multiple folder levels</p>
+
+<p>In the end this line worked for me</p>
+
+<pre><code>Webdriver-framework/target/surefire-reports/*,Webdriver-framework/target/surefire-reports/**/*.png 
+</code></pre>
+
+<p>This grabs a report in one level - and images it references in subdirectories</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Unit Testing | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/unit-testing/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Drupal Is Not Test Friendly]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/09/30/drupal-is-not-test-friendly/"/>
+    <updated>2009-09-30T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/09/30/drupal-is-not-test-friendly</id>
+    <content type="html"><![CDATA[<p>
+I was originally excited about the embrace that Drupal seemed to have given to testing.
+</p>
+
+
+<p>
+However after spending some time with it I&#8217;ve concluded that Drupal really isn&#8217;t very test friendly.
+</p>
+
+
+<p>
+Most tests for Drupal are integration tests not unit tests.
+</p>
+
+
+<p>
+That is to say that they test a bunch of components together - not each bit separately.
+</p>
+
+
+<p>
+This is because Drupal components (modules or functions) are not well encapsulated, global variables are used, data is cached within functions,  passed via the database etc.  
+</p>
+
+
+<p>
+THis makes it much harder for the developer to create tests that validate functional increments, and means the suite of tests run very slowly.
+</p>
+
+
+<p>
+A while ago I tried to run the tests for Drupal 7 - but gave up waiting after an hour. I was very surprised to find that both database and web server were being hit hard - when I was running on the command line!
+</p>
+
+
+<p>
+Even the integration level testing isn&#8217;t all that great, it runs in an environment without JavaScript support - so the AJAX functionality can&#8217;t be tested. 
+</p>
+
+
+<p>
+Testing is better than not testing - but having gotten into testing I&#8217;ve found Drupal&#8217;s environment frustrating. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Testing PHP]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/05/12/testing-php/"/>
+    <updated>2009-05-12T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/05/12/testing-php</id>
+    <content type="html"><![CDATA[<p>
+I had fun this weekend at the <a href="http://www.phplondon.org/" mce_href="http://www.phplondon.org/">PHP London</a> Test Fest, it was a great opportunity to learn something new and meet some great programmers.
+</p>
+
+
+<p>
+The tests our team took on were based around the <a href="http://www.php.net/%7Ehelly/php/ext/spl/main.html" mce_href="http://www.php.net/~helly/php/ext/spl/main.html">SPL</a> <a href="http://uk.php.net/manual/en/spl.iterators.php" mce_href="http://uk.php.net/manual/en/spl.iterators.php">iterators</a> I hadn&#8217;t used this part of PHP before and it was a great way to learn about it, especially as many of the functions we tested aren&#8217;t documented yet.
+</p>
+
+
+<p>
+What we did was :
+</p>
+
+
+<ol>
+    <li>Take a copy of <a href="http://www.php.net/anoncvs.php" mce_href="http://www.php.net/anoncvs.php">PHP source code <br>
+    </a></li>
+    <li>extract this and run ./configure</li>
+    <li> create a short script to run tests</li>
+    <li>and another to run the checked out version of PHO</li>
+    <li> Check the <a href="http://gcov.php.net/PHP_5_3/lcov_html/spl/spl_iterators.c.gcov.php" mce_href="http://gcov.php.net/PHP_5_3/lcov_html/spl/spl_iterators.c.gcov.php">test coverage reports</a></li>
+    <li>Find an untested section of code (in red)</li>
+    <li>Figure out what it does</li>
+    <li>Write a test to run this part of code</li>
+    <li>go to 5 </li>
+</ol>
+
+
+<p>
+More details on how to write tests are at http://qa.php.net/write-test.php&nbsp;
+</p>
+
+
+<p>
+I found the hardest bit was interpreting the C source code of PHP - this was made much easier by the mentors at the test fest, and once pointed in the right direction we were able to get going easily enough.
+</p>
+
+
+<p>
+This does give me another reason to read this book: <br /><a href="http://www.practicalweb.co.uk/review/extending-and-embedding-php" mce_href="/review/extending-and-embedding-php"><img src="http://ecx.images-amazon.com/images/I/415rN3jdDvL._SL160_.jpg" mce_src="http://ecx.images-amazon.com/images/I/415rN3jdDvL._SL160_.jpg" alt="Extending and Embedding PHP Sara Golemon" width="125" height="160"></a>
+</p>
+
+
+<p>
+One thing I didn&#8217;t figure out on the day - in order to regenerate the coverage reports and check that the new tests do add coverage I needed to&nbsp; 
+</p>
+
+
+<p><code>
+aptitude install lcov</p>
+
+<p>make lcov TESTS=./path-to tests
+</code></p>
+
+<p>
+NB you can either run all tests or just a subdirectory
+</p>
+
+
+<p>
+The script to run tests was 
+</p>
+
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<p>export TEST_PHP_EXECUTABLE=/path-to/php5.3-200905081030/sapi/cli/php
+$TEST_PHP_EXECUTABLE /path-to/php5.3-200905081030/run-tests.php $*
+</code></p>
+
+<p>
+I also created an alias to sapi/cli/php so that I could run the tests as simple PHP scripts
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Continuous Integration Testing for Drupal With CruiseControl (Part 1)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1/"/>
+    <updated>2009-04-08T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1</id>
+    <content type="html"><![CDATA[<p>
+I recently finished work on a project that really suffered from a lack of build tools.
+</p>
+
+
+<p>
+It was a large project, and while many of us were keen on writing tests we weren&#8217;t able to get management sign of to spend some time automating the test process. So even though we did some of the work we didn&#8217;t get all the benefits.
+</p>
+
+
+<p>
+It was really frustrating to come back to a piece of work that was well covered by unit tests, only to find those tests broken  
+</p>
+
+
+<p>
+Well, right now I&#8217;ve decided to take some time to explore automated testing a bit more. I&#8217;ve got a Drupal site and a bunch of simpletest tests - I want the tests run on every commit, and while I&#8217;m at it I want to run some other checks too.
+</p>
+
+
+<p>
+The following records what I&#8217;ve done so far, problems I encountered, and how I solved them.
+</p>
+
+
+<p>
+Download 
+</p>
+
+
+<ul>
+    <li><a href="http://cruisecontrol.sourceforge.net/">cruisecontrol</a> <a href="http://phpundercontrol.org/about.html"><br />
+    </a></li>
+    <li><a href="http://phpundercontrol.org/about.html">phpundercontrol</a></li>
+    <li><a href="http://demo.codesetter.com/drupal5-macgyver-cruisecontrol">simpletest runner for cruise control</a> (thanks Adnan)</li>
+</ul>
+
+
+<p>
+Checkout and configure my Drupal site, create the settings for this as a CruiseControl project.
+</p>
+
+
+<p>
+At this point I had CruiseControl setup, I could see my project, but no useful reports.
+</p>
+
+
+<p>
+Debugging
+</p>
+
+
+<ul>
+    <li>read the logfiles (doh!)</li>
+    <li>run each process separately</li>
+</ul>
+
+
+<p>
+CruiseControl is a big beast and trying to debug small parts of it by running it all wasn&#8217;t much fun.
+</p>
+
+
+<p>
+CruiseControl runs each step of a build via <a href="http://ant.apache.org/">ant</a>  - this is a fairly standard tool (available via apt-get if you&#8217;re a Debian user) 
+</p>
+
+
+<p>
+Running ant manually gave me much greater visibility of errors that were occuring at this stage (I&#8217;d put my test runner script in the wrong place).
+</p>
+
+
+<p>$ cd cruisecontrol/projects/myproject
+$ ant </p>
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+This gives nice easy to read output for each step of the build.
+</p>
+
+
+<p>
+Once CruiseControl has built your project it merges the xml logfiles; the merged file is stored in cruisecontrol/logs/myproject/
+</p>
+
+
+<p>
+The web application part of CruiseControl uses xsl to transform these logfiles into output, and a little jsp to select which xsl files to use. Again I found it easier to debug the xsl part of the process by running the xsl manually (either on the combined logfile - or individual ones wrapped in &lt;cruisecontrol&gt; tags).
+</p>
+
+
+<p>$ xsltproc webapps/cruisecontrol/xsl/checkstyle.xsl  projects/myproject/build/logs/checkstyle.xml</p>
+
+<p>
+And what I found was that my xml log wasn&#8217;t xml after all (I&#8217;d hit a <a href="http://pear.php.net/bugs/bug.php?id=14409">bug in phpcodesniffer</a> which was outputting error messages at the top of the file). 
+</p>
+
+
+<p>
+Right now I have a continuous integration server up and running. It&#8217;s not quite how I want it yet but now I understand how CruiseControl works I don&#8217;t think it&#8217;ll take too long to get right - but it&#8217;s the sort of thing that I expect to grow and tweak as I go along.
+</p>
+
+
+<p>
+I&#8217;ve found CruiseControl hard to setup, seen too many Java stacktraces, and blank screens when xsl didn&#8217;t work as expected.
+</p>
+
+
+<p>
+Some things could probably be done better via svn commit hooks (if you have access to the svn server), and certainly it would have been faster to cobble together some cron jobs.
+</p>
+
+
+<p>
+But I&#8217;ve persevered because CruiseControl comes with a wealth of plugins including many version control systems, and many notification methods. I&#8217;m hoping that I&#8217;ve overcome the initial learning curve and will start to reap the rewards.
+</p>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

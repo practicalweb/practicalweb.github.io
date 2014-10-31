@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Varnish | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/varnish/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using Varnish to Cache Authenticated Drupal Pages]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/10/15/using-varnish-to-cache-authenticated-drupal-pages/"/>
+    <updated>2013-10-15T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/10/15/using-varnish-to-cache-authenticated-drupal-pages</id>
+    <content type="html"><![CDATA[<p>I have a site which requires users to be logged in, but the pages are not customised. I was playing with a way to cache the content in varnish while still doing an access check. This method uses an access check pages (test.php below) which then uses ESI to load the real, cacheable content.</p>
+
+<p>I&rsquo;ve tried it in a dev env, I&rsquo;m not yet sure if we&rsquo;ll use this in production.</p>
+
+<p>Varnish config</p>
+
+<pre><code class="C">probe checkslash {
+    .url = "/robots.txt";
+    .interval = 500s;
+    .timeout = 10s;
+}    
+
+include "backends.vcl";
+
+/** generic config from here down */
+sub vcl_recv{
+
+  /* if the drupals are down, this is how long we cache for */
+  set req.grace = 6h;
+
+  /* Make sure we direct 443 traffic to the secure drupal */
+  if (server.port == 443 ) {
+    set req.backend = drpau_ssl_director; 
+  } else {
+    /* port 80 traffic goes to the correct LB */
+    set req.backend = drpau_director;
+  }
+  # just pass through non-page files, and the login page
+  if (req.url ~ "(?i)\.(pdf|asc|dat|txt|doc|xls|ppt|tgz|csv|png|gif|jpeg|jpg|ico|swf|css|js|htc|ejs)(\?.*)?$") {
+  } else if (req.url ~ "(?i)(sites/default/files)|(js/)|(/login)" ) { 
+  } else if (req.esi_level == 0 ) {
+    # pass regular pages to a spoecial url
+    set req.url = "/esi" + req.url;
+  }
+  return (lookup);
+}
+
+
+
+sub vcl_fetch {
+
+  if (req.url ~ "/esi/" &amp;&amp; req.esi_level == 0 ) {
+    set beresp.do_esi = true; /* Do ESI processing               */ 
+   }
+
+}
+</code></pre>
+
+<p>Then in apache I redirect all requests for pages that come via the esi prefix</p>
+
+<pre><code class="ApacheConf">RewriteRule ^esi/(.*)$ test.php [L]
+</code></pre>
+
+<p>and test php is</p>
+
+<pre><code class="PHP">    define('DRUPAL_ROOT', getcwd());
+    // We prepare only a minimal bootstrap.
+    require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+    drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
+    global $user;
+    $roles = user_roles();
+
+    if (in_array('anonymous user', $user-&gt;roles)) {
+      $uri = preg_replace('#^/esi#', '', $_SERVER[REQUEST_URI]);
+      echo "&lt;esi:include src=\"http://$_SERVER[SERVER_NAME]$uri\"/&gt;";
+    } else {
+        header("Location: https://$_SERVER[SERVER_NAME]/login");
+    }
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Varnish on Two Ports, With Separate Backends]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/11/22/varnish-on-two-ports-with-separate-backends/"/>
+    <updated>2012-11-22T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/11/22/varnish-on-two-ports-with-separate-backends</id>
+    <content type="html"><![CDATA[<p>We have a site with a hardware ssl accelerator wich routes http traffic to port 80 and decrypted https traffic (so back to http) to port 443. We wanted varnish to cache the 443 traffic, and I came up with this proof of concept config, in reality you&#8217;d want to have a bunhch of different rules for your https site to ensure you cache only what you want to. </p>
+
+
+
+
+<p>in /etc/varnish/default.vcl</p>
+
+
+<p><code>
+backend default {
+    .host = &ldquo;www.example.com&rdquo;;
+    .port = &ldquo;80&rdquo;;
+}</p>
+
+<p>backend secure {
+        .host = &ldquo;www.example.com&rdquo;;
+        .port = &ldquo;443&rdquo;;
+}</p>
+
+<p>sub vcl_recv {</p>
+
+<p>set req.http.Host = &ldquo;www.example.com&rdquo;;</p>
+
+<p>if (server.port == 7081) {
+                set req.http.host = &ldquo;www.example.com&rdquo;;
+                set req.http.port = 443;
+                set req.backend = secure;
+                return(lookup);
+}
+</code></p>
+
+<p>and in /etc/default/varnish</p>
+
+
+<p><code>
+DAEMON_OPTS=&ldquo;-a :6081,:7081 \
+             -T localhost:6082 \
+             -f /etc/varnish/default.vcl \
+             -S /etc/varnish/secret \
+             -s malloc,256m&rdquo;</p>
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Varnish Logs Twice]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/05/varnish-logs-twice/"/>
+    <updated>2010-10-05T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/05/varnish-logs-twice</id>
+    <content type="html"><![CDATA[<p>The default configuration of varnish logs every request twice, once for the client and once for the backend communication</p>
+
+<p>edit the line in /etc/init.d/varnishncsa to something like</p>
+
+<p><code>
+DAEMON_OPTS=&ldquo;-c -a -w $logfile -D -P $pidfile&rdquo;
+</code></p>
+
+<p>from the varnishncsa man page</p>
+
+<blockquote>
+     -c          Include log entries which result from communication with a client.  If neither -b nor -c is specified, varnishncsa acts as if they both were.
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Varnish ACL]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/01/varnish-acl/"/>
+    <updated>2010-10-01T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/01/varnish-acl</id>
+    <content type="html"><![CDATA[<p>To setup an IP based access control list so that only allowed users may access the site.</p>
+
+<p><code>
+sub vcl_recv {</p>
+
+<p>  if (!(client.ip ~ testers)) {
+    error 403 &ldquo;Access Denied - server in test mode (IP not in ACL)&rdquo;;
+  }</p>
+
+<p>}</p>
+
+<p>acl testers {
+    &ldquo;localhost&rdquo;;
+    &ldquo;www.example.com&rdquo;;
+    &ldquo;192.168.0.1&rdquo;;
+}
+</code></p>
+
+<p>In my case I need to be able to test a dev site but don&rsquo;t want to make it public, we tried using password authentication but that made it harder to test varnish as the authentication headers affected caching.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Varnish Config on Debian]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/05/14/varnish-config-on-debian/"/>
+    <updated>2010-05-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/05/14/varnish-config-on-debian</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve just spent too long being very confused as to why varnish wasn&#8217;t working
+</p>
+
+
+<p>
+I&#8217;d forgotten that&nbsp; the Debian version doesn&#8217;t read the default.vcl config file by default!
+</p>
+
+
+<p>
+You have to edit /etc/default/varnish and specify the config type you want.
+</p>
+
+
+<p>
+I was getting the error message
+</p>
+
+
+<p><code>
+Error 503 Service Unavailable</p>
+
+<p>Error talking to backend</p>
+
+<p>Guru Meditation: XID:
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

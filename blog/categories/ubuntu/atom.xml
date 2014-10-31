@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ubuntu | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/ubuntu/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu 10.04 Bluetooth Audio]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/06/ubuntu-10-04-bluetooth-audio/"/>
+    <updated>2010-10-06T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/06/ubuntu-10-04-bluetooth-audio</id>
+    <content type="html"><![CDATA[<p>It wasn&rsquo;t immediately obvious to me</p>
+
+<p>What I needed to do to get blutooth audio working was to install the blueman package</p>
+
+<p>After that configuration via GUI was pretty straightforward</p>
+
+<p>Now I have fantastic sound via my bluetooth enabled HIFI :-)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu on a Samsung N150 Netbook]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/09/06/ubuntu-on-a-samsung-n150-netbook/"/>
+    <updated>2010-09-06T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/09/06/ubuntu-on-a-samsung-n150-netbook</id>
+    <content type="html"><![CDATA[<p>
+Installing Ubuntu on a new netbook proved remarkably easy once I got past a couple of hurdles
+</p>
+
+
+<ul>
+    <li>BIOS settings - in order to install a new OS I needed to configure the BIOS to boot from a USB key. At first it seemed like the netbook didn&#8217;t offer this option and I found several posts online from people having similar problems - but posts from others who had succeeded encouraged me and in the end I just had to guess the right points in the boot sequence to press the escape key and see a BIOS menu</li>
+    <li>Bootable USB key, I followed the instructions at http://www.ubuntu.com/desktop/get-ubuntu/download but no matter what the USB key wouldn&#8217;t boot.<br />
+    So I repartitioned and reformatted it on an existing Linux system, ran the USB Installer software again and this time it worked.</li>
+    <li>Wireless network driver, I needed to update the system (over a wired network) before this worked - just following onscreen prompts.</li>
+</ul>
+
+
+<p>
+As far as I can see everything now works (video, audio, webcam, wifi, power management etc)
+</p>
+
+
+<p>
+I have a dev version of my current web project running with MySQL and Apache, MP3s play, I have a full office suite and all the utilities I could wish for.
+</p>
+
+
+<p>
+I was impressed by the USB installers live mode allowing me to run Linux on the system before installing it fully, and then to repartition the hard drive leaving me with a dual boot system.
+</p>
+
+
+<p>
+I wasn&#8217;t impressed with Windows though - very slow to get up and running (an hour of installs, updates and reboots - on a pre-installed system?!)  Constant alerts from the security software - and no useful software installed on the base system.
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Moving an Svn Repository to Integrate With Trac]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/02/02/moving-an-svn-repository-to-integrate-with-trac/"/>
+    <updated>2010-02-02T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/02/02/moving-an-svn-repository-to-integrate-with-trac</id>
+    <content type="html"><![CDATA[<p>I just started on a project that was using trac and subversion but they weren&#8217;t integrated. I love the cross referncing trac provides. It can really help explain changesets and show how an issue was resolved.</p>
+
+
+
+
+<p>The steps to add subversion to trac are</p>
+
+
+
+
+<ul>
+<li>Stop people using the old repository</li>
+<li>copy the repository files from one server to the other<br />I used tar and scp</li>
+<li>edit trac.ini to add the location of the respository <br/>
+Trac and svn must be on the same server</li>
+<li>run trac-admin resync <br/>
+This imports all the svn history.</li>
+</ul>
+
+
+
+
+<p><p>I enabled access to subversion via apache SSL while I could get access via the browser checking out code with different tools gave the follwoing errors</p>
+
+<p><code>
+svn: OPTIONS of &lsquo;<a href="https://195.99.1.93/svn">https://195.99.1.93/svn</a>&rsquo;: 200 OK</p>
+
+<p>svn: PROPFIND of &lsquo;/svn&rsquo;: 405 Method Not Allowed</p>
+
+<p>svn: Server sent unexpected return value (405 Method Not Allowed) in response to PROPFIND request for &lsquo;/svn&rsquo;
+</code></p>
+
+<p><p>Thanks to <a href="http://techpulp.com/2009/01/webdav-405-method-not-allowed-in-porpfind/">techpulp.com/2009/01/webdav-405-method-not-allowed-in-porpfind/</a> I found out that my problem was an extraneous trailing slash in my apache config!</p></p>
+
+<p><p>I then ran svn relocate (right click on the repository using eclipse in the subversion perspective).</p></p>
+
+<p><p>I moved Trac to SSL for good measure - changing the location on the task repository in eclipse was straightforward.</p></p>
+
+<p><p>And as a finishing touch I customised Trac by adding a project logo - it goes in trac/htdocs/mylogo.png and is referenced in trac.ini as site/mylogo.png - I&rsquo;ve failed this step before but actuallt read the docs this tim.</p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Bug in Trac on Ubuntu Jaunty]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/02/02/bug-in-trac-on-ubuntu-jaunty/"/>
+    <updated>2010-02-02T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/02/02/bug-in-trac-on-ubuntu-jaunty</id>
+    <content type="html"><![CDATA[<p>
+There is a bug in Ubunty Jaunty which cause Trac to have errors.
+</p>
+
+
+<p>
+ Attachments do not work, the admin interface for milestones doesn&#8217;t work properly - and there may be other issues.
+</p>
+
+
+<p>
+The bug report is at https://bugs.launchpad.net/ubuntu/+source/trac/+bug/369792
+</p>
+
+
+<p>
+And the solution is 
+</p>
+
+
+<p>
+&quot;go to <a href="http://packages.ubuntu.com/karmic/trac">http://packages.ubuntu.com/karmic/trac</a>
+and scroll all the way down. There you&#8217;ll find a download link for the 
+karmic package which you can download and install via
+</p>
+
+
+<p>
+sudo dpkg -i trac_0.11.5-2ubuntu1_all.deb&quot;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Installing Lame on Debian]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/07/22/installing-lame-on-debian/"/>
+    <updated>2009-07-22T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/07/22/installing-lame-on-debian</id>
+    <content type="html"><![CDATA[<p>
+Debian has a very strict policy on free and legal software. This helps keep everyone honest, but sometimes a pragmatic approach is called for. MP3 is a file format that is patent encumbered - but also in universal use. 
+</p>
+
+
+<p>
+I could use the supplied Ogg Vorbis tools but then my music wouldn&#8217;t work everywhere I want it to.
+</p>
+
+
+<p>
+So I want to install Lame which is only available in source.
+</p>
+
+
+<p>
+http://sourceforge.net/projects/lame/files/
+</p>
+
+
+<p>
+Download and extract 
+</p>
+
+
+<p><code>
+cd lame-398-2/</p>
+
+<h1>install a build environment by pulling in the build dependencies for something useful (I chose php)</h1>
+
+<p>sudo apt-get build-dep php5
+sudo aptitude install fakeroot</p>
+
+<h1>check build dependencies of lame</h1>
+
+<p>cat debian/control</p>
+
+<h1>and install them</h1>
+
+<p>sudo aptitude install nasm libsndfile1-dev
+chmod 700 debian/rules
+dpkg-buildpackage -rfakeroot -uc -b
+sudo dpkg -i ../lame_3.98.1_i386.deb ../libmp3lame0_3.98.1_i386.deb
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

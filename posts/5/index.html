@@ -1,0 +1,735 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="This just took me a while to figure out I have a jmeter test plan which POSTs to a url, resulting in cookies being set and a redirect I was not &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/posts/5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/04/jmeter-cookies-and-redirects/">jMeter Cookies and Redirects</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-04T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This just took me a while to figure out</p>
+
+<p>I have a jmeter test plan which POSTs to a url, resulting in cookies being set and a redirect</p>
+
+<p>I was not seeing the cookies retained.</p>
+
+<p>The solution was to</p>
+
+<p>enable &ldquo;Follow redirects&rdquo; and disable &ldquo;Auto redirect&rdquo; on the HTTP request sampler.</p>
+
+<p>Tree view now shows the POST and subsequent GET separately - and the cookies are retained (I am using an HTTP cookie manager)</p>
+
+<p>Another solution if you know what the redirect will be is to disable both redirects and add another sampler for the subsequent GET</p>
+
+<p>This has the benefit that each step can be monitored seperately</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/20/verbose-remote-ssh-with-echo/">Verbose Remote Ssh (With Echo)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-01-20T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I usually manage website deployment with bash scripts that run remote commands on the servers</p>
+
+<p>In order that I can see what is going on and debug any errors verbose output is useful.</p>
+
+<p>Running &ldquo;bash -ex&rdquo; causes each line to be output as it progresses and halt on any error so that you don&rsquo;t miss it.</p>
+
+<p>within the remote command &ldquo;set -x&rdquo; cuase bash to echo all commands</p>
+
+<p><code></p>
+
+<h1>!/bin/bash -ex</h1>
+
+<p>ssh -T user@server &lt;&lt; EOF
+set -x
+echo foo > /dev/null
+EOF
+</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/15/export-from-git-for-drupal-site-releases/">Export From Git for Drupal Site Releases</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-11-15T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m used to how svn export works, and have used this in a number of release scripts.</p>
+
+<p>Git doesn&rsquo;t quite have an equivalent</p>
+
+<p>There is</p>
+
+<p><code>git archive</code></p>
+
+<p>Which creates a tarball rather than a set of files, and while you can export a subset of the repository you still get the full path in the tarball.</p>
+
+<p>and</p>
+
+<p><code>git checkout-index</code></p>
+
+<p>Which creates a set of files (these can be locate outside the working copy) but requires a local repository.</p>
+
+<p>Also I&rsquo;m using github which doesn&rsquo;t support the remote repository option of git archive and their ready made tarball doesn&rsquo;t seem to work via wget on a private project (P.S. I since discovered the githaub tarbal works with wget if you pass params on the query string like ?login=${user}&amp;token=${token} )</p>
+
+<p>What I really wanted was a script I could hand to the sysadmin, that he could run on any server without needing a local git repository.</p>
+
+<p>In the end I have instead written a script that packages the tarball I want and uploads that to a server he can access it from.</p>
+
+<p>&lt;?php</p>
+
+<h1>!/bin/bash -ex</h1>
+
+<h1>pass a valid release tag as a parameter to this script to create an release tarball and upload to skunkworks</h1>
+
+<h1>this works on the local git repo - which must be up to date!</h1>
+
+<p>git archive   $1 www > /tmp/${1}.tar
+cd /tmp
+tar -xf ${1}.tar
+rm ${1}.tar
+rm -Rf www/sites/default/
+mv www $1
+tar -czf ${1}.tar.gz $1
+rm -Rf $1</p>
+
+<p>scp ${1}.tar.gz dev.server.foo:/var/www/releases</p>
+
+<p>?></p>
+
+<p> Then there is another script that downloads and unpacks this to upgrade our site.</p>
+
+<p>&lt;?php</p>
+
+<h1>!/bin/bash -ex</h1>
+
+<h1>parameter is release tag</h1>
+
+<h1>tag has been released and uploaded to skunkworks</h1>
+
+<h1>live site is backed up</h1>
+
+<h1>live site docroot is /var/www/public_html</h1>
+
+<h1>each release is at /var/www/$release</h1>
+
+<h1>symlink points /var/www/public_html to current release</h1>
+
+<h1>sites/default is common to every release - stored as /var/www/sites-default</h1>
+
+<h1>symlink added to each release to point to this</h1>
+
+<p>export COLUMNS=80</p>
+
+<p>release=$1</p>
+
+<p>cd /var/www/</p>
+
+<p>wget <a href="http://dev.server.foo/releases/$">http://dev.server.foo/releases/$</a>{release}.tar.gz</p>
+
+<p>tar -xzf ${release}.tar.gz</p>
+
+<p>cd ${release}</p>
+
+<p>ln -s /var/www/sites-default sites/default</p>
+
+<p>drush -y vset site_offline_message &ldquo;<p>Site offline for upgrade</p>&rdquo;
+drush -y vset site_offline 1</p>
+
+<p>drush -y updb</p>
+
+<p>drush cc all</p>
+
+<h1>if the current user is a member of the www-data or apache group we can make the files owned by this group</h1>
+
+<h1>as long as apache has umask 002 files should now be writable by us and apache</h1>
+
+<p>groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
+groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;</p>
+
+<p>cd ..</p>
+
+<p>rm public_html</p>
+
+<p>ln -s ${release} public_html</p>
+
+<p>cd ${release}</p>
+
+<p>drush -y &ndash;uri=www.foo.com vset site_offline 0</p>
+
+<p>?></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/23/instance-parameter-for-drupal-field_create_instanceinstance/">Instance Parameter for Drupal Field_create_instance($instance)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-09-23T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The code in chapter 7 of pro Drupal development has a bug.</p>
+
+<p>The $instance array that you need to pass to <a href="http://api.drupal.org/api/drupal/modules--field--field.crud.inc/function/field_create_instance/7">field_create_instance()</a> needs to be as below.</p>
+
+<p>Note that the display array has the keyword, &lsquo;default&rsquo; for the default display - ie a node on it&rsquo;s own page &lsquo;teaser&rsquo; looks like the right value for teaser. Other view modes are possible too.</p>
+
+<p>The label field in the display part of the array is just the positioning of the array - &lsquo;above&rsquo;, &lsquo;below&rsquo;, &lsquo;inline&rsquo; and &lsquo;hidden&rsquo; seem the likely set of allowed values.</p>
+
+<p>NB the display part of the array is optional as Drupal will provide default values.</p>
+
+<p>&lt;?php</p>
+
+<p>array(
+    array(
+        &lsquo;field_name&rsquo; => &lsquo;job_post_company&rsquo;,
+        &lsquo;type&rsquo;       => &lsquo;text&rsquo;,
+        &lsquo;label&rsquo;      => $t(&lsquo;Company posting the job listing&rsquo;),
+        &lsquo;widget&rsquo;     => array(
+                   &lsquo;type&rsquo; => &lsquo;text_textfield&rsquo;,
+         ),
+        &lsquo;display&rsquo; => array(
+           &lsquo;default&rsquo; => array(
+               &lsquo;label&rsquo; => &lsquo;above&rsquo;,
+               &lsquo;type&rsquo;  => &lsquo;text&rsquo;,
+         ),
+     ),
+   ),
+);
+?></p>
+
+<p>The errata for this book seems to be long and unhelpfully laid out 563 reported errors so far&hellip;</p>
+
+<p><a href="http://www.drupalbook.com/errata3">http://www.drupalbook.com/errata3</a></p>
+
+<p>There even seems to be errors in the errata <a href="http://www.drupalbook.com/node/269">http://www.drupalbook.com/node/269</a> seems to report this error (or part of it) but I think it&rsquo;s wrong - the array key should be a view mode.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/22/node_save-tags-by-term-name-with-auto-addition-of-new-tags/">Node_save Tags by Term Name With Auto Addition of New Tags</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-09-22T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Drupal lets you add a taxonomy term to a node and if you use the GUI you can have a nice auto-complete widget that takes term name - and iof the term doesn&rsquo;t exist yet you get a new term created when you save the node.</p>
+
+<p>I wanted to access the same functionality on node I am generating from external data.</p>
+
+<p>The key is to create the term array with tid = &lsquo;autocreate&rsquo; - this and the vocabulary ID are enough to trigger the taxonomy module to lookup the tid for you - and adda new term is required.</p>
+
+<p>&lt;?php
+$node = new stdClass();
+$node->type=&lsquo;mytype&rsquo;;
+$node-title=&lsquo;foo&rsquo;;
+$node->body = &lsquo;bar&rsquo;;</p>
+
+<p>$node->field_cat_tag[&lsquo;und&rsquo;][0][&lsquo;name&rsquo;] =  $name;
+$node->field_cat_tag[&lsquo;und&rsquo;][0][&lsquo;vocabulary_machine_name&rsquo;] = $vocab_machine_name; // optional - helps performance if in a loop<br/>
+$node->field_g4_cat_tag[&lsquo;und&rsquo;][0][&lsquo;vid&rsquo;] = $vid;
+$node->field_g4_cat_tag[&lsquo;und&rsquo;][0][&lsquo;tid&rsquo;] = &lsquo;autocreate&rsquo;;</p>
+
+<p>$node_save($node);
+?></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/21/using-php-and-curl-with-http-put-on-string-data/">Using PHP and Curl With Http PUT on String Data</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-09-21T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This wasn&rsquo;t obvious</p>
+
+<p>There are various other posts on this - but mostly assuming you will put a file.</p>
+
+<p>In my case I want to put the contents of a string so I needed to craete a temporary filehandle.</p>
+
+<p>&lt;?php</p>
+
+<p>function put_it($url, $string) {
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_PUT, TRUE);
+  // create tempoary file handle
+  $oneMB = 1024 * 1024;
+  $fp = fopen(&ldquo;php://temp/maxmemory:$oneMB&rdquo;, &lsquo;r+&rsquo;);
+  fputs($fp, $string);
+  rewind($fp);
+  curl_setopt($ch, CURLOPT_INFILE,  $fp);
+  curl_setopt($ch, CURLOPT_INFILESIZE, strlen($string));
+  $response = curl_exec($ch);
+  fclose($fp);</p>
+
+<p>?></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/20/raid-ext4-disk-problems/">RAID Ext4 Disk Problems</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-09-20T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of those posts for myself in case I need to come back to this later</p>
+
+<p>I have a new PC which is very fast apart from problems with disc access seeming slow (and the disks being physically noisy)</p>
+
+<p>The following related links led me to try a solution</p>
+
+<p><a href="http://forums.gentoo.org/viewtopic-t-843292.html">http://forums.gentoo.org/viewtopic-t-843292.html</a></p>
+
+<p><a href="http://marc.info/?l=linux-raid&amp;m=128506852210452&amp;w=2">http://marc.info/?l=linux-raid&amp;m=128506852210452&amp;w=2</a></p>
+
+<p>/etc/fstab
+<code>
+UUID=317f7912-9956-41f1-9855-7bee69c950b3 /               ext4    errors=remount-ro,barrier=0 0       1
+</code></p>
+
+<p>NB adding barrier=0 here seems to have solved the problem</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/19/how-to-turn-off-notifications-in-banshee/">How to Turn Off Notifications in Banshee</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-08-19T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The music player banshee which is part of the default Ubuntu setup pops up a message each time a new track starts playing.</p>
+
+<p>To turn this off</p>
+
+<p><ol>
+<li>Open Banshee</li>
+<li>Go to Edit, preferences, extensions</li>
+<li>Enable Notification Area Icon</li>
+<li>The Icon should now show up - right click on it</li>
+<li>Uncheck Show notifications</li>
+<li>Disable the Notification Area Icon again</li>
+<ol></p>
+
+<p>Very annoying - the option to turn off notifications is hidden on a menu you can&rsquo;t get to by default.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/13/svn-merges-and-excess-merginfo-properties/">Svn Merges and Excess Merginfo Properties</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-07-13T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The main svn server I&rsquo;m working on has finally upgraded to svn 1.5 - so easier merging is now possible - hooray.</p>
+
+<p>But we&rsquo;ve been seeing merges that should only affect one file resulting in property changes on lots of files/directories. This isn&rsquo;t especially harmful - but it is annoying and makes reviewing the merge harder because of the extra noise.</p>
+
+<p>It turns out that this extra mergeinfo is likely because of earlier merges on subtrees <a href="http://blogs.collab.net/subversion/2009/11/where-did-that-mergeinfo-come-from/">http://blogs.collab.net/subversion/2009/11/where-did-that-mergeinfo-come-from/</a></p>
+
+<p>It is possible to remove the subtree mergeinfo via this command run from the root of the branch</p>
+
+<p><code>
+svn propdel -R svn:mergeinfo ./*
+</code></p>
+
+<p><a href="http://stackoverflow.com/questions/767418/remove-unnecessary-svnmergeinfo-properties">http://stackoverflow.com/questions/767418/remove-unnecessary-svnmergeinfo-properties</a></p>
+
+<p>Which should get rid of the problem - I&rsquo;m just not 100% sure if it throws away important data.</p>
+
+<p>For now I think I&rsquo;ll live with the nuisance - and come back to this if it becomes too annoying or if I gain greater insight into the issue.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/13/henri-bergius-secret-agenda-for-php-content-management-systems/">Henri Bergius&#8217; Secret Agenda for PHP Content Management Systems</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-07-13T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I read this post the other day and found it really inspiring - so many things to do and learn&hellip;</p>
+
+<p><a href="http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/">http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/</a></p>
+
+<p>Links within that blog that I found especially interesting</p>
+
+<p><a href="https://github.com/indeyets/appserver-in-php">https://github.com/indeyets/appserver-in-php</a></p>
+
+<p><a href="http://documentcloud.github.com/backbone/">http://documentcloud.github.com/backbone/</a></p>
+
+<p><a href="https://github.com/bergie/VIE">https://github.com/bergie/VIE</a></p>
+
+<p><a href="http://phpcr.github.com/">http://phpcr.github.com/</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/6">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/4">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

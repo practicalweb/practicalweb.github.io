@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Accessing CKAN Data From PHP - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I&rsquo;ve been working on a couple of open data projects recently - which has been very rewarding. A couple of people have asked for some code so I& &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2010/02/23/accessing-ckan-data-from-php">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Accessing CKAN Data From PHP</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-23T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&rsquo;ve been working on a couple of open data projects recently - which has been very rewarding.</p>
+
+<p>A couple of people have asked for some code so I&rsquo;ve knocked up a quick version of the sort of thing I&rsquo;ve been working on.</p>
+
+<p>This code requires PHP 5.1 for the JSON functions but doesn&rsquo;t need any extra libraries (pecl_http can give better error messages but is a bit of a pain to install).</p>
+
+<p>The Notes field in packages returns output in Markdown format - you can convert this to HTMl with a parser available at <a href="http://michelf.com/projects/php-markdown">http://michelf.com/projects/php-markdown</a></p>
+
+<p>This isn&rsquo;t production code so please test before using.</p>
+
+<p>&lt;?php</p>
+
+<p>class Ckan {
+    private  $url = &lsquo;<a href="http://www.ckan.net/">http://www.ckan.net/</a>&rsquo;;
+    private $errors = array(
+                              &lsquo;400&rsquo;  =>   &lsquo;Bad Request&rsquo;,
+                              &lsquo;403&rsquo;  =>   &lsquo;Not Authorized&rsquo;,
+                              &lsquo;404&rsquo;  =>   &lsquo;Not Found&rsquo;,
+                              &lsquo;500&rsquo;  =>   &lsquo;Internal Server Error&rsquo;,
+    );</p>
+
+<pre><code>public function __construct($url=null){
+    if ($url){
+        $this-&gt;url=$url;
+    }
+}
+
+private function transfer($url){
+
+    $ch = curl_init($this-&gt;url . $url);
+
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    $result = curl_exec($ch);
+    $info = curl_getinfo($ch);
+    curl_close($ch);
+    if ($info['http_code'] != 200){
+        throw new CkanException($this-&gt;error_codes["$info[http_code]"]);
+    }
+    if (!$result){
+        throw new CkanException("No Result");
+    }
+    return json_decode($result);
+}
+
+public function search($keyword){
+    $results = $this-&gt;transfer('api/search/package/?all_fields=1&amp;q=' . urlencode($keyword));
+    if (!$results-&gt;count){
+        throw new CkanException("Search Error");
+    }
+    return $results;
+}
+
+public function getPackage($package){
+    $package = $this-&gt;transfer('api/rest/package/' . urlencode($package));
+    if (!$package-&gt;name){
+        throw new CkanException("Package Load Error");
+    }
+    return $package;
+}
+
+
+public function getPackageList(){
+    $list =  $this-&gt;transfer('api/rest/package/');
+    if (!is_array($list)){
+        throw new CkanException("Package List Error");
+    }
+    return $list;
+}
+
+public function getGroup($group){
+    $group = $this-&gt;transfer('api/rest/group/' . urlencode($group) );
+    if (!$group-&gt;name){
+        throw new CkanException("Group Error");
+    }
+    return $group;
+}
+
+public function getGroupList(){
+    $groupList = $this-&gt;transfer('api/rest/group/');
+    if (!is_array($groupList)){
+        throw new CkanException("Group List Error");
+    }
+    return $groupList;
+}
+</code></pre>
+
+<p>}</p>
+
+<p>class CkanException extends Exception{}</p>
+
+<p>?></p>
+
+<p>Test with</p>
+
+<p>&lt;?php</p>
+
+<p>require_once(&ldquo;ckan.php&rdquo;);</p>
+
+<p>$ckan = new Ckan();</p>
+
+<p>$data = $ckan->getPackage(&lsquo;edmonton-data&rsquo;);</p>
+
+<p>print_r($data);</p>
+
+<p>?></p>
+
+<p>I&rsquo;m keeping this file and a Drupal module that uses it on Github at:</p>
+
+<p><a href="http://github.com/practicalweb/drupal-ckan">http://github.com/practicalweb/drupal-ckan</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2010-02-23T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ckan/'>ckan</a>, <a class='category' href='/blog/categories/drupal/'>drupal</a>, <a class='category' href='/blog/categories/open-data/'>open data</a>, <a class='category' href='/blog/categories/php/'>php</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2010/02/23/accessing-ckan-data-from-php/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2010/02/23/accessing-ckan-data-from-php/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/02/22/drupal-as-url-shortener/" title="Previous Post: Drupal as URL shortener">&laquo; Drupal as URL shortener</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/02/23/drupal-the-missing-api/" title="Next Post: Drupal - the missing API">Drupal - the missing API &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2010/02/23/accessing-ckan-data-from-php/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2010/02/23/accessing-ckan-data-from-php/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

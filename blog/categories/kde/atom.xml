@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Kde | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/kde/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Kdesvn and Kompare]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/12/01/kdesvn-and-kompare/"/>
+    <updated>2008-12-01T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/12/01/kdesvn-and-kompare</id>
+    <content type="html"><![CDATA[<p>
+Kdesvn and Kompare are two very nice tools providing rich GUI&#8217;s for svn and file comparison respectively. 
+</p>
+
+
+<p>
+In order to show the difference between two revisions using Kompare, change the default external diff settings to:
+kompare %1 %2
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu 8.10]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/11/01/ubuntu-8-10/"/>
+    <updated>2008-11-01T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/11/01/ubuntu-8-10</id>
+    <content type="html"><![CDATA[<p>
+Having just upgraded to Ubuntu 8.10 my key observation is that it&#8217;s important to read the release notes first.
+</p>
+
+
+<p>
+http://www.ubuntu.com/getubuntu/releasenotes/810
+</p>
+
+
+<p>
+There are a few bugs which have affected me
+</p>
+
+
+<ul>
+    <li>there is no bluetooth support in KDE</li>
+    <li>my wifi card only works in the US<br />
+    (there&#8217;s a workaround and I&#8217;m back online)</li>
+    <li> Dual head display with xrandr is causing problems<br />
+    (my screen flashes and KDE is putting widgets in parts of the screen I can&#8217;t see)</li>
+    <li>Subversion has moved to version 1.5 and getting Eclipse to use a compatible svn library is proving tricky</li>
+</ul>
+
+
+<p>
+On the plus side KDE 4.1 is looking very pretty, and the move to subversion 1.5 will be very useful in the long run.
+</p>
+
+
+<p>
+I had hoped to get my 3G connection working as a previous update seems to have broken it - but so far still no joy. 
+</p>
+
+
+<p>
+update:<br />
+There&#8217;s a solution for the Kubuntu Intrepid Dual Monitor Blinking<br />
+issue here: http://blog.nixternal.com/2008.10.22/kubuntu-intrepid-dual-monitor-blinking/ 
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

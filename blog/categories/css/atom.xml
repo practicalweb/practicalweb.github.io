@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Css | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/css/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Selenium Test for computedStyle]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/06/28/selenium-test-for-computedstyle/"/>
+    <updated>2011-06-28T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/06/28/selenium-test-for-computedstyle</id>
+    <content type="html"><![CDATA[<p>I wanted to write some automated tests for CSS changes and bugs, these type of issues are quite prone to regression so re-running the tests has a large benefit.</p>
+
+<p>It is possible to add new assertions to selenium via the user-extensions.js file</p>
+
+<p>The following adds a test for computed style, this only works in firefox as far as I know - but some automation is better than none</p>
+
+<p><code>
+//only works in firefox
+Selenium.prototype.assertStyle = function(locator, text) {
+    var params = text.split(&lsquo;=&rsquo;, 2);</p>
+
+<pre><code>var propertyName = params[0];
+var expectedValue = params[1];
+
+var element = this.page().findElement(locator);
+var actualValue = this.browserbot.getCurrentWindow().getComputedStyle(element, null).getPropertyValue(propertyName);
+Assert.matches(expectedValue, actualValue);
+</code></pre>
+
+<p>};</p>
+
+<p></code></p>
+
+<p>Now I can add a selenium test like
+<code></p>
+
+<table>
+<tr>
+    <td>assertStyle</td>
+    <td>//td[@class='lender'][1]</td>
+    <td>text-align=center</td>
+</tr>
+
+</table>
+
+
+<p></code>
+Selenium only lets me pass two parameters and really I want three (locator, css property, expected value). So I&rsquo;ve hacked this and put two parameters into one - which is a bit smelly but for now gets the job done - comments on better methods very welcome.</p>
+
+<p>I need to at least check that the &lsquo;text&rsquo; parameter is validated properly - but I figured I&rsquo;d blog now and update later as I&rsquo;ve a deadline to meet today.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Web Fonts With @font-face]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/07/17/web-fonts-with-font-face/"/>
+    <updated>2009-07-17T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/07/17/web-fonts-with-font-face</id>
+    <content type="html"><![CDATA[<p>
+When the web first started everything was in Times New Roman, black on grey with few images.
+</p>
+
+
+<p>
+Things have moved on a long way since then, but there are still very few fonts. I&#8217;ve worked on many sites that have tried to overcome this by various routes.
+</p>
+
+
+<ul>
+    <li>Creating an image of headline text in the desired font<br />
+    This can look good but offers poor accessibility and it&#8217;s hard to update</li>
+    <li><a href="http://www.mikeindustries.com/blog/sifr/">SiFR</a> - uses JavaScript and flash to add fonts<br />
+    It can work well - but performs badly if overused, and can cause problems with z-ordering on some systems</li>
+    <li><a href="http://www.w3.org/TR/css3-fonts/#the-font-face-rule">@font-face</a> Part of the CSS standard which allows you to provide font files for download.</li>
+</ul>
+
+
+<p>
+@font-face has a great deal of potential as the end users browser automatically downloads the font definition and renders whatever font you specify without any plug-ins or even JavaScript required.
+</p>
+
+
+<p>
+However, this is actually quite old technology - I tried to use it back in the days of Internet Explorer 5 and Netscape Navigator.
+</p>
+
+
+<p>
+Then as now there were competing standards for downloadable font files.
+</p>
+
+
+<p>
+At the time both browsers only offered a web specific font format which didn&#8217;t look good enough to use.
+</p>
+
+
+<p>
+However; Firefox 3.5 and Safari 4 now support regular TTF and OTF fonts and these look great.
+</p>
+
+
+<p>
+There is still the problem that most good fonts are supplied under license - which prevents you providing them for download. 
+</p>
+
+
+<p>
+But with two major browsers providing a good implementation for standard font file we can hope that it won&#8217;t be too much longer before the problem is solved. 
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Less Is More (CSS)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/06/22/less-is-more-css/"/>
+    <updated>2009-06-22T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/06/22/less-is-more-css</id>
+    <content type="html"><![CDATA[<p>
+CSS revolutionised web development, &lt;font&gt; and &lt;table&gt; were a nightmare in comparison.
+</p>
+
+
+<p>
+But still there are times when CSS feels very limited, if you want to change a colour or margin size and have to hunt through the CSS to calculate the related changes.
+</p>
+
+
+<p>
+But now there is 
+</p>
+
+
+<p>
+http://lesscss.org/
+</p>
+
+
+<p>
+Which looks like it fills in some of the missing gaps - it extends the CSS syntax and to it&#8217;s own format - and then generates standard CSS from this.
+</p>
+
+
+<p>
+I&#8217;m definitely planning on using this for my next project.  
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Keep Your Drupal Theme Simple]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/07/12/keep-your-drupal-theme-simple/"/>
+    <updated>2008-07-12T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/07/12/keep-your-drupal-theme-simple</id>
+    <content type="html"><![CDATA[<p>
+When creating a Drupal theme it is tempting to start with one of the existing themes (Zen and Garland are often used) but I would argue against this approach.
+</p>
+
+
+<p>
+If you start from another theme it feels good at the beginning; after all you start from a position where your site looks good. But the more customisations you make, the more you find that the old theme just adds complexity to your existing theme.
+</p>
+
+
+<p>
+The way Drupal works is that each module can add it&#8217;s own CSS: so tabs, menu trees, filters and so on all come with some sensible styling by default. If you want it to look different you not only have to create the CSS to make it look how you want - you have to make sure this overrides the default rules.
+</p>
+
+
+<p>
+So CSS in Drupal isn&#8217;t simple - don&#8217;t add to the complexity more than you need to.
+</p>
+
+
+<!--break-->
+
+
+<p>
+Start with a blank theme, make only the changes you need.
+</p>
+
+
+<p>
+That way you understand more of the CSS your site uses, changes are much easier to make, and bugs are less likely.
+</p>
+
+
+<p>
+This site is an example of that approach, the main stylesheet is less than 300 lines of code. IE6 specific code, and print style are only another 40 lines each.
+</p>
+
+
+<p>
+More complex themes benefit even more from initial simplicity, the complexity can then be built up systematically without fighting another designers plans.
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Testing Websites in IE - Verions 6 to 8]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/04/04/testing-websites-in-ie-verions-6-to-8/"/>
+    <updated>2008-04-04T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/04/04/testing-websites-in-ie-verions-6-to-8</id>
+    <content type="html"><![CDATA[<p>
+When developing a website it&#8217;s important to test it in as many different web browsers as possible. 
+</p>
+
+
+<p>
+If a client has a problem viewing the page there&#8217;s little point saying &quot;but it works on my machine&quot;
+</p>
+
+
+<p>
+ 
+I have found that the differences between different versions of firefox to be small enough that testing in one version is sufficient.
+</p>
+
+
+<p>
+Internet Explorer is so different between versions that each target version must be tested seperately.
+</p>
+
+
+<p>
+There is a <a href="http://tredosoft.com/Multiple_IE">package for multiple IEs</a>.
+</p>
+
+
+<p>
+But you can&#8217;t then install the developer toolbar, and I&#8217;m not quite convinced that install is 100% the same as having a standard browser.
+</p>
+
+
+<p>
+Fortunately Microsoft are aware of the problem and make a test virtual machine available.
+</p>
+
+
+<p>
+I&#8217;ve used this for a while for testing IE6 - and it works very well.
+They have now released a verion of IE8 - time to check that my websites won&#8217;t break when users start updating.
+</p>
+
+
+<p>
+<a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=6D58729D-DFA8-40BF-AFAF-20BCB7F01CD1&amp;displaylang=en">the virtual machine</a>
+<a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=21EABB90-958F-4B64-B5F1-73D0A413C8EF&amp;displaylang=en">images for ie6, ie7 and ie8</a>
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Import an Svn Repository to Git - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="You&rsquo;ll need to have git and git-svn installed. The code samples are run in bash on Linux. Initial Import The import process can be slow if you &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2011/05/14/import-an-svn-repository-to-git">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Import an Svn Repository to Git</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-05-14T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>You&rsquo;ll need to have git and git-svn installed.</p>
+
+<p>The code samples are run in bash on Linux.</p>
+
+<h2>Initial Import</h2>
+
+
+<p>The import process can be slow if you have a lot of history to import as git-svn has to pull in every single revision individally. I&rsquo;ve found it worthwhile creating a tiny svn repository to practice with as imports are quick and mistakes cheap.</p>
+
+<p><code>
+mkdir mynewgitrepo
+cd mynewgitrepo
+git svn init <svn repo url>  &ndash;tags=tags &ndash;branches=branches &ndash;trunk=trunk &ndash;prefix=svn
+git svn fetch  # this takes ages
+</code></p>
+
+<p>You can use git-svn rebase to pull in further updates from svn and git-svn dcommit to commit back.</p>
+
+<p>NB - if you are doing a one shot import and abandoning svn the look into the <a href="http://www.au.kernel.org/software/scm/git/docs/git-svn.html">authors-file and no-metadata options</a> - though <a href="http://www.au.kernel.org/software/scm/git/docs/git-filter-branch.html">git-filter-branch</a> may be a better way of cleaning up the history.</p>
+
+<h2>Local and remote Branches</h2>
+
+
+<p>git-svn creates remote branches that track changes in the svn repository, if you want to work on these branches you will need local copies, I&rsquo;ve used the prefix &ldquo;svn&rdquo; on importing which will be applied to the remote branches which allows me to create local branches with the same name as is used in svn.</p>
+
+<p>To create a local copy of branch 1.0
+<code>
+git branch 1.0 svn/1.0
+</code></p>
+
+<p>To create local copies of all svn branches</p>
+
+<p><code>
+for branch in $(git branch -r | grep -v tags | grep -v trunk) ; do echo git branch ${branch#svn/} $branch ; done > local_branches</p>
+
+<h1>review local_branches file</h1>
+
+<p>. local_branches
+</code></p>
+
+<p>NB when a new branch is created in svn it won&rsquo;t appear automatically in git - use git svn fetch to achive this and then create a local copy of it if needed.</p>
+
+<h2>Tags</h2>
+
+
+<p>Subversion doesn&rsquo;t really distinguish between tags and branches - there is just a convention that copies of trunk are stored in &ldquo;branches&rdquo; for further commits and in &ldquo;tags&rdquo; to be left as a record of a a point in time. But you can in fact continue to work on subversion tags.</p>
+
+<p>What git-svn does is to import tags as branches prefixed with /tags if the tag has commits git-svn creates a branch for each commit named tags/$tagname@$revison_id</p>
+
+<p>If you want to you can make true git tags from these and delete the git branches - though you will (presumably) lose the ability to obtain further updates on these later.</p>
+
+<p><code>
+for tag in $(git branch -r | grep tags) ; do echo &ldquo;git tag ${tag#tags/} $tag &amp;&amp; git branch -r -d $tag &rdquo;; done > converttags</p>
+
+<h1>review converttags file</h1>
+
+<p>. converttags
+</code></p>
+
+<h2>Further git settings</h2>
+
+
+<p>Migrate svn ignore settings
+<code>
+git-svn show-ignore > .gitignore
+</code></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2011-05-14T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/git/'>git</a>, <a class='category' href='/blog/categories/svn/'>svn</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2011/05/14/import-an-svn-repository-to-git/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2011/05/14/import-an-svn-repository-to-git/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/05/13/seleniumrc-and-self-signed-ssl-certs/" title="Previous Post: SeleniumRC and self signed SSL certs">&laquo; SeleniumRC and self signed SSL certs</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/05/19/selenium-ui-elements/" title="Next Post: Selenium UI-Elements ">Selenium UI-Elements  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2011/05/14/import-an-svn-repository-to-git/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2011/05/14/import-an-svn-repository-to-git/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

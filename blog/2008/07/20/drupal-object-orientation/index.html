@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Drupal Object Orientation - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="One of the surprising things about Drupal is that it doesn't use object oriented coding. There's a good page in the Drupal documentation about this &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2008/07/20/drupal-object-orientation">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Drupal Object Orientation</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-07-20T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>
+One of the surprising things about Drupal is that it doesn&#8217;t use object oriented coding.
+</p>
+
+
+<p>
+There&#8217;s a good page in the Drupal documentation about this
+</p>
+
+
+<p>
+<a href="http://api.drupal.org/api/file/developer/topics/oop.html">http://api.drupal.org/api/file/developer/topics/oop.html</a>
+</p>
+
+
+<p>
+It makes a good case for the design of Drupal, and goes a long way to explain why Drupal feels more OO than the code looks at first glance.
+</p>
+
+
+<p>
+There has been discussion on the mailing list
+</p>
+
+
+<p>
+Endless debate:<br />
+<a href="http://lists.drupal.org/pipermail/development/2006-July/thread.html#17264">lists.drupal.org/pipermail/development/2006-July/thread.html#17264</a>
+</p>
+
+
+<p>
+Objects vs Arrays:<br />
+<a href="http://lists.drupal.org/pipermail/development/2007-January/021746.html">lists.drupal.org/pipermail/development/2007-January/021746.html</a>
+</p>
+
+
+<p>
+Why use the object notation:<br />
+<a href="http://lists.drupal.org/pipermail/development/2005-July/thread.html#7137"> lists.drupal.org/pipermail/development/2005-July/thread.html#7137</a>
+</p>
+
+
+<p>
+A lot of that discussion boils down to personal preference - but one of the key issues seems to be that OO support in PHP4 is poor. 
+</p>
+
+
+<p>
+As an enterprise CMS I don&#8217;t believe that Drupal has had any business considering PHP4 for a long time; I&#8217;m glad that PHP5 will be required for Drupal 7 - but that&#8217;s still a long way off.
+</p>
+
+
+<p>
+Another oft-quoted argument is that Object performance is worse than array equivalents: this this performance difference seems marginal at best - reducing the number of queries per page is likely to make a far bigger difference. CPU cycles are way cheaper than programmer hours  - and in any case better structures lead to more efficient programming which ends up producing faster code. 
+</p>
+
+
+<p>
+There&#8217;s a great Post from merlinofchaos on how Drupal might look<br />
+<a href="http://www.angrydonuts.com/what_if_fapi_were_oo">www.angrydonuts.com/what_if_fapi_were_oo</a>
+</p>
+
+
+<p>
+To my mind one of the biggest reasons to use OO constructs would be to define structure in a way that would generate errors when mistakes are made. If you look at the <a href="http://api.drupal.org/api/file/developer/topics/forms_api_reference.html/5">form api page</a> you will see endless comments like &quot;Property names without # signs causes havoc.&quot; this is a direct result of using a complex array to build forms - if objects were used it would be much easier to generate errors when the wrong attribute name was used. Drupal has much to strong a tendency to be silent about errors - making debugging much harder than it needs to be.
+</p>
+
+
+<p>
+WebChick wrote a great post about making Drupal E_ALL compliant<br />
+<a href="http://drupal.org/node/99625">drupal.org/node/99625</a>
+</p>
+
+
+<p>
+Using well defined objects would aid debugging in exactly the same way.
+</p>
+
+
+<p>
+But for me the biggest productivity gain of a move to Objects would be auto-completion.
+</p>
+
+
+<p>
+I use the Eclipse IDE for development and find auto-completion invaluable (along with the pop-up documentation and &quot;open declaration&quot;). To work this requires that the IDE be able to determine something about the variable in question. The IDE knows the allowed property names and methods of variables when they are a defined object type - but if all you know is that a function returns an array - none of this help is available.
+</p>
+
+
+<p>
+The above argument doesn&#8217;t even touch on the benefits of encapsulation, code re-use, and so on that have revolutionised software development. Even without full-on adoption of OO methodology - just adopting object structures over array structure would provide a huge boost in productivity. 
+</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2008-07-20T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/drupal/'>drupal</a>, <a class='category' href='/blog/categories/eclipse/'>eclipse</a>, <a class='category' href='/blog/categories/enterprise/'>enterprise</a>, <a class='category' href='/blog/categories/php/'>php</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2008/07/20/drupal-object-orientation/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2008/07/20/drupal-object-orientation/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2008/07/18/time-to-upgrade-to-drupal-6/" title="Previous Post: Time to upgrade to Drupal 6?">&laquo; Time to upgrade to Drupal 6?</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2008/07/24/install-runkit-for-unit-testing/" title="Next Post: Install runkit for unit testing">Install runkit for unit testing &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2008/07/20/drupal-object-orientation/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2008/07/20/drupal-object-orientation/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

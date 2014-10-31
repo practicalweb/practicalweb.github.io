@@ -1,0 +1,948 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Creating New Vagrant Base Boxes With Veewee]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/"/>
+    <updated>2014-10-28T16:08:14+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee</id>
+    <content type="html"><![CDATA[<p>Creating your own base box for vagrant is a great thing to do, you get to undestand exactly what is on that box and to choose exactly what base OS you use.</p>
+
+<p>After all one of the big draws of vagrant is keeping your dev environment close to what production looks like - and for that you need to know what is in the base box.</p>
+
+<p>When I first started using vagrant I wrote a post <a href="http://www.practicalweb.co.uk/blog/2012/10/16/how-to-build-a-centos-6-base-box-for-vagrant/">How to build a Centos 6 base Box for vagrant</a> whcih details the manual steps needed. At the time I was busy learning puppet, vagrant and related tools - veewee was just one tool too many and a manual build seemed the best way to get my head around what a base box was.</p>
+
+<p>While the base box isn&rsquo;t something I have needed to repeat much, it is beneficial to update the base image from time to time and here veewee is brilliant. It also makes shareing the reponnsbibility for the base box within a team easy.</p>
+
+<p>Here&rsquo;s what I did</p>
+
+<ul>
+<li>fork <a href="https://github.com/jedi4ever/veewee">https://github.com/jedi4ever/veewee</a> (in my case to a private repo)</li>
+<li>check that out</li>
+<li>install veewee according to its install notes</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox tenplates <span class="p">|</span> grep -i centos
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This told me that the template I wanted was CentOS-6.5-x86_64-minimal</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox define centos65 CentOS-6.5-x86_64-minimal
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now I made some edits to customise the base box how I wanted</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vim definitions/centos65/definition.rb <span class="c"># comment out the chef line</span>
+</span><span class='line'>vim definitions/centos65/cleanup.sh <span class="c"># remove build packages like gcc</span>
+</span><span class='line'>vim definitions/centos65/vagrant.sh <span class="c"># remove insecure vagrant key and add your own public key</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Build</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox build centos65
+</span><span class='line'>veewee vbox <span class="nb">export </span>centos65
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>add to my local vagrant so I can test</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vagrant box add centos65 ./centos65.box
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now I can copy the base box to a team-accessible server</p>
+
+<p>And push my custom definition to my veewee fork so anyone from the team can build an updated box.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vim .gitignore <span class="c"># remove definitions/*</span>
+</span><span class='line'>git add .gitignore
+</span><span class='line'>git add definitions/
+</span><span class='line'>git commit -m <span class="s2">&quot;added my definition&quot;</span>
+</span><span class='line'>git push
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Install Graphite/grafana and Import Data From Munin]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/"/>
+    <updated>2014-10-24T14:09:22+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin</id>
+    <content type="html"><![CDATA[<p><a href="http://grafana.org/">Grafana</a> is a fork of <a href="http://www.elasticsearch.org/overview/kibana/">kibana</a> that builds grapshs based on data stored in <a href="http://graphite.wikidot.com/">graphite</a> (it can pull data from other places too but this blog only looks at graphite)</p>
+
+<p>I&rsquo;m looking at using it to replace tools like [munin}(<a href="http://munin-monitoring.org/">http://munin-monitoring.org/</a>) or [cacti}(<a href="http://www.cacti.net/">http://www.cacti.net/</a>) which do a great job of gathering and displaying metrics.</p>
+
+<p>Wwhat Grafana does beyond this is that it allows you to interactivley manipulate the graphs, you can easily create a graph showing related metrics on the same screen (for example add sysem load and apache requestes per second to the same graphic). You can do this in the other tools - but you have to edit config files on the server, in grafana this is all managed via the UI.</p>
+
+<p>It also allows you to look at any period you like - and in any resolution.</p>
+
+<p>sudo yum install graphite-web python-carbon</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Insert Line to All Files When Missing]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/22/insert-line-to-all-files-when-missing/"/>
+    <updated>2014-10-22T16:31:31+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/22/insert-line-to-all-files-when-missing</id>
+    <content type="html"><![CDATA[<p>In this case to turn on comments in all posts for this blog</p>
+
+<p>All files that don&rsquo;t have comments at the start of a line get &ldquo;comments: true&rdquo; inserted on the 5th line</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">for</span> f in * <span class="p">;</span> <span class="k">do</span> grep -q <span class="s2">&quot;^comments&quot;</span> <span class="nv">$f</span> <span class="o">||</span> sed -i <span class="s1">&#39;5 i\</span>
+</span><span class='line'><span class="s1">comments: true&#39;</span> <span class="nv">$f</span> <span class="p">;</span> <span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Maybe Octopress has a way to globally enable comments - but I didn&rsquo;t find it and this was quick</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Migrating From Drupal 5 to Octopress]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/21/migrating-from-drupal-5-to-octopress/"/>
+    <updated>2014-10-21T15:41:17+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/21/migrating-from-drupal-5-to-octopress</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been running this blog (or some version of it) for almost 10 years now.</p>
+
+<p>I write to help clarify my own thoughts, or to note down technical details of a task that I have struggled to figure out. I often found myself coming back and have saved many hours of trying to figure out the same thing again a year or more later.</p>
+
+<p>For a long time this site was running Drupal 5, I set it up at a time when I was getting to know Drupal, starting out as an independant, and had plenty of time to spend on it. At the time this was a very useful excercise, installing lots of modules, and writing some code was good experience. But when Drupal 6 came out and I was busy <a href="http://www.practicalweb.co.uk/blog/2008/07/18/time-to-upgrade-to-drupal-6}">it wasnt worth upgrading</a>, then when drupal 7 was released and Drupal 5 no longer supported, upgrading was even more difficult as I would have had to upgrade in two steps. Besides Drupal didn&rsquo;t seem like such a good fit for my blog any more.</p>
+
+<p>I don&rsquo;t want to have to apply security updates on a site I&rsquo;m not getting paid for: so a static html site is a great fit for me.</p>
+
+<p>I lose integrated comments, but spam had already killed those for me - I&rsquo;ll try disqus and see how that goes (the need to enable comments in the yaml for each post threw me at first).</p>
+
+<p>Search was useful - but I can grep the source files myself.</p>
+
+<p>I had all sorts of Drupal plugins before - but really I don&rsquo;t think they were very important.</p>
+
+<p>Jekyll seems great, especially because with github&rsquo;s patronage it seems unlikely to become unsupported; and at the end of the day it is just a bunch of simple files so importing to another system should be easy.</p>
+
+<p>Exporting from Drupal 5 needed a <a href="https://github.com/practicalweb/jekyll-import/commit/cfa72281147fd37ce527d2dab1f3ae916e066b04">small patch on the importer</a> without this the categories were seen as some kind of binary object in yaml. The import reads direct from the database, so doesn&rsquo;t run all Drupal&rsquo;s filters and I suspect a drupal export module from drupal would do a much better job. I still need to pull over some old comments and formatting could do with a tidy up, but I need to move to a system that gets me writing new content, and not worry too much about the old.</p>
+
+<p>Jekyll itself didn&rsquo;t use tags in the way I wanted - I find the ability to cross link from one post to similar ones very useful so I am using Octopress which seem to do what I want out of the box.</p>
+
+<p>To get the content in Octopress I just did</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cp jekyll/mysite/_posts/* octopress/source/_posts
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I have switched from pygments highlighter to linguist (this seems to be what github use and supports code highlighting well)</p>
+
+<p>I added a twitter aside for which I just copy pasted the twitter widget into <code>source/_includes/asides/twitter.html</code> and enabled this in _config.yml</p>
+
+<p>I&rsquo;m not a ruby coder, so instaling all the required ruby gems and figuring out how to run a modified version of the jekyll importer took a little while, in the end I think it was just a case of getting all the gems installed that I needed. I didn&rsquo;t blog soon enough!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Static Export of Drupal Site]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/14/static-export-of-drupal-site/"/>
+    <updated>2014-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/14/static-export-of-drupal-site</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve exported this site from Drupal using wget to create a static html version like</p>
+
+<pre><code>wget  --mirror -p  -e robots=off --base=./ -k -P ./ http://localhost/
+</code></pre>
+
+<p>Then rsync to the server and use mod rewrite to retain the paged links like frontpage?page=4</p>
+
+<p>I&rsquo;ve had some trouble getting mod rewrite to work, it seems that getting apache to serve content from filenames containing question marks is tricky.</p>
+
+<p>in apache 2.4 this worked</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ApacheConf'><span class='line'><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
+</span><span class='line'>   <span class="nb">ServerName</span> practicalweb.localhost
+</span><span class='line'>   <span class="nb">DocumentRoot</span> <span class="sx">/home/sean/rescue/localhost</span>
+</span><span class='line'>   <span class="nb">RewriteEngine</span> <span class="k">on</span>
+</span><span class='line'>   <span class="nb">LogLevel</span> <span class="k">alert</span> rewrite:trace3
+</span><span class='line'>     <span class="nt">&lt;Directory</span> <span class="s">/home/sean/rescue/localhost</span><span class="nt">&gt;</span>
+</span><span class='line'>       <span class="nb">RewriteCond</span> %{QUERY_STRING} !=&amp;quot;&amp;quot;
+</span><span class='line'>       <span class="nb">RewriteRule</span> ^(.*) <span class="sx">/home/sean/rescue/localhost/</span>$1\%3F%{QUERY_STRING}? [L]
+</span><span class='line'>
+</span><span class='line'>       <span class="nb">Options</span> Indexes FollowSymLinks MultiViews
+</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">All</span>
+</span><span class='line'>      <span class="nb">Require</span> <span class="k">all</span> granted
+</span><span class='line'>   <span class="nt">&lt;/Directory&gt;</span>
+</span><span class='line'><span class="nt">&lt;/VirtualHost&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But on apache 2.2 (which my server runs I) needed an external redirect</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ApacheConf'><span class='line'><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nb">DocumentRoot</span> <span class="sx">/var/www/practicalweb</span>
+</span><span class='line'>  <span class="nb">RewriteEngine</span> <span class="k">on</span>
+</span><span class='line'>  <span class="nb">RewriteCond</span> %{QUERY_STRING} !=&amp;quot;&amp;quot;
+</span><span class='line'>  <span class="nb">RewriteRule</span> ^(.*) $1\%3F%{QUERY_STRING}? [last,noescape,R]
+</span><span class='line'>  <span class="nt">&lt;Directory</span> <span class="s">/</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nb">Options</span> FollowSymLinks
+</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">None</span>
+</span><span class='line'>  <span class="nt">&lt;/Directory&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;Directory</span> <span class="s">/var/www/practicalweb</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nb">Options</span> <span class="k">None</span>
+</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">None</span>
+</span><span class='line'>      <span class="nb">Order</span> allow,deny
+</span><span class='line'>      <span class="nb">allow</span> from <span class="k">all</span>
+</span><span class='line'>  <span class="nt">&lt;/Directory&gt;</span>
+</span><span class='line'><span class="nt">&lt;/VirtualHost&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It still basically works - but users see a slightly changed URL which isn&rsquo;t quite what I wanted.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Developing for Ops]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/14/developing-for-ops/"/>
+    <updated>2014-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/14/developing-for-ops</id>
+    <content type="html"><![CDATA[<p>We often work on large websites with strict change control practices and scheduled release cycles. Sometimes we also hand over the systems to the client for production and don’t have direct access ourselves.</p>
+
+<p>Some bugs have a nasty habit of only occurring in production, this may be due to high load, odd/old browsers, changes in data, or just because test scenarios don’t cover every eventuality.</p>
+
+<p>What this means is that when we have a bug in production we can only understand it through the error logging we have already built into the system. If we need to put in place additional logging we usually lose the chance of actually fixing the bug for another release cycle.</p>
+
+<p>One of the real arts in this flow of development is to be pessimistic enough to assume that somehow something is going to go wrong, to remember that the people who see the bug will not be the developers who know the code, and that at this point (unlike during dev) we will have very limited access to the systems we might want to debug.</p>
+
+<p>One temptation is to log everything - but you soon find that doesn’t scale.</p>
+
+<p>The art of error messages is a bit like the art of commenting - especially for those errors that should never happen. You often don’t need to say exactly what went wrong, hopefully your compiler or runtime engine will do this along with a stacktrace or at least a line number. You need to say what it means to have this error - especially if it indicates a breakdown in business logic. It also helps to raise errors as early in the code flow as possible.</p>
+
+<p>When working on a large project with multiple teams it is especially helpful for errors to make clear whenever possible which team the bug belongs to. Clear error data like this can really cut down on the politics that can accompany a production bug and radically reduce the time to fix.</p>
+
+<p>For example let’s imagine that we are developing a website, we are responsible for the shopfront but we obtain product data from a feed. As well as all the bugs that can occur in our code there are likely to be a whole host of possible problems with the incoming data.</p>
+
+<p>What if we receive a null instead of the agreed object, what if the price is non numeric (or zero, or negative), what if an expected field is missing?</p>
+
+<p>You might display a product with zero price, fail to display it, or perhaps you do catch an error but the log just says something like “Notice:  Trying to get property of non-object”. The bug gets reported to the front end team - because that’s where the error appears. The front end team can’t see the production data.</p>
+
+<p>The politics here is that teams often blame each other, developers are generally optimistic that their code is good and pessimistic about other teams code. Therefore bugs get thrown over the wall too quick and then get thrown back - leaving bugs bouncing about with no fix.</p>
+
+<p>Now imagine you have explicit validation at the point you load third party data (or any place you have a boundary of responsibility like this). You log an error that points directly to the data feed, hopefully with the actual data that is wrong, perhaps even logging the request/response pair that led to it. This time you can give the data team enough info that they can quickly identify the problem. Conversely if you have missing products and no data errors - the impossible has happened - there is a bug in your own code. Now you get to be the hero and fix it.</p>
+
+<p>Remember, in development (where developers spend 95%) of their time this bug would be trivial, the developer would see the error, know which bit of code it related to, be able to view the data feed, and report the bug back to the data team. The trick is to remember it won’t be like this in production.</p>
+
+<p>In my experience it is well worth spending a chunk of time up front writing good generic error routines, that capture as much detail as possible, and 5 or 10 minutes every day looking at stubbed out error routines.</p>
+
+<p>This may add up to a non-trivial time investment - but you only have to save a few minor production bugs to get paid back plenty.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Merge Google Plus Accounts]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/11/19/merge-google-plus-accounts/"/>
+    <updated>2013-11-19T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/11/19/merge-google-plus-accounts</id>
+    <content type="html"><![CDATA[<p>If you have a gmail account, you get a google plus account with it, many of end of with several of each. For mail this is usually what you want but for plus with it&#8217;s circles you usually just want one account and to split post by circle. Fortunately there is a way to redirect one account to another.</p>
+
+
+
+
+<p>This way anyone looking for you at the account you don&#8217;t really use or looking you up via an alternate email  gets redirected to your active account.</p>
+
+
+
+
+<p>First make sure you are only logged in to the google account you want to transfer your connections away from</p>
+
+
+
+
+<p>Go to <a href="https://www.google.com/settings/takeout/custom">Google takeout</a>, this is usually used to download backups of your data.</p>
+
+
+
+
+<p>On the google circles line is a little folder icon, the mousover text tells you this is to &quot;Transfer your google+ connections to another account&quot;</p>
+
+
+
+
+<p>Follow this link and you&#8217;ll have to log into your destination account.</p>
+
+
+
+
+<p>That should set up your transfer.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to Use Google Comments on Your Blog]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/11/19/how-to-use-google-comments-on-your-blog/"/>
+    <updated>2013-11-19T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/11/19/how-to-use-google-comments-on-your-blog</id>
+    <content type="html"><![CDATA[<p>To use google plus comments on your site all you need to do is insert the following code on teh page where you want the comments to appear</p>
+
+<p>url should be the full url to the page, then any comments in google plus with this url will appear to any user who can see them (ie public commnts or those from people in the viewers circles).</p>
+
+<p>width is just how wide you want the comment box</p>
+
+<p>BLOGGER This method is as far as I can see only officially supported for Blogger comments and only this value seems to work</p>
+
+<p>FILTERED_POSTMOD similarly seems to be just what people use - I didn&rsquo;t find docs for this so I&rsquo;m unsure if other values work</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://apis.google.com/js/plusone.js&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;g:comments</span>
+</span><span class='line'>    <span class="na">href=</span><span class="s">&quot;The url of the blog post&quot;</span>
+</span><span class='line'>    <span class="na">width=</span><span class="s">&quot;500&quot;</span>
+</span><span class='line'>    <span class="na">first_party_property=</span><span class="s">&quot;BLOGGER&quot;</span>
+</span><span class='line'>    <span class="na">view_type=</span><span class="s">&quot;FILTERED_POSTMOD&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/g:comments&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Hacked Server (Now Restored)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/11/19/hacked-server-now-restored/"/>
+    <updated>2013-11-19T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/11/19/hacked-server-now-restored</id>
+    <content type="html"><![CDATA[<p>A few days ago I was notified by my ISP that my server was &quot;emitting a UDP-based denial of service attack &quot;, as a result the VM had been rebooted and taken off the network.</p>
+
+
+
+
+<p>With console access I was able to verify there was a problem, and the ISP was able to give me a clean VM, with my old system available as a mount, in read-only mode</p>
+
+
+
+
+<p>I had thought that the server was fairly well locked down with minimal users, secure passwords and so on, but to be honest with other commitments I hadn&#8217;t been keeping on top of patching.</p>
+
+
+
+
+<p>Reviewing logs etc didn&#8217;t show any clear point of entry, and since the server was rebooted I didn&#8217;t see any  ongoing activity. I decided the best thing is just a clean rebuild, with better security, better monitoring, and keep on top of those patches.</p>
+
+
+
+
+<p>The site is back up - but the code is based on Drupal 5 which isn&#8217;t supported and I don&#8217;t have time for an upgrade right now. What I&#8217;ve done is to run the site  locally (after audit) and put online a static html mirror. As well as leaving less avenue for attack this should make the site a lot faster to load. I keep meaning to revamp the site properly but just never seem to have time, and there are always paid tasks that take priority!</p>
+
+
+
+
+<p>Comments are the main loss - but they were overloaded with spam anyway - so I&#8217;m trying out google plus comments instead which I hope will avoid the spam and give a better experience</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using Varnish to Cache Authenticated Drupal Pages]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/10/15/using-varnish-to-cache-authenticated-drupal-pages/"/>
+    <updated>2013-10-15T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/10/15/using-varnish-to-cache-authenticated-drupal-pages</id>
+    <content type="html"><![CDATA[<p>I have a site which requires users to be logged in, but the pages are not customised. I was playing with a way to cache the content in varnish while still doing an access check. This method uses an access check pages (test.php below) which then uses ESI to load the real, cacheable content.</p>
+
+<p>I&rsquo;ve tried it in a dev env, I&rsquo;m not yet sure if we&rsquo;ll use this in production.</p>
+
+<p>Varnish config</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="n">probe</span> <span class="n">checkslash</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">url</span> <span class="o">=</span> <span class="s">&quot;/robots.txt&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">interval</span> <span class="o">=</span> <span class="mi">500</span><span class="n">s</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">10</span><span class="n">s</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">include</span> <span class="s">&quot;backends.vcl&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/** generic config from here down */</span>
+</span><span class='line'><span class="n">sub</span> <span class="n">vcl_recv</span><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* if the drupals are down, this is how long we cache for */</span>
+</span><span class='line'>  <span class="n">set</span> <span class="n">req</span><span class="p">.</span><span class="n">grace</span> <span class="o">=</span> <span class="mi">6</span><span class="n">h</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* Make sure we direct 443 traffic to the secure drupal */</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">server</span><span class="p">.</span><span class="n">port</span> <span class="o">==</span> <span class="mi">443</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">set</span> <span class="n">req</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">drpau_ssl_director</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="cm">/* port 80 traffic goes to the correct LB */</span>
+</span><span class='line'>    <span class="n">set</span> <span class="n">req</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">drpau_director</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="cp"># just pass through non-page files, and the login page</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="n">url</span> <span class="o">~</span> <span class="s">&quot;(?i)\.(pdf|asc|dat|txt|doc|xls|ppt|tgz|csv|png|gif|jpeg|jpg|ico|swf|css|js|htc|ejs)(\?.*)?$&quot;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="n">url</span> <span class="o">~</span> <span class="s">&quot;(?i)(sites/default/files)|(js/)|(/login)&quot;</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="n">esi_level</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="cp"># pass regular pages to a spoecial url</span>
+</span><span class='line'>    <span class="n">set</span> <span class="n">req</span><span class="p">.</span><span class="n">url</span> <span class="o">=</span> <span class="s">&quot;/esi&quot;</span> <span class="o">+</span> <span class="n">req</span><span class="p">.</span><span class="n">url</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">(</span><span class="n">lookup</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="n">sub</span> <span class="n">vcl_fetch</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="n">url</span> <span class="o">~</span> <span class="s">&quot;/esi/&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="p">.</span><span class="n">esi_level</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">set</span> <span class="n">beresp</span><span class="p">.</span><span class="n">do_esi</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="cm">/* Do ESI processing               */</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then in apache I redirect all requests for pages that come via the esi prefix</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ApacheConf'><span class='line'><span class="nb">RewriteRule</span> ^esi/(.*)$ test.php [L]
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and test php is</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DRUPAL_ROOT&#39;</span><span class="p">,</span> <span class="nb">getcwd</span><span class="p">());</span>
+</span><span class='line'><span class="c1">// We prepare only a minimal bootstrap.</span>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">DRUPAL_ROOT</span> <span class="o">.</span> <span class="s1">&#39;/includes/bootstrap.inc&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">drupal_bootstrap</span><span class="p">(</span><span class="nx">DRUPAL_BOOTSTRAP_SESSION</span><span class="p">);</span>
+</span><span class='line'><span class="k">global</span> <span class="nv">$user</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$roles</span> <span class="o">=</span> <span class="nx">user_roles</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nb">in_array</span><span class="p">(</span><span class="s1">&#39;anonymous user&#39;</span><span class="p">,</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">roles</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$uri</span> <span class="o">=</span> <span class="nb">preg_replace</span><span class="p">(</span><span class="s1">&#39;#^/esi#&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="nx">REQUEST_URI</span><span class="p">]);</span>
+</span><span class='line'>  <span class="k">echo</span> <span class="s2">&quot;&lt;esi:include src=</span><span class="se">\&quot;</span><span class="s2">http://</span><span class="si">$_SERVER[SERVER_NAME]$uri\</span><span class="s2">&quot;</span><span class="o">/&gt;</span><span class="s2">&quot;;</span>
+</span><span class='line'><span class="s2">} else {</span>
+</span><span class='line'><span class="s2">     header(&quot;</span><span class="nx">Location</span><span class="o">:</span> <span class="nx">https</span><span class="o">://</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="nx">SERVER_NAME</span><span class="p">]</span><span class="o">/</span><span class="nx">login</span><span class="s2">&quot;);</span>
+</span><span class='line'><span class="s2">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Search Skype History Across Chats]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/10/14/search-skype-history-across-chats/"/>
+    <updated>2013-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/10/14/search-skype-history-across-chats</id>
+    <content type="html"><![CDATA[<p>I find a lot of clients use skype</p>
+
+<p>For me the biggest frustration is the limited search</p>
+
+<p>But it turns out the data is stored using sqlite - and so you can search using sql directly on the sqlite db files.</p>
+
+<div><script src='https://gist.github.com/740d136e58d8b87d057f.js'></script>
+<noscript><pre><code>#!/bin/bash
+
+export username=skype.name
+sqlite3 -column ~/.Skype/$username/main.db \
+&quot;SELECT displayname, from_dispname, datetime(Messages.timestamp, 'unixepoch') as date, body_xml 
+             FROM Messages, Conversations 
+             WHERE Conversations.id=Messages.convo_id and body_xml like '%$searchterm%' 
+             ORDER BY Messages.timestamp;&quot;
+
+</code></pre></noscript></div>
+
+
+<p>or for all your chats from a given day</p>
+
+<div><script src='https://gist.github.com/85e282537f6f2f631414.js'></script>
+<noscript><pre><code>export username=skype.name
+export thedate=$(date +%Y-%m-%d)
+sqlite3 ~/.Skype/${username}/main.db \
+&quot;SELECT displayname, datetime(Messages.timestamp, 'unixepoch') as date, body_xml 
+           FROM Messages, Conversations 
+           WHERE Conversations.id=Messages.convo_id and date(Messages.timestamp, 'unixepoch') == '${thedate}' and author='${username}' 
+           ORDER BY Messages.timestamp;&quot;</code></pre></noscript></div>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Blocking Git Commits From Future Merges]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/08/15/blocking-git-commits-from-future-merges/"/>
+    <updated>2013-08-15T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/08/15/blocking-git-commits-from-future-merges</id>
+    <content type="html"><![CDATA[<p>I used to use subversion and <a href="http://www.orcaware.com/svn/wiki/Svnmerge.py">svnmerge</a> a lot, and there&#8217;s just one thing I miss about it. Now svnmerge is a tool to bolt on merge tracking to svn, and gits merge tracking is vastly better in many ways. But the one thing that svnmerge allowed me to do that was cool and doesn&#8217;t have a real equivalent in git is to block commits</p>
+
+
+
+
+<p>I use release branches as well as feature branches, so for each release we support we have a barcnh, new features are developed in feature branches off this - and merged back to it when complete. The branch for release x gets merged forwards to release x+1 periodically - to ensure that any features or bugfixes make it to the latest release.</p>
+
+
+
+
+<p>Sometimes we make a commit to an older release that we don&#8217;t want to merge forwards to newer releases - typically this is a quick and dirty bugfix/workaround that is superseded by a proper fix in the next release.</p>
+
+
+
+
+<p>Svnmerge allowed you to &quot;block&quot; these commits so that they did not get merged forwards, with git you could cherry-pick around these commits - but you&#8217;d loose the ability to do regular merges.</p>
+
+
+
+
+<p><p>What you can do it git is to merge the commit - but keep the files unchanged, this looks a bit weird but works OK.<p></p>
+
+<p><code>git cherry-pick -e &ndash;strategy=ours $hash</code></p>
+
+<p><p>The strategy=ours bit means keep the code as it was in this branch. -e lets you edit the commit message to indicate it isn&rsquo;t a normal merge</p></p>
+
+<p><p>Now sometimes this doesn&rsquo;t seem to work, git complains that the commit is empty, I think this is when there is a conflict - in this case the only way I have worked around it is to do a regular cherry-pick and resolve the conflict manually - effectively undoing the commit. Then <code>commit &ndash;allow-empty</code></p>
+
+<p></p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Github Jenkins Hook - Multiple Endpoints and API]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/08/07/github-jenkins-hook-multiple-endpoints-and-api/"/>
+    <updated>2013-08-07T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/08/07/github-jenkins-hook-multiple-endpoints-and-api</id>
+    <content type="html"><![CDATA[<p>I wanted to trigger multiple jenkins servers from a github hook.</p>
+
+<p>I found <a href="https://github.com/github/github-services/pull/604M/">this pull request</a> which led me to look at the API</p>
+
+<p>useful docs</p>
+
+<ul>
+<li><a href="http://developer.github.com/v3/repos/hooks">http://developer.github.com/v3/repos/hooks</a></li>
+<li><a href="https://gist.github.com/caspyin/2288960">https://gist.github.com/caspyin/2288960</a></li>
+</ul>
+
+
+<p>My code</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>  curl --user <span class="s2">&quot;me:mypassword&quot;</span> --request POST --data @jenkins.json  https://api.github.com/repos/myorg/myproject/hooks
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>here jenkins.json is like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jenkins&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nt">&quot;active&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>      <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span class='line'>        <span class="s2">&quot;push&quot;</span>
+</span><span class='line'>      <span class="p">],</span>
+</span><span class='line'>      <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nt">&quot;jenkins_hook_url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://jenkins.mydomain/github-webhook/&quot;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What I found was that this just replaces my jenkins hook - which isn&rsquo;t what I wanted.</p>
+
+<p>But the more I looked at the service hooks the more it looked like the jenkins one just passes a standard payload to a url, which is the same as the generic webhook, so I tried adding the jenkins webhook URL as a standard webhook ( you are allowed multiples of these) and that seems to work.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nova Client for Rackspace Servers]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/07/02/nova-client-for-rackspace-servers/"/>
+    <updated>2013-07-02T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/07/02/nova-client-for-rackspace-servers</id>
+    <content type="html"><![CDATA[<p>This took me a little while to figure out how to get the right parameters</p>
+
+<p>I used password instead of API key and account ID instead of tenant ID which seemed to work&lt;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>nova --username <span class="nv">$username</span> --apikey <span class="nv">$password</span> --os_tenant_name <span class="nv">$accountID</span> --os_auth_url https://auth.api.rackspacecloud.com --os_region_name ORD  list
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Script to Download All Jenkins Job Configs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/05/10/script-to-download-all-jenkins-job-configs/"/>
+    <updated>2013-05-10T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/05/10/script-to-download-all-jenkins-job-configs</id>
+    <content type="html"><![CDATA[<script src="https://gist.github.com/practicalweb/5554803.js"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkins Publish Over Ssh - Parameterized]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/04/18/jenkins-publish-over-ssh-parameterized/"/>
+    <updated>2013-04-18T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/04/18/jenkins-publish-over-ssh-parameterized</id>
+    <content type="html"><![CDATA[<p>To have a jenkins job which acts on a remote server via ssh - and has a parameter to choose which server(s) to use.</p>
+
+
+
+
+<ol>
+<li>check <i>This build is parameterized</i></li>
+
+<li>Make the parameter name something like TARGET_SERVER</li>
+<li>add build step <i>Send files or execute commands over SSH</i></li>
+<li>Add server</li>
+<li>In server details click <i>advanced</i></li>
+<li>add a value for <i>Label</i></li>
+<li>at the end of the ssh section check <i>Parameterized publishing</i></li>
+<li>specify the  <i>Parameter name</i> from earlier (TARGET_SERVER)</li>
+
+</ol>
+
+
+
+
+<p><p>Now when you run the job supply a value for the TARGET_SERVER parameter that can be a regex, the job will run the ssh sections on any servers that have a matching label.<p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git Files With Local Changes I Don't Want Committed]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/03/25/git-files-with-local-changes-i-dont-want-committed/"/>
+    <updated>2013-03-25T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/03/25/git-files-with-local-changes-i-dont-want-committed</id>
+    <content type="html"><![CDATA[<p>I&#8217;m working on a project where I find I want to semi-regularly adjust a config file for local testing, but want to be sure I don&#8217;t commit that file by mistake.</p>
+
+
+
+
+<p>Seems the best approach is</p>
+
+
+<p><code>git update-index &ndash;skip-worktree $filename</code></p>
+
+<p>This tells git to skip this file when I push, if the remote file changes it will warn me </p>
+
+
+
+
+<p>To switch back</p>
+
+
+<p><code>git update-index &ndash;no-skip-worktree $filename</code></p>
+
+<p>There is also a assume-unchanged option - but this is aimed more at performance and bug workarounds - it realy does assume the file is unchanged - which in my case is incorrect.</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Headless VPN on Linux With Minimal VPN Traffic and Selective DNS]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/03/12/headless-vpn-on-linux-with-minimal-vpn-traffic-and-selective-dns/"/>
+    <updated>2013-03-12T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/03/12/headless-vpn-on-linux-with-minimal-vpn-traffic-and-selective-dns</id>
+    <content type="html"><![CDATA[<p>I needed to setup a VPN client connection on a headless system where the VPN is slow and so I want to route the minimal amount of traffic through it. I need DNS to use the VPN but only for one domain.</p>
+
+<p>This is my setup using pptp and dnsmasq (tested on centOS)</p>
+
+<p>Basic VPN config is here</p>
+
+<p><code>/etc/ppp/peers/office</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># written by pptpsetup
+</span><span class='line'>pty "pptp vpn.example.com --nolaunchpppd"
+</span><span class='line'>lock
+</span><span class='line'>noauth
+</span><span class='line'>nobsdcomp
+</span><span class='line'>nodeflate
+</span><span class='line'>refuse-eap
+</span><span class='line'>usepeerdns
+</span><span class='line'>defaultroute
+</span><span class='line'>name sean.burlington
+</span><span class='line'>remotename office
+</span><span class='line'>ipparam office
+</span><span class='line'>require-mppe-128</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Startup script adds a default route for the network I need to access via vpn and adds the DNS server to dnsmasq config</p>
+
+<p><code>/etc/ppp/ip-up.local</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">for</span> net in 192.168.128.0/17 <span class="p">;</span> <span class="k">do</span>
+</span><span class='line'>  /sbin/route -v add -net <span class="nv">$net</span> dev <span class="nv">$IFNAME</span>
+</span><span class='line'>  logger -t pppd <span class="s2">&quot;added route for $net&quot;</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
+</span><span class='line'>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;server=/example.com/${DNS1}&quot;</span> &gt;&gt; /etc/dnsmasq.conf
+</span><span class='line'>
+</span><span class='line'>service dnsmasq restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When disconnecting VPN reset dnsmasq, in my case I need the public DNS for example.com when not on VPN</p>
+
+<p><code>/etc/ppp/ip-down.local</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'>cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
+</span><span class='line'>
+</span><span class='line'>service dnsmasq restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>My <code>/etc/resolv.conf</code> points first to localhost where dnsmaq runs, then to my router which provides the upstream DNS</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>nameserver 127.0.0.1
+</span><span class='line'>nameserver 192.168.0.1
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Puppet - Apache Virtualhost Docroot Provided by Rpm]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/03/11/puppet-apache-virtualhost-docroot-provided-by-rpm/"/>
+    <updated>2013-03-11T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/03/11/puppet-apache-virtualhost-docroot-provided-by-rpm</id>
+    <content type="html"><![CDATA[<p>This has been annoying to work out.</p>
+
+
+
+
+<p>The <a href="https://forge.puppetlabs.com/puppetlabs/apache">puppet apache module</a> will by default create the document root for a virtualhost if it is not already defined. But since I wanted the documentroot to be managed by a custom   RPM I don&#8217;t have a reference to the actual directory in puppet.</p>
+
+
+
+
+<p>It seems the thing to do is to create file named after the document root - but with an alternate path property. This way puppet/apache knows not to create the documentroot, and the one I make in puppet doesn&#8217;t then get in the way of the RPM one.</p>
+
+
+<p><code></p>
+
+<p>  apache::vhost { &lsquo;www.vagrant&rsquo;:
+    priority        => &lsquo;10&rsquo;,
+    port            => &lsquo;80&rsquo;,
+    docroot         => &ldquo;/var/www/html/foo&rdquo;,
+    docroot_owner   => &lsquo;root&rsquo;,
+    docroot_group   => &lsquo;root&rsquo;,
+    override        => &lsquo;All&rsquo;,
+    require         => Package[&lsquo;foo&rsquo;],
+  }</p>
+
+<p>  file {&lsquo;/var/www/html/foo&rsquo;:
+      path => &ldquo;/usr/share/doc/foo&rdquo;,
+      content => &ldquo;Puppet needs a file with an object name of teh docroot defined, this is that dummy file, the real docroot is defined in an rpm\n &rdquo;,
+      owner => root,
+  }</p>
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Eclipse Hangs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/03/11/eclipse-hangs/"/>
+    <updated>2013-03-11T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/03/11/eclipse-hangs</id>
+    <content type="html"><![CDATA[<p>This worked for me today - saving it here so I can find it again</p>
+
+
+
+
+<p><a href="http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/">http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/</a></p>
+
+
+
+
+<pre>
+cd .metadata/.plugins
+mv org.eclipse.core.resources org.eclipse.core.resources.bak
+Start eclipse. (It should show an error message or an empty workspace because no project is found.)
+Close all open editors tabs.
+Exit eclipse.
+rm -rf org.eclipse.core.resources (Delete the newly created directory.)
+mv org.eclipse.core.resources.bak/ org.eclipse.core.resources (Restore the original directory.)
+Start eclipse and start working. :-)
+</pre>
+
+]]></content>
+  </entry>
+  
+</feed>

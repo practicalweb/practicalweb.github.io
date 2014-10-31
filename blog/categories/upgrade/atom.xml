@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Upgrade | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/upgrade/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Easy Drupal Upgrades Using Subversion]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/03/15/easy-drupal-upgrades-using-subversion/"/>
+    <updated>2010-03-15T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/03/15/easy-drupal-upgrades-using-subversion</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve long been puzzled by the <a href="http://drupal.org/upgrade/downloading-drupal-gui">official advice on upgrading Drupal</a></p>
+
+
+<p></p>
+
+<p>It basically says you should delete everything, unpack a new Drupal version, and replace your customisations.</p>
+
+
+
+
+<p>I like to use version control to manage my site.</p>
+
+
+
+
+<p>My current project uses the pressflow fork of Drupal, I downloaded the current and new versions of this, added them to my repository and then upgrading my working copy is as easy as</p>
+
+
+<p><code>
+svn merge &ndash;ignore-ancestry <a href="https://example.com/svn/vendor/pressflow-6.15.73">https://example.com/svn/vendor/pressflow-6.15.73</a> <a href="https://example.com/svn/vendor/pressflow-6.16.77">https://example.com/svn/vendor/pressflow-6.16.77</a> ./
+</code></p>
+
+<p>This merges in all the changes (including file/directory additions/deletes).</p>
+
+
+
+
+<p>Then I play around with the newly upgraded site, have a look at the code that changed, check all is OK and when I&#8217;m happy - commit the changes.</p>
+
+
+
+
+<p>If I later find a bug that might be related to an upgrade I&#8217;ve got the changes ready via the usual tools (annotate, log, diff).</p>
+
+
+
+
+<p>Even better - this retains any changes I&#8217;ve made to core without any need to keep a list of patches. If the core update contains a fix I&#8217;ve applied locally then I&#8217;ll get a conflict which I can resolve.</p>
+
+
+<p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Upgrading Debian Etch to Lenny]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/01/21/upgrading-debian-etch-to-lenny/"/>
+    <updated>2010-01-21T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/01/21/upgrading-debian-etch-to-lenny</id>
+    <content type="html"><![CDATA[<p>Debian Etch has been serving me well for a few years with wonderfully easy and infrequent maintenance.</p>
+
+<p>However it&rsquo;s at the end of its life</p>
+
+<p><a href="http://www.debian.org/News/2010/20100121">http://www.debian.org/News/2010/20100121</a></p>
+
+<p>So I&rsquo;ve upgraded to Lenny following these instructions</p>
+
+<p><a href="http://www.debian.org/releases/lenny/i386/release-notes/ch-upgrading.en.html">http://www.debian.org/releases/lenny/i386/release-notes/ch-upgrading.en.html</a></p>
+
+<p>It was remarkably painless</p>
+
+<p>One small problem with the mail system.</p>
+
+<p><code>
+Errors were encountered while processing:
+ exim4-config
+ imapproxy
+ exim4-base
+ exim4-daemon-light
+ courier-imap
+ at
+ bsd-mailx
+ courier-imap-ssl
+ mailx
+</code></p>
+
+<p>But scrolling upwards I got a more helpful error message</p>
+
+<p><code>
+A package failed to install.  Trying to recover:
+Setting up exim4-config (4.69-9) &hellip;
+DEBCONFsomethingDEBCONF found in exim configuration. This is most probably
+caused by you upgrading to exim4 4.67-3 or later without accepting the
+suggested conffile changes. Please read
+/usr/share/doc/exim4-config/NEWS.Debian.gz for 4.67-2 and 4.67-4
+</code></p>
+
+<p>So I purged exim, deleted the config files, reinstalled it and now everything seems good.</p>
+]]></content>
+  </entry>
+  
+</feed>

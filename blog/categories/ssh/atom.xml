@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ssh | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/ssh/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Verbose Remote Ssh (With Echo)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/01/20/verbose-remote-ssh-with-echo/"/>
+    <updated>2012-01-20T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/01/20/verbose-remote-ssh-with-echo</id>
+    <content type="html"><![CDATA[<p>I usually manage website deployment with bash scripts that run remote commands on the servers</p>
+
+<p>In order that I can see what is going on and debug any errors verbose output is useful.</p>
+
+<p>Running &ldquo;bash -ex&rdquo; causes each line to be output as it progresses and halt on any error so that you don&rsquo;t miss it.</p>
+
+<p>within the remote command &ldquo;set -x&rdquo; cuase bash to echo all commands</p>
+
+<p><code></p>
+
+<h1>!/bin/bash -ex</h1>
+
+<p>ssh -T user@server &lt;&lt; EOF
+set -x
+echo foo > /dev/null
+EOF
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ssh Port Forwarding]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/02/19/ssh-port-forwarding/"/>
+    <updated>2010-02-19T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/02/19/ssh-port-forwarding</id>
+    <content type="html"><![CDATA[<p>Every now and again I find I have ssh access to one server - which has access to somewhere I need to get to - but I want direct access (eg to forward an X session)</p>
+
+<p><code></p>
+
+<p>ssh -L 2222:otherserver:22 server</p>
+
+<p>ssh -X -p 2222 localhost</p>
+
+<p></code></p>
+
+<p>an now I&rsquo;m  logged into othersever with forwarded X</p>
+]]></content>
+  </entry>
+  
+</feed>

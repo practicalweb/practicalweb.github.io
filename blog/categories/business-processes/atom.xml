@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Business Processes | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/business-processes/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Website Costs, Fixed Price, and Bugs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/08/04/website-costs-fixed-price-and-bugs/"/>
+    <updated>2009-08-04T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/08/04/website-costs-fixed-price-and-bugs</id>
+    <content type="html"><![CDATA[<p>
+Three interesting posts I&#8217;ve read recently
+</p>
+
+
+<p>
+http://www.contenthere.net/2009/08/fixed-bid-implementation-work-a-marriage-made-in-vegas.html
+</p>
+
+
+<p>
+Large fixed bid projects are very hard to get right.
+</p>
+
+
+<p>
+http://www.teamlalala.com/blog/2008/11/12/how-much-do-websites-cost/
+</p>
+
+
+<p>
+How much do websites cost? Well it&#8217;s hard to say.
+</p>
+
+
+<p>
+http://www.codinghorror.com/blog/archives/001239.html
+</p>
+
+
+<p>
+You&#8217;re gonna have bugs - plan for it and log them so that you can analyse the most common ones and  target your budget effectively.  
+</p>
+
+
+<p>
+Developing websites is a real challenge, and putting a business process around it so that all parties make a fair profit is hard too. 
+</p>
+
+
+<p>
+But it&#8217;s an exciting business to be in and there are profits to be made. 
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

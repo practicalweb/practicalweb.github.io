@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Spam | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/spam/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Spamassassin and Fetchmail Without Delays for Local Clients]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2005/03/05/spamassassin-and-fetchmail-without-delays-for-local-clients/"/>
+    <updated>2005-03-05T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2005/03/05/spamassassin-and-fetchmail-without-delays-for-local-clients</id>
+    <content type="html"><![CDATA[<p>
+Most of my mail is delivered by smtp directly to me, but my
+secondary max records cause some mail to be delivered to a POP3
+mailbox- this is then retrieved using spamassasin.
+</p>
+
+
+<p>
+This works very well generally - I get my mail very quickly and implement spam/virus filtering.<br />
+The only problem is that many spammers deliberately target secondary
+mail servers as being less likely to have spam filtering, so I still
+filter mail received vi fetchmail even though this is seen by my mail
+server as local mail.
+</p>
+
+
+<p>
+In order to allow my mail client to deliver to the server without
+waiting for the spam scan I have configured the server to listen on two
+local ip addresses (127.0.0.1 and 127.0.0.17) fetchmail delivers to the
+first which is filtered - my mail client delivers to the second - and
+mail to this address is accepted without spam scanning
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Spamassassin Troubleshooting]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2005/02/02/spamassassin-troubleshooting/"/>
+    <updated>2005-02-02T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2005/02/02/spamassassin-troubleshooting</id>
+    <content type="html"><![CDATA[<p>Having been running spamassassin at home with great success for some time, I have just set it up at work but had a few problems setting up a new Debian Linux box for this from scratch.<br />
+<br />
+I found that spam was just not being detected nearly as well as at home, and the machine was struggling with the load (load average around 3).<br />
+<br />
+1.<br />
+<br />
+I noticed that the blacklists were not being used,<br />
+after a bit of digging (wiki.apache.org/spamassassin/DnsBlocklists I discovered I needed to install the package libnet-dns-perl<br />
+This package is only recommended by the spamassasin package, not required by it.<br />
+2.<br />
+<br />
+The blacklists stopped working again, it turned out that the IP address of the DNS server had been changed. The docs recommend using a local caching DNS server for speed but I’ll see how things go as they are.<br />
+3.<br />
+<br />
+Spam still wasn’t being detected properly and the machine load was to high, I assume that either some tests or the whole spam checking process was timing out - more memory fixed this (I later found out that I might have been able to just reduce the number of child processes spawned by spamd).<br />
+<br />
+I hope that fixes it - I haven’t had enough mail yet to tell.<br />
+<br />
+What has made an immediate and obvious difference is rejecting viruses and executable attachments, we previously relied Windows software which quarantined the attachments but sent the body of the mail on to users. Rejecting this mail has already reduced the number of IT support calls of the ‘have I just got a virus?’ nature.<br />
+<br />
+It remains to be seen if we end up rejecting any legitimate mail, and how useful whitelisting can be in avoiding this.</p>
+]]></content>
+  </entry>
+  
+</feed>

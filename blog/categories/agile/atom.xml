@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Agile | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/agile/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Integrating Selenium and Hudson]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/05/12/integrating-selenium-and-hudson/"/>
+    <updated>2011-05-12T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/05/12/integrating-selenium-and-hudson</id>
+    <content type="html"><![CDATA[<p>
+Hudson http://hudson-ci.org/ is a continuous integration server - it runs and monitors &#8216;jobs&#8217; in a way that is useful to regularly build software and report on any errors.
+</p>
+
+
+<p>
+Selenium http://seleniumhq.org/ is a suite of tools specifically for testing web
+applications - it tests the full website by automating the running of one or more browsers (so you can test all that pointy clicky ajaxy stuff)
+</p>
+
+
+<p>
+You can generate selenium tests with a firefox plugin http://seleniumhq.org/projects/ide/ basic tests can be generated just by recording your actions on a website - and saved as an html test suite.
+</p>
+
+
+<p>
+The seleniumhq plugin for hudson http://wiki.hudson-ci.org/display/HUDSON/Seleniumhq+Plugin will start the seleniumrc server, run this test suite, monitor test/failure status and display the selenium report. 
+</p>
+
+
+<p>
+Just add this plugin to hudson, ensure you have the seleniumrc jar file available and configured in the global settings page.
+</p>
+
+
+<p>
+If you are running hudson on your local development system you may just need to download all the components and configure a job for it to just work. BUT if you want to run these jobs on a machine you are not logged in to you will need to run Xvfb to provide a fake display that the browser can use. 
+</p>
+
+
+<p>
+I&#8217;ve done this by 
+</p>
+
+
+<p>
+setting the environment variable DISPLAY to :99 
+</p>
+
+
+<p>
+running the following shell script before the selenium test suite
+</p>
+
+
+<p><code>
+Xvfb :99 -fp /usr/share/X11/fonts/misc -screen 0 1024x768x24 &gt; xvfb.log 2&amp;>1 &amp;<br />
+echo $! &gt; xvfp.pid
+</code></p>
+
+<p>
+The SeleniumHQ testSuite config needs to know which browser to use, the staturl, where to find the tests and where to log the results  
+</p>
+
+
+<p><code>
+kill $(cat xvfp.pid)
+rm xvfb.pid
+</code></p>
+
+<p>
+and checked the &quot;Publish Selenium Report&quot; option - configured to match the results file as above. 
+</p>
+
+
+<p>
+I had hoped that I could export the DISPLAY variable within the script but that didn&#8217;t work - the environment variable setting is global so I&#8217;ve limited hudson to run one job at a time as they all share a display.
+</p>
+
+
+<p>
+I have redirected all output from xvfb to a logfile otherwise hudson complains about leaking file descriptors.
+</p>
+
+
+<p>
+So far this is great - my tests get run regularly and reported consistently over time.
+</p>
+
+
+<p>
+But these tests are written in selenese (an html table based markup) which while having a great deal to offer does not have the full power of a programming language so my next step is to run tests via phpunit (this way I can access the database, loop over my test suite for a range of browsers, and more)
+</p>
+
+
+<p>
+This time I need to manage starting the selenium server as well as xvfb
+</p>
+
+
+<p><code>
+Xvfb :99   -screen 0 1024x768x24 &amp;> xvfb.log &amp;
+echo $! > xvfb.pid
+export DISPLAY=:99
+sleep 10
+java -jar /path-to/selenium-server.jar &amp;> selenium.log &amp;
+echo $! > selenium.pid
+sleep 30</p>
+
+<p>phpunit &ndash;log-xml phpunit.xml Example.php</p>
+
+<p>kill $(cat xvfb.pid)
+rm xvfb.pid
+kill $(cat selenium.pid)
+rm selenium.pid    
+</code></p>
+
+<p>
+I have instructed phpunit to log in xml format (aka junit format in more recent versions - but I&#8217;m running an old version of debian at the moment) 
+</p>
+
+
+<p>
+I added the xunit plugin http://wiki.hudson-ci.org/display/HUDSON/xUnit+Plugin to hudson and configured &quot;Publish JUnit test result report&quot; for my project specifying phpunit.xml as in the above script.
+</p>
+
+
+<p><p>It&rsquo;s worth noting that Drupals simpletest can also provide output in junit format at least according to <a href="http://drupal.org/node/1024426">http://drupal.org/node/1024426</a> so it should be possible to mix test types and aggregate the reports.
+<p>
+So now it all seems to be working an I can run all my tests overnight - all software has bugs - but at least now we should see fewer bugs reoccur as we&rsquo;ll keep adding tests to prevent these things creeping up on us.
+</p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Hope Is Not a Risk Management Strategy]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/07/23/hope-is-not-a-risk-management-strategy/"/>
+    <updated>2009-07-23T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/07/23/hope-is-not-a-risk-management-strategy</id>
+    <content type="html"><![CDATA[<p>
+This is a great post by Cory Foy
+</p>
+
+
+<p>
+http://blog.cornetdesign.com/2009/06/hope-is-not-a-risk-management-strategy/
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Cross Platform Testing With Selenium and VirtualBox]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/04/27/cross-platform-testing-with-selenium-and-virtualbox/"/>
+    <updated>2009-04-27T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/04/27/cross-platform-testing-with-selenium-and-virtualbox</id>
+    <content type="html"><![CDATA[<p>
+As well as following standards such as those laid down by www.w3.org I always try and test websites I develop across a range of browsers. Despite improvements in compatibility in recent years, browsers do still vary in implementation and even relatively minor browsers are still used by large numbers of people.
+</p>
+
+
+<p>
+However all this testing can be hard to keep on top of and sometimes I just have to push out what seems like a small code change with only limited testing.
+</p>
+
+
+<p>
+I&#8217;m aiming to automate as much testing as possible, this is a little more work up front - but makes re-running tests trivial and so more likely to happen.
+</p>
+
+
+<p>
+I use VirtualBox to run multiple environments, and am happy to find that the newer releases (2.1 and up) support improved networking.
+</p>
+
+
+<p>
+So I have installed <a href="http://seleniumhq.org/projects/remote-control/">Selenium RC</a> on a virtual machine, and by running this simple script I can test on Internet Explorer - from my Linux development machine.
+</p>
+
+
+<p>&lt;?php</p>
+
+<p>set_include_path(get_include_path() . PATH_SEPARATOR . &lsquo;./PEAR/&rsquo;);
+require_once &lsquo;Testing/Selenium.php&rsquo;;</p>
+
+<p>$selenium = new Testing_Selenium(&ldquo;*iexplore&rdquo;, &ldquo;<a href="http://www.google.com">http://www.google.com</a>&rdquo;, &lsquo;192.168.0.7&rsquo;);</p>
+
+<p>$selenium->start();</p>
+
+<p>$selenium->open(&ldquo;/&rdquo;);
+$selenium->type(&ldquo;q&rdquo;, &ldquo;hello world&rdquo;);
+$selenium->click(&ldquo;btnG&rdquo;);
+$selenium->waitForPageToLoad(10000);
+print (preg_match(&ldquo;/Google Search/&rdquo;, $selenium->getTitle())) ? &ldquo;pass\n&rdquo; : &ldquo;fail\n&rdquo;;
+$selenium->stop();</p>
+
+<p>?></p>
+
+<p>Note that I can specify which Virtual Machine to test on just by providing the appropriate IP address.</p>
+
+
+
+
+<p>This example is in PHP because that&#8217;s what I use, it requires the Pear package Testing_Selenium which I installed on Ubuntu by the command</p>
+
+
+<p><code>
+sudo pear install channel://pear.php.net/Testing_Selenium-0.4.3
+</code></p>
+
+<p>
+Now all I need to do is integrate this into my unit testing framework and add some scripts to start up and shut down the virtual machines.
+</p>
+
+
+
+
+<p>There is also Selenium Grid which is aimed at distributing tests across multiple machines in parallel - but as this is all running on one physical machine (my laptop) I don&#8217;t really want parallelisation here.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Continuous Integration Testing for Drupal With CruiseControl (Part 1)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1/"/>
+    <updated>2009-04-08T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1</id>
+    <content type="html"><![CDATA[<p>
+I recently finished work on a project that really suffered from a lack of build tools.
+</p>
+
+
+<p>
+It was a large project, and while many of us were keen on writing tests we weren&#8217;t able to get management sign of to spend some time automating the test process. So even though we did some of the work we didn&#8217;t get all the benefits.
+</p>
+
+
+<p>
+It was really frustrating to come back to a piece of work that was well covered by unit tests, only to find those tests broken  
+</p>
+
+
+<p>
+Well, right now I&#8217;ve decided to take some time to explore automated testing a bit more. I&#8217;ve got a Drupal site and a bunch of simpletest tests - I want the tests run on every commit, and while I&#8217;m at it I want to run some other checks too.
+</p>
+
+
+<p>
+The following records what I&#8217;ve done so far, problems I encountered, and how I solved them.
+</p>
+
+
+<p>
+Download 
+</p>
+
+
+<ul>
+    <li><a href="http://cruisecontrol.sourceforge.net/">cruisecontrol</a> <a href="http://phpundercontrol.org/about.html"><br />
+    </a></li>
+    <li><a href="http://phpundercontrol.org/about.html">phpundercontrol</a></li>
+    <li><a href="http://demo.codesetter.com/drupal5-macgyver-cruisecontrol">simpletest runner for cruise control</a> (thanks Adnan)</li>
+</ul>
+
+
+<p>
+Checkout and configure my Drupal site, create the settings for this as a CruiseControl project.
+</p>
+
+
+<p>
+At this point I had CruiseControl setup, I could see my project, but no useful reports.
+</p>
+
+
+<p>
+Debugging
+</p>
+
+
+<ul>
+    <li>read the logfiles (doh!)</li>
+    <li>run each process separately</li>
+</ul>
+
+
+<p>
+CruiseControl is a big beast and trying to debug small parts of it by running it all wasn&#8217;t much fun.
+</p>
+
+
+<p>
+CruiseControl runs each step of a build via <a href="http://ant.apache.org/">ant</a>  - this is a fairly standard tool (available via apt-get if you&#8217;re a Debian user) 
+</p>
+
+
+<p>
+Running ant manually gave me much greater visibility of errors that were occuring at this stage (I&#8217;d put my test runner script in the wrong place).
+</p>
+
+
+<p>$ cd cruisecontrol/projects/myproject
+$ ant </p>
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+This gives nice easy to read output for each step of the build.
+</p>
+
+
+<p>
+Once CruiseControl has built your project it merges the xml logfiles; the merged file is stored in cruisecontrol/logs/myproject/
+</p>
+
+
+<p>
+The web application part of CruiseControl uses xsl to transform these logfiles into output, and a little jsp to select which xsl files to use. Again I found it easier to debug the xsl part of the process by running the xsl manually (either on the combined logfile - or individual ones wrapped in &lt;cruisecontrol&gt; tags).
+</p>
+
+
+<p>$ xsltproc webapps/cruisecontrol/xsl/checkstyle.xsl  projects/myproject/build/logs/checkstyle.xml</p>
+
+<p>
+And what I found was that my xml log wasn&#8217;t xml after all (I&#8217;d hit a <a href="http://pear.php.net/bugs/bug.php?id=14409">bug in phpcodesniffer</a> which was outputting error messages at the top of the file). 
+</p>
+
+
+<p>
+Right now I have a continuous integration server up and running. It&#8217;s not quite how I want it yet but now I understand how CruiseControl works I don&#8217;t think it&#8217;ll take too long to get right - but it&#8217;s the sort of thing that I expect to grow and tweak as I go along.
+</p>
+
+
+<p>
+I&#8217;ve found CruiseControl hard to setup, seen too many Java stacktraces, and blank screens when xsl didn&#8217;t work as expected.
+</p>
+
+
+<p>
+Some things could probably be done better via svn commit hooks (if you have access to the svn server), and certainly it would have been faster to cobble together some cron jobs.
+</p>
+
+
+<p>
+But I&#8217;ve persevered because CruiseControl comes with a wealth of plugins including many version control systems, and many notification methods. I&#8217;m hoping that I&#8217;ve overcome the initial learning curve and will start to reap the rewards.
+</p>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

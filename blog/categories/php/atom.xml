@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Php | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/php/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using PHP and Curl With Http PUT on String Data]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/09/21/using-php-and-curl-with-http-put-on-string-data/"/>
+    <updated>2011-09-21T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/09/21/using-php-and-curl-with-http-put-on-string-data</id>
+    <content type="html"><![CDATA[<p>This wasn&rsquo;t obvious</p>
+
+<p>There are various other posts on this - but mostly assuming you will put a file.</p>
+
+<p>In my case I want to put the contents of a string so I needed to craete a temporary filehandle.</p>
+
+<p>&lt;?php</p>
+
+<p>function put_it($url, $string) {
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_PUT, TRUE);
+  // create tempoary file handle
+  $oneMB = 1024 * 1024;
+  $fp = fopen(&ldquo;php://temp/maxmemory:$oneMB&rdquo;, &lsquo;r+&rsquo;);
+  fputs($fp, $string);
+  rewind($fp);
+  curl_setopt($ch, CURLOPT_INFILE,  $fp);
+  curl_setopt($ch, CURLOPT_INFILESIZE, strlen($string));
+  $response = curl_exec($ch);
+  fclose($fp);</p>
+
+<p>?></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Henri Bergius' Secret Agenda for PHP Content Management Systems]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/07/13/henri-bergius-secret-agenda-for-php-content-management-systems/"/>
+    <updated>2011-07-13T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/07/13/henri-bergius-secret-agenda-for-php-content-management-systems</id>
+    <content type="html"><![CDATA[<p>I read this post the other day and found it really inspiring - so many things to do and learn&hellip;</p>
+
+<p><a href="http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/">http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/</a></p>
+
+<p>Links within that blog that I found especially interesting</p>
+
+<p><a href="https://github.com/indeyets/appserver-in-php">https://github.com/indeyets/appserver-in-php</a></p>
+
+<p><a href="http://documentcloud.github.com/backbone/">http://documentcloud.github.com/backbone/</a></p>
+
+<p><a href="https://github.com/bergie/VIE">https://github.com/bergie/VIE</a></p>
+
+<p><a href="http://phpcr.github.com/">http://phpcr.github.com/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Integrating Selenium and Hudson]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/05/12/integrating-selenium-and-hudson/"/>
+    <updated>2011-05-12T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/05/12/integrating-selenium-and-hudson</id>
+    <content type="html"><![CDATA[<p>
+Hudson http://hudson-ci.org/ is a continuous integration server - it runs and monitors &#8216;jobs&#8217; in a way that is useful to regularly build software and report on any errors.
+</p>
+
+
+<p>
+Selenium http://seleniumhq.org/ is a suite of tools specifically for testing web
+applications - it tests the full website by automating the running of one or more browsers (so you can test all that pointy clicky ajaxy stuff)
+</p>
+
+
+<p>
+You can generate selenium tests with a firefox plugin http://seleniumhq.org/projects/ide/ basic tests can be generated just by recording your actions on a website - and saved as an html test suite.
+</p>
+
+
+<p>
+The seleniumhq plugin for hudson http://wiki.hudson-ci.org/display/HUDSON/Seleniumhq+Plugin will start the seleniumrc server, run this test suite, monitor test/failure status and display the selenium report. 
+</p>
+
+
+<p>
+Just add this plugin to hudson, ensure you have the seleniumrc jar file available and configured in the global settings page.
+</p>
+
+
+<p>
+If you are running hudson on your local development system you may just need to download all the components and configure a job for it to just work. BUT if you want to run these jobs on a machine you are not logged in to you will need to run Xvfb to provide a fake display that the browser can use. 
+</p>
+
+
+<p>
+I&#8217;ve done this by 
+</p>
+
+
+<p>
+setting the environment variable DISPLAY to :99 
+</p>
+
+
+<p>
+running the following shell script before the selenium test suite
+</p>
+
+
+<p><code>
+Xvfb :99 -fp /usr/share/X11/fonts/misc -screen 0 1024x768x24 &gt; xvfb.log 2&amp;>1 &amp;<br />
+echo $! &gt; xvfp.pid
+</code></p>
+
+<p>
+The SeleniumHQ testSuite config needs to know which browser to use, the staturl, where to find the tests and where to log the results  
+</p>
+
+
+<p><code>
+kill $(cat xvfp.pid)
+rm xvfb.pid
+</code></p>
+
+<p>
+and checked the &quot;Publish Selenium Report&quot; option - configured to match the results file as above. 
+</p>
+
+
+<p>
+I had hoped that I could export the DISPLAY variable within the script but that didn&#8217;t work - the environment variable setting is global so I&#8217;ve limited hudson to run one job at a time as they all share a display.
+</p>
+
+
+<p>
+I have redirected all output from xvfb to a logfile otherwise hudson complains about leaking file descriptors.
+</p>
+
+
+<p>
+So far this is great - my tests get run regularly and reported consistently over time.
+</p>
+
+
+<p>
+But these tests are written in selenese (an html table based markup) which while having a great deal to offer does not have the full power of a programming language so my next step is to run tests via phpunit (this way I can access the database, loop over my test suite for a range of browsers, and more)
+</p>
+
+
+<p>
+This time I need to manage starting the selenium server as well as xvfb
+</p>
+
+
+<p><code>
+Xvfb :99   -screen 0 1024x768x24 &amp;> xvfb.log &amp;
+echo $! > xvfb.pid
+export DISPLAY=:99
+sleep 10
+java -jar /path-to/selenium-server.jar &amp;> selenium.log &amp;
+echo $! > selenium.pid
+sleep 30</p>
+
+<p>phpunit &ndash;log-xml phpunit.xml Example.php</p>
+
+<p>kill $(cat xvfb.pid)
+rm xvfb.pid
+kill $(cat selenium.pid)
+rm selenium.pid    
+</code></p>
+
+<p>
+I have instructed phpunit to log in xml format (aka junit format in more recent versions - but I&#8217;m running an old version of debian at the moment) 
+</p>
+
+
+<p>
+I added the xunit plugin http://wiki.hudson-ci.org/display/HUDSON/xUnit+Plugin to hudson and configured &quot;Publish JUnit test result report&quot; for my project specifying phpunit.xml as in the above script.
+</p>
+
+
+<p><p>It&rsquo;s worth noting that Drupals simpletest can also provide output in junit format at least according to <a href="http://drupal.org/node/1024426">http://drupal.org/node/1024426</a> so it should be possible to mix test types and aggregate the reports.
+<p>
+So now it all seems to be working an I can run all my tests overnight - all software has bugs - but at least now we should see fewer bugs reoccur as we&rsquo;ll keep adding tests to prevent these things creeping up on us.
+</p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Debugging SOAP With Xdebug and Eclipse]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse/"/>
+    <updated>2010-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s been a while since I&rsquo;ve worked on a project which is providing as well as consuming web services.</p>
+
+<p>In this case I need to debug incoming requests that are not initiated from with the browser (I&rsquo;m using <a href="http://www.soapui.org/">soapui</a> as a test tool).</p>
+
+<p>In order to allow Eclipse to pick up xdebug responses triggered by requests from soapui I just needed to</p>
+
+<ul>
+<li>start a debuging session within eclipse as normal</li>
+<li>ensure that the query string ?XDEBUG_SESSION_START=ECLIPSE_DBGP is appended to all requests by editing the WSDL file so that the address looks like
+<code>
+<soap:address location="http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP"/>
+</code>
+</li>
+
+<li>make requests via soapui</li>
+</ul>
+
+
+<p>Now eclipse is picking up the soap requests and I can step through as normal (some tools apply a timeout which can be a nuisance while debugging - I haven&rsquo;t been using soapui long enough yet to see if that&rsquo;s the case here)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Accessing CKAN Data From PHP]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/02/23/accessing-ckan-data-from-php/"/>
+    <updated>2010-02-23T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/02/23/accessing-ckan-data-from-php</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been working on a couple of open data projects recently - which has been very rewarding.</p>
+
+<p>A couple of people have asked for some code so I&rsquo;ve knocked up a quick version of the sort of thing I&rsquo;ve been working on.</p>
+
+<p>This code requires PHP 5.1 for the JSON functions but doesn&rsquo;t need any extra libraries (pecl_http can give better error messages but is a bit of a pain to install).</p>
+
+<p>The Notes field in packages returns output in Markdown format - you can convert this to HTMl with a parser available at <a href="http://michelf.com/projects/php-markdown">http://michelf.com/projects/php-markdown</a></p>
+
+<p>This isn&rsquo;t production code so please test before using.</p>
+
+<p>&lt;?php</p>
+
+<p>class Ckan {
+    private  $url = &lsquo;<a href="http://www.ckan.net/">http://www.ckan.net/</a>&rsquo;;
+    private $errors = array(
+                              &lsquo;400&rsquo;  =>   &lsquo;Bad Request&rsquo;,
+                              &lsquo;403&rsquo;  =>   &lsquo;Not Authorized&rsquo;,
+                              &lsquo;404&rsquo;  =>   &lsquo;Not Found&rsquo;,
+                              &lsquo;500&rsquo;  =>   &lsquo;Internal Server Error&rsquo;,
+    );</p>
+
+<pre><code>public function __construct($url=null){
+    if ($url){
+        $this-&gt;url=$url;
+    }
+}
+
+private function transfer($url){
+
+    $ch = curl_init($this-&gt;url . $url);
+
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    $result = curl_exec($ch);
+    $info = curl_getinfo($ch);
+    curl_close($ch);
+    if ($info['http_code'] != 200){
+        throw new CkanException($this-&gt;error_codes["$info[http_code]"]);
+    }
+    if (!$result){
+        throw new CkanException("No Result");
+    }
+    return json_decode($result);
+}
+
+public function search($keyword){
+    $results = $this-&gt;transfer('api/search/package/?all_fields=1&amp;q=' . urlencode($keyword));
+    if (!$results-&gt;count){
+        throw new CkanException("Search Error");
+    }
+    return $results;
+}
+
+public function getPackage($package){
+    $package = $this-&gt;transfer('api/rest/package/' . urlencode($package));
+    if (!$package-&gt;name){
+        throw new CkanException("Package Load Error");
+    }
+    return $package;
+}
+
+
+public function getPackageList(){
+    $list =  $this-&gt;transfer('api/rest/package/');
+    if (!is_array($list)){
+        throw new CkanException("Package List Error");
+    }
+    return $list;
+}
+
+public function getGroup($group){
+    $group = $this-&gt;transfer('api/rest/group/' . urlencode($group) );
+    if (!$group-&gt;name){
+        throw new CkanException("Group Error");
+    }
+    return $group;
+}
+
+public function getGroupList(){
+    $groupList = $this-&gt;transfer('api/rest/group/');
+    if (!is_array($groupList)){
+        throw new CkanException("Group List Error");
+    }
+    return $groupList;
+}
+</code></pre>
+
+<p>}</p>
+
+<p>class CkanException extends Exception{}</p>
+
+<p>?></p>
+
+<p>Test with</p>
+
+<p>&lt;?php</p>
+
+<p>require_once(&ldquo;ckan.php&rdquo;);</p>
+
+<p>$ckan = new Ckan();</p>
+
+<p>$data = $ckan->getPackage(&lsquo;edmonton-data&rsquo;);</p>
+
+<p>print_r($data);</p>
+
+<p>?></p>
+
+<p>I&rsquo;m keeping this file and a Drupal module that uses it on Github at:</p>
+
+<p><a href="http://github.com/practicalweb/drupal-ckan">http://github.com/practicalweb/drupal-ckan</a></p>
+]]></content>
+  </entry>
+  
+</feed>

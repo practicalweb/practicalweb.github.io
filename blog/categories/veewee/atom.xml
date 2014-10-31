@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Veewee | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/veewee/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Creating New Vagrant Base Boxes With Veewee]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/"/>
+    <updated>2014-10-28T16:08:14+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee</id>
+    <content type="html"><![CDATA[<p>Creating your own base box for vagrant is a great thing to do, you get to undestand exactly what is on that box and to choose exactly what base OS you use.</p>
+
+<p>After all one of the big draws of vagrant is keeping your dev environment close to what production looks like - and for that you need to know what is in the base box.</p>
+
+<p>When I first started using vagrant I wrote a post <a href="/blog/2012/10/16/how-to-build-a-centos-6-base-box-for-vagrant/">How to build a Centos 6 base Box for vagrant</a> whcih details the manual steps needed. At the time I was busy learning puppet, vagrant and related tools - veewee was just one tool too many and a manual build seemed the best way to get my head around what a base box was.</p>
+
+<p>While the base box isn&rsquo;t something I have needed to repeat much, it is beneficial to update the base image from time to time and here veewee is brilliant. It also makes shareing the reponnsbibility for the base box within a team easy.</p>
+
+<p>Here&rsquo;s what I did</p>
+
+<ul>
+<li>fork <a href="https://github.com/jedi4ever/veewee">https://github.com/jedi4ever/veewee</a> (in my case to a private repo)</li>
+<li>check that out</li>
+<li>install veewee according to its install notes</li>
+</ul>
+
+
+<pre><code class="bash">veewee vbox tenplates | grep -i centos
+</code></pre>
+
+<p>This told me that the template I wanted was CentOS-6.5-x86_64-minimal</p>
+
+<pre><code class="bash ">veewee vbox define centos65 CentOS-6.5-x86_64-minimal
+</code></pre>
+
+<p>Now I made some edits to customise the base box how I wanted</p>
+
+<pre><code class="bash">vim definitions/centos65/definition.rb # comment out the chef line
+vim definitions/centos65/cleanup.sh # remove build packages like gcc
+vim definitions/centos65/vagrant.sh # remove insecure vagrant key and add your own public key
+</code></pre>
+
+<p>Build</p>
+
+<pre><code class="bash">veewee vbox build centos65
+veewee vbox export centos65
+</code></pre>
+
+<p>add to my local vagrant so I can test</p>
+
+<pre><code class="bash">vagrant box add centos65 ./centos65.box
+</code></pre>
+
+<p>Now I can copy the base box to a team-accessible server</p>
+
+<p>And push my custom definition to my veewee fork so anyone from the team can build an updated box.</p>
+
+<pre><code class="bash">vim .gitignore # remove definitions/*
+git add .gitignore 
+git add definitions/
+git commit -m "added my definition"
+git push
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

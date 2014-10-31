@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Cvs | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/cvs/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[CVS for Subversion Users]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/12/30/cvs-for-subversion-users/"/>
+    <updated>2009-12-30T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/12/30/cvs-for-subversion-users</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve been using version control for a long time, but I haven&#8217;t used CVS much since the first day I tried Subversion.
+</p>
+
+
+<p>
+(Git seems great but isn&#8217;t the same kind of drop-in upgrade that CVS to Subversion was)
+</p>
+
+
+<p>
+Things I forgot
+</p>
+
+
+<ul>
+    <li>CVS doesn&#8217;t do the nice recursive add that subversion does<br />
+    At the start of a project you need to run <br />
+    cvs import </li>
+    <li>CVS expands keywords by default - this is a problem if like me you want to merge in changes from someone else CVS repository as both sites have changes teh keywords<br />
+    Disable keyword changing by updating with<br />
+    cvs up -d -ko</li>
+    <li>CVS doesn&#8217;t add back deleted directories<br />
+    cvs up -d </li>
+    <li>CVS doesn&#8217;t have a nice equivilant of svn status<br />
+    cvs -q up <br />
+    Not quite the same as it will update stuff - but it does tell you which local files have changed</li>
+    <li>Tagging seems OK but doesn&#8217;t quite do the same thing<br />
+    cvs tag</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating a Patch From Cvs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/01/11/creating-a-patch-from-cvs/"/>
+    <updated>2008-01-11T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/01/11/creating-a-patch-from-cvs</id>
+    <content type="html"><![CDATA[<p>specifically
+I wanted to create a patch equal to the changes between two versions of
+Drupal - but it turns out that a packaging script adds some info to
+releases that isn’t in the cvs version so this doesn’t quite do what I
+wanted.</p>
+
+<div class="post-entry">
+<p>
+it’s still useful though …
+</p>
+<ul>
+    <li>checkout the current version</li>
+    <li>generate the patch as a diff between the previos version and this one</li>
+    <li>optionally run a diff to compare the two versions (cvs and svn) to check they are the same</li>
+</ul>
+<p>
+<br />
+cvs -z6 -d:pserver:anonymous:anonymous@cvs.drupal.org:/cvs/drupal checkout -d drupal5 -r DRUPAL-5-6 drupal
+</p>
+<p>
+cd drupal<br />
+cvs diff -N -u -rDRUPAL-5-5 -r DRUPAL-5-6 &gt; ../drupal-5-5-to-5-6.txt<br />
+cd ..<br />
+diff -r drupal-cvs/ drupal | grep -v .svn | grep -v CVS | less<br />
+</p>
+<p>
+In eclipse open the svn drupal project - go to teams - apply patch
+</p>
+<p>
+and (except for the packaging stuff) you have an updated drupal for your svn repository.
+</p>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Version Control and Drupal]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/01/03/version-control-and-drupal/"/>
+    <updated>2008-01-03T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/01/03/version-control-and-drupal</id>
+    <content type="html"><![CDATA[<p>I’ve
+been using open source software and developing php for a decade or so
+now - but until recently the two have been fairly seperate.</p>
+
+<div class="post-entry">
+<p>
+Now I’m working on Drupal I need to keep track of my work - and merge in the changes from ‘upstream’.
+</p>
+<p>
+here’s the useful info I found …
+</p>
+<p>
+Drupal advise<br />
+Drupal.org » Forum » Support » Post installation : Repository setup<br />
+<a href="http://drupal.org/node/118936">http://drupal.org/node/118936</a>
+</p>
+<p>
+Vendor Branches<br />
+<a href="http://svnbook.red-bean.com/en/1.0/ch07s04.html">http://svnbook.red-bean.com/en/1.0/ch07s04.html</a>
+</p>
+<p>
+Subversion Externals<br />
+<a href="http://svnbook.red-bean.com/en/1.0/ch07s03.html">http://svnbook.red-bean.com/en/1.0/ch07s03.html</a>
+</p>
+<p>
+svn load dirs (need for upgrading the vendor release)<br />
+<a href="http://docs.ofbiz.org/display/OFBIZ/SVN+Tips+-+svn_load_dirs+Vendor+Branch">http://docs.ofbiz.org/display/OFBIZ/SVN+Tips+-+svn_load_dirs+Vendor+Branch</a>
+</p>
+<p>
+CVS to subversion scripts<br />
+<a href="http://drupal.org/node/71232">http://drupal.org/node/71232</a>
+</p>
+<p>
+Update Status (to track new modules)<br />
+<a href="http://drupal.org/project/update_status">http://drupal.org/project/update_status</a>
+</p>
+<p>
+In the end I’ve decided to put all my projects in one repository
+(I’ll need to upgrade trac 0.11 soon to host project management on a
+per project basis)
+</p>
+<p>
+Each project has a copy of drupal core + contrib modules I plan to use svn:externals to link in my own modules
+</p>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

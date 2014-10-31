@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Networking | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/networking/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Device Eth0 Does Not Seem to Be Present, Delaying Initialization.]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/05/02/device-eth0-does-not-seem-to-be-present-delaying-initialization/"/>
+    <updated>2012-05-02T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/05/02/device-eth0-does-not-seem-to-be-present-delaying-initialization</id>
+    <content type="html"><![CDATA[<p>
+I had a centos VM that I hadn&#8217;t used in a while, I think I cloned it from another version.
+</p>
+
+
+<p>
+When I came to use it again I had no network andtrying to start the network I got the error message in the title.
+</p>
+
+
+<p>
+There seem to be a few issues
+</p>
+
+
+<p>
+Firstly netowrking isn&#8217;t endabled by default 
+</p>
+
+
+<p>
+<a href="http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90">http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90</a> 
+</p>
+
+
+<p>
+Secondly the cloned image appears to get a different mac address for the network card, but theconfig doesn&#8217;t auto detect this
+</p>
+
+
+<p>
+Thirdly the new machine seemed to have eth1 instead of eth0
+</p>
+
+
+<p>
+and finally I needed to enable dhcp
+</p>
+
+
+<p>
+What this meant was copying the new mac address from the virtualbox network settings tab (inserting a colon every second charecter  to match the format required)
+</p>
+
+
+<p>
+I placed this in both 
+</p>
+
+
+<p>
+/etc/udev/rules.d/70-persistant-net.rules
+</p>
+
+
+<p>
+and  
+</p>
+
+
+<p>
+/etc/sysconfig/network-scripts/ifcfg-eth0
+</p>
+
+
+<p>
+Where I also set 
+</p>
+
+
+<p>
+ONBOOT=&quot;yes&quot;  <br />
+BOOTPROTO=&quot;dhcp&quot;
+</p>
+
+
+<p>
+Finally /etc/init.d/networking restart got my network up 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

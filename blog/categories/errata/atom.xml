@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Errata | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/errata/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Instance Parameter for Drupal Field_create_instance($instance)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/09/23/instance-parameter-for-drupal-field_create_instanceinstance/"/>
+    <updated>2011-09-23T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/09/23/instance-parameter-for-drupal-field_create_instanceinstance</id>
+    <content type="html"><![CDATA[<p>The code in chapter 7 of pro Drupal development has a bug.</p>
+
+<p>The $instance array that you need to pass to <a href="http://api.drupal.org/api/drupal/modules--field--field.crud.inc/function/field_create_instance/7">field_create_instance()</a> needs to be as below.</p>
+
+<p>Note that the display array has the keyword, &lsquo;default&rsquo; for the default display - ie a node on it&rsquo;s own page &lsquo;teaser&rsquo; looks like the right value for teaser. Other view modes are possible too.</p>
+
+<p>The label field in the display part of the array is just the positioning of the array - &lsquo;above&rsquo;, &lsquo;below&rsquo;, &lsquo;inline&rsquo; and &lsquo;hidden&rsquo; seem the likely set of allowed values.</p>
+
+<p>NB the display part of the array is optional as Drupal will provide default values.</p>
+
+<p>&lt;?php</p>
+
+<p>array(
+    array(
+        &lsquo;field_name&rsquo; => &lsquo;job_post_company&rsquo;,
+        &lsquo;type&rsquo;       => &lsquo;text&rsquo;,
+        &lsquo;label&rsquo;      => $t(&lsquo;Company posting the job listing&rsquo;),
+        &lsquo;widget&rsquo;     => array(
+                   &lsquo;type&rsquo; => &lsquo;text_textfield&rsquo;,
+         ),
+        &lsquo;display&rsquo; => array(
+           &lsquo;default&rsquo; => array(
+               &lsquo;label&rsquo; => &lsquo;above&rsquo;,
+               &lsquo;type&rsquo;  => &lsquo;text&rsquo;,
+         ),
+     ),
+   ),
+);
+?></p>
+
+<p>The errata for this book seems to be long and unhelpfully laid out 563 reported errors so far&hellip;</p>
+
+<p><a href="http://www.drupalbook.com/errata3">http://www.drupalbook.com/errata3</a></p>
+
+<p>There even seems to be errors in the errata <a href="http://www.drupalbook.com/node/269">http://www.drupalbook.com/node/269</a> seems to report this error (or part of it) but I think it&rsquo;s wrong - the array key should be a view mode.</p>
+]]></content>
+  </entry>
+  
+</feed>

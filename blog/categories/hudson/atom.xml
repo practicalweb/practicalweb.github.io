@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Hudson | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/hudson/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Drupal Files Directory Permissions for Continuous Integration]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/05/31/drupal-files-directory-permissions-for-continuous-integration/"/>
+    <updated>2011-05-31T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/05/31/drupal-files-directory-permissions-for-continuous-integration</id>
+    <content type="html"><![CDATA[<p>I want the drupal user uploaded files to be manageable by both apache and a non-root user</p>
+
+<p>In my case I&rsquo;m using hudson to rebuild the site with data and &ldquo;files&rdquo; from live periodically.</p>
+
+<p>So I have added the apache group to the hudson user</p>
+
+<p><code>
+/usr/sbin/usermod -G hudson,apache hudson
+/etc/init.d/hudson restart
+</code></p>
+
+<p>and set the umask for apache so that files are created group writebale</p>
+
+<p>For Redhat
+<code>
+echo &ldquo;umask 002&rdquo; >> /etc/sysconfig/httpd
+/etc/init.d/httpd restart
+</code></p>
+
+<p>For Debian/Ubuntu
+<code>
+echo &ldquo;umask 002&rdquo; >> /etc/apache2/envvars
+/etc/init.d/httpd restart
+</code>
+NB debian based systems use the group www-data for apache</p>
+
+<p>In my build script I can delete my dev files and copy the ones from live - making sure the group for the files is set to apache.</p>
+
+<p><code>
+rm -Rf files
+cp -R /tmp/backup/files/ ./
+chgrp -R apache files
+find files/ -type f -exec chmod 664 &lsquo;{}&rsquo; &lsquo;;&rsquo;
+find files/ -type d -exec chmod 775 &lsquo;{}&rsquo; &lsquo;;&rsquo;
+</code></p>
+
+<p>Now apache can write the files I have created, and I can create the files apache has created - <b>and</b> they are not world writeable.</p>
+
+<p>see also <a href="http://drupal.org/node/244924">http://drupal.org/node/244924</a></p>
+
+<h2>Update - drush</h2>
+
+
+<p>I had a cron job running drush as a different user - this created cached files which hudson couldn&rsquo;t delete.</p>
+
+<p>Now I am running the drush cron via hudson and making sure all the &lsquo;files&rsquo; directory stuff is owned correctly afterwards</p>
+
+<p>NB non-root users don&rsquo;t seem to be able to chgrp files that they don&rsquo;t own</p>
+
+<p>so after running cron I make sure any files created by hudson are chgrp&rsquo;d</p>
+
+<p><code>
+find files -user hudson -exec chgrp apache {} \;
+</code></p>
+
+<p>A simple chgrp -R  caused permission denied errors on those files not owned by hudson - even though they were already group apache so wouldn&rsquo;t have been affected.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Integrating Selenium and Hudson]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/05/12/integrating-selenium-and-hudson/"/>
+    <updated>2011-05-12T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/05/12/integrating-selenium-and-hudson</id>
+    <content type="html"><![CDATA[<p>
+Hudson http://hudson-ci.org/ is a continuous integration server - it runs and monitors &#8216;jobs&#8217; in a way that is useful to regularly build software and report on any errors.
+</p>
+
+
+<p>
+Selenium http://seleniumhq.org/ is a suite of tools specifically for testing web
+applications - it tests the full website by automating the running of one or more browsers (so you can test all that pointy clicky ajaxy stuff)
+</p>
+
+
+<p>
+You can generate selenium tests with a firefox plugin http://seleniumhq.org/projects/ide/ basic tests can be generated just by recording your actions on a website - and saved as an html test suite.
+</p>
+
+
+<p>
+The seleniumhq plugin for hudson http://wiki.hudson-ci.org/display/HUDSON/Seleniumhq+Plugin will start the seleniumrc server, run this test suite, monitor test/failure status and display the selenium report. 
+</p>
+
+
+<p>
+Just add this plugin to hudson, ensure you have the seleniumrc jar file available and configured in the global settings page.
+</p>
+
+
+<p>
+If you are running hudson on your local development system you may just need to download all the components and configure a job for it to just work. BUT if you want to run these jobs on a machine you are not logged in to you will need to run Xvfb to provide a fake display that the browser can use. 
+</p>
+
+
+<p>
+I&#8217;ve done this by 
+</p>
+
+
+<p>
+setting the environment variable DISPLAY to :99 
+</p>
+
+
+<p>
+running the following shell script before the selenium test suite
+</p>
+
+
+<p><code>
+Xvfb :99 -fp /usr/share/X11/fonts/misc -screen 0 1024x768x24 &gt; xvfb.log 2&amp;>1 &amp;<br />
+echo $! &gt; xvfp.pid
+</code></p>
+
+<p>
+The SeleniumHQ testSuite config needs to know which browser to use, the staturl, where to find the tests and where to log the results  
+</p>
+
+
+<p><code>
+kill $(cat xvfp.pid)
+rm xvfb.pid
+</code></p>
+
+<p>
+and checked the &quot;Publish Selenium Report&quot; option - configured to match the results file as above. 
+</p>
+
+
+<p>
+I had hoped that I could export the DISPLAY variable within the script but that didn&#8217;t work - the environment variable setting is global so I&#8217;ve limited hudson to run one job at a time as they all share a display.
+</p>
+
+
+<p>
+I have redirected all output from xvfb to a logfile otherwise hudson complains about leaking file descriptors.
+</p>
+
+
+<p>
+So far this is great - my tests get run regularly and reported consistently over time.
+</p>
+
+
+<p>
+But these tests are written in selenese (an html table based markup) which while having a great deal to offer does not have the full power of a programming language so my next step is to run tests via phpunit (this way I can access the database, loop over my test suite for a range of browsers, and more)
+</p>
+
+
+<p>
+This time I need to manage starting the selenium server as well as xvfb
+</p>
+
+
+<p><code>
+Xvfb :99   -screen 0 1024x768x24 &amp;> xvfb.log &amp;
+echo $! > xvfb.pid
+export DISPLAY=:99
+sleep 10
+java -jar /path-to/selenium-server.jar &amp;> selenium.log &amp;
+echo $! > selenium.pid
+sleep 30</p>
+
+<p>phpunit &ndash;log-xml phpunit.xml Example.php</p>
+
+<p>kill $(cat xvfb.pid)
+rm xvfb.pid
+kill $(cat selenium.pid)
+rm selenium.pid    
+</code></p>
+
+<p>
+I have instructed phpunit to log in xml format (aka junit format in more recent versions - but I&#8217;m running an old version of debian at the moment) 
+</p>
+
+
+<p>
+I added the xunit plugin http://wiki.hudson-ci.org/display/HUDSON/xUnit+Plugin to hudson and configured &quot;Publish JUnit test result report&quot; for my project specifying phpunit.xml as in the above script.
+</p>
+
+
+<p><p>It&rsquo;s worth noting that Drupals simpletest can also provide output in junit format at least according to <a href="http://drupal.org/node/1024426">http://drupal.org/node/1024426</a> so it should be possible to mix test types and aggregate the reports.
+<p>
+So now it all seems to be working an I can run all my tests overnight - all software has bugs - but at least now we should see fewer bugs reoccur as we&rsquo;ll keep adding tests to prevent these things creeping up on us.
+</p></p>
+]]></content>
+  </entry>
+  
+</feed>

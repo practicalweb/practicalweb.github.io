@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Drupal Planet | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/drupal-planet/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Check Drupal for Update Hook Changes]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/07/12/check-drupal-for-update-hook-changes/"/>
+    <updated>2012-07-12T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/07/12/check-drupal-for-update-hook-changes</id>
+    <content type="html"><![CDATA[<p>In a busy team, with ongoing testing I often find we have a production version of the site, a version under test, and another version being actively developed.</p>
+
+<p>In fact it can be less clear than this if release planning isn&rsquo;t a priority, some teams simply churn out releases some of which get tested and eventually released.</p>
+
+<p>This can lead to developers being unsure which update hooks have actually run on production (or will have run by the time the next release goes live).</p>
+
+<p>In this case it&rsquo;s important for somebody to manually review all install files that have been edited and check that we don&rsquo;t end up releasing update hooks that have been edited after they have been run.</p>
+
+<p>This script fires up a visual diff tool for the changed files.</p>
+
+<p>test_tag = the tag of the release currently under test and close to being launched</p>
+
+<p>future_release_tag = the tag of the subsequent expected release</p>
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<p>test_tag=$1
+future_release_tag=$2</p>
+
+<p>git checkout ${test_tag}
+./download-database.sh
+./build.sh</p>
+
+<h1>make a note of update hooks run</h1>
+
+<p>for f in $(git log &ndash;oneline &ndash;name-only ${test_tag}..${future_release_tag}  | sort | uniq | grep \.install | sed &ldquo;s/.<em>\/(.</em>).install/\1/&rdquo;) ; do echo &ldquo;select name, schema_version from system where name =&lsquo;$f&rsquo;&rdquo; | drush sqlc  ; done</p>
+
+<h1>this tells you the schema version at the end of the first update for modules that have edited install files</h1>
+
+<p>for f in $(git log &ndash;oneline &ndash;name-only ${test_tag}..${future_release_tag}  | sort | uniq | grep \.install) ; do git difftool -y ${test_tag} ${future_release_tag} &ndash; $f ; done</p>
+
+<h1>review update hook edits</h1>
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Drupal Upgrades and Patches]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/09/drupal-upgrades-and-patches/"/>
+    <updated>2010-10-09T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/09/drupal-upgrades-and-patches</id>
+    <content type="html"><![CDATA[<p>Reading <a href="http://www.drupaler.co.uk/users/gregharvey">Greg</a>&rsquo;s <a href="http://www.drupaler.co.uk/blog/security-releases-dont-work/504">post on security upgrades</a> and a few mentions of patches in the following discussion got me thinking about upgrade methods.</p>
+
+<p>The standard Drupal method is to delete existing files and unpack a tarball to replace the old version - I find this method unappealing because: I keep my code in subversion so don&rsquo;t want to delete the .svn subdirectories, and sometimes I have patches applied that I don&rsquo;t want to loose.</p>
+
+<p>Drush provides a significant step up for managing updates, it&rsquo;s really easy to use and replaces just files not the directory structure so it plays well with subversion.</p>
+
+<p>So I had a look around for methods to upgrade Drupal via patches (I really don&rsquo;t understand why this isn&rsquo;t the default) and I found</p>
+
+<p>A whole lot of ready made patches
+<a href="http://fuerstnet.de/en/drupal-upgrade-easier">http://fuerstnet.de/en/drupal-upgrade-easier</a></p>
+
+<p>A handbook page about patch upgrades
+<a href="http://drupal.org/node/359234">http://drupal.org/node/359234</a></p>
+
+<p>And a script to generate patch files
+<a href="http://2bits.com/articles/upgrading-drupal-5-2-installations-to-5-3-security-releases-using-a-single-patch.html">http://2bits.com/articles/upgrading-drupal-5-2-installations-to-5-3-security-releases-using-a-single-patch.html</a></p>
+
+<p>Which is really cool - but all aimed at core - so I&rsquo;ve created a modified version which also works for modules (attached)</p>
+
+<p>The main advantage of this method is that when patches have been applied to a live site but these patches haven&rsquo;t been accepted upstream - then it is still easy to upgrade to new releases - and should the patch later be accepted upstream the new release will generate a patch conflict alerting you to the relevant changes - and allowing you to choose how to proceed.</p>
+
+<p>I don&rsquo;t recommend this technique for newbies, for most people drush updates are the way to go.</p>
+
+<p>But if you find yourself maintaining patches on core or contrib modules that aren&rsquo;t moving through the issue queue - then maybe this may be helpful.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA["Backport Small Changes to Stable Releases"]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/09/backport-small-changes-to-stable-releases/"/>
+    <updated>2010-10-09T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/09/backport-small-changes-to-stable-releases</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve found the recent thread on distribution support very interesting.</p>
+
+<p>An I&rsquo;m especially excited by the prospects hinted at here</p>
+
+<p><a href="http://drupal.org/node/933846#comment-3545110">http://drupal.org/node/933846#comment-3545110</a></p>
+
+<blockquote>
+#42
+webchick - October 7, 2010 - 21:40
+
+For those who haven&#8217;t read it, http://buytaert.net/8-steps-for-drupal-8 is worth a read. In it, step 6 is &#8220;Backport small changes to stable releases&#8221;. Drupal 7 is the first release we&#8217;ve been able to entertain the idea, since we have a testing framework with 25K tests and a version-specific dependency system. What the boundaries are of such changes isn&#8217;t quite defined yet, because Dries and I have kept pretty busy with, you know, getting Drupal 7 out the door. :P~
+
+</blockquote>
+
+
+<p>For a long time I&rsquo;ve felt that Drupal could get a great deal more engagement from contractors, freelances and other somewhat mercenary entities (myself included) if contributions could have an impact on a smaller timescale.</p>
+
+<p>By allowing changes to core within major releases it potentially becomes possible to contribute patches that get released within months rather than years.</p>
+
+<p>On this timescale it becomes much easier to justify the time spent to a client as there is a reasonable change of it benifitting thier project.</p>
+
+<p><a href="http://drupal.org/node/200953#comment-1674372>I submitted a patch</a> that&rsquo;s actually in Drupal 7 - I may get to use in within 2 years of writing it - but that&rsquo;s several clients on.</p>
+
+<p>I think it&rsquo;s especially an opportunity to flesh out the API and add missing functions</p>
+]]></content>
+  </entry>
+  
+</feed>

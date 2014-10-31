@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Http | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/http/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using PHP and Curl With Http PUT on String Data]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/09/21/using-php-and-curl-with-http-put-on-string-data/"/>
+    <updated>2011-09-21T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/09/21/using-php-and-curl-with-http-put-on-string-data</id>
+    <content type="html"><![CDATA[<p>This wasn&rsquo;t obvious</p>
+
+<p>There are various other posts on this - but mostly assuming you will put a file.</p>
+
+<p>In my case I want to put the contents of a string so I needed to craete a temporary filehandle.</p>
+
+<p>&lt;?php</p>
+
+<p>function put_it($url, $string) {
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_PUT, TRUE);
+  // create tempoary file handle
+  $oneMB = 1024 * 1024;
+  $fp = fopen(&ldquo;php://temp/maxmemory:$oneMB&rdquo;, &lsquo;r+&rsquo;);
+  fputs($fp, $string);
+  rewind($fp);
+  curl_setopt($ch, CURLOPT_INFILE,  $fp);
+  curl_setopt($ch, CURLOPT_INFILESIZE, strlen($string));
+  $response = curl_exec($ch);
+  fclose($fp);</p>
+
+<p>?></p>
+]]></content>
+  </entry>
+  
+</feed>

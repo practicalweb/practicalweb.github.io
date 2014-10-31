@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Devops | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/devops/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Install Graphite/grafana and Import Data From Munin]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/"/>
+    <updated>2014-10-24T14:09:22+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin</id>
+    <content type="html"><![CDATA[<p><a href="http://grafana.org/">Grafana</a> is a fork of <a href="http://www.elasticsearch.org/overview/kibana/">kibana</a> that builds grapshs based on data stored in <a href="http://graphite.wikidot.com/">graphite</a> (it can pull data from other places too but this blog only looks at graphite)</p>
+
+<p>I&rsquo;m looking at using it to replace tools like [munin}(<a href="http://munin-monitoring.org/">http://munin-monitoring.org/</a>) or [cacti}(<a href="http://www.cacti.net/">http://www.cacti.net/</a>) which do a great job of gathering and displaying metrics.</p>
+
+<p>Wwhat Grafana does beyond this is that it allows you to interactivley manipulate the graphs, you can easily create a graph showing related metrics on the same screen (for example add sysem load and apache requestes per second to the same graphic). You can do this in the other tools - but you have to edit config files on the server, in grafana this is all managed via the UI.</p>
+
+<p>It also allows you to look at any period you like - and in any resolution.</p>
+
+<p>sudo yum install graphite-web python-carbon</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Developing for Ops]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/14/developing-for-ops/"/>
+    <updated>2014-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/14/developing-for-ops</id>
+    <content type="html"><![CDATA[<p>We often work on large websites with strict change control practices and scheduled release cycles. Sometimes we also hand over the systems to the client for production and don’t have direct access ourselves.</p>
+
+<p>Some bugs have a nasty habit of only occurring in production, this may be due to high load, odd/old browsers, changes in data, or just because test scenarios don’t cover every eventuality.</p>
+
+<p>What this means is that when we have a bug in production we can only understand it through the error logging we have already built into the system. If we need to put in place additional logging we usually lose the chance of actually fixing the bug for another release cycle.</p>
+
+<p>One of the real arts in this flow of development is to be pessimistic enough to assume that somehow something is going to go wrong, to remember that the people who see the bug will not be the developers who know the code, and that at this point (unlike during dev) we will have very limited access to the systems we might want to debug.</p>
+
+<p>One temptation is to log everything - but you soon find that doesn’t scale.</p>
+
+<p>The art of error messages is a bit like the art of commenting - especially for those errors that should never happen. You often don’t need to say exactly what went wrong, hopefully your compiler or runtime engine will do this along with a stacktrace or at least a line number. You need to say what it means to have this error - especially if it indicates a breakdown in business logic. It also helps to raise errors as early in the code flow as possible.</p>
+
+<p>When working on a large project with multiple teams it is especially helpful for errors to make clear whenever possible which team the bug belongs to. Clear error data like this can really cut down on the politics that can accompany a production bug and radically reduce the time to fix.</p>
+
+<p>For example let’s imagine that we are developing a website, we are responsible for the shopfront but we obtain product data from a feed. As well as all the bugs that can occur in our code there are likely to be a whole host of possible problems with the incoming data.</p>
+
+<p>What if we receive a null instead of the agreed object, what if the price is non numeric (or zero, or negative), what if an expected field is missing?</p>
+
+<p>You might display a product with zero price, fail to display it, or perhaps you do catch an error but the log just says something like “Notice:  Trying to get property of non-object”. The bug gets reported to the front end team - because that’s where the error appears. The front end team can’t see the production data.</p>
+
+<p>The politics here is that teams often blame each other, developers are generally optimistic that their code is good and pessimistic about other teams code. Therefore bugs get thrown over the wall too quick and then get thrown back - leaving bugs bouncing about with no fix.</p>
+
+<p>Now imagine you have explicit validation at the point you load third party data (or any place you have a boundary of responsibility like this). You log an error that points directly to the data feed, hopefully with the actual data that is wrong, perhaps even logging the request/response pair that led to it. This time you can give the data team enough info that they can quickly identify the problem. Conversely if you have missing products and no data errors - the impossible has happened - there is a bug in your own code. Now you get to be the hero and fix it.</p>
+
+<p>Remember, in development (where developers spend 95%) of their time this bug would be trivial, the developer would see the error, know which bit of code it related to, be able to view the data feed, and report the bug back to the data team. The trick is to remember it won’t be like this in production.</p>
+
+<p>In my experience it is well worth spending a chunk of time up front writing good generic error routines, that capture as much detail as possible, and 5 or 10 minutes every day looking at stubbed out error routines.</p>
+
+<p>This may add up to a non-trivial time investment - but you only have to save a few minor production bugs to get paid back plenty.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Vagrant / Puppet Project to Setup a RPM Build Server and Custom Yum Repository]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/11/24/vagrant-puppet-project-to-setup-a-rpm-build-server-and-custom-yum-repository/"/>
+    <updated>2012-11-24T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/11/24/vagrant-puppet-project-to-setup-a-rpm-build-server-and-custom-yum-repository</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve published a project on github <a href="https://github.com/practicalweb/vagrant-rpmbuild">https://github.com/practicalweb/vagrant-rpmbuild</a></p>
+
+
+
+
+<p>The project contains a Vagrant config file, and Puppet manifests that together with an appropriate basebox will create a VM setup to build RPMS and host them on a Custom Yum repository</p>
+
+
+
+
+<p>To run this</p>
+
+
+
+
+<ol>
+<li><p>Install vagrant <a href="http://vagrantup.com/">http://vagrantup.com/</a> (on Ubuntu just <code>apt-get install vagrant</code>)</p></li>
+<li><p>Install Virtualbox <a href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a> (again on Ubuntu <code>apt-get install virtualbox</code>)</p></li>
+<li><p>Clone this reporitory <code>git clone git@github.com:practicalweb/vagrant-rpmbuild.git</code></p></li>
+<li><p>run <code>vagrant up</code> from the root of your cloned repository (NB the first time you do the a 600Mb base image will be downloaded)</p></li>
+<li><p>run <code>vagrant ssh</code> to connect to the new VM  </p></li>
+<li><p>To build the demo rpm and publish it locally run <code>/vagrant/build-rpm.sh</code> the key password is &#8216;secret&#8217;</p></li>
+<li><p>To install the demo package on the VM run <code>sudo yum install demo</code></p></li>
+</ol>
+
+
+<p>There is a Vagrant port forwarding rule, and firewall setup to allow the yum repo to be accessed on the host machine as http://localhos:8088/repo</p>
+
+
+
+
+<p>This project is intended as documentation of how to setup this build environment, and as a starting point for further customisation, I&#8217;m sure it isn&#8217;t perfect, I hope it is useful.</p>
+
+
+
+
+<p>It&#8217;s all released under GPL with no promise that it is fot for any purpose - see LICENCE.txt </p>
+
+
+
+
+<p>I&#8217;ve tried to group the code logically, there are 4 modules</p>
+
+
+
+
+<dl>
+<dt>base</dt>
+    <dd>This contains some generic stuff, pulling in a couple of packages not in the minimal centos install but that I find essential.</dd><dd>
+    </dd><dd>The idea is that I would use this base module on every server I setup.</dd>
+
+  
+
+<dt>rpmbuild</dt>
+    <dd>Just what is needed to actually build the RPMs</dd><dd>
+  
+  </dd>
+
+<dt>tomyumrepo</dt>
+     <dd>Just what is needed to serve a custom yum repository, the packages could be built elsewhere</dd>
+  <dt>usemyrepo</dt>
+     <dd>Config to setup a machine to consume yum packages.</dd>
+     <dd>This could be added to the setup for any machine that needs to use the custom packages</dd>
+</dl>
+
+
+<p>I&#8217;ve included a minimal RPM project to get things rolling, it just installs a single text file.</p>
+
+
+
+
+<p>I&#8217;ve built a GPG key to sign packages with, and also included a script ( generate-gpg-key.sh ) which shows how to generate a new one, edit this file to make your own key.</p>
+
+
+
+
+<p>The base box I&#8217;ve defined is a minimal install of CentOS 6.3 (64 bit) with the dependencies required for vagrant.</p>
+
+
+
+
+<p>Base boxes are quite a heavy download, but you only need to do it once and then you can have as many VMs as you want based on them, because the base is minimal and all extra config is done in puppet each of these VMs can serve a very differnt purpose - just by changing the Vagrantfile and puppet config.</p>
+
+
+
+
+<p>The Vagrantfile runs puppet in standalone mode, but the modules <em>should</em> work with a client/server Puppet setup - so hopefully migrating the Vagrant setup to any Puppet manged system should be easy.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Satellite vs Puppet]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/11/20/satellite-vs-puppet/"/>
+    <updated>2012-11-20T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/11/20/satellite-vs-puppet</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve been using Puppet for a little while and am now working on a project that will be using RedHat&#8217;s Satellite (the upstream project is Spacewalk).</p>
+
+
+
+
+<p>I haven&#8217;t really used puppet in anger on production systems yet, I&#8217;m referring to the open source edition of Puppet, and have only read about Satellite, but I didn&#8217;t find much comparison out there so thought it worth writing up what I&#8217;ve found.</p>
+
+
+
+
+<p><p>They key differences that strike me are<p></p>
+
+<p><ul>
+<li>Satellite is RedHat/Centos only, Puppet works on multiple distributions, and even on Windows to some extent</li>
+<li>Satellite is primarily a GUI driven system whereas Puppet is primarily text configuration (puppet has a web dashboard but it&rsquo;s really just a log viewer)</li></p>
+
+<p><li>Satellite can manage provisioning of new systems (I&rsquo;m using openstack for provisioning new VMs anyway, Razor is said to work well with Puppet for provisioning)</li></p>
+
+<p><li>Satellite manages configuration via simple templates with limited variable use, Puppets templates are fully scriptable</li></p>
+
+<p><li>Puppet has a very rich dependency system (eg you can trigger an Apache restart whenever a configuration change occurs</li></p>
+
+<p><li>Satellite uses a mixture of technologies (python, Java, C) puppet is written in Ruby.</li></p>
+
+<p><li>Puppet is available as a package on Ubuntu/debian systems, on Redhat/centos it has to be installed via the EPEL repo, pulling in extra dependencies</li></p>
+
+<p></ul></p>
+
+<p><p>Personally I much prefer puppet&rsquo;s approach, it&rsquo;s easy to keep all the config in git and test changes in a dev env before rolling out.</p></p>
+
+<p><p>I love puppets declarative approach, and the ability to chain dependencies</p></p>
+
+<p><p>That said I&rsquo;m really looking forward to playing with Satellite, finding out how provisioning works when all the servers are VMs and seeing how we manage the dependency tracking</p></p>
+]]></content>
+  </entry>
+  
+</feed>

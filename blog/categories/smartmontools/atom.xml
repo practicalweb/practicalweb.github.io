@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Smartmontools | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/smartmontools/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Hard Drive Testing Using Smartmontools]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/12/03/hard-drive-testing-using-smartmontools/"/>
+    <updated>2009-12-03T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/12/03/hard-drive-testing-using-smartmontools</id>
+    <content type="html"><![CDATA[<p>Test the hard drive with</p>
+
+
+<p><code>
+ smartctl -t long /dev/hd?
+</code></p>
+
+<p>This may take hours to run and will do so as a background process.</p>
+
+
+
+
+<p>Once complete run the following to see results</p>
+
+
+<p><code>
+ smartctl -l selftest /dev/hd?
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Sqlite | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/sqlite/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Adding More Data Types to Schema API for Drupal 7]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/06/07/adding-more-data-types-to-schema-api-for-drupal-7/"/>
+    <updated>2009-06-07T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/06/07/adding-more-data-types-to-schema-api-for-drupal-7</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve written a patch for Drupal 7 to enable date and time data types to be defined for the schema API.</p>
+
+<p><a href="http://drupal.org/node/200953">http://drupal.org/node/200953</a></p>
+
+<p>Update : <a href="https://www.drupal.org/node/866340">it got removed</a></p>
+
+<!--break-->
+
+
+<p>There seems to be some resistance to this idea due to concerns about compatibility between database versions (Drupal now supports MySQL, PostgreSQL and sqlite).</p>
+
+<p>Personally I don&rsquo;t think Drupal can afford to work at lowest common denominator level if the aim is to be a serious option for the enterprise</p>
+
+<p>Most professionally developed Drupal sites will have some (maybe a lot of) custom coding - this code is written with full awareness of which database will be used - and vendor specific SQL may be appropriate.</p>
+
+<p>For publicly available modules vendor neutral code is desirable but can&rsquo;t be guaranteed with the current schema API.</p>
+
+<p>Sqlite is never going to be able to do all the things &lsquo;real&rsquo; databases can do, there may be some cases that some of the work can be done in PHP instead, or it may be that some modules just won&rsquo;t work for all systems.</p>
+
+<p>Having said all this date and time data types are pretty standard stuff and hopefully my patch can be included in Drupal without rocking the boat.</p>
+
+<p>I used a git mirror of the Drupal repository to develop this patch, and I&rsquo;m pretty impressed with git - it is blazingly fast - it was great to be able to make local commits - and then to &lsquo;rebase&rsquo; these wrapping several small commits into one really cleanup up my repository history.</p>
+]]></content>
+  </entry>
+  
+</feed>

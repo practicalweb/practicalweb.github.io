@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Iwl3945 | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/iwl3945/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Configuring WIFI With Debian]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/07/21/configuring-wifi-with-debian/"/>
+    <updated>2009-07-21T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/07/21/configuring-wifi-with-debian</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve just installed Debian Lenny and generally am impressed with how well things are auto detected and configured - so much easier than a few years ago - and in many ways easier than a Windows install where you have to constantly find 3rd party drivers to get things working.
+</p>
+
+
+<p>
+ However getting wifi running was a bit trickier (largely because of FCC regulations  affecting licenses and default settings).
+</p>
+
+
+<p>
+This document got me most of the way 
+</p>
+
+
+<p>
+http://wiki.debian.org/iwlwifi
+</p>
+
+
+<p>
+Additional lines in /etc/.network/interfaces
+</p>
+
+
+<p><code>
+iface wlan0 inet dhcp
+  pre-up ip link set wlan0 up
+  wpa-driver wext
+  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf</p>
+
+<p></code></p>
+
+<p>and wpa_supplicant.conf looks like
+<code>
+ctrl_interface=/var/run/wpa_supplicant</p>
+
+<p>network={
+     ssid=&ldquo;mynetwork&rdquo;
+     psk=&ldquo;mypassword&rdquo;
+}
+</code></p>
+
+<p>And it&#8217;s all working&#8230;</p>
+
+
+
+
+<p>
+This old bug seems to be fixed
+</p>
+
+
+<p>
+ https://bugs.launchpad.net/ubuntu/+source/linux/+bug/288401
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Windows | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/windows/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Reinstall Grub After Windows Breaks It]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/02/12/reinstall-grub-after-windows-breaks-it/"/>
+    <updated>2013-02-12T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/02/12/reinstall-grub-after-windows-breaks-it</id>
+    <content type="html"><![CDATA[<p>One of those things that happens from time to time on a dual boot system&#8230;</p>
+
+
+
+
+<p>Windows breaks grub, usually if I&#8217;ve reinstalled windows, this can lead to a unbootable system.</p>
+
+
+
+
+<p>Boot from a Ubuntu (or other distro) live disk or USB stick.</p>
+
+
+
+
+<p>Figure out which your disks and partitions are.</p>
+
+
+<p><code></p>
+
+<pre><code>sudo mount /dev/sdXY /mnt
+</code></pre>
+
+<h1>if there is a boot partition</h1>
+
+<pre><code>sudo mount /dev/sdUV /mnt/boot
+sudo grub-install --recheck --root-directory=/mnt /dev/sdZ 
+</code></pre>
+
+<p></code></p>
+
+<p>When you reboot grub should be back to normal.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Perils of Virtualisation]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/04/28/the-perils-of-virtualisation/"/>
+    <updated>2009-04-28T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/04/28/the-perils-of-virtualisation</id>
+    <content type="html"><![CDATA[<p>
+I just read an interesting article about Windows 7 - it will include a virtual machine to run windows XP for backwards compatibility. 
+</p>
+
+
+<p>
+http://www.computerworld.com/action/article.do?command=viewArticleBasic&amp;articleId=9132177
+</p>
+
+
+<p>
+The article points out that this has the drawback of extra maintenance.
+</p>
+
+
+<p>
+I&#8217;d have to agree with this - it&#8217;s one of the big downsides of using virtual machines for testing -  with three virtual Windows&#8217; I find myslef constantly having to run updates.
+</p>
+
+
+<p>
+One of the big wins of Linux systems is centralised updates for all applications - having to update windows, office, flash, firefox, java - all separately is a real pain even when you only have one machine to look after. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

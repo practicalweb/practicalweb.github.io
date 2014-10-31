@@ -1,0 +1,1287 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="One of those things that happens from time to time on a dual boot system... Windows breaks grub, usually if I've reinstalled windows, this can lead &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/posts/3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/12/reinstall-grub-after-windows-breaks-it/">Reinstall Grub After Windows Breaks It</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-12T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of those things that happens from time to time on a dual boot system&#8230;</p>
+
+
+
+
+<p>Windows breaks grub, usually if I&#8217;ve reinstalled windows, this can lead to a unbootable system.</p>
+
+
+
+
+<p>Boot from a Ubuntu (or other distro) live disk or USB stick.</p>
+
+
+
+
+<p>Figure out which your disks and partitions are.</p>
+
+
+<p><code></p>
+
+<pre><code>sudo mount /dev/sdXY /mnt
+</code></pre>
+
+<h1>if there is a boot partition</h1>
+
+<pre><code>sudo mount /dev/sdUV /mnt/boot
+sudo grub-install --recheck --root-directory=/mnt /dev/sdZ 
+</code></pre>
+
+<p></code></p>
+
+<p>When you reboot grub should be back to normal.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/05/mini-scripts-to-obtain-git-id-branch-tag/">Mini Scripts to Obtain Git Id/branch/tag</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-05T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>
+$new_branch=$1 # passed as param</p>
+
+<p>current_branch=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
+current_branch=${current_branch##refs/heads/}</p>
+
+<p>current_id=$(git rev-parse &ndash;short origin/$current_branch)</p>
+
+<p>new_id=$(git rev-parse &ndash;short origin/$new_branch)</p>
+
+<p>last_tag=$(git describe &ndash;abbrev=0 &ndash;tags)</p>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/26/git-submodules-and-subtrees/">Git Submodules and Subtrees</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-11-26T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Git has the concept of both submodules and subtrees, there seem to be some problems with each solution, nether being well loved as far as I can see.</p>
+
+
+
+
+<p>Both add significant complexity to a project, and require extra care - but the alternative is monolithic projects or a lot of copy-pasting.</p>
+
+
+
+
+<p>Submodules allow another git repo to be nested inside the main one, you can then commit to either repo from the same filesystem.<br />
+The &#8220;parent&#8221; repo references a specific tag/branch of the child one - it&#8217;s just this reference which is committed (and can be updated) in the parent.<br />
+Commits in the parent relating to changes in subtree just show the ID changing and any message made when committing an updated version of the module. You can see commit history for the submodule when you are in that directory.
+</p>
+
+
+<p>The downside here being that neither a regular checkout nor a github tarball includes the child repo which adds overhead to dev build and server deploys.</p>
+
+
+
+
+<p>Subtrees allow an additional external reference to be added and checked out as a subdirectory, this time the whole subdirectory is committed to the parent - but not the reference.<br />
+The local repo does hold a reference and this allows the child repo to be merged in (preserving any local patches).<br />
+The downside here is that the external reference has to be added manually to any repo that needs it, you don&#8217;t see the submodule history in the parent.</p>
+
+
+
+
+<p>There&#8217;s a good article here <a href="http://codingkilledthecat.wordpress.com/2012/04/28/why-your-company-shouldnt-use-git-submodules/">http://codingkilledthecat.wordpress.com/2012/04/28/why-your-company-shouldnt-use-git-submodules</a> which basically says to use another tool - but that has it&#8217;s own set of problems.</p>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/24/vagrant-puppet-project-to-setup-a-rpm-build-server-and-custom-yum-repository/">Vagrant / Puppet Project to Setup a RPM Build Server and Custom Yum Repository</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-11-24T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve published a project on github <a href="https://github.com/practicalweb/vagrant-rpmbuild">https://github.com/practicalweb/vagrant-rpmbuild</a></p>
+
+
+
+
+<p>The project contains a Vagrant config file, and Puppet manifests that together with an appropriate basebox will create a VM setup to build RPMS and host them on a Custom Yum repository</p>
+
+
+
+
+<p>To run this</p>
+
+
+
+
+<ol>
+<li><p>Install vagrant <a href="http://vagrantup.com/">http://vagrantup.com/</a> (on Ubuntu just <code>apt-get install vagrant</code>)</p></li>
+<li><p>Install Virtualbox <a href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a> (again on Ubuntu <code>apt-get install virtualbox</code>)</p></li>
+<li><p>Clone this reporitory <code>git clone git@github.com:practicalweb/vagrant-rpmbuild.git</code></p></li>
+<li><p>run <code>vagrant up</code> from the root of your cloned repository (NB the first time you do the a 600Mb base image will be downloaded)</p></li>
+<li><p>run <code>vagrant ssh</code> to connect to the new VM  </p></li>
+<li><p>To build the demo rpm and publish it locally run <code>/vagrant/build-rpm.sh</code> the key password is &#8216;secret&#8217;</p></li>
+<li><p>To install the demo package on the VM run <code>sudo yum install demo</code></p></li>
+</ol>
+
+
+<p>There is a Vagrant port forwarding rule, and firewall setup to allow the yum repo to be accessed on the host machine as http://localhos:8088/repo</p>
+
+
+
+
+<p>This project is intended as documentation of how to setup this build environment, and as a starting point for further customisation, I&#8217;m sure it isn&#8217;t perfect, I hope it is useful.</p>
+
+
+
+
+<p>It&#8217;s all released under GPL with no promise that it is fot for any purpose - see LICENCE.txt </p>
+
+
+
+
+<p>I&#8217;ve tried to group the code logically, there are 4 modules</p>
+
+
+
+
+<dl>
+<dt>base</dt>
+    <dd>This contains some generic stuff, pulling in a couple of packages not in the minimal centos install but that I find essential.</dd><dd>
+    </dd><dd>The idea is that I would use this base module on every server I setup.</dd>
+
+  
+
+<dt>rpmbuild</dt>
+    <dd>Just what is needed to actually build the RPMs</dd><dd>
+  
+  </dd>
+
+<dt>tomyumrepo</dt>
+     <dd>Just what is needed to serve a custom yum repository, the packages could be built elsewhere</dd>
+  <dt>usemyrepo</dt>
+     <dd>Config to setup a machine to consume yum packages.</dd>
+     <dd>This could be added to the setup for any machine that needs to use the custom packages</dd>
+</dl>
+
+
+<p>I&#8217;ve included a minimal RPM project to get things rolling, it just installs a single text file.</p>
+
+
+
+
+<p>I&#8217;ve built a GPG key to sign packages with, and also included a script ( generate-gpg-key.sh ) which shows how to generate a new one, edit this file to make your own key.</p>
+
+
+
+
+<p>The base box I&#8217;ve defined is a minimal install of CentOS 6.3 (64 bit) with the dependencies required for vagrant.</p>
+
+
+
+
+<p>Base boxes are quite a heavy download, but you only need to do it once and then you can have as many VMs as you want based on them, because the base is minimal and all extra config is done in puppet each of these VMs can serve a very differnt purpose - just by changing the Vagrantfile and puppet config.</p>
+
+
+
+
+<p>The Vagrantfile runs puppet in standalone mode, but the modules <em>should</em> work with a client/server Puppet setup - so hopefully migrating the Vagrant setup to any Puppet manged system should be easy.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/22/varnish-on-two-ports-with-separate-backends/">Varnish on Two Ports, With Separate Backends</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-11-22T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We have a site with a hardware ssl accelerator wich routes http traffic to port 80 and decrypted https traffic (so back to http) to port 443. We wanted varnish to cache the 443 traffic, and I came up with this proof of concept config, in reality you&#8217;d want to have a bunhch of different rules for your https site to ensure you cache only what you want to. </p>
+
+
+
+
+<p>in /etc/varnish/default.vcl</p>
+
+
+<p><code>
+backend default {
+    .host = &ldquo;www.example.com&rdquo;;
+    .port = &ldquo;80&rdquo;;
+}</p>
+
+<p>backend secure {
+        .host = &ldquo;www.example.com&rdquo;;
+        .port = &ldquo;443&rdquo;;
+}</p>
+
+<p>sub vcl_recv {</p>
+
+<p>set req.http.Host = &ldquo;www.example.com&rdquo;;</p>
+
+<p>if (server.port == 7081) {
+                set req.http.host = &ldquo;www.example.com&rdquo;;
+                set req.http.port = 443;
+                set req.backend = secure;
+                return(lookup);
+}
+</code></p>
+
+<p>and in /etc/default/varnish</p>
+
+
+<p><code>
+DAEMON_OPTS=&ldquo;-a :6081,:7081 \
+             -T localhost:6082 \
+             -f /etc/varnish/default.vcl \
+             -S /etc/varnish/secret \
+             -s malloc,256m&rdquo;</p>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/21/how-to-create-a-custom-yum-repository-on-centos-6/">How to Create a Custom Yum Repository on Centos 6</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-11-21T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you want to create custom rpms and install then with the usual automated dependency management you&rsquo;ll need your own yum repository. This is just the RPMS and metadata in the format of static xml files served by a webserver.</p>
+
+<h2>First you need a GPG key to sign your packages.</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># make some randomness if running headless </span>
+</span><span class='line'>sudo rngd -r /dev/urandom
+</span><span class='line'><span class="c"># start the agent</span>
+</span><span class='line'>gpg-agent --use-standard-socket --daemon
+</span><span class='line'><span class="c"># interactive key generation (accept the defaults for key type, provide your name and email when promted)</span>
+</span><span class='line'>gpg --gen-key
+</span><span class='line'><span class="c"># </span>
+</span><span class='line'>gpg --export -a <span class="s1">&#39;My Name&#39;</span> &gt; MY-RPM-GPG-KEY
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You won&rsquo;t need the random generator if you do this on a desktop, but on a headless system I found I needed this. These actions will store a private key in your keyring, and a public key in the specified file.</p>
+
+<h2>Build your rpm</h2>
+
+<p>First configure rpm to use the key you just added to your key ring, checing you don&rsquo;t oveerwrite earlier configuration).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span> ! -f ~/.rpmmacros <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s1">&#39;%_signature gpg</span>
+</span><span class='line'><span class="s1">%_gpg_name  My Name</span>
+</span><span class='line'><span class="s1">&#39;</span> &gt; ~/.rpmmacros
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now build your RPM (assuming you are already setup to do this).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rpmbuild -bb --sign ~/rpmbuild/SPECS/my-project.spec
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Setup the Yum Repo</h2>
+
+<p>Setup apache, make the directory structure, with teh repo files. This can be the same or a different server to your build machine.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># make the repo base url</span>
+</span><span class='line'>sudo mkdir -p /var/www/html/myrepo
+</span><span class='line'><span class="c"># make it wrietable by you normal account</span>
+</span><span class='line'>sudo chown <span class="k">$(</span>id -un<span class="k">)</span>.<span class="k">$(</span>id -gn<span class="k">)</span> /var/www/html/myrepo
+</span><span class='line'><span class="c"># copy you rpm files</span>
+</span><span class='line'>cp *rpm /var/www/html/myrepo
+</span><span class='line'><span class="c"># create the metadata</span>
+</span><span class='line'>createrepo /var/www/html/myrepo
+</span><span class='line'>
+</span><span class='line'><span class="c"># Setup an apache Alias for this directory</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s1">&#39;Alias /myrepo/ /var/www/html/myrepo/</span>
+</span><span class='line'><span class="s1">&#39;</span> &gt; /etc/httpd/conf.d/my-yum-repo
+</span><span class='line'>
+</span><span class='line'><span class="c"># restart Apache to pickup the change</span>
+</span><span class='line'>service restart httpd
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Configure the system that will use the custom repo</h2>
+
+<p>Copy over the GPG key, and import it into the  rpm database.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo rpm --import MY-RPM-GPG-KEY
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Configure yum to use the new repo.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> <span class="err">&#39;</span><span class="o">[</span>my-repo<span class="o">]</span>
+</span><span class='line'><span class="nv">name</span><span class="o">=</span>My Custom Packages
+</span><span class='line'><span class="nv">baseurl</span><span class="o">=</span>http://yum.example.com/myrepo
+</span><span class='line'>&gt; /etc/yum.repos.d/my.repo
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you should be able to install your custom packages with regular yum commands. When you update your rpms just re-run the createrepo command to update the metadata.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/20/satellite-vs-puppet/">Satellite vs Puppet</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-11-20T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve been using Puppet for a little while and am now working on a project that will be using RedHat&#8217;s Satellite (the upstream project is Spacewalk).</p>
+
+
+
+
+<p>I haven&#8217;t really used puppet in anger on production systems yet, I&#8217;m referring to the open source edition of Puppet, and have only read about Satellite, but I didn&#8217;t find much comparison out there so thought it worth writing up what I&#8217;ve found.</p>
+
+
+
+
+<p><p>They key differences that strike me are<p></p>
+
+<p><ul>
+<li>Satellite is RedHat/Centos only, Puppet works on multiple distributions, and even on Windows to some extent</li>
+<li>Satellite is primarily a GUI driven system whereas Puppet is primarily text configuration (puppet has a web dashboard but it&rsquo;s really just a log viewer)</li></p>
+
+<p><li>Satellite can manage provisioning of new systems (I&rsquo;m using openstack for provisioning new VMs anyway, Razor is said to work well with Puppet for provisioning)</li></p>
+
+<p><li>Satellite manages configuration via simple templates with limited variable use, Puppets templates are fully scriptable</li></p>
+
+<p><li>Puppet has a very rich dependency system (eg you can trigger an Apache restart whenever a configuration change occurs</li></p>
+
+<p><li>Satellite uses a mixture of technologies (python, Java, C) puppet is written in Ruby.</li></p>
+
+<p><li>Puppet is available as a package on Ubuntu/debian systems, on Redhat/centos it has to be installed via the EPEL repo, pulling in extra dependencies</li></p>
+
+<p></ul></p>
+
+<p><p>Personally I much prefer puppet&rsquo;s approach, it&rsquo;s easy to keep all the config in git and test changes in a dev env before rolling out.</p></p>
+
+<p><p>I love puppets declarative approach, and the ability to chain dependencies</p></p>
+
+<p><p>That said I&rsquo;m really looking forward to playing with Satellite, finding out how provisioning works when all the servers are VMs and seeing how we manage the dependency tracking</p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/12/changing-default-port-of-memcache-on-centos-6/">Changing Default Port of Memcache on Centos 6</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-11-12T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of those things that just took me a lot longer than I expected&#8230;</p>
+
+
+
+
+<p>Changing memcache port sdeems simple enough - just edit 
+/etc/sysconfig/memcached and change the PORT value</p>
+
+
+
+
+<p>BUT on a new centOS install memecache failed to start on any non-standard port.</p>
+
+
+<p>To see any error message I had to edit the file /etc/init.d/memcached</p></p>
+
+<p>and change the start line to </p>
+
+
+<p><code></p>
+
+<p>daemon &ndash;pidfile ${pidfile} memcached -d -v -p $PORT -u $USER  -m $CACHESIZE -c $MAXCONN -P ${pidfile} $OPTIONS
+</code></p>
+
+<p>Just adding the -v makes output verbose and I could see an error like </p>
+
+
+<p><code>
+memcache failed to listen on TCP port 11311 : Permission denied
+</code></p>
+
+<p>At this point I realised selinux was enabled by default, I tend to forget about this as it is so common for it to be disabled.</p>
+
+
+
+
+<p><p>In order to add a new allowed port I added the following packages to edit selinux rules<p></p>
+
+<p><code>policycoreutils-python
+setroubleshoot-server</code></p>
+
+<p><p>To check the name of the memcache port</p>
+<code>
+semanage port -l | grep memcache
+</code>
+<p>Then to allow the new port</p>
+<code>
+sudo semanage port -a -t memcache_port_t -p tcp 11311
+</code></p>
+
+<p><p>And now memcache works on the port I need for this project.</p></p>
+
+<p><p>Sadly I don&rsquo;t see any good puppet modules to help with this, and it still seems selinux is very commonly disabled as it is tricky to work with.</p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/16/how-to-build-a-centos-6-base-box-for-vagrant/">How to Build a Centos 6 Base Box for Vagrant</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-10-16T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><hr />
+
+<p>Update : <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating new Vagrant base boxes with Veewee</a></p>
+
+<p>I originally went down a manual route as I wanted to understand the process, and since I&rsquo;m familiar with manual installs this was the easiest path for me at the time.</p>
+
+<p>You&rsquo;re probably better off using <a href="https://github.com/jedi4ever/veewee">veewee</a> or <a href="http://www.packer.io/">packer</a></p>
+
+<hr />
+
+<p>I&rsquo;ve been playing with <a href="http://vagrantup.com/">vagrant</a> a bit lately but of course the first thing I wanted was something they say is for advanced users only, creating my own base box.</p>
+
+<p>I&rsquo;m not sure why this is given such a stark warning, it is perhaps a little long, but it wasn&rsquo;t too difficult, and given that I want to match a client install as closely as possible I want centos 6.2 (client has RHEL6.2)</p>
+
+<p>There is a list of <a href="http://www.vagrantbox.es/">pre-built boxes</a> but I personally don&rsquo;t know how trustworthy those urls are.</p>
+
+<p>So here is what I did (as well as I can reconstruct from notes) with a few comments.</p>
+
+<p>I&rsquo;ve tried to keep this quite detailed so that it should achievable even if you don&rsquo;t regularly install new OS&rsquo;s</p>
+
+<h2>On your local dev machine</h2>
+
+<p>I&rsquo;m running Ubuntu 12.04.1 LTS locally</p>
+
+<p>I have installed</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>i A virtualbox                                                                                                                      - x86 virtualization solution - base binaries                                                                                              
+</span><span class='line'>i A virtualbox-dkms                                                                                                                 - x86 virtualization solution - kernel module sources for dkms                                                                             
+</span><span class='line'>i A virtualbox-fuse                                                                                                                 - x86 virtualization solution - virtual filesystem                                                                                         
+</span><span class='line'>i   virtualbox-guest-additions-iso                                                                                                  - guest additions iso image for VirtualBox                                                                                                 
+</span><span class='line'>i   virtualbox-ose-dkms                                                                                                             - transitional package for virtualbox-dkms                                                                                                 
+</span><span class='line'>i   virtualbox-ose-fuse                                                                                                             - transitional package for virtualbox-fuse                                                                                                 
+</span><span class='line'>i   virtualbox-ose-qt                                                                                                               - transitional package for virtualbox-qt                                                                                                   
+</span><span class='line'>i A virtualbox-qt                                                                                                                   - x86 virtualization solution - Qt based user interface  
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>i   vagrant                                                                                                                         - Tool for building and distributing virtualized development environments                                                                  </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://mirrors.ukfast.co.uk/sites/ftp.centos.org/6.3/isos/i386/CentOS-6.3-i386-minimal.iso</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>In Virtualbox GUI</h2>
+
+<p><img src="/sites/default/files/step-1.jpeg" title="[step 1]" ></p>
+
+<p>Create a new VM</p>
+
+<p><img src="/sites/default/files/step-2.jpeg" title="[step 2]" ></p>
+
+<p>Set OS to Linux and version to Red Hat</p>
+
+<p>Call it &ldquo;vagrant-centos62&rdquo; (ie vagrant-${osname}</p>
+
+<p><img src="/sites/default/files/step-3.jpeg" title="[step 3]" ></p>
+
+<p>Set memory to 512Mb (this is just a default and can be altered later)</p>
+
+<p><img src="/sites/default/files/step-4.jpeg" title="[step 4]" ></p>
+
+<p>Create a new virtual hard disk</p>
+
+<p><img src="/sites/default/files/step-5.jpeg" title="[step 5]" ></p>
+
+<p>Use the default virtualbox format</p>
+
+<p><img src="/sites/default/files/step-6.jpeg" title="[step 6]" ></p>
+
+<p>Choose dynamically sized (This means the VM will see a large disk - but the space won&rsquo;t be used on your real hard disk - unless the virtual one has actual data on it)</p>
+
+<p><img src="/sites/default/files/step-7.jpeg" title="[step 7]" ></p>
+
+<p>Make it 32Gb in size (which should be big enough for most tasks)</p>
+
+<p><img src="/sites/default/files/step-8.jpeg" title="[step 8]" ></p>
+
+<p>Click create</p>
+
+<h3>Virtualbox settings for this new VM</h3>
+
+<p><img src="/sites/default/files/step-9.jpeg" title="[step 9]" ></p>
+
+<p>Disable audio support (not normally needed for a development VM)</p>
+
+<p><img src="/sites/default/files/step-10.jpeg" title="[step 10]" ></p>
+
+<p>Same for USB</p>
+
+<p><img src="/sites/default/files/step-11.jpeg" title="[step 11]" ></p>
+
+<p>In Storage settings choose a virtual CD - and broswe to the iso you downloaded earlier.</p>
+
+<p>Start the new VM</p>
+
+<h2>In the Install process</h2>
+
+<p>NB I don&rsquo;t show every single step here, as I got bored with all the confirmation screens. Hopefully the ones I mised are obvious enough.</p>
+
+<p><img src="/sites/default/files/step-13.jpeg" title="[step 13]" ></p>
+
+<p>Select to install a new OS</p>
+
+<p><img src="/sites/default/files/step-14.jpeg" title="[step 14]" ></p>
+
+<p>Re-initialize the hard drive (this is just the one on the VM that has never been used)</p>
+
+<p><img src="/sites/default/files/step-15.jpeg" title="[step 15]" ></p>
+
+<p>Set the root password to &ldquo;vagrant&rdquo; (and remember it for later)</p>
+
+<p><img src="/sites/default/files/step-16.jpeg" title="[step 16]" ></p>
+
+<p>Accept defaults for partitioning the disk, &ldquo;replace linux system&rdquo;</p>
+
+<p><img src="/sites/default/files/step-17.jpeg" title="[step 17]" ></p>
+
+<p>Write changes to disk</p>
+
+<p><img src="/sites/default/files/step-18.jpeg" title="[step 18]" ></p>
+
+<p>Reboot the VM</p>
+
+<h2>In the VM</h2>
+
+<p>So now thew new VM is up and running, we just need to prepare it for vagrant</p>
+
+<p>Oddly centOS/RHEL network interfaces are not enabled by default, we need to change this.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /etc/sysconfig/network-scripts/ifcfg-eth0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>set ONBOOT=&ldquo;yes&#8217; and BOOTPROTO=dhcp</p>
+
+<p>Start the network
+<code>ifup eth0</code></p>
+
+<p>Install some packages we need to get Virtualbox additions to work (do this before rebooting). ALso it is important to update - to ensure the kernel in use matches the kernel-devel package</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum update
+</span><span class='line'>yum install gcc make kernel-devel kernel-headers perl
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now shut down the VM a moment, and <b>in your local system</b> run</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>VBoxManage modifyvm <span class="s2">&quot;vagrant-centos62&quot;</span> --natpf1 <span class="s2">&quot;guestssh,tcp,,2222,,22&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will open an ssh port on localhost to the new VM (NB this can also be done via the GUI in advanced options on the network config).</p>
+
+<p>Now start the VM again, and once booted, in the VM window menu, click &ldquo;Devices&rdquo; and &ldquo;Install guest additions&rdquo;</p>
+
+<p>back in your local system again run
+<code>ssh -p2222 root@localhost</code></p>
+
+<p>Great so now we have root on the new machine, in your normal terminal and it should be possible to copy-paste the following commands</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mount /dev/cdrom /mnt/
+</span><span class='line'>sh /mnt/VBoxLinuxAdditions.run
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>errors related to KERN_DIR mean you don&rsquo;t have a matching running kernel and kerne-devel versions - check the update, install reboot steps above</p>
+
+<p>Errors building openGL and windows drivers are expected (there is no windows system) these error messages don&rsquo;t mean the process failed.</p>
+
+<p>Test that the additions are installed, the following command should run and print out some system facts</p>
+
+<p><code>VBoxControl  guestproperty enumerate</code></p>
+
+<p>Create vagrant user, group vagrant, password vagrant.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>groupadd admin
+</span><span class='line'>useradd -G admin -p <span class="k">$(</span>openssl passwd -1 vagrant<span class="k">)</span> vagrant
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Install and configure sudo for vagrant user to have passwordless sudo powers</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum -y install sudo
+</span><span class='line'>
+</span><span class='line'><span class="nb">echo</span> <span class="s1">&#39;</span>
+</span><span class='line'><span class="s1">Defaults    env_keep += SSH_AUTH_SOCK </span>
+</span><span class='line'><span class="s1">%admin ALL=NOPASSWD: ALL</span>
+</span><span class='line'><span class="s1">Defaults:vagrant !requiretty</span>
+</span><span class='line'><span class="s1">&#39;</span> <span class="p">&amp;</span>gt<span class="p">;</span> /etc/sudoers.d/vagrant
+</span><span class='line'>
+</span><span class='line'>chmod <span class="m">0440</span> /etc/sudoers.d/vagrant
+</span><span class='line'>
+</span><span class='line'><span class="c"># the above for copy-paste convenience NEVER do this on a remote machine - use visudo instead</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ssh with sudo commands should work, only asking a password for login (not again for sudo) from you local system try</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ssh -p2222 vagrant@localhost <span class="s2">&quot;sudo ls /&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Add vagrant&rsquo;s public key so vagrant user can ssh without password.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo -u vagrant mkdir /home/vagrant/.ssh
+</span><span class='line'>sudo -u vagrant curl -k https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub &gt; /home/vagrant/.ssh/authorized_keys
+</span><span class='line'>chmod <span class="m">0755</span> /home/vagrant/.ssh
+</span><span class='line'>chmod <span class="m">0644</span> /home/vagrant/.ssh/authorized_keys
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>These keys are reccomended for publically distributable base boxes, the keys are included in the vargant programs and so login &lsquo;just works&rsquo; for anyone using vagrant. However this is not secure and these keys should only be allowed if your vagrant systems will be secured by a private network. If the boxes will be public use secure keys and and then specify the private key you created by setting config.ssh.private_key_path.</p>
+
+<p>Install the Puppet Repository</p>
+
+<p>According to the [official documentation}(<a href="http://vagrantup.com/v1/docs/base_boxes.html">http://vagrantup.com/v1/docs/base_boxes.html</a>)</p>
+
+<blockquote><p>Chef and Puppet for provisioning support<br/>&#8230; are absolutely required of a base box in order to work properly with Vagrant.</p></blockquote>
+
+
+<p>However this appears to me to be talking about a requirment for base boxes to be publically distributed, if you are building a base box for your own team I can&rsquo;t see why you would need either puppet or chef unless you will actually use them, but I may be wrong on this. The following instrcutions detail how to install both (on centos)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> <span class="s1">&#39;[puppetlabs]</span>
+</span><span class='line'><span class="s1">name=Puppet Labs Packages</span>
+</span><span class='line'><span class="s1">baseurl=http://yum.puppetlabs.com/el/$releasever/products/$basearch/</span>
+</span><span class='line'><span class="s1">enabled=1</span>
+</span><span class='line'><span class="s1">gpgcheck=1</span>
+</span><span class='line'><span class="s1">gpgkey=http://yum.puppetlabs.com/RPM-GPG-KEY-puppetlabs</span>
+</span><span class='line'><span class="s1">&#39;</span> &gt;  /etc/yum.repos.d/puppet.repo
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Install the EPEL x86_64 YUM Repository</span>
+</span><span class='line'>
+</span><span class='line'>rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-7.noarch.rpm
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Install the Puppet Master packages (I&#39;m not 100% sure if this is striclty required if you don&#39;t use the puppet master provisioner)</span>
+</span><span class='line'>
+</span><span class='line'>yum -y install puppet-server
+</span><span class='line'>
+</span><span class='line'><span class="c">#Install the Puppet Client packages</span>
+</span><span class='line'>
+</span><span class='line'>yum -y install puppet
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you want to use chef</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rpm -Uvh http://rbel.frameos.org/rbel6
+</span><span class='line'>
+</span><span class='line'><span class="c"># Install Ruby and other development tools:</span>
+</span><span class='line'>yum install ruby ruby-devel ruby-ri ruby-rdoc ruby-shadow gcc gcc-c++ automake autoconf make curl dmidecode
+</span><span class='line'>
+</span><span class='line'><span class="c"># On RHEL 6 you will need to add the &quot;RHEL Server Optional&quot; channel subscription for this command to succeed without missing dependencies.</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">#We prefer to install RubyGems from source rather than use the OS-provided version (if any), as it is cross platform, so we know what to expect.</span>
+</span><span class='line'>Install RubyGems
+</span><span class='line'><span class="nb">cd</span> /tmp
+</span><span class='line'>curl -O http://production.cf.rubygems.org/rubygems/rubygems-1.8.10.tgz
+</span><span class='line'>tar zxf rubygems-1.8.10.tgz
+</span><span class='line'><span class="nb">cd </span>rubygems-1.8.10
+</span><span class='line'>ruby setup.rb --no-format-executable
+</span><span class='line'>
+</span><span class='line'><span class="c"># Install Chef Gem</span>
+</span><span class='line'>
+</span><span class='line'>gem install chef --no-ri --no-rdoc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Clean up (freeing up space to make the final box smaller)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum remove gcc make kernel-devel kernel-headers perl
+</span><span class='line'>yum clean all
+</span><span class='line'><span class="c"># TODO add more cleanup steps eg ruby tarballs, kernel-devel probably isn&#39;t needed after vbox additions is built etc</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally shut down the VM, package the box and add it to your vagrant boxes.
+On your local dev machine</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vagrant package --output centos62.box --base vagrant-centos62
+</span><span class='line'>vagrant box add centos62 centos62.box
+</span><span class='line'>vagrant box list <span class="c"># this should show the new box</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you can quickly create a Vagrant VM</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir vagrant_test
+</span><span class='line'><span class="nb">cd </span>vagrant_test
+</span><span class='line'>vagrant init centos62
+</span><span class='line'>vagrant up
+</span><span class='line'><span class="c"># wait while it boots</span>
+</span><span class='line'>vagrant ssh
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/28/monitor-filesystem-for-deletions/">Monitor Filesystem for Deletions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-09-28T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>On a project I&#8217;m working on at the moment we have a problem, files are going missing.</p>
+
+
+
+
+<p>We don&#8217;t know which part of the system could be trashing these files (user uploaded images in this case) and they are on a shared filesystem so there are plenty of places to point fingers.</p>
+
+
+
+
+<p>I&#8217;ve discovered a very handy toolset <a href="https://github.com/rvoicilas/inotify-tools/wiki">inotify-tools</a> Which hooks into the linix kernel and allows you to monitor actions like file deletion.</p>
+
+
+
+
+<p>I my case all I need to do right now is monitor the files on each sytem that has access - and I&#8217;m hoping to catch which one does the delete</p>
+
+
+<p><In my build script is now the code</p></p>
+
+<p><code></p>
+
+<h1>stop monitoring for deletes through the build</h1>
+
+<p>[ -f ~/inotifywait.pid ] &amp;&amp; kill $(cat ~/inotifywait.pid)</p>
+
+<p>git pull
+./build.sh</p>
+
+<h1>if the tool is installed - monitor file delets</h1>
+
+<p>which inotifywait &amp;&amp;
+{
+ nohup inotifywait -mr &ndash;timefmt &lsquo;%d/%m/%y %H:%M&rsquo; &ndash;format &lsquo;%T %w %f %e&rsquo; -e delete /var/www/sites/default/files/ &amp;> ~/build-${JOB_NAME}-$(BUILD_NUMBER)-delete.log  &amp;
+ echo $! > ~/inotifywait.pid
+}</p>
+
+<p></code></p>
+
+<p>This should create a log of any user files that get deleted between builds</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/4">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/2">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

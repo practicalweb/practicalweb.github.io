@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Git | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Blocking Git Commits From Future Merges]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/08/15/blocking-git-commits-from-future-merges/"/>
+    <updated>2013-08-15T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/08/15/blocking-git-commits-from-future-merges</id>
+    <content type="html"><![CDATA[<p>I used to use subversion and <a href="http://www.orcaware.com/svn/wiki/Svnmerge.py">svnmerge</a> a lot, and there&#8217;s just one thing I miss about it. Now svnmerge is a tool to bolt on merge tracking to svn, and gits merge tracking is vastly better in many ways. But the one thing that svnmerge allowed me to do that was cool and doesn&#8217;t have a real equivalent in git is to block commits</p>
+
+
+
+
+<p>I use release branches as well as feature branches, so for each release we support we have a barcnh, new features are developed in feature branches off this - and merged back to it when complete. The branch for release x gets merged forwards to release x+1 periodically - to ensure that any features or bugfixes make it to the latest release.</p>
+
+
+
+
+<p>Sometimes we make a commit to an older release that we don&#8217;t want to merge forwards to newer releases - typically this is a quick and dirty bugfix/workaround that is superseded by a proper fix in the next release.</p>
+
+
+
+
+<p>Svnmerge allowed you to &quot;block&quot; these commits so that they did not get merged forwards, with git you could cherry-pick around these commits - but you&#8217;d loose the ability to do regular merges.</p>
+
+
+
+
+<p><p>What you can do it git is to merge the commit - but keep the files unchanged, this looks a bit weird but works OK.<p></p>
+
+<p><code>git cherry-pick -e &ndash;strategy=ours $hash</code></p>
+
+<p><p>The strategy=ours bit means keep the code as it was in this branch. -e lets you edit the commit message to indicate it isn&rsquo;t a normal merge</p></p>
+
+<p><p>Now sometimes this doesn&rsquo;t seem to work, git complains that the commit is empty, I think this is when there is a conflict - in this case the only way I have worked around it is to do a regular cherry-pick and resolve the conflict manually - effectively undoing the commit. Then <code>commit &ndash;allow-empty</code></p>
+
+<p></p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git Files With Local Changes I Don't Want Committed]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/03/25/git-files-with-local-changes-i-dont-want-committed/"/>
+    <updated>2013-03-25T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/03/25/git-files-with-local-changes-i-dont-want-committed</id>
+    <content type="html"><![CDATA[<p>I&#8217;m working on a project where I find I want to semi-regularly adjust a config file for local testing, but want to be sure I don&#8217;t commit that file by mistake.</p>
+
+
+
+
+<p>Seems the best approach is</p>
+
+
+<p><code>git update-index &ndash;skip-worktree $filename</code></p>
+
+<p>This tells git to skip this file when I push, if the remote file changes it will warn me </p>
+
+
+
+
+<p>To switch back</p>
+
+
+<p><code>git update-index &ndash;no-skip-worktree $filename</code></p>
+
+<p>There is also a assume-unchanged option - but this is aimed more at performance and bug workarounds - it realy does assume the file is unchanged - which in my case is incorrect.</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mini Scripts to Obtain Git Id/branch/tag]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/02/05/mini-scripts-to-obtain-git-id-branch-tag/"/>
+    <updated>2013-02-05T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/02/05/mini-scripts-to-obtain-git-id-branch-tag</id>
+    <content type="html"><![CDATA[<p><code>
+$new_branch=$1 # passed as param</p>
+
+<p>current_branch=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
+current_branch=${current_branch##refs/heads/}</p>
+
+<p>current_id=$(git rev-parse &ndash;short origin/$current_branch)</p>
+
+<p>new_id=$(git rev-parse &ndash;short origin/$new_branch)</p>
+
+<p>last_tag=$(git describe &ndash;abbrev=0 &ndash;tags)</p>
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git Submodules and Subtrees]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/11/26/git-submodules-and-subtrees/"/>
+    <updated>2012-11-26T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/11/26/git-submodules-and-subtrees</id>
+    <content type="html"><![CDATA[<p>Git has the concept of both submodules and subtrees, there seem to be some problems with each solution, nether being well loved as far as I can see.</p>
+
+
+
+
+<p>Both add significant complexity to a project, and require extra care - but the alternative is monolithic projects or a lot of copy-pasting.</p>
+
+
+
+
+<p>Submodules allow another git repo to be nested inside the main one, you can then commit to either repo from the same filesystem.<br />
+The &#8220;parent&#8221; repo references a specific tag/branch of the child one - it&#8217;s just this reference which is committed (and can be updated) in the parent.<br />
+Commits in the parent relating to changes in subtree just show the ID changing and any message made when committing an updated version of the module. You can see commit history for the submodule when you are in that directory.
+</p>
+
+
+<p>The downside here being that neither a regular checkout nor a github tarball includes the child repo which adds overhead to dev build and server deploys.</p>
+
+
+
+
+<p>Subtrees allow an additional external reference to be added and checked out as a subdirectory, this time the whole subdirectory is committed to the parent - but not the reference.<br />
+The local repo does hold a reference and this allows the child repo to be merged in (preserving any local patches).<br />
+The downside here is that the external reference has to be added manually to any repo that needs it, you don&#8217;t see the submodule history in the parent.</p>
+
+
+
+
+<p>There&#8217;s a good article here <a href="http://codingkilledthecat.wordpress.com/2012/04/28/why-your-company-shouldnt-use-git-submodules/">http://codingkilledthecat.wordpress.com/2012/04/28/why-your-company-shouldnt-use-git-submodules</a> which basically says to use another tool - but that has it&#8217;s own set of problems.</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why I Don't Like Gitflow]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/08/01/why-i-dont-like-gitflow/"/>
+    <updated>2012-08-01T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/08/01/why-i-dont-like-gitflow</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve been looking into <a href="https://github.com/nvie/gitflow/">gitflow</a> recently, it&#8217;s an interesting set of scripts to facilitate <a href="http://nvie.com/posts/a-successful-git-branching-model/">a succesful git branching model</a> which some of the people I work with rave about.
+</p>
+
+
+<p>
+In the end I&#8217;ve decided I don&#8217;t like the tool or the model, though both are interesting.
+</p>
+
+
+<p>
+I think this is because I&#8217;m used to working in fairly large teams where we may have some people working on one release and others working on the next, in this situation I want release branches that are fairly long lived, and to create topic branches from them.
+</p>
+
+
+<p>
+In fact in one project we dropped the master branch altogether and just used a series or release barnches, always merging the older release branches into the newer (further from launch) ones. 
+</p>
+
+
+<p>
+The other main reason is that gitflow hides some of the mechanics of git in a way that seems to me to hinder peoples understanding of what they are doing, it&#8217;s a shame it down&#8217;t output the git commands it uses - that would allow people to use it to get started then move on later if they want.
+</p>
+
+
+<p>
+The commands also seem very slow to me which is odd when you are used to git being fast.
+</p>
+
+
+<p>
+Documentation on gitflow seems sparse, with some commands incomplete (git flow support * , gitflow feature checkout)
+</p>
+
+
+<p>
+ The best I could find is the source, and particularly the &quot;summary&quot; bits
+</p>
+
+
+<p>
+ <a href="https://github.com/nvie/gitflow/blob/develop/git-flow-release#L177">https://github.com/nvie/gitflow/blob/develop/git-flow-release#L177</a>
+</p>
+
+
+<p>
+The project wiki does have some addiutional info on command line options 
+</p>
+
+
+<p>
+ <a href="https://github.com/nvie/gitflow/wiki/Command-Line-Arguments">https://github.com/nvie/gitflow/wiki/Command-Line-Arguments</a>
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

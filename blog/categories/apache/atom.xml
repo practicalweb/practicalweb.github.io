@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Apache | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/apache/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Can't Login to Drupal (404)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/04/25/cant-login-to-drupal-404/"/>
+    <updated>2012-04-25T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/04/25/cant-login-to-drupal-404</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve been working on a project for a while on my main dev machine, but needed to run it on my laptop too.
+</p>
+
+
+<p>
+Usually copying a sitre across is quick but this time I re-installed the OS too, everything wnet OK except for some reason I couldn&#8217;t log in to my drupal site.
+</p>
+
+
+<p>
+Eventually I noticed that while the site appeared to be working, every page was being served with a 404 header.
+</p>
+
+
+<p>
+What happpend is that I hadn&#8217;t enabled mod_rewrite
+</p>
+
+
+<p>
+The .htaccess had been configured to serve drupal 404 pages, but in this case Drupal (once started as a 404 handler) correctly processed the URL - but presumably without the form data.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Configure Apache SSL and Subversion in Debian in 683 Seconds]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2007/12/02/configure-apache-ssl-and-subversion-in-debian-in-683-seconds/"/>
+    <updated>2007-12-02T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2007/12/02/configure-apache-ssl-and-subversion-in-debian-in-683-seconds</id>
+    <content type="html"><![CDATA[<div class="post-entry">
+<p>
+Shamelessly copied from:
+</p>
+<p>
+<a href="http://www.geocities.com/arhuaco/doc/subversion/apache-subversion-in-debian.html">www.geocities.com/arhuaco/doc/subversion/apache-subversion-in-debian.html</a>
+</p>
+<p>
+Configure Apache SSL and Subversion in Debian in 683 seconds
+</p>
+<p>
+This just saved me lots of time and I want to keep a copy for later - just in case…
+</p>
+<p>
+Mar 26 2005
+</p>
+<p>
+(The apache2+SSL part was taken from the article Debian, Apache2 and SSL by Ian Miller)
+</p>
+<p>
+Debian Sarge comes with an apache2 package. I thought I’d give this
+a go to get it working with a self signed SSL certificate. However, I
+had little idea of what I was doing. Eventually I worked it out - and
+it’s easy:
+</p>
+<p>
+    * Login or su as root<br />
+* Run:
+</p>
+<p>
+apt-get install apache2
+</p>
+<p>
+    * Run the script
+</p>
+<p>
+apache2-ssl-certificate
+</p>
+<p>
+and tell it what it wants to know.
+</p>
+<p>
+    * Make a copy of ‘/etc/apache2/sites-available/default’ - call it something like ’ssl’
+</p>
+<p>
+ * Make a sym-link to this new site configuration from
+/etc/apache2/sites-enabled/ You will see this is already done for
+‘default’.
+</p>
+<p>
+    * Add a
+</p>
+<p>
+Listen 443
+</p>
+<p>
+to /etc/apache2/ports.conf
+</p>
+<p>
+ * Edit /etc/apache2/sites-available/ssl (or whatever you called
+your new ssl site’s config) and change port 80 in the name of the site
+to 443. Also change the virtual host setting. Add the lines “SSLEngine
+On”, “SSLCertificateFile /etc/apache2/ssl/apache.pem” and “LoadModule
+ssl_module /usr/lib/apache2/modules/mod_ssl.so”. My config file reads:
+</p>
+<p>
+NameVirtualHost *:443<br />
+<br />
+LoadModule ssl_module /usr/lib/apache2/modules/mod_ssl.so<br />
+SSLEngine On<br />
+SSLCertificateFile /etc/apache2/ssl/apache.pem
+</p>
+<p>
+ …
+</p>
+<p>
+    * Restart apache2
+</p>
+<p>
+/etc/init.d/apache2 restart
+</p>
+<p>
+    * HTTPS should work.
+</p>
+<p>
+Try: https://hostname/
+</p>
+<p>
+    * Now, let’s start with subversion.
+</p>
+<p>
+apt-get install libapache2-svn subversion subversion-tools
+</p>
+<p>
+    * Create a repository.
+</p>
+<p>
+cd /home<br />
+mkdir svn<br />
+chown www-data svn<br />
+su www-data -c “svnadmin create svn/src”
+</p>
+<p>
+    * If you let your users run as www-data they will be able to write to your repository!
+</p>
+<p>
+    * Become root again and add the following lines our apache configuration (ssl), inside of the VirtualHost declaration.
+</p>
+<p>
+ <br />
+DAV svn<br />
+SVNPath /home/svn/src
+</p>
+<p>
+    AuthType Basic<br />
+AuthName “My Subversion Repository”<br />
+AuthUserFile /home/svn/.dav_svn.passwd<br />
+Require valid-user<br />
+</p>
+<p>
+    * Use this instead of “Require valid-user” if you don’t want to use passwords for read-only access
+</p>
+<p>
+  <br />
+Require valid-user<br />
+</p>
+<p>
+    * Let’s add some users.
+</p>
+<p>
+su www-data -c “htpasswd2 -c -m /home/svn/.dav_svn.passwd galactus”
+</p>
+<p>
+    * Add another user (don’t use -c or it will recreate the file)
+</p>
+<p>
+su www-data -c “htpasswd2 -m /home/svn/.dav_svn.passwd ceruno”<br />
+su www-data -c “htpasswd2 -m /home/svn/.dav_svn.passwd n”
+</p>
+<p>
+    * Test the repository
+</p>
+<p>
+ 1. Using your browser. Load https://hostname/svn/src/ in your
+browser. Replace hostname with your host name or ip. You will get
+something like:
+</p>
+<p>
+Revision 0: /<br />
+Powered by Subversion version 1.1.3 (r12730).
+</p>
+<p>
+   1. From the command line:
+</p>
+<p>
+ svn –username n import checkers https://localhost/svn/src -m “initial import”<br />
+Authentication realm:  My Subversion Repository<br />
+Password for ‘n’:<br />
+Adding         checkers/trunk<br />
+Adding         checkers/trunk/gendelta.pl<br />
+Adding         checkers/site<br />
+Adding         checkers/branches<br />
+Adding         checkers/tags
+</p>
+<p>
+Committed revision 1.
+</p>
+<p>
+    * Load from the browser again.
+</p>
+<p>
+Revision 1: /<br />
+* branches/<br />
+* site/<br />
+* tags/<br />
+* trunk/<br />
+Powered by Subversion version 1.1.3 (r12730).
+</p>
+<p>
+    * And that’s all so far.
+</p>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Connecting Tomcat 5 to Apache 2 Using Mod Jk 1.2 (in a Virtual Host and Using Debian)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2005/04/09/connecting-tomcat-5-to-apache-2-using-mod-jk-1-2-in-a-virtual-host-and-using-debian/"/>
+    <updated>2005-04-09T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2005/04/09/connecting-tomcat-5-to-apache-2-using-mod-jk-1-2-in-a-virtual-host-and-using-debian</id>
+    <content type="html"><![CDATA[<p>This
+is fairly well documented on the apache site - but you have to pull
+info together from a few pages and the importance of virtual servers is
+easy to miss.</p>
+
+<div class="post-entry">
+<ol>
+    <li>
+    <p>
+    Make sure you have the development package for apache (you need
+    apxs2 installed) taking care to get the right apache2-dev package<br />
+    I ran apt-get install apache2-prefork-dev
+    </p>
+    </li>
+    <li>
+    <p>
+    <a href="http://www.apache.org/dist/jakarta/tomcat-connectors/jk/source/">Download the Source</a> (so that you can compile for your platform and your version of apache)
+    </p>
+    </li>
+    <li>
+    <p>
+    extract the jk-connector source
+    </p>
+    </li>
+    <li>
+    <p>
+    Change to the build directory<br />
+    cd jakarta-tomcat-connectors-1.2.10-src/jk/native
+    </p>
+    </li>
+    <li>
+    <p>
+    clean with make clean
+    </p>
+    </li>
+    <li>
+    <p>
+    Configure for your apache with ./configure &#8211;with-apxs=/usr/bin/apxs2
+    </p>
+    </li>
+    <li>
+    <p>
+    Build the module with make
+    </p>
+    </li>
+    <li>
+    <p>
+    Switch to root
+    </p>
+    </li>
+    <li>
+    <p>
+    Copy the module to the apache modules directory cp apache-2.0/mod_jk.so /usr/lib/apache2/modules/
+    </p>
+    </li>
+    <li>
+    <p>
+    Create a load module file for apache /etc/apache2/mods-available/mod_jk.load<br />
+    This file should just contain the line<br />
+    LoadModule jk_module   /usr/lib/apache2/modules/mod_jk.so
+    </p>
+    </li>
+    <li>
+    <p>
+    Create a Conf module /etc/apache2/mods-available/mod_jk.conf<br />
+    Mine looks like this (still at the testing stage)
+    </p>
+    <pre>
+        JkWorkersFile /etc/apache2/workers.properties
+    # Where to put jk logs
+    JkLogFile     /tmp/mod_jk.log
+    # Set the jk log level [debug/error/info]
+    JkLogLevel  debug
+    JkLogStampFormat &quot;[%a %b %d %H:%M:%S %Y] &quot;
+    # JkOptions indicate to send SSL KEY SIZE,
+    JkOptions     +ForwardKeySize +ForwardURICompat -ForwardDirectories
+    # JkRequestLogFormat set the request format
+    JkRequestLogFormat     &quot;%w %V %T&quot;
+    </pre>
+    <p>
+    The <a href="http://jakarta.apache.org/tomcat/connectors-doc/howto/apache.html">official howto</a>
+    suggests that JkRequestLogFormat and JkMount can be configured on a per
+    virtual host basis - the other directives seem to be required in the
+    main apache config.
+    </p>
+    </li>
+    <li>
+    <p>
+    enable these modules in the usual way by creating symlinks from mods-enabled to the files in mods-available
+    </p>
+    </li>
+    <li>
+    <p>
+    Create a workers file (in the place specified above) /etc/apache2/workers.properties
+    </p>
+    <pre>
+        workers.tomcat_home=/usr/local/jakarta-tomcat-5.0.18/
+    workers.java_home=/usr/local/java/j2sdk1.4.2_04/
+    ps=/
+    # Define 1 real worker using ajp13
+    worker.list=worker1
+    # Set properties for worker1 (ajp13)
+    worker.worker1.type=ajp13
+    worker.worker1.host=127.0.0.1
+    worker.worker1.port=8009
+    worker.worker1.lbfactor=50
+    worker.worker1.cachesize=10
+    worker.worker1.cache_timeout=600
+    worker.worker1.socket_keepalive=1
+    worker.worker1.reclycle_timeout=300
+    </pre>
+    <p>
+    I’m not sure if the first 3 lines are required.
+    </p>
+    </li>
+    <li>
+    <p>
+    Add a line in your Virtual host config such as<br />
+    JkMount  /manager/html/* worker1
+    </p>
+    </li>
+    <li>
+    <p>
+    Restart apache
+    </p>
+    </li>
+    <li>
+    <p>
+    You should now be able to access your tomcat app as http://yourvirtualhost/manager/html/<br />
+    (or whichever apps you have used
+    </p>
+    </li>
+</ol>
+<p>
+<a href="http://jakarta.apache.org/tomcat/connectors-doc/howto/quick.html">the official quick guide to workers</a>
+</p>
+<h2>Trouble Shooting</h2>
+<p>
+I had problems getting this working, it turned out to be because I
+hade configured the jk directives in the vitual host sectionm of my
+apache config but the error messages were not helpful - I just got <br />
+jk_handler::mod_jk.c (1983): Could not find a worker for worker name=worker1
+</p>
+<h3>Testing the setup</h3>
+<p>
+Can you telnet to the apj13 port?<br />
+telnet 127.0.0.1 8009<br />
+You should see something like
+</p>
+<pre>
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'
+</pre>
+<p>
+If this works your tomcat setup is OK - if not check your server.xml settings.
+</p>
+<p>
+NB you can restrict tomcat to only listen to localhost by adding an address parameter like
+</p>
+<pre>
+&lt;Connector address=&quot;127.0.0.1&quot; port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; protocolHandlerClassName=&quot;org.apache.jk.server.JkCoyoteHandler&quot; redirectPort=&quot;8443&quot;&gt;
+</pre>
+<p>
+When I had tomcat running correctly and mod jk configured this is the output in my jk log
+</p>
+<pre>
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] do_shm_open::jk_shm.c (213): Using process memory as shared memory
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] init_jk::mod_jk.c (2341): Initialized shm:memory
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] uri_worker_map_open::jk_uri_worker_map.c (324): rule map size is 0
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] build_worker_map::jk_worker.c (219): creating worker worker1
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] wc_create_worker::jk_worker.c (125): about to create instance worker1 of aj
+p13
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] wc_create_worker::jk_worker.c (138): about to validate and init worker1
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_validate::jk_ajp_common.c (1781): worker worker1 contact is '127.0.0.1:
+8009'
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_init::jk_ajp_common.c (1870): setting socket keepalive to 1
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_init::jk_ajp_common.c (1909): setting socket timeout to -1
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_init::jk_ajp_common.c (1913): setting socket buffer size to 0
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_init::jk_ajp_common.c (1917): setting connection recycle timeout to 0
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_init::jk_ajp_common.c (1921): setting cache timeout to 600
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_init::jk_ajp_common.c (1925): setting connect timeout to 0
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_init::jk_ajp_common.c (1929): setting reply timeout to 0
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_init::jk_ajp_common.c (1933): setting prepost timeout to 0
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_init::jk_ajp_common.c (1937): setting recovery opts to 0
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_init::jk_ajp_common.c (1941): setting number of retries to 3
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] ajp_create_endpoint_cache::jk_ajp_common.c (1818): setting connection cache
+size to 10
+[Sat Apr 09 22:21:48 2005] [23190:16512] [debug] build_worker_map::jk_worker.c (231): removing old worker1 worker
+[Sat Apr 09 22:21:49 2005] [23190:16512] [debug] jk_cleanup_shmem::mod_jk.c (1735): Shmem cleanup
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] do_shm_open::jk_shm.c (213): Using process memory as shared memory
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] init_jk::mod_jk.c (2341): Initialized shm:memory
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] uri_worker_map_open::jk_uri_worker_map.c (324): rule map size is 0
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] build_worker_map::jk_worker.c (219): creating worker worker1
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] wc_create_worker::jk_worker.c (125): about to create instance worker1 of aj
+p13
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] wc_create_worker::jk_worker.c (138): about to validate and init worker1
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_validate::jk_ajp_common.c (1781): worker worker1 contact is '127.0.0.1:
+8009'
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_init::jk_ajp_common.c (1870): setting socket keepalive to 1
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_init::jk_ajp_common.c (1909): setting socket timeout to -1
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_init::jk_ajp_common.c (1913): setting socket buffer size to 0
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_init::jk_ajp_common.c (1917): setting connection recycle timeout to 0
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_init::jk_ajp_common.c (1921): setting cache timeout to 600
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_init::jk_ajp_common.c (1925): setting connect timeout to 0
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_init::jk_ajp_common.c (1929): setting reply timeout to 0
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_init::jk_ajp_common.c (1933): setting prepost timeout to 0
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_init::jk_ajp_common.c (1937): setting recovery opts to 0
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_init::jk_ajp_common.c (1941): setting number of retries to 3
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] ajp_create_endpoint_cache::jk_ajp_common.c (1818): setting connection cache
+size to 10
+[Sat Apr 09 22:21:49 2005] [23191:16512] [debug] build_worker_map::jk_worker.c (231): removing old worker1 worker
+[Sat Apr 09 22:21:50 2005] [23192:16512] [debug] do_shm_open::jk_shm.c (213): Using process memory as shared memory
+[Sat Apr 09 22:21:50 2005] [23192:16512] [debug] jk_child_init::mod_jk.c (2307): Attached shm:memory
+[Sat Apr 09 22:21:50 2005] [23192:16512] [debug] jk_child_init::mod_jk.c (2317): Initialized mod_jk/1.2.10
+[Sat Apr 09 22:21:50 2005] [23193:16512] [debug] do_shm_open::jk_shm.c (213): Using process memory as shared memory
+[Sat Apr 09 22:21:50 2005] [23193:16512] [debug] jk_child_init::mod_jk.c (2307): Attached shm:memory
+[Sat Apr 09 22:21:50 2005] [23193:16512] [debug] jk_child_init::mod_jk.c (2317): Initialized mod_jk/1.2.10
+[Sat Apr 09 22:21:50 2005] [23194:16512] [debug] do_shm_open::jk_shm.c (213): Using process memory as shared memory
+[Sat Apr 09 22:21:50 2005] [23194:16512] [debug] jk_child_init::mod_jk.c (2307): Attached shm:memory
+[Sat Apr 09 22:21:50 2005] [23194:16512] [debug] jk_child_init::mod_jk.c (2317): Initialized mod_jk/1.2.10
+[Sat Apr 09 22:21:50 2005] [23195:16512] [debug] do_shm_open::jk_shm.c (213): Using process memory as shared memory
+[Sat Apr 09 22:21:50 2005] [23195:16512] [debug] jk_child_init::mod_jk.c (2307): Attached shm:memory
+[Sat Apr 09 22:21:50 2005] [23195:16512] [debug] jk_child_init::mod_jk.c (2317): Initialized mod_jk/1.2.10
+[Sat Apr 09 22:21:50 2005] [23196:16512] [debug] do_shm_open::jk_shm.c (213): Using process memory as shared memory
+[Sat Apr 09 22:21:50 2005] [23196:16512] [debug] jk_child_init::mod_jk.c (2307): Attached shm:memory
+[Sat Apr 09 22:21:50 2005] [23196:16512] [debug] jk_child_init::mod_jk.c (2317): Initialized mod_jk/1.2.10
+</pre>
+<p>
+The above appeared on apache startup - before any requests were made.
+</p>
+<p>
+Even when it wasn’t working I could see apache trying to map requests to tomcat
+</p>
+<pre>
+[Sat Apr 09 22:24:39 2005] [23193:16512] [debug] map_uri_to_worker::jk_uri_worker_map.c (455): Attempting to map URI '/manager/html/' from 0 maps
+</pre>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to Create Your Own Wayback Machine]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2005/02/23/how-to-create-your-own-wayback-machine/"/>
+    <updated>2005-02-23T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2005/02/23/how-to-create-your-own-wayback-machine</id>
+    <content type="html"><![CDATA[<p>
+I’ve long been impressed with the <a href="http://www.archive.org/">wayback machine</a> and found it very useful to find things that have disappeared from the rest of the Internet.
+</p>
+
+
+<p>
+I use <a href="http://www.cvshome.org/">cvs</a> a lot in software
+development and find it a real life saver to be able to restore any
+file I have been working on at any point in it’s history. This really
+helps me to find out when and why things went wrong, saving me from
+making the same mistakes again.
+</p>
+
+
+<p>
+What I wanted was a system that would give me some of this functionality - but for file structures outside of my direct control.
+</p>
+
+
+<p>
+Here is my recipe:
+</p>
+
+
+<p>
+Install <a href="http://namazu.org/%7Esatoru/pdumpfs/">pdumpfs</a> (you are running Linux/Unix aren’t you?)
+</p>
+
+
+<p>
+pdumpfs is a simple daily backup system written in Ruby (ruby(1)),
+which is similar to Plan9’s dumpfs that preserves every daily snapshot.
+</p>
+
+
+<p>
+Back up your home directory with pdumpfs, and you can retrieve any past day’s snapshot of any file.
+</p>
+
+
+<p>
+pdumpfs constructs each day’s snapshot in the directory named YYYY/MM/DD under the destination directory.  All<br />
+source files are copied to the snapshot directory for the first time, and on and after the second time, pdumpfs<br />
+copies only updated or newly created files and stores unchanged files as hard links to the files of the previous<br />
+day’s snapshot to save disk space.
+</p>
+
+
+<p>
+Set up a cron job to run pdumpfs /sourcedir /backupdir
+</p>
+
+
+<p>
+That gives you the archive to work with - I wanted to back up a website be able to access each days archive directly.<br />
+To do this I used Apache’s VirtualDocumentRoot directive together with
+a wildcard DNS record so that I access any days archive from a url like
+http://20050223.wayback/ (where the number is the date as YYYYMMDD).<br />
+My Apache config looks like:
+</p>
+
+
+<pre>
+NameVirtualHost *:80
+&lt;VirtualHost *:80&gt;
+ServerName *.wayback
+UseCanonicalName Off
+# this log format can be split per-virtual-host based on the first field
+LogFormat &quot;%V %h %l %u %t &quot;%r&quot; %s %b&quot; vcommon
+CustomLog /var/log/apache2/wayback-access.log vcommon
+VirtualDocumentRoot /var/www/wayback/%1.1%1.2%1.3%1.4/%1.5%1.6/%1.7%1.8/origdirname
+&lt;/VirtualHost&gt;
+</pre>
+
+
+<p>
+My wildcard DNS entry is just <br />
+*.wayback  IN A 127.0.0.1<br />
+In the zone file for my local domain (if it wasn’t my local domain I’d
+need to specify the fully qualified name of the server in the apache
+config.
+</p>
+
+
+<p>
+Altogether this creates an archive where each days version of the
+website is under /somedir/YYYY/MM/DD/website/, the wildcard DNS means
+that any request to YYYYMMDD.wayback is sent to the right server,
+wildcard server name will always match, the virtual document root reads
+the first part of the server name and interprets it in the form needed
+to get the right path. Hey presto we’ve gone back in time and see the
+website as it was then!
+</p>
+
+
+<p>
+More about Apache’s <a href="http://httpd.apache.org/docs-2.0/mod/mod_vhost_alias.html#interpol">Directory Name Interpolation</a>, <a href="http://httpd.apache.org/docs-2.0/vhosts/mass.html">Dynamically configured mass virtual hosting</a>, and <a href="http://httpd.apache.org/docs-2.0/mod/mod_log_config.html#formats">Custom Log Formats</a>.
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

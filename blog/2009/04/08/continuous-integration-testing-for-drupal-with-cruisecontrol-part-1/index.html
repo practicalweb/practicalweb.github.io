@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Continuous Integration Testing for Drupal With CruiseControl (Part 1) - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I recently finished work on a project that really suffered from a lack of build tools. It was a large project, and while many of us were keen on &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Continuous Integration Testing for Drupal With CruiseControl (Part 1)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-08T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>
+I recently finished work on a project that really suffered from a lack of build tools.
+</p>
+
+
+<p>
+It was a large project, and while many of us were keen on writing tests we weren&#8217;t able to get management sign of to spend some time automating the test process. So even though we did some of the work we didn&#8217;t get all the benefits.
+</p>
+
+
+<p>
+It was really frustrating to come back to a piece of work that was well covered by unit tests, only to find those tests broken  
+</p>
+
+
+<p>
+Well, right now I&#8217;ve decided to take some time to explore automated testing a bit more. I&#8217;ve got a Drupal site and a bunch of simpletest tests - I want the tests run on every commit, and while I&#8217;m at it I want to run some other checks too.
+</p>
+
+
+<p>
+The following records what I&#8217;ve done so far, problems I encountered, and how I solved them.
+</p>
+
+
+<p>
+Download 
+</p>
+
+
+<ul>
+    <li><a href="http://cruisecontrol.sourceforge.net/">cruisecontrol</a> <a href="http://phpundercontrol.org/about.html"><br />
+    </a></li>
+    <li><a href="http://phpundercontrol.org/about.html">phpundercontrol</a></li>
+    <li><a href="http://demo.codesetter.com/drupal5-macgyver-cruisecontrol">simpletest runner for cruise control</a> (thanks Adnan)</li>
+</ul>
+
+
+<p>
+Checkout and configure my Drupal site, create the settings for this as a CruiseControl project.
+</p>
+
+
+<p>
+At this point I had CruiseControl setup, I could see my project, but no useful reports.
+</p>
+
+
+<p>
+Debugging
+</p>
+
+
+<ul>
+    <li>read the logfiles (doh!)</li>
+    <li>run each process separately</li>
+</ul>
+
+
+<p>
+CruiseControl is a big beast and trying to debug small parts of it by running it all wasn&#8217;t much fun.
+</p>
+
+
+<p>
+CruiseControl runs each step of a build via <a href="http://ant.apache.org/">ant</a>  - this is a fairly standard tool (available via apt-get if you&#8217;re a Debian user) 
+</p>
+
+
+<p>
+Running ant manually gave me much greater visibility of errors that were occuring at this stage (I&#8217;d put my test runner script in the wrong place).
+</p>
+
+
+<p>$ cd cruisecontrol/projects/myproject
+$ ant </p>
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+This gives nice easy to read output for each step of the build.
+</p>
+
+
+<p>
+Once CruiseControl has built your project it merges the xml logfiles; the merged file is stored in cruisecontrol/logs/myproject/
+</p>
+
+
+<p>
+The web application part of CruiseControl uses xsl to transform these logfiles into output, and a little jsp to select which xsl files to use. Again I found it easier to debug the xsl part of the process by running the xsl manually (either on the combined logfile - or individual ones wrapped in &lt;cruisecontrol&gt; tags).
+</p>
+
+
+<p>$ xsltproc webapps/cruisecontrol/xsl/checkstyle.xsl  projects/myproject/build/logs/checkstyle.xml</p>
+
+<p>
+And what I found was that my xml log wasn&#8217;t xml after all (I&#8217;d hit a <a href="http://pear.php.net/bugs/bug.php?id=14409">bug in phpcodesniffer</a> which was outputting error messages at the top of the file). 
+</p>
+
+
+<p>
+Right now I have a continuous integration server up and running. It&#8217;s not quite how I want it yet but now I understand how CruiseControl works I don&#8217;t think it&#8217;ll take too long to get right - but it&#8217;s the sort of thing that I expect to grow and tweak as I go along.
+</p>
+
+
+<p>
+I&#8217;ve found CruiseControl hard to setup, seen too many Java stacktraces, and blank screens when xsl didn&#8217;t work as expected.
+</p>
+
+
+<p>
+Some things could probably be done better via svn commit hooks (if you have access to the svn server), and certainly it would have been faster to cobble together some cron jobs.
+</p>
+
+
+<p>
+But I&#8217;ve persevered because CruiseControl comes with a wealth of plugins including many version control systems, and many notification methods. I&#8217;m hoping that I&#8217;ve overcome the initial learning curve and will start to reap the rewards.
+</p>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2009-04-08T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/agile/'>agile</a>, <a class='category' href='/blog/categories/cruisecontrol/'>cruisecontrol</a>, <a class='category' href='/blog/categories/drupal/'>drupal</a>, <a class='category' href='/blog/categories/php/'>php</a>, <a class='category' href='/blog/categories/phpundercontrol/'>phpundercontrol</a>, <a class='category' href='/blog/categories/svn/'>svn</a>, <a class='category' href='/blog/categories/testing/'>testing</a>, <a class='category' href='/blog/categories/unit-testing/'>unit testing</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2009/04/04/accessible-rich-internet-applications-wai-aria/" title="Previous Post: Accessible Rich Internet Applications (WAI-ARIA)">&laquo; Accessible Rich Internet Applications (WAI-ARIA)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2009/04/27/cross-platform-testing-with-selenium-and-virtualbox/" title="Next Post: Cross Platform Testing with Selenium and VirtualBox">Cross Platform Testing with Selenium and VirtualBox &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

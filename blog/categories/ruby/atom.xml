@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ruby | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Less Is More (CSS)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/06/22/less-is-more-css/"/>
+    <updated>2009-06-22T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/06/22/less-is-more-css</id>
+    <content type="html"><![CDATA[<p>
+CSS revolutionised web development, &lt;font&gt; and &lt;table&gt; were a nightmare in comparison.
+</p>
+
+
+<p>
+But still there are times when CSS feels very limited, if you want to change a colour or margin size and have to hunt through the CSS to calculate the related changes.
+</p>
+
+
+<p>
+But now there is 
+</p>
+
+
+<p>
+http://lesscss.org/
+</p>
+
+
+<p>
+Which looks like it fills in some of the missing gaps - it extends the CSS syntax and to it&#8217;s own format - and then generates standard CSS from this.
+</p>
+
+
+<p>
+I&#8217;m definitely planning on using this for my next project.  
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

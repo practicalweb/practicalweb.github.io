@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Drupal | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/drupal/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Migrating From Drupal 5 to Octopress]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/21/migrating-from-drupal-5-to-octopress/"/>
+    <updated>2014-10-21T15:41:17+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/21/migrating-from-drupal-5-to-octopress</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been running this blog (or some version of it) for almost 10 years now.</p>
+
+<p>I write to help clarify my own thoughts, or to note down technical details of a task that I have struggled to figure out. I often found myself coming back and have saved many hours of trying to figure out the same thing again a year or more later.</p>
+
+<p>For a long time this site was running Drupal 5, I set it up at a time when I was getting to know Drupal, starting out as an independant, and had plenty of time to spend on it. At the time this was a very useful excercise, installing lots of modules, and writing some code was good experience. But when Drupal 6 came out and I was busy <a href="/blog/2008/07/18/time-to-upgrade-to-drupal-6}">it wasnt worth upgrading</a>, then when drupal 7 was released and Drupal 5 no longer supported, upgrading was even more difficult as I would have had to upgrade in two steps. Besides Drupal didn&rsquo;t seem like such a good fit for my blog any more.</p>
+
+<p>I don&rsquo;t want to have to apply security updates on a site I&rsquo;m not getting paid for: so a static html site is a great fit for me.</p>
+
+<p>I lose integrated comments, but spam had already killed those for me - I&rsquo;ll try disqus and see how that goes (the need to enable comments in the yaml for each post threw me at first).</p>
+
+<p>Search was useful - but I can grep the source files myself.</p>
+
+<p>I had all sorts of Drupal plugins before - but really I don&rsquo;t think they were very important.</p>
+
+<p>Jekyll seems great, especially because with github&rsquo;s patronage it seems unlikely to become unsupported; and at the end of the day it is just a bunch of simple files so importing to another system should be easy.</p>
+
+<p>Exporting from Drupal 5 needed a <a href="https://github.com/practicalweb/jekyll-import/commit/cfa72281147fd37ce527d2dab1f3ae916e066b04">small patch on the importer</a> without this the categories were seen as some kind of binary object in yaml. The import reads direct from the database, so doesn&rsquo;t run all Drupal&rsquo;s filters and I suspect a drupal export module from drupal would do a much better job. I still need to pull over some old comments and formatting could do with a tidy up, but I need to move to a system that gets me writing new content, and not worry too much about the old.</p>
+
+<p>Jekyll itself didn&rsquo;t use tags in the way I wanted - I find the ability to cross link from one post to similar ones very useful so I am using Octopress which seem to do what I want out of the box.</p>
+
+<p>To get the content in Octopress I just did</p>
+
+<pre><code class="bash">cp jekyll/mysite/_posts/* octopress/source/_posts
+</code></pre>
+
+<p>I have switched from pygments highlighter to linguist (this seems to be what github use and supports code highlighting well)</p>
+
+<p>I added a twitter aside for which I just copy pasted the twitter widget into <code>source/_includes/asides/twitter.html</code> and enabled this in _config.yml</p>
+
+<p>I&rsquo;m not a ruby coder, so instaling all the required ruby gems and figuring out how to run a modified version of the jekyll importer took a little while, in the end I think it was just a case of getting all the gems installed that I needed. I didn&rsquo;t blog soon enough!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Static Export of Drupal Site]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/14/static-export-of-drupal-site/"/>
+    <updated>2014-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/14/static-export-of-drupal-site</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve exported this site from Drupal using wget to create a static html version like</p>
+
+<pre><code>wget  --mirror -p  -e robots=off --base=./ -k -P ./ http://localhost/
+</code></pre>
+
+<p>Then rsync to the server and use mod rewrite to retain the paged links like frontpage?page=4</p>
+
+<p>I&rsquo;ve had some trouble getting mod rewrite to work, it seems that getting apache to serve content from filenames containing question marks is tricky.</p>
+
+<p>in apache 2.4 this worked</p>
+
+<pre><code class="ApacheConf">&lt;VirtualHost *:80&gt;
+   ServerName practicalweb.localhost
+   DocumentRoot /home/sean/rescue/localhost
+   RewriteEngine on
+   LogLevel alert rewrite:trace3
+     &lt;Directory /home/sean/rescue/localhost&gt;
+       RewriteCond %{QUERY_STRING} !=&amp;quot;&amp;quot;
+       RewriteRule ^(.*) /home/sean/rescue/localhost/$1\%3F%{QUERY_STRING}? [L]
+
+       Options Indexes FollowSymLinks MultiViews
+      AllowOverride All
+      Require all granted
+   &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>But on apache 2.2 (which my server runs I) needed an external redirect</p>
+
+<pre><code class="ApacheConf">&lt;VirtualHost *:80&gt;
+
+  DocumentRoot /var/www/practicalweb
+  RewriteEngine on
+  RewriteCond %{QUERY_STRING} !=&amp;quot;&amp;quot;
+  RewriteRule ^(.*) $1\%3F%{QUERY_STRING}? [last,noescape,R]
+    &lt;Directory /&gt;
+        Options FollowSymLinks
+        AllowOverride None
+    &lt;/Directory&gt;
+    &lt;Directory /var/www/practicalweb&gt;
+
+        Options None
+        AllowOverride None
+        Order allow,deny
+        allow from all
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>It still basically works - but users see a slightly changed URL which isn&rsquo;t quite what I wanted.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using Varnish to Cache Authenticated Drupal Pages]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/10/15/using-varnish-to-cache-authenticated-drupal-pages/"/>
+    <updated>2013-10-15T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/10/15/using-varnish-to-cache-authenticated-drupal-pages</id>
+    <content type="html"><![CDATA[<p>I have a site which requires users to be logged in, but the pages are not customised. I was playing with a way to cache the content in varnish while still doing an access check. This method uses an access check pages (test.php below) which then uses ESI to load the real, cacheable content.</p>
+
+<p>I&rsquo;ve tried it in a dev env, I&rsquo;m not yet sure if we&rsquo;ll use this in production.</p>
+
+<p>Varnish config</p>
+
+<pre><code class="C">probe checkslash {
+    .url = "/robots.txt";
+    .interval = 500s;
+    .timeout = 10s;
+}    
+
+include "backends.vcl";
+
+/** generic config from here down */
+sub vcl_recv{
+
+  /* if the drupals are down, this is how long we cache for */
+  set req.grace = 6h;
+
+  /* Make sure we direct 443 traffic to the secure drupal */
+  if (server.port == 443 ) {
+    set req.backend = drpau_ssl_director; 
+  } else {
+    /* port 80 traffic goes to the correct LB */
+    set req.backend = drpau_director;
+  }
+  # just pass through non-page files, and the login page
+  if (req.url ~ "(?i)\.(pdf|asc|dat|txt|doc|xls|ppt|tgz|csv|png|gif|jpeg|jpg|ico|swf|css|js|htc|ejs)(\?.*)?$") {
+  } else if (req.url ~ "(?i)(sites/default/files)|(js/)|(/login)" ) { 
+  } else if (req.esi_level == 0 ) {
+    # pass regular pages to a spoecial url
+    set req.url = "/esi" + req.url;
+  }
+  return (lookup);
+}
+
+
+
+sub vcl_fetch {
+
+  if (req.url ~ "/esi/" &amp;&amp; req.esi_level == 0 ) {
+    set beresp.do_esi = true; /* Do ESI processing               */ 
+   }
+
+}
+</code></pre>
+
+<p>Then in apache I redirect all requests for pages that come via the esi prefix</p>
+
+<pre><code class="ApacheConf">RewriteRule ^esi/(.*)$ test.php [L]
+</code></pre>
+
+<p>and test php is</p>
+
+<pre><code class="PHP">    define('DRUPAL_ROOT', getcwd());
+    // We prepare only a minimal bootstrap.
+    require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+    drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
+    global $user;
+    $roles = user_roles();
+
+    if (in_array('anonymous user', $user-&gt;roles)) {
+      $uri = preg_replace('#^/esi#', '', $_SERVER[REQUEST_URI]);
+      echo "&lt;esi:include src=\"http://$_SERVER[SERVER_NAME]$uri\"/&gt;";
+    } else {
+        header("Location: https://$_SERVER[SERVER_NAME]/login");
+    }
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Monitor Filesystem for Deletions]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/09/28/monitor-filesystem-for-deletions/"/>
+    <updated>2012-09-28T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/09/28/monitor-filesystem-for-deletions</id>
+    <content type="html"><![CDATA[<p>On a project I&#8217;m working on at the moment we have a problem, files are going missing.</p>
+
+
+
+
+<p>We don&#8217;t know which part of the system could be trashing these files (user uploaded images in this case) and they are on a shared filesystem so there are plenty of places to point fingers.</p>
+
+
+
+
+<p>I&#8217;ve discovered a very handy toolset <a href="https://github.com/rvoicilas/inotify-tools/wiki">inotify-tools</a> Which hooks into the linix kernel and allows you to monitor actions like file deletion.</p>
+
+
+
+
+<p>I my case all I need to do right now is monitor the files on each sytem that has access - and I&#8217;m hoping to catch which one does the delete</p>
+
+
+<p><In my build script is now the code</p></p>
+
+<p><code></p>
+
+<h1>stop monitoring for deletes through the build</h1>
+
+<p>[ -f ~/inotifywait.pid ] &amp;&amp; kill $(cat ~/inotifywait.pid)</p>
+
+<p>git pull
+./build.sh</p>
+
+<h1>if the tool is installed - monitor file delets</h1>
+
+<p>which inotifywait &amp;&amp;
+{
+ nohup inotifywait -mr &ndash;timefmt &lsquo;%d/%m/%y %H:%M&rsquo; &ndash;format &lsquo;%T %w %f %e&rsquo; -e delete /var/www/sites/default/files/ &amp;> ~/build-${JOB_NAME}-$(BUILD_NUMBER)-delete.log  &amp;
+ echo $! > ~/inotifywait.pid
+}</p>
+
+<p></code></p>
+
+<p>This should create a log of any user files that get deleted between builds</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkins Build Script for Drupal - Multistep With Changelogs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs/"/>
+    <updated>2012-09-28T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs</id>
+    <content type="html"><![CDATA[<p><p>My build script has been getting more complex lately and I&rsquo;m quite pleased with it.<p></p>
+
+<p><p>We tend to have several versions of code on the go,
+version x is live, x+1 is in UAT, and x+2 is in development. With all these versions around it&rsquo;s important to keep track of changelogs, and to upgrade correctly x to x+1, and then x+1 to x+2 as we have found that going direct from x to x+2 can fail to uncover some bugs. Specifically this happens if a drupal update hook gets edited after it has been released to the client, but before it has run on live. Our builds always start from a copy of the live site.</p></p>
+
+<p><p>I have also posted a <a href="http://www.practicalweb.co.uk/blog/12/07/12/check-drupal-update-hook-changes">script to review these update hooks</a> but this two step upgrade fits more easily into a continuous integration setup.</p></p>
+
+<p><p>Each release has it&rsquo;s own branch, any hotfixes to branch x get merged forwards to x+1</p></p>
+
+<p><p>This code is in jenkins - and is run remotely using the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Publish+Over+SSH+Plugin">publish over ssh plugin</a></p></p>
+
+<p><p>The jenkins job has two parameters, the target branch and the intermediate branch (where the HEAD of the intermediate branch is the code in UAT or x+1, and head of the target branch is the latest dev code - x +2</p></p>
+
+<p><p>While this might sound complex, I find it easy to use in practice, partly because the complexity is there   anyway, even if you just code direct in master all the time, it&rsquo;s just that this way you can see it all, and see what is going on.</p></p>
+
+<p><code></p>
+
+<p>cd /var/www/</p>
+
+<h1>there should be any changes on the server - but stash them just in case</h1>
+
+<p>git stash</p>
+
+<h1>get the latest code from upstream - but don&rsquo;t change our version yet</h1>
+
+<p>git fetch</p>
+
+<h1>check what branch we are on - in case this build also changes the test server to a new release</h1>
+
+<p>current_branch=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
+current_branch=${current_branch##refs/heads/}</p>
+
+<h1>get the commit we are on and the one we will be on at the end</h1>
+
+<p>current_id=$(git rev-parse &ndash;short origin/develop)
+new_id=$(git rev-parse &ndash;short origin/branch)</p>
+
+<h1>email a nice log to myself (TODO - pull this back into jenkins)</h1>
+
+<p>git log &ndash;oneline &ndash;graph ${current_branch}..origin/$branch | mail -s &ldquo;updating $(hostname) from $current_branch $current_id to $branch $new_id&rdquo;   <a href="&#109;&#x61;&#105;&#108;&#116;&#111;&#58;&#x6d;&#101;&#x40;&#101;&#x78;&#x61;&#x6d;&#112;&#x6c;&#x65;&#46;&#x63;&#x6f;&#x6d;">&#x6d;&#x65;&#64;&#101;&#120;&#97;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#111;&#x6d;</a></p>
+
+<h1>update the code to the latest on the dev branch</h1>
+
+<p>git checkout $branch
+git merge origin/branch</p>
+
+<h1>now build</h1>
+
+<p>./build.sh ${intermediate}</p>
+
+<p></code></p>
+
+<p><p>The build script itself is used on developer machines as well as on the test server.<p></p>
+
+<p><p>We use cronjobs to ensure we always have the latest backup from live available</p></p>
+
+<p><code></p>
+
+<h1>!/bin/bash -ex</h1>
+
+<p>export COLUMNS=80
+cd $(dirname $0)/www</p>
+
+<h1>drop and reload the database</h1>
+
+<p>drush -y sql-drop
+type -P zcat &amp;>/dev/null &amp;&amp; {
+  # if we have zcat leave db dump compressed
+  zcat ../database_backups/www-latest.sql.gz | drush sqlc
+} || {
+  # otherwise unzip
+  gunzip ../database_backups/www-latest.sql.gz
+  drush sqlc &lt; ../database_backups/www-latest.sql</p>
+
+<p>}</p>
+
+<h1>get rid of production watchdog messages - so we can see any new ones easily</h1>
+
+<p>drush watchdog-delete all -y</p>
+
+<h1>put site offline</h1>
+
+<p>drush -y vset maintenance_mode 1</p>
+
+<h1>delete user files and replace with fresh ones from live - checking user permissions</h1>
+
+<h1>NB I use umask and groups to ensure the files remain writable by apache and CLI</h1>
+
+<p>if [ -d ../files_from_live/www ]
+  then
+   rm -Rf sites/default/files</p>
+
+<p>   cp -R ../files_from_live/www/sites/default/files sites/default
+   # cater for debian, ubuntu or mac
+   groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
+   groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;
+   groups | grep <em>www > /dev/null &amp;&amp; find sites/default/files/ ! -group </em>www -exec chgrp _www {} \;
+fi</p>
+
+<p>   # put code version info online so we can easily check what is in the test site
+echo &ldquo;$(git describe)&rdquo; > CODE-VERSION.TXT
+echo &ldquo;$(git log &ndash;oneline -n 1 | sed &rsquo;s/ .*//&lsquo;)&rdquo; > CODE-HASH.TXT</p>
+
+<h1>if this script is passed a intermediate version, check that out - upgrade and then checkout back to where we were</h1>
+
+<p>if ! [ -z &ldquo;$1&rdquo; ]<br/>
+  then
+  branch_name=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
+  branch_name=${branch_name##refs/heads/}
+  git checkout $1
+  drush -y updb
+  #
+  git checkout $branch_name
+fi</p>
+
+<h1>take site fully offline</h1>
+
+<p>mv index.php bak-index.php
+drush -y updb</p>
+
+<h1>if the current user is a member of the www-data group we can make the files owned by this group</h1>
+
+<h1>as long as apache has umask 002 files should now be writeable by us and apache</h1>
+
+<p>groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
+groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;
+groups | grep <em>www > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp </em>www {} \;</p>
+
+<p>drush cc all</p>
+
+<h1>any tasks that have to be done at the end of each deploy go in this drush hook</h1>
+
+<p>drush helper-post-deploy</p>
+
+<h1>on dev sites rewrite any user emails so we can&rsquo;t spam  customers by mistake</h1>
+
+<p>drush helper-rewrite-emails</p>
+
+<h1>set the admin password to one the devs know</h1>
+
+<p>drush upwd admin &ndash;password=secret</p>
+
+<h1>put the site online again</h1>
+
+<p>drush -y vset maintenance_mode 0
+mv bak-index.php index.php
+drush cc all</p>
+
+<h1>final permission reset just in case the last commands changed anything</h1>
+
+<p>find sites/default/files/ -user $USER -type d -exec chmod 775 {} \;
+find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+</feed>

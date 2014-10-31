@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Skype | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/skype/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Search Skype History Across Chats]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/10/14/search-skype-history-across-chats/"/>
+    <updated>2013-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/10/14/search-skype-history-across-chats</id>
+    <content type="html"><![CDATA[<p>I find a lot of clients use skype</p>
+
+<p>For me the biggest frustration is the limited search</p>
+
+<p>But it turns out the data is stored using sqlite - and so you can search using sql directly on the sqlite db files.</p>
+
+<p><div><script src='https://gist.github.com/740d136e58d8b87d057f.js'></script>
+<noscript><pre><code>#!/bin/bash
+
+export username=skype.name
+sqlite3 -column ~/.Skype/$username/main.db \
+&quot;SELECT displayname, from_dispname, datetime(Messages.timestamp, 'unixepoch') as date, body_xml 
+             FROM Messages, Conversations 
+             WHERE Conversations.id=Messages.convo_id and body_xml like '%$searchterm%' 
+             ORDER BY Messages.timestamp;&quot;
+
+</code></pre></noscript></div>
+</p>
+
+<p>or for all your chats from a given day</p>
+
+<p><div><script src='https://gist.github.com/85e282537f6f2f631414.js'></script>
+<noscript><pre><code>export username=skype.name
+export thedate=$(date +%Y-%m-%d)
+sqlite3 ~/.Skype/${username}/main.db \
+&quot;SELECT displayname, datetime(Messages.timestamp, 'unixepoch') as date, body_xml 
+           FROM Messages, Conversations 
+           WHERE Conversations.id=Messages.convo_id and date(Messages.timestamp, 'unixepoch') == '${thedate}' and author='${username}' 
+           ORDER BY Messages.timestamp;&quot;</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+</feed>

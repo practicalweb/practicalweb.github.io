@@ -1,0 +1,985 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="This module makes it possible to customise the title of the pages which add nodes to Drupal site. By default these pages have the title &ldquo;Create &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/posts/13">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/05/25/module-to-make-the-title-of-node-add-pages-editable-in-drupal/">Module to Make the Title of Node/add Pages Editable in Drupal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-05-25T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This module makes it possible to customise the title of the pages which add nodes to Drupal site.</p>
+
+<p>By default these pages have the title &ldquo;Create a $node_type&rdquo;</p>
+
+<p>This module was paid for by <a href="http://www.consultanddesign.com/">http://www.consultanddesign.com/</a> who have asked for it to be contributed back to the community. I&rsquo;m in the process of applying for a CVS account to do that properly, in the meantime here&rsquo;s the code.</p>
+
+<p>&lt;?php</p>
+
+<p>/<em>*
+ * Implementation of hook_form_alter
+ *
+ * This contains two cases.
+ *
+ * For the form that edits node types it adds a field to record an additional title.
+ *
+ * The form used to add a node uses this title if it is available.
+ *
+ * @param Array $form
+ * @param Array $form_state
+ * @param String $form_id
+ </em>/
+function node_add_title_form_alter(&amp;$form, &amp;$form_state, $form_id) {
+    global $user;</p>
+
+<pre><code>if ($form_id == 'node_type_form') {
+    $form['identity']['add_title'] = array(
+    '#title' =&gt; t('Title for Add Page'),
+    '#description' =&gt; t('If populated this field will be used instead of the "Create Blah" default title when adding a new node of this type'),
+    '#type' =&gt; 'textfield',
+    '#weight' =&gt; 0,
+    '#required' =&gt; false,
+    '#default_value' =&gt; variable_get("node_add_title_". $form['#node_type']-&gt;type, ''),
+    );
+//    print_r($form);
+    $form['#submit'][] = 'node_add_title_save';
+    //print_r($form);
+}
+ else if (preg_match('/([a-z0-9_]+)_node_form$/', $form_id, $matches)) {
+    $new_title = variable_get('node_add_title_'.  $matches[1], '');
+    if ($new_title) {
+        drupal_set_title(t($new_title));
+        // add a validate callback - just as a place to set title on validation
+        $form['#validate'][] = 'node_add_title_set_title';
+    }
+}
+</code></pre>
+
+<p>}</p>
+
+<p>/<em>*
+ * Form submit handler.
+ *
+ * This captures the value of the additional title and saves it as a Drupal variable.
+ *
+ * @param Array $form
+ * @param Array $form_state
+ </em>/
+function node_add_title_save(&amp;$form, &amp;$form_state) {
+    variable_set(&ldquo;node_add_title_&rdquo;. $form_state[&lsquo;values&rsquo;][&lsquo;type&rsquo;], $form_state[&lsquo;values&rsquo;][&lsquo;add_title&rsquo;]);</p>
+
+<p>}</p>
+
+<p>/<em>*
+ * Form validation handler.
+ *
+ * Override the default title on validation if we have one.
+ *
+ * @param array $form
+ * @param array $form_state
+ </em>/
+function node_add_title_set_title(&amp;$form, &amp;$form_state) {
+    $new_title = variable_get(&lsquo;node_add_title_&rsquo;.  $form[&lsquo;type&rsquo;][&lsquo;#value&rsquo;], &lsquo;&rsquo;);
+        if ($new_title) {
+            drupal_set_title(t($new_title));
+        }
+}</p>
+
+<p>?></p>
+
+<p>see also <a href="http://drupal.org/node/342750">http://drupal.org/node/342750</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/05/12/testing-php/">Testing PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-05-12T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I had fun this weekend at the <a href="http://www.phplondon.org/" mce_href="http://www.phplondon.org/">PHP London</a> Test Fest, it was a great opportunity to learn something new and meet some great programmers.
+</p>
+
+
+<p>
+The tests our team took on were based around the <a href="http://www.php.net/%7Ehelly/php/ext/spl/main.html" mce_href="http://www.php.net/~helly/php/ext/spl/main.html">SPL</a> <a href="http://uk.php.net/manual/en/spl.iterators.php" mce_href="http://uk.php.net/manual/en/spl.iterators.php">iterators</a> I hadn&#8217;t used this part of PHP before and it was a great way to learn about it, especially as many of the functions we tested aren&#8217;t documented yet.
+</p>
+
+
+<p>
+What we did was :
+</p>
+
+
+<ol>
+    <li>Take a copy of <a href="http://www.php.net/anoncvs.php" mce_href="http://www.php.net/anoncvs.php">PHP source code <br>
+    </a></li>
+    <li>extract this and run ./configure</li>
+    <li> create a short script to run tests</li>
+    <li>and another to run the checked out version of PHO</li>
+    <li> Check the <a href="http://gcov.php.net/PHP_5_3/lcov_html/spl/spl_iterators.c.gcov.php" mce_href="http://gcov.php.net/PHP_5_3/lcov_html/spl/spl_iterators.c.gcov.php">test coverage reports</a></li>
+    <li>Find an untested section of code (in red)</li>
+    <li>Figure out what it does</li>
+    <li>Write a test to run this part of code</li>
+    <li>go to 5 </li>
+</ol>
+
+
+<p>
+More details on how to write tests are at http://qa.php.net/write-test.php&nbsp;
+</p>
+
+
+<p>
+I found the hardest bit was interpreting the C source code of PHP - this was made much easier by the mentors at the test fest, and once pointed in the right direction we were able to get going easily enough.
+</p>
+
+
+<p>
+This does give me another reason to read this book: <br /><a href="/review/extending-and-embedding-php" mce_href="/review/extending-and-embedding-php"><img src="http://ecx.images-amazon.com/images/I/415rN3jdDvL._SL160_.jpg" mce_src="http://ecx.images-amazon.com/images/I/415rN3jdDvL._SL160_.jpg" alt="Extending and Embedding PHP Sara Golemon" width="125" height="160"></a>
+</p>
+
+
+<p>
+One thing I didn&#8217;t figure out on the day - in order to regenerate the coverage reports and check that the new tests do add coverage I needed to&nbsp; 
+</p>
+
+
+<p><code>
+aptitude install lcov</p>
+
+<p>make lcov TESTS=./path-to tests
+</code></p>
+
+<p>
+NB you can either run all tests or just a subdirectory
+</p>
+
+
+<p>
+The script to run tests was 
+</p>
+
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<p>export TEST_PHP_EXECUTABLE=/path-to/php5.3-200905081030/sapi/cli/php
+$TEST_PHP_EXECUTABLE /path-to/php5.3-200905081030/run-tests.php $*
+</code></p>
+
+<p>
+I also created an alias to sapi/cli/php so that I could run the tests as simple PHP scripts
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/05/06/simpletest-vs-phpunit/">Simpletest vs Phpunit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-05-06T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+There are two main options for unit testing PHP: simpletest and phpunit 
+</p>
+
+
+<p>
+They both do a lot of the same stuff, both have the ability to run suites of tests and create mock objects.
+</p>
+
+
+<p>
+Simpletest has a built in webTestCase which allows you to perform some integration as well as unit testing.
+</p>
+
+
+<p><p>An example web test for simpletest is:
+&lt;?php
+    function testDefaultValue() {
+        $this->get(&lsquo;<a href="http://www.my-site.com/">http://www.my-site.com/</a>&rsquo;);
+        $this->assertField(&lsquo;a&rsquo;, &lsquo;A default&rsquo;);
+        $this->setField(&lsquo;a&rsquo;, &lsquo;New value&rsquo;);
+        $this->click(&lsquo;Go&rsquo;);
+    }</p>
+
+<p>?></p>
+
+<p><p>Drupal has extended this further to include functions specific for Drupal login, creating users etc.</p></p>
+
+<p><p>PHPUnit on the other hand has Selenium integration so that these sorts of integration tests can be run with a real browser (even with multiple browsers).</p></p>
+
+<p><p>PHPUnit also has some useful tools to detect copy pasted code, calculate code soverage of tests, and integrates with Cruise Control</p></p>
+
+<p><p>Simpletest&rsquo;s fake browser should be a lot faster to run than Selenium, but can&rsquo;t truly test JavaScript although ther is the facility to code in form changes that would normally occur via script.</p></p>
+
+<p><p>Both projects are actively maintained, and supported.</p></p>
+
+<p><p>So far I&rsquo;ve mostly used simpletest because it&rsquo;s the default for Drupal; but I&rsquo;m impressed with Selenium, and I&rsquo;m tempted to use PHPUnit.</p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/29/how-sure-are-you-that-your-code-doesnt-have-bugs/">How Sure Are You That Your Code Doesn&#8217;t Have Bugs?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-29T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There are times you really really want to be sure your code doesn&rsquo;t have any bugs at all.</p>
+
+<p>This is one of those times.</p>
+
+<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/yln_IGDuOCo&hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/yln_IGDuOCo&hl=en&fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>
+
+
+<p>I really hope they had a good set of tests running on thier software before doing that!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/28/the-perils-of-virtualisation/">The Perils of Virtualisation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-28T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I just read an interesting article about Windows 7 - it will include a virtual machine to run windows XP for backwards compatibility. 
+</p>
+
+
+<p>
+http://www.computerworld.com/action/article.do?command=viewArticleBasic&amp;articleId=9132177
+</p>
+
+
+<p>
+The article points out that this has the drawback of extra maintenance.
+</p>
+
+
+<p>
+I&#8217;d have to agree with this - it&#8217;s one of the big downsides of using virtual machines for testing -  with three virtual Windows&#8217; I find myslef constantly having to run updates.
+</p>
+
+
+<p>
+One of the big wins of Linux systems is centralised updates for all applications - having to update windows, office, flash, firefox, java - all separately is a real pain even when you only have one machine to look after. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/27/selenium-ide-exports-to-php/">Selenium IDE Exports to PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-27T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Oh cool :-)
+</p>
+
+
+<p>
+I just noticed that selenium IDE has the option to export tests as PHP unit tests.
+</p>
+
+
+<p>
+This is great - the IDE is a good way to interactively build up tests by recording a set of actions and tweaking what it records. 
+</p>
+
+
+<p>
+And being able to save them as unit tests makes it easy to integrate this with automated testing.
+</p>
+
+
+<p>
+Interestingly they are created as PHPunit tests - not simpletest tests.
+</p>
+
+
+<p>
+It does look like I&#8217;m being pushed more towards PHPunit - though I wonder how I&#8217;ll integrate this with Drupal development and it&#8217;s focus on simpletest.  
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/27/nework-error-after-virtualbox-upgrade/">Nework Error After VirtualBox Upgrade</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-27T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I decided to upgrade  VirtualBox because the newer versions have much better support for networks that allow virtual computer to be visible on the real network.
+</p>
+
+
+<p>
+But after upgrade I encountered the error
+</p>
+
+
+<p>
+&quot;HostInterface&#8217;: The attribute &#8216;name&#8217; is required but missing.&quot;
+</p>
+
+
+<p>
+It seems others have had similar issues
+</p>
+
+
+<p>
+http://forums.virtualbox.org/viewtopic.php?p=58720&amp;sid=f3759d4d938c30120502ad5610833caa
+</p>
+
+
+<p>
+I resolved this by deleting this entry: 
+</p>
+
+
+<p><code>
+<HostInterface/>  
+</code></p>
+
+<p>
+from the config file, in my case this was 
+</p>
+
+
+<p><code>
+.VirtualBox/Machines/WinXP/WinXP.xml
+</code></p>
+
+<p>
+After this the virtual machine worked fine - and the new network settings are great. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/27/cross-platform-testing-with-selenium-and-virtualbox/">Cross Platform Testing With Selenium and VirtualBox</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-27T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+As well as following standards such as those laid down by www.w3.org I always try and test websites I develop across a range of browsers. Despite improvements in compatibility in recent years, browsers do still vary in implementation and even relatively minor browsers are still used by large numbers of people.
+</p>
+
+
+<p>
+However all this testing can be hard to keep on top of and sometimes I just have to push out what seems like a small code change with only limited testing.
+</p>
+
+
+<p>
+I&#8217;m aiming to automate as much testing as possible, this is a little more work up front - but makes re-running tests trivial and so more likely to happen.
+</p>
+
+
+<p>
+I use VirtualBox to run multiple environments, and am happy to find that the newer releases (2.1 and up) support improved networking.
+</p>
+
+
+<p>
+So I have installed <a href="http://seleniumhq.org/projects/remote-control/">Selenium RC</a> on a virtual machine, and by running this simple script I can test on Internet Explorer - from my Linux development machine.
+</p>
+
+
+<p>&lt;?php</p>
+
+<p>set_include_path(get_include_path() . PATH_SEPARATOR . &lsquo;./PEAR/&rsquo;);
+require_once &lsquo;Testing/Selenium.php&rsquo;;</p>
+
+<p>$selenium = new Testing_Selenium(&ldquo;*iexplore&rdquo;, &ldquo;<a href="http://www.google.com">http://www.google.com</a>&rdquo;, &lsquo;192.168.0.7&rsquo;);</p>
+
+<p>$selenium->start();</p>
+
+<p>$selenium->open(&ldquo;/&rdquo;);
+$selenium->type(&ldquo;q&rdquo;, &ldquo;hello world&rdquo;);
+$selenium->click(&ldquo;btnG&rdquo;);
+$selenium->waitForPageToLoad(10000);
+print (preg_match(&ldquo;/Google Search/&rdquo;, $selenium->getTitle())) ? &ldquo;pass\n&rdquo; : &ldquo;fail\n&rdquo;;
+$selenium->stop();</p>
+
+<p>?></p>
+
+<p>Note that I can specify which Virtual Machine to test on just by providing the appropriate IP address.</p>
+
+
+
+
+<p>This example is in PHP because that&#8217;s what I use, it requires the Pear package Testing_Selenium which I installed on Ubuntu by the command</p>
+
+
+<p><code>
+sudo pear install channel://pear.php.net/Testing_Selenium-0.4.3
+</code></p>
+
+<p>
+Now all I need to do is integrate this into my unit testing framework and add some scripts to start up and shut down the virtual machines.
+</p>
+
+
+
+
+<p>There is also Selenium Grid which is aimed at distributing tests across multiple machines in parallel - but as this is all running on one physical machine (my laptop) I don&#8217;t really want parallelisation here.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1/">Continuous Integration Testing for Drupal With CruiseControl (Part 1)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-08T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I recently finished work on a project that really suffered from a lack of build tools.
+</p>
+
+
+<p>
+It was a large project, and while many of us were keen on writing tests we weren&#8217;t able to get management sign of to spend some time automating the test process. So even though we did some of the work we didn&#8217;t get all the benefits.
+</p>
+
+
+<p>
+It was really frustrating to come back to a piece of work that was well covered by unit tests, only to find those tests broken  
+</p>
+
+
+<p>
+Well, right now I&#8217;ve decided to take some time to explore automated testing a bit more. I&#8217;ve got a Drupal site and a bunch of simpletest tests - I want the tests run on every commit, and while I&#8217;m at it I want to run some other checks too.
+</p>
+
+
+<p>
+The following records what I&#8217;ve done so far, problems I encountered, and how I solved them.
+</p>
+
+
+<p>
+Download 
+</p>
+
+
+<ul>
+    <li><a href="http://cruisecontrol.sourceforge.net/">cruisecontrol</a> <a href="http://phpundercontrol.org/about.html"><br />
+    </a></li>
+    <li><a href="http://phpundercontrol.org/about.html">phpundercontrol</a></li>
+    <li><a href="http://demo.codesetter.com/drupal5-macgyver-cruisecontrol">simpletest runner for cruise control</a> (thanks Adnan)</li>
+</ul>
+
+
+<p>
+Checkout and configure my Drupal site, create the settings for this as a CruiseControl project.
+</p>
+
+
+<p>
+At this point I had CruiseControl setup, I could see my project, but no useful reports.
+</p>
+
+
+<p>
+Debugging
+</p>
+
+
+<ul>
+    <li>read the logfiles (doh!)</li>
+    <li>run each process separately</li>
+</ul>
+
+
+<p>
+CruiseControl is a big beast and trying to debug small parts of it by running it all wasn&#8217;t much fun.
+</p>
+
+
+<p>
+CruiseControl runs each step of a build via <a href="http://ant.apache.org/">ant</a>  - this is a fairly standard tool (available via apt-get if you&#8217;re a Debian user) 
+</p>
+
+
+<p>
+Running ant manually gave me much greater visibility of errors that were occuring at this stage (I&#8217;d put my test runner script in the wrong place).
+</p>
+
+
+<p>$ cd cruisecontrol/projects/myproject
+$ ant </p>
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+This gives nice easy to read output for each step of the build.
+</p>
+
+
+<p>
+Once CruiseControl has built your project it merges the xml logfiles; the merged file is stored in cruisecontrol/logs/myproject/
+</p>
+
+
+<p>
+The web application part of CruiseControl uses xsl to transform these logfiles into output, and a little jsp to select which xsl files to use. Again I found it easier to debug the xsl part of the process by running the xsl manually (either on the combined logfile - or individual ones wrapped in &lt;cruisecontrol&gt; tags).
+</p>
+
+
+<p>$ xsltproc webapps/cruisecontrol/xsl/checkstyle.xsl  projects/myproject/build/logs/checkstyle.xml</p>
+
+<p>
+And what I found was that my xml log wasn&#8217;t xml after all (I&#8217;d hit a <a href="http://pear.php.net/bugs/bug.php?id=14409">bug in phpcodesniffer</a> which was outputting error messages at the top of the file). 
+</p>
+
+
+<p>
+Right now I have a continuous integration server up and running. It&#8217;s not quite how I want it yet but now I understand how CruiseControl works I don&#8217;t think it&#8217;ll take too long to get right - but it&#8217;s the sort of thing that I expect to grow and tweak as I go along.
+</p>
+
+
+<p>
+I&#8217;ve found CruiseControl hard to setup, seen too many Java stacktraces, and blank screens when xsl didn&#8217;t work as expected.
+</p>
+
+
+<p>
+Some things could probably be done better via svn commit hooks (if you have access to the svn server), and certainly it would have been faster to cobble together some cron jobs.
+</p>
+
+
+<p>
+But I&#8217;ve persevered because CruiseControl comes with a wealth of plugins including many version control systems, and many notification methods. I&#8217;m hoping that I&#8217;ve overcome the initial learning curve and will start to reap the rewards.
+</p>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/04/accessible-rich-internet-applications-wai-aria/">Accessible Rich Internet Applications (WAI-ARIA)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-04T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve just been reading some good stuff on developing accessible web applications that still benefit from rich interactivity.
+</p>
+
+
+<ul>
+    <li>http://www.w3.org/TR/wai-aria/</li>
+    <li>http://dev.opera.com/articles/view/introduction-to-wai-aria/</li>
+    <li>http://www.iheni.com/screen-reader-testing/</li>
+    <li>http://wiki.codetalks.org/wiki/index.php/Main_Page</li>
+</ul>
+
+
+<p>
+I&#8217;ve been keen on building accessible websites for a long time, and I find everyone benefits from this - well developed accessible sites are just easier for everyone to use.
+</p>
+
+
+<p>
+What&#8217;s great is that it can be as simple as just clearly defining the navigation areas of the site, or as complex as adding a semantic layer on top of a full application. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/14">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/12">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,1088 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="Here&rsquo;s a basic Drupal Module that pulls CKAN data into Drupal. It provides a simple search interface - when the user views a CKAN package for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/posts/9">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/24/drupal-module-for-ckan-integration/">Drupal Module for CKAN Integration</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-24T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here&rsquo;s a basic Drupal Module that pulls CKAN data into Drupal.</p>
+
+<p>It provides a simple search interface - when the user views a CKAN package for the first time a corresponding node is created.</p>
+
+<p>When this node is then viewed Drupal loads the package details - I&rsquo;m only displaying notes and title here as I&rsquo;ve run out of time tonight - but the rest of the data is there.</p>
+
+<p>You can then have user comments, voting, etc on these pages.</p>
+
+<p>This is fairly quickly put together code and it&rsquo;s incomplete - but it should be enough to get people started - if there&rsquo;s interest I&rsquo;ll carry on with this so please add comments.</p>
+
+<p>I&rsquo;ve created a github repository for it and I&rsquo;ll start using the issue tracker there.</p>
+
+<p><a href="http://github.com/practicalweb/drupal-ckan">http://github.com/practicalweb/drupal-ckan</a></p>
+
+<p>&lt;?php</p>
+
+<p>/<em>*
+ * @file
+ * A Module to Integrate CKAN and Drupal.
+ *
+ * This works by
+ *
+ *   1. providing a serach and listing interface to CKAN with links to this Drupal site
+ *   2. using a wildcard menu handler to match these links in the first instance
+ *   3. this loads the packages and creates matching nodes (storing the ckan name)
+ *   4. the node has a url alias which overrides the wildcard match
+ * <br/>
+ *   Now we have Drupal nodes which can have user commments associated with them, fivestar votes etc&hellip;
+ *
+ * @author Sean Burlington www.practicalweb.co.uk
+ * @copyright PracticalWeb Ltd
+ * @license <a href="http://opensource.org/licenses/gpl-license.php">http://opensource.org/licenses/gpl-license.php</a> GNU Public License
+ *
+ </em>/</p>
+
+<p>function ckan_menu(){
+    $items = array();</p>
+
+<pre><code>// link to the search form page
+$items['ckan_search'] = array(
+'title'           =&gt; t('Search CKAN'),
+'page callback'   =&gt; 'drupal_get_form',
+'page arguments'  =&gt; array('ckan_search_form'),
+'access callback' =&gt; TRUE,
+);
+
+$items['ckan/search/%'] = array(
+'page callback'     =&gt; 'ckan_search_results_page',
+'page arguments'    =&gt; array(2),
+'access arguments'  =&gt; array('access content'),
+'type'              =&gt; MENU_CALLBACK,
+);
+
+$items['ckan/data/%'] = array(
+'page callback'   =&gt; 'ckan_new',
+'page arguments'  =&gt; array(2),
+'access arguments' =&gt; array('access content'),
+'type'            =&gt; MENU_CALLBACK,
+);
+
+
+return $items;
+</code></pre>
+
+<p>}</p>
+
+<p>/<em>*
+ * Gets the ckan Object
+ * Initialises it in one central place reusing it if needed.
+ *<br/>
+ * @return Ckan $ckan
+ </em>/
+function ckan_ckan(){
+    static $ckan=null;
+    if (!$ckan){
+        require_once(dirname(<strong>FILE</strong>) . &lsquo;/ckan.php&rsquo;);
+        $ckan=new Ckan(variable_get(&lsquo;ckan_site&rsquo;, &lsquo;<a href="http://www.ckan.net/">http://www.ckan.net/</a>&rsquo;));
+    }
+    return $ckan;
+}</p>
+
+<p>/<em>*
+ * Implements hook_form
+ *
+ * @param Array $form_state
+ * @return Array $form
+ </em>/
+function ckan_search_form(&amp;$form_state){</p>
+
+<pre><code>$form = array();
+$form['q'] = array(
+               '#type'          =&gt; 'textfield',
+               '#default_value' =&gt; '',
+);
+$form['submit'] = array(
+               '#type'          =&gt; 'submit',
+               '#value'         =&gt; t('Search CKAN'),
+);
+
+return $form;
+</code></pre>
+
+<p>}</p>
+
+<p>function ckan_search_form_submit($form, &amp;$form_state) {
+      // The search form relies on control of the redirect destination for its
+  // functionality, so we override any static destination set in the request,
+  // for example by drupal_access_denied() or drupal_not_found()
+  // (see <a href="http://drupal.org/node/292565">http://drupal.org/node/292565</a>).
+  if (isset($<em>REQUEST[&lsquo;destination&rsquo;])) {
+    unset($</em>REQUEST[&lsquo;destination&rsquo;]);
+  }
+  if (isset($<em>REQUEST[&lsquo;edit&rsquo;][&lsquo;destination&rsquo;])) {
+    unset($</em>REQUEST[&lsquo;edit&rsquo;][&lsquo;destination&rsquo;]);
+  }</p>
+
+<p>  $form_state[&lsquo;redirect&rsquo;] = &lsquo;ckan/search/&rsquo;. trim($form_state[&lsquo;values&rsquo;][&lsquo;q&rsquo;]);</p>
+
+<p>}</p>
+
+<p>function ckan_search_results_page($search){
+//  return $search;
+    try {
+     $ckan = ckan_ckan();</p>
+
+<pre><code> $results = $ckan-&gt;search(check_plain($search));
+} catch (Exception $e){
+    return $e-&gt;getMessage();
+}
+return theme('ckan_search_results', $results);
+</code></pre>
+
+<p>}</p>
+
+<p>/<em>*
+ * Create the node the first time this package is seen.
+ *
+ * This creates a specific URL which override the wildcard one subsequently
+ *
+ * @param String $ckan_name
+ </em>/
+function ckan_new($ckan_name){</p>
+
+<pre><code>$ckan = ckan_ckan();
+try {
+    $ckan_data = $ckan-&gt;getPackage($ckan_name);
+} catch (CkanException $e){
+    drupal_set_message($e-&gt;getMessage(), 'error');
+    drupal_set_title("Error");
+    return "Error" ;
+}
+$node = ckan_create_node($ckan_data);
+drupal_goto('node/'. $node-&gt;nid);
+</code></pre>
+
+<p>}</p>
+
+<p>function ckan_create_node($ckan_data){
+    $node = array(
+              &lsquo;title&rsquo;   => $ckan_data->title,
+              &lsquo;uid&rsquo;     => 1,
+              &lsquo;body&rsquo;    => $ckan_data->name,
+              &lsquo;promote&rsquo; => 1,
+              &lsquo;path&rsquo;    => &lsquo;ckan/data/&rsquo; . $ckan_data->name,
+              &lsquo;type&rsquo;    => &lsquo;ckan&rsquo;,
+              &lsquo;comment&rsquo; => 2,</p>
+
+<pre><code>);
+
+if ($node = node_submit($node)) {
+    node_save($node);
+} else {
+    drupal_set_message("Failed to create node for package.");
+}
+return $node;
+</code></pre>
+
+<p>}</p>
+
+<p>function ckan_node_info() {</p>
+
+<pre><code>return array(
+'ckan' =&gt; array(
+  'name'           =&gt; t('CKAN Package'),
+  'module'         =&gt; 'ckan',
+  'description'    =&gt; t('A package of Open Data.'),
+  'has_title'      =&gt; TRUE,
+  'title_label'    =&gt; t('Title'),
+  'has_body'       =&gt; TRUE,
+  'body_label'     =&gt; t('Package Description'),
+  'min_word_count' =&gt; 0,
+  'locked'         =&gt; TRUE
+)
+);
+</code></pre>
+
+<p>}</p>
+
+<p>function ckan_load($node){
+    $ckan = ckan_ckan();
+    try {
+        $node->ckan = $ckan->getPackage($node->body);
+    } catch(Exception $e){
+        drupal_set_message($e->getMessage(), &lsquo;error&rsquo;);
+    }
+//  print_r($node->ckan);
+    return $node;
+}</p>
+
+<p>function ckan_view($node, $teaser = FALSE, $page = FALSE) {</p>
+
+<p>  $node = node_prepare($node, $teaser);
+  $node->content[&lsquo;title&rsquo;][&lsquo;#value&rsquo;]  = check_plain($node->ckan->title);
+  $node->content[&lsquo;body&rsquo;][&lsquo;#value&rsquo;] = nl2br(check_plain($node->ckan->notes));</p>
+
+<p>  return $node;
+}</p>
+
+<p>function ckan_theme() {
+    return array(
+    &lsquo;ckan_search_results&rsquo; => array(&lsquo;arguments&rsquo; => array(&lsquo;results&rsquo;)),
+    );
+}</p>
+
+<p>function theme_ckan_search_results($results) {
+    $content = &lsquo;&rsquo;;
+    $content .= &ldquo;<p>&rdquo; . $results->count . &ldquo; Results found</p>&rdquo;;
+    foreach ($results->results as $package){
+        $content .= &lsquo;<h2>&rsquo; . l($package->title, &lsquo;ckan/data/&rsquo; . urlencode(check_plain($package->name))) . &lsquo;</h2>&rsquo;;
+        $content .= &lsquo;<p>&rsquo; . nl2br(check_plain($package->notes)) . &lsquo;</p>&rsquo;;
+        $content .= &lsquo;<p>&rsquo;;
+        foreach ($package->groups as $i => $group){
+            $content .= &lsquo;<b>&rsquo; . check_plain($group) . &lsquo;</b> &rsquo;;
+        }
+        $content .= &lsquo;</p>&rsquo;;
+    }
+    return $content;</p>
+
+<p>}
+?></p>
+
+<p>see also <a href="/blog/10/02/23/accessing-ckan-data-php">Accessing CKAN data from PHP</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/23/drupal-the-missing-api/">Drupal - the Missing API</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-23T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I was just reading this presentation on deploying Drupal 
+</p>
+
+
+<p>
+http://www.slideshare.net/eaton/drupal-deployment-presentation
+</p>
+
+
+<p>
+and noticed 
+</p>
+
+
+<p>
+http://drupal.org/project/install_profile_api
+</p>
+
+
+<p>
+Which seems to have a collection of API functions needed at install/upgrade time that are missing from Drupal (and contrib modules)
+</p>
+
+
+<p>
+And even better this is great motivation to write more such functions myself instead of just using SQL hacks. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/23/accessing-ckan-data-from-php/">Accessing CKAN Data From PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-23T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been working on a couple of open data projects recently - which has been very rewarding.</p>
+
+<p>A couple of people have asked for some code so I&rsquo;ve knocked up a quick version of the sort of thing I&rsquo;ve been working on.</p>
+
+<p>This code requires PHP 5.1 for the JSON functions but doesn&rsquo;t need any extra libraries (pecl_http can give better error messages but is a bit of a pain to install).</p>
+
+<p>The Notes field in packages returns output in Markdown format - you can convert this to HTMl with a parser available at <a href="http://michelf.com/projects/php-markdown">http://michelf.com/projects/php-markdown</a></p>
+
+<p>This isn&rsquo;t production code so please test before using.</p>
+
+<p>&lt;?php</p>
+
+<p>class Ckan {
+    private  $url = &lsquo;<a href="http://www.ckan.net/">http://www.ckan.net/</a>&rsquo;;
+    private $errors = array(
+                              &lsquo;400&rsquo;  =>   &lsquo;Bad Request&rsquo;,
+                              &lsquo;403&rsquo;  =>   &lsquo;Not Authorized&rsquo;,
+                              &lsquo;404&rsquo;  =>   &lsquo;Not Found&rsquo;,
+                              &lsquo;500&rsquo;  =>   &lsquo;Internal Server Error&rsquo;,
+    );</p>
+
+<pre><code>public function __construct($url=null){
+    if ($url){
+        $this-&gt;url=$url;
+    }
+}
+
+private function transfer($url){
+
+    $ch = curl_init($this-&gt;url . $url);
+
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    $result = curl_exec($ch);
+    $info = curl_getinfo($ch);
+    curl_close($ch);
+    if ($info['http_code'] != 200){
+        throw new CkanException($this-&gt;error_codes["$info[http_code]"]);
+    }
+    if (!$result){
+        throw new CkanException("No Result");
+    }
+    return json_decode($result);
+}
+
+public function search($keyword){
+    $results = $this-&gt;transfer('api/search/package/?all_fields=1&amp;q=' . urlencode($keyword));
+    if (!$results-&gt;count){
+        throw new CkanException("Search Error");
+    }
+    return $results;
+}
+
+public function getPackage($package){
+    $package = $this-&gt;transfer('api/rest/package/' . urlencode($package));
+    if (!$package-&gt;name){
+        throw new CkanException("Package Load Error");
+    }
+    return $package;
+}
+
+
+public function getPackageList(){
+    $list =  $this-&gt;transfer('api/rest/package/');
+    if (!is_array($list)){
+        throw new CkanException("Package List Error");
+    }
+    return $list;
+}
+
+public function getGroup($group){
+    $group = $this-&gt;transfer('api/rest/group/' . urlencode($group) );
+    if (!$group-&gt;name){
+        throw new CkanException("Group Error");
+    }
+    return $group;
+}
+
+public function getGroupList(){
+    $groupList = $this-&gt;transfer('api/rest/group/');
+    if (!is_array($groupList)){
+        throw new CkanException("Group List Error");
+    }
+    return $groupList;
+}
+</code></pre>
+
+<p>}</p>
+
+<p>class CkanException extends Exception{}</p>
+
+<p>?></p>
+
+<p>Test with</p>
+
+<p>&lt;?php</p>
+
+<p>require_once(&ldquo;ckan.php&rdquo;);</p>
+
+<p>$ckan = new Ckan();</p>
+
+<p>$data = $ckan->getPackage(&lsquo;edmonton-data&rsquo;);</p>
+
+<p>print_r($data);</p>
+
+<p>?></p>
+
+<p>I&rsquo;m keeping this file and a Drupal module that uses it on Github at:</p>
+
+<p><a href="http://github.com/practicalweb/drupal-ckan">http://github.com/practicalweb/drupal-ckan</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/22/drupal-as-url-shortener/">Drupal as URL Shortener</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-22T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Drupal has a couple of modules which allow you to produce your own tinyurl.com type website - complete with your own tracking etc.</p>
+
+<p>This has been extended for use by the US government at <a href="http://go.usa.com/">http://go.usa.com/</a> and the code re-released to the community.</p>
+
+<p>This mainly adds statistics gathering and reporting</p>
+
+<p>Unfortunately the module maintainer has chosen not to integrate these changes back into the module at drupal.org  - issue here : <a href="http://drupal.org/node/520588">http://drupal.org/node/520588</a></p>
+
+<p>So now the patch doesn&rsquo;t apply cleanly unless you checkout an old version of the module from CVS like this</p>
+
+<p>NB the password for anonymous access to CVS is &ldquo;anonymous&rdquo;</p>
+
+<p><code>
+cvs -d :pserver:anonymous@cvs.drupal.org:/cvs/drupal-contrib login
+cvs -d:pserver:anonymous@cvs.drupal.org:/cvs/drupal-contrib co contributions/modules/shorturl
+cd contributions/modules/shorturl/
+cvs update -r DRUPAL-6&ndash;1  -D 2009-12-01
+wget <a href="http://drupal.org/files/issues/shorturl_1.patch">http://drupal.org/files/issues/shorturl_1.patch</a>
+patch -p0 &lt; shorturl_1.patch
+</code></p>
+
+<p>Update:</p>
+
+<p>I&rsquo;ve managed to merge both branches of development and the bugfix at <a href="http://drupal.org/node/627668">http://drupal.org/node/627668</a></p>
+
+<p>This module is very much a development version - I&rsquo;ve incorporated several people work and the result seems to work OK - but test before using.</p>
+
+<p>Download an updated version of the module</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/19/ssh-port-forwarding/">Ssh Port Forwarding</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-19T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Every now and again I find I have ssh access to one server - which has access to somewhere I need to get to - but I want direct access (eg to forward an X session)</p>
+
+<p><code></p>
+
+<p>ssh -L 2222:otherserver:22 server</p>
+
+<p>ssh -X -p 2222 localhost</p>
+
+<p></code></p>
+
+<p>an now I&rsquo;m  logged into othersever with forwarded X</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/18/drush-tput-no-value-for-term-and-no-t-specified/">Drush &#8220;Tput: No Value for $TERM and No -T Specified&#8221;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-18T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The drush script which provides comman line acceess to drupal functionality emits an error message when run as a cron job</p>
+
+
+<p><code>
+tput: No value for $TERM and no -T specified
+</code></p>
+
+<p><code></p>
+
+<h1>If it is not exported determine and export the number of columns.</h1>
+
+<p>if [ -z $COLUMNS ]; then
+  export COLUMNS=$(tput cols)
+fi
+</code></p>
+
+<p>I presume drush uses this information to calculate layout of output.</p>
+
+
+
+
+<p>However when running as a cron job COLUMNS is not set and tput gives the above error.</p>
+
+
+
+
+<p>To resolve this specify a COLUMNS value in your cron job, setting an appropriate size for viewing in email</p>
+
+
+<p></p>
+
+<p><p>cron now runs the following for me.</p>
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<p>cd /var/www/mysite/public_html</p>
+
+<p>COLUMNS=80 /home/me/bin/drush cron
+</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/05/drupal-cron-getting-stuck/">Drupal Cron Getting Stuck</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-05T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve just run into the drupal cron problem again  
+</p>
+
+
+<p>
+Cron fails and the error log says 
+</p>
+
+
+<p>
+&quot;Attempting 
+to re-run cron while it is already running.&quot;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<ul>
+    <li>delete from variable where name=&#8217;cron_semaphore&#8217;;</li>
+    <li>clear caches</li>
+    <li>run cron from the web page </li>
+</ul>
+
+
+<p>That seems to do the trick.</p>
+
+
+
+
+<p>Now cron runs OK fom drush or web.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/03/programatic-block-creation-in-drupal/">Programatic Block Creation in Drupal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-03T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To remove static blocks and replace with as custom block.</p>
+
+
+
+
+<p>Implement hook_block specifying the default visibility and so on</p>
+
+
+<p>&lt;?php
+$blocks[&lsquo;random&rsquo;] = array(
+      &lsquo;info&rsquo; => t(&lsquo;Random&rsquo;),
+      &lsquo;weight&rsquo; => 0,
+      &lsquo;status&rsquo; => 1,
+      &lsquo;region&rsquo; => &lsquo;sidebar&rsquo;,
+      &lsquo;pages&rsquo;  => &lsquo;offers&rsquo;,
+      &lsquo;visibility&rsquo; => 0, // all pages except
+      &lsquo;cache&rsquo; => BLOCK_CACHE_PER_PAGE,
+    );</p>
+
+<p>?></p>
+
+<p>Create an update hook that deletes the old blocks and boxes (I&#8217;ve specified the ID as I know they won&#8217;t change on my site).</p>
+
+
+<p>&lt;?php</p>
+
+<p>function mymodule_update_6101(){</p>
+
+<pre><code>$items = array();
+$items[] = update_sql('DELETE FROM {boxes} WHERE bid in (2, 12,13)');
+$items[] = update_sql("DELETE FROM {blocks} WHERE module = 'block' AND delta in (2, 12, 13)");
+</code></pre>
+
+<p>// Update the &lsquo;blocks&rsquo; DB table with the blocks currently exported by modules.
+// It&rsquo;s a &ldquo;private&rdquo; function called when you visit
+// the admin/build/block/list/ page
+// calling it here causes the rehash which you otherwise have to visit the page to get
+    _block_rehash();</p>
+
+<p>// clear the cache
+    cache_clear_all();
+    return $items;
+}</p>
+
+<p>?></p>
+
+<p>When you run update.php your shiny new blocks should then be immediately available with no manual steps required.</p>
+
+
+
+
+<p>This makes it so much easier to test your upgrades.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/02/moving-an-svn-repository-to-integrate-with-trac/">Moving an Svn Repository to Integrate With Trac</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-02T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I just started on a project that was using trac and subversion but they weren&#8217;t integrated. I love the cross referncing trac provides. It can really help explain changesets and show how an issue was resolved.</p>
+
+
+
+
+<p>The steps to add subversion to trac are</p>
+
+
+
+
+<ul>
+<li>Stop people using the old repository</li>
+<li>copy the repository files from one server to the other<br />I used tar and scp</li>
+<li>edit trac.ini to add the location of the respository <br/>
+Trac and svn must be on the same server</li>
+<li>run trac-admin resync <br/>
+This imports all the svn history.</li>
+</ul>
+
+
+
+
+<p><p>I enabled access to subversion via apache SSL while I could get access via the browser checking out code with different tools gave the follwoing errors</p>
+
+<p><code>
+svn: OPTIONS of &lsquo;<a href="https://195.99.1.93/svn">https://195.99.1.93/svn</a>&rsquo;: 200 OK</p>
+
+<p>svn: PROPFIND of &lsquo;/svn&rsquo;: 405 Method Not Allowed</p>
+
+<p>svn: Server sent unexpected return value (405 Method Not Allowed) in response to PROPFIND request for &lsquo;/svn&rsquo;
+</code></p>
+
+<p><p>Thanks to <a href="http://techpulp.com/2009/01/webdav-405-method-not-allowed-in-porpfind/">techpulp.com/2009/01/webdav-405-method-not-allowed-in-porpfind/</a> I found out that my problem was an extraneous trailing slash in my apache config!</p></p>
+
+<p><p>I then ran svn relocate (right click on the repository using eclipse in the subversion perspective).</p></p>
+
+<p><p>I moved Trac to SSL for good measure - changing the location on the task repository in eclipse was straightforward.</p></p>
+
+<p><p>And as a finishing touch I customised Trac by adding a project logo - it goes in trac/htdocs/mylogo.png and is referenced in trac.ini as site/mylogo.png - I&rsquo;ve failed this step before but actuallt read the docs this tim.</p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/02/bug-in-trac-on-ubuntu-jaunty/">Bug in Trac on Ubuntu Jaunty</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-02T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+There is a bug in Ubunty Jaunty which cause Trac to have errors.
+</p>
+
+
+<p>
+ Attachments do not work, the admin interface for milestones doesn&#8217;t work properly - and there may be other issues.
+</p>
+
+
+<p>
+The bug report is at https://bugs.launchpad.net/ubuntu/+source/trac/+bug/369792
+</p>
+
+
+<p>
+And the solution is 
+</p>
+
+
+<p>
+&quot;go to <a href="http://packages.ubuntu.com/karmic/trac">http://packages.ubuntu.com/karmic/trac</a>
+and scroll all the way down. There you&#8217;ll find a download link for the 
+karmic package which you can download and install via
+</p>
+
+
+<p>
+sudo dpkg -i trac_0.11.5-2ubuntu1_all.deb&quot;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/10">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/8">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

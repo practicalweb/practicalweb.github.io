@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Multi-threading | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/multi-threading/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Multi-threaded PHP]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/07/24/multi-threaded-php/"/>
+    <updated>2009-07-24T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/07/24/multi-threaded-php</id>
+    <content type="html"><![CDATA[<p>
+OK so it isn&#8217;t quite multi-threaded, but forking and controlling processes in the command line environment is still pretty powerful and something I&#8217;ve wanted to do on a couple of occasions. 
+</p>
+
+
+<p>
+http://brian.moonspot.net/php-fork
+</p>
+
+
+<p>
+http://us.php.net/manual/en/book.pcntl.php
+</p>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Patches | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/patches/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Drupal Upgrades and Patches]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/09/drupal-upgrades-and-patches/"/>
+    <updated>2010-10-09T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/09/drupal-upgrades-and-patches</id>
+    <content type="html"><![CDATA[<p>Reading <a href="http://www.drupaler.co.uk/users/gregharvey">Greg</a>&rsquo;s <a href="http://www.drupaler.co.uk/blog/security-releases-dont-work/504">post on security upgrades</a> and a few mentions of patches in the following discussion got me thinking about upgrade methods.</p>
+
+<p>The standard Drupal method is to delete existing files and unpack a tarball to replace the old version - I find this method unappealing because: I keep my code in subversion so don&rsquo;t want to delete the .svn subdirectories, and sometimes I have patches applied that I don&rsquo;t want to loose.</p>
+
+<p>Drush provides a significant step up for managing updates, it&rsquo;s really easy to use and replaces just files not the directory structure so it plays well with subversion.</p>
+
+<p>So I had a look around for methods to upgrade Drupal via patches (I really don&rsquo;t understand why this isn&rsquo;t the default) and I found</p>
+
+<p>A whole lot of ready made patches
+<a href="http://fuerstnet.de/en/drupal-upgrade-easier">http://fuerstnet.de/en/drupal-upgrade-easier</a></p>
+
+<p>A handbook page about patch upgrades
+<a href="http://drupal.org/node/359234">http://drupal.org/node/359234</a></p>
+
+<p>And a script to generate patch files
+<a href="http://2bits.com/articles/upgrading-drupal-5-2-installations-to-5-3-security-releases-using-a-single-patch.html">http://2bits.com/articles/upgrading-drupal-5-2-installations-to-5-3-security-releases-using-a-single-patch.html</a></p>
+
+<p>Which is really cool - but all aimed at core - so I&rsquo;ve created a modified version which also works for modules (attached)</p>
+
+<p>The main advantage of this method is that when patches have been applied to a live site but these patches haven&rsquo;t been accepted upstream - then it is still easy to upgrade to new releases - and should the patch later be accepted upstream the new release will generate a patch conflict alerting you to the relevant changes - and allowing you to choose how to proceed.</p>
+
+<p>I don&rsquo;t recommend this technique for newbies, for most people drush updates are the way to go.</p>
+
+<p>But if you find yourself maintaining patches on core or contrib modules that aren&rsquo;t moving through the issue queue - then maybe this may be helpful.</p>
+]]></content>
+  </entry>
+  
+</feed>

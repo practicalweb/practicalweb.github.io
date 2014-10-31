@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Version Control | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/version-control/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Blocking Git Commits From Future Merges]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/08/15/blocking-git-commits-from-future-merges/"/>
+    <updated>2013-08-15T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/08/15/blocking-git-commits-from-future-merges</id>
+    <content type="html"><![CDATA[<p>I used to use subversion and <a href="http://www.orcaware.com/svn/wiki/Svnmerge.py">svnmerge</a> a lot, and there&#8217;s just one thing I miss about it. Now svnmerge is a tool to bolt on merge tracking to svn, and gits merge tracking is vastly better in many ways. But the one thing that svnmerge allowed me to do that was cool and doesn&#8217;t have a real equivalent in git is to block commits</p>
+
+
+
+
+<p>I use release branches as well as feature branches, so for each release we support we have a barcnh, new features are developed in feature branches off this - and merged back to it when complete. The branch for release x gets merged forwards to release x+1 periodically - to ensure that any features or bugfixes make it to the latest release.</p>
+
+
+
+
+<p>Sometimes we make a commit to an older release that we don&#8217;t want to merge forwards to newer releases - typically this is a quick and dirty bugfix/workaround that is superseded by a proper fix in the next release.</p>
+
+
+
+
+<p>Svnmerge allowed you to &quot;block&quot; these commits so that they did not get merged forwards, with git you could cherry-pick around these commits - but you&#8217;d loose the ability to do regular merges.</p>
+
+
+
+
+<p><p>What you can do it git is to merge the commit - but keep the files unchanged, this looks a bit weird but works OK.<p></p>
+
+<p><code>git cherry-pick -e &ndash;strategy=ours $hash</code></p>
+
+<p><p>The strategy=ours bit means keep the code as it was in this branch. -e lets you edit the commit message to indicate it isn&rsquo;t a normal merge</p></p>
+
+<p><p>Now sometimes this doesn&rsquo;t seem to work, git complains that the commit is empty, I think this is when there is a conflict - in this case the only way I have worked around it is to do a regular cherry-pick and resolve the conflict manually - effectively undoing the commit. Then <code>commit &ndash;allow-empty</code></p>
+
+<p></p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why I Don't Like Gitflow]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/08/01/why-i-dont-like-gitflow/"/>
+    <updated>2012-08-01T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/08/01/why-i-dont-like-gitflow</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve been looking into <a href="https://github.com/nvie/gitflow/">gitflow</a> recently, it&#8217;s an interesting set of scripts to facilitate <a href="http://nvie.com/posts/a-successful-git-branching-model/">a succesful git branching model</a> which some of the people I work with rave about.
+</p>
+
+
+<p>
+In the end I&#8217;ve decided I don&#8217;t like the tool or the model, though both are interesting.
+</p>
+
+
+<p>
+I think this is because I&#8217;m used to working in fairly large teams where we may have some people working on one release and others working on the next, in this situation I want release branches that are fairly long lived, and to create topic branches from them.
+</p>
+
+
+<p>
+In fact in one project we dropped the master branch altogether and just used a series or release barnches, always merging the older release branches into the newer (further from launch) ones. 
+</p>
+
+
+<p>
+The other main reason is that gitflow hides some of the mechanics of git in a way that seems to me to hinder peoples understanding of what they are doing, it&#8217;s a shame it down&#8217;t output the git commands it uses - that would allow people to use it to get started then move on later if they want.
+</p>
+
+
+<p>
+The commands also seem very slow to me which is odd when you are used to git being fast.
+</p>
+
+
+<p>
+Documentation on gitflow seems sparse, with some commands incomplete (git flow support * , gitflow feature checkout)
+</p>
+
+
+<p>
+ The best I could find is the source, and particularly the &quot;summary&quot; bits
+</p>
+
+
+<p>
+ <a href="https://github.com/nvie/gitflow/blob/develop/git-flow-release#L177">https://github.com/nvie/gitflow/blob/develop/git-flow-release#L177</a>
+</p>
+
+
+<p>
+The project wiki does have some addiutional info on command line options 
+</p>
+
+
+<p>
+ <a href="https://github.com/nvie/gitflow/wiki/Command-Line-Arguments">https://github.com/nvie/gitflow/wiki/Command-Line-Arguments</a>
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Export From Git for Drupal Site Releases]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/11/15/export-from-git-for-drupal-site-releases/"/>
+    <updated>2011-11-15T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/11/15/export-from-git-for-drupal-site-releases</id>
+    <content type="html"><![CDATA[<p>I&rsquo;m used to how svn export works, and have used this in a number of release scripts.</p>
+
+<p>Git doesn&rsquo;t quite have an equivalent</p>
+
+<p>There is</p>
+
+<p><code>git archive</code></p>
+
+<p>Which creates a tarball rather than a set of files, and while you can export a subset of the repository you still get the full path in the tarball.</p>
+
+<p>and</p>
+
+<p><code>git checkout-index</code></p>
+
+<p>Which creates a set of files (these can be locate outside the working copy) but requires a local repository.</p>
+
+<p>Also I&rsquo;m using github which doesn&rsquo;t support the remote repository option of git archive and their ready made tarball doesn&rsquo;t seem to work via wget on a private project (P.S. I since discovered the githaub tarbal works with wget if you pass params on the query string like ?login=${user}&amp;token=${token} )</p>
+
+<p>What I really wanted was a script I could hand to the sysadmin, that he could run on any server without needing a local git repository.</p>
+
+<p>In the end I have instead written a script that packages the tarball I want and uploads that to a server he can access it from.</p>
+
+<p>&lt;?php</p>
+
+<h1>!/bin/bash -ex</h1>
+
+<h1>pass a valid release tag as a parameter to this script to create an release tarball and upload to skunkworks</h1>
+
+<h1>this works on the local git repo - which must be up to date!</h1>
+
+<p>git archive   $1 www > /tmp/${1}.tar
+cd /tmp
+tar -xf ${1}.tar
+rm ${1}.tar
+rm -Rf www/sites/default/
+mv www $1
+tar -czf ${1}.tar.gz $1
+rm -Rf $1</p>
+
+<p>scp ${1}.tar.gz dev.server.foo:/var/www/releases</p>
+
+<p>?></p>
+
+<p> Then there is another script that downloads and unpacks this to upgrade our site.</p>
+
+<p>&lt;?php</p>
+
+<h1>!/bin/bash -ex</h1>
+
+<h1>parameter is release tag</h1>
+
+<h1>tag has been released and uploaded to skunkworks</h1>
+
+<h1>live site is backed up</h1>
+
+<h1>live site docroot is /var/www/public_html</h1>
+
+<h1>each release is at /var/www/$release</h1>
+
+<h1>symlink points /var/www/public_html to current release</h1>
+
+<h1>sites/default is common to every release - stored as /var/www/sites-default</h1>
+
+<h1>symlink added to each release to point to this</h1>
+
+<p>export COLUMNS=80</p>
+
+<p>release=$1</p>
+
+<p>cd /var/www/</p>
+
+<p>wget <a href="http://dev.server.foo/releases/$">http://dev.server.foo/releases/$</a>{release}.tar.gz</p>
+
+<p>tar -xzf ${release}.tar.gz</p>
+
+<p>cd ${release}</p>
+
+<p>ln -s /var/www/sites-default sites/default</p>
+
+<p>drush -y vset site_offline_message &ldquo;<p>Site offline for upgrade</p>&rdquo;
+drush -y vset site_offline 1</p>
+
+<p>drush -y updb</p>
+
+<p>drush cc all</p>
+
+<h1>if the current user is a member of the www-data or apache group we can make the files owned by this group</h1>
+
+<h1>as long as apache has umask 002 files should now be writable by us and apache</h1>
+
+<p>groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
+groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;</p>
+
+<p>cd ..</p>
+
+<p>rm public_html</p>
+
+<p>ln -s ${release} public_html</p>
+
+<p>cd ${release}</p>
+
+<p>drush -y &ndash;uri=www.foo.com vset site_offline 0</p>
+
+<p>?></p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Perl | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/perl/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Handy One-liners]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/11/22/handy-one-liners/"/>
+    <updated>2008-11-22T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/11/22/handy-one-liners</id>
+    <content type="html"><![CDATA[<p>While creating websites I often find the need to manipulate files in all sorts of ad-hoc ways.</p>
+
+<p>Things that are hard to do by hand, but you don&rsquo;t want to write a whole program for - you&rsquo;ll just use it once and throw it away.</p>
+
+<p>Linux/Unix excels at this sort of task - there is a rich selection of tools and plenty of ready made recipes.</p>
+
+<p>From:</p>
+
+<p><a href="http://www.ibm.com/developerworks/linux/library/l-p101/">http://www.ibm.com/developerworks/linux/library/l-p101/</a></p>
+
+<p>I often use</p>
+
+<pre><code class="bash">&gt; cat test
+aaa
+bbb
+ccc
+ddd
+aaa
+&gt; perl -pi -e's/aaa/bbb/' test
+&gt; cat test
+bbb
+bbb
+ccc
+ddd
+bbb
+</code></pre>
+
+<p><a href="http://student.northpark.edu/pemente/sed/sed1line.txt">http://student.northpark.edu/pemente/sed/sed1line.txt</a> gives me a way to print out just the lines near an error is being generated (handy when there is one error line in a gigabyte of data)</p>
+
+<pre><code class="bash">sed -n '7560,7570p' my_big_file.txt
+</code></pre>
+
+<p>Though day to day grep, find, locate and thier friends  usually do all I need.</p>
+
+<p>I tried working on Windows a while ago - but found I just couldn&rsquo;t work effectively without these tools.</p>
+]]></content>
+  </entry>
+  
+</feed>

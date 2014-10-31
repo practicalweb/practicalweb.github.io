@@ -1,0 +1,844 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I've just installed Debian Lenny and generally am impressed with how well things are auto detected and configured - so much easier than a few years &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/posts/12">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/21/configuring-wifi-with-debian/">Configuring WIFI With Debian</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-21T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve just installed Debian Lenny and generally am impressed with how well things are auto detected and configured - so much easier than a few years ago - and in many ways easier than a Windows install where you have to constantly find 3rd party drivers to get things working.
+</p>
+
+
+<p>
+ However getting wifi running was a bit trickier (largely because of FCC regulations  affecting licenses and default settings).
+</p>
+
+
+<p>
+This document got me most of the way 
+</p>
+
+
+<p>
+http://wiki.debian.org/iwlwifi
+</p>
+
+
+<p>
+Additional lines in /etc/.network/interfaces
+</p>
+
+
+<p><code>
+iface wlan0 inet dhcp
+  pre-up ip link set wlan0 up
+  wpa-driver wext
+  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf</p>
+
+<p></code></p>
+
+<p>and wpa_supplicant.conf looks like
+<code>
+ctrl_interface=/var/run/wpa_supplicant</p>
+
+<p>network={
+     ssid=&ldquo;mynetwork&rdquo;
+     psk=&ldquo;mypassword&rdquo;
+}
+</code></p>
+
+<p>And it&#8217;s all working&#8230;</p>
+
+
+
+
+<p>
+This old bug seems to be fixed
+</p>
+
+
+<p>
+ https://bugs.launchpad.net/ubuntu/+source/linux/+bug/288401
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/17/web-fonts-with-font-face/">Web Fonts With @font-face</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-17T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+When the web first started everything was in Times New Roman, black on grey with few images.
+</p>
+
+
+<p>
+Things have moved on a long way since then, but there are still very few fonts. I&#8217;ve worked on many sites that have tried to overcome this by various routes.
+</p>
+
+
+<ul>
+    <li>Creating an image of headline text in the desired font<br />
+    This can look good but offers poor accessibility and it&#8217;s hard to update</li>
+    <li><a href="http://www.mikeindustries.com/blog/sifr/">SiFR</a> - uses JavaScript and flash to add fonts<br />
+    It can work well - but performs badly if overused, and can cause problems with z-ordering on some systems</li>
+    <li><a href="http://www.w3.org/TR/css3-fonts/#the-font-face-rule">@font-face</a> Part of the CSS standard which allows you to provide font files for download.</li>
+</ul>
+
+
+<p>
+@font-face has a great deal of potential as the end users browser automatically downloads the font definition and renders whatever font you specify without any plug-ins or even JavaScript required.
+</p>
+
+
+<p>
+However, this is actually quite old technology - I tried to use it back in the days of Internet Explorer 5 and Netscape Navigator.
+</p>
+
+
+<p>
+Then as now there were competing standards for downloadable font files.
+</p>
+
+
+<p>
+At the time both browsers only offered a web specific font format which didn&#8217;t look good enough to use.
+</p>
+
+
+<p>
+However; Firefox 3.5 and Safari 4 now support regular TTF and OTF fonts and these look great.
+</p>
+
+
+<p>
+There is still the problem that most good fonts are supplied under license - which prevents you providing them for download. 
+</p>
+
+
+<p>
+But with two major browsers providing a good implementation for standard font file we can hope that it won&#8217;t be too much longer before the problem is solved. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/07/drupal-and-tinymce/">Drupal and TinyMCE</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-07T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been working on a Drupal project to build a CMS for the production and management of very specific content.
+</p>
+
+
+<p>
+The emphasis is all on the  backend system, with tight field size limits (character count including markup) and restricted input (specified tags only).
+</p>
+
+
+<p>
+Becuase of this I needed to use TinyMCE fully - restricting the  valid_elements set, and adding event handlers for paste, and keyup.
+</p>
+
+
+<p>
+I also had to do this in a moderately deeply nested form.
+</p>
+
+
+<p>
+While I tried quite hard to do this within the Drupal WYSIWYG module  http://drupal.org/node/488034 it became clear that the project developer and I had incompatible goals. He wanted all features to be available only where they work on all Rich Text Editors, I wanted to use a feature only available in one.
+</p>
+
+
+<p>
+Initially I tried just patching the module, but in the end I just couldn&#8217;t get it working with multiple tinyMCE configurations in one form. This is supposed to be possible but the documentation is limited  http://drupal.org/node/358316 http://api.drupal.org/api/function/filter_form/6 http://groups.drupal.org/node/8911
+</p>
+
+
+<p>
+Part of the problem is that WYSIWYG works by detecting input filters which requires you to use them (I didn&#8217;t want to) and using filters means you get &#8216;help text&#8217; - using multiple filters means users get to choose which one. 
+</p>
+
+
+<p>
+You can theme some of this cruft away - but then where&#8217;s the benefit   of the easy to use GUI?  
+</p>
+
+
+<p>
+So I fell back to using TinyMCE directly, found out there is a nice jquery plugin http://tinymce.moxiecode.com/examples/example_23.php
+</p>
+
+
+<p>
+And got my form up and running exactly as I wanted it in short order.
+</p>
+
+
+<p>
+All I had to do was assign a class to the fields I wanted to be rich text editable,  create my settings, and adapt an existing character counter.
+</p>
+
+
+<p>
+The settings look like
+</p>
+
+
+<p><p>
+<code></p>
+
+<p>var single = {
+    valid_elements                    : &lsquo;b,i&rsquo;,
+    theme_advanced_buttons1           : &ldquo;bold,italic,cleanup&rdquo;,
+    theme_advanced_buttons2           : &ldquo;&rdquo;,
+    theme_advanced_buttons3           : &ldquo;&rdquo;,
+    theme_advanced_statusbar_location : &ldquo;bottom&rdquo;,
+    theme_advanced_toolbar_location   : &ldquo;top&rdquo;,
+    theme                             : &ldquo;advanced&rdquo;,
+    theme_advanced_resizing           : true,
+    plugins                           : &ldquo;maxlength,safari&rdquo;,
+};
+</code>
+<p>
+ TinyMCE is enabled by the lines
+</p>
+<code>
+ $().ready(function() {
+        $(&lsquo;textarea.mceSingle&rsquo;).tinymce(single);
+        $(&lsquo;textarea.mceEditor&rsquo;).tinymce(welcome);
+});
+</code><p>
+No filters, no cruft in the user interface, and it was quicker to develop!
+</p>
+<p>
+&nbsp;
+</p>
+<p>
+<br />
+</p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/06/drupal-forms-require-a-submit-button/">Drupal Forms Require a Submit Button</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-06T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;m working on an AJAX heavy site for a defined audience who all have JavaScript - so I have a form with no submit button that gets submitted by an change handler. 
+</p>
+
+
+<p>
+Normally I&#8217;d make sure the site was fully accessible - but not on this project so I just got rid of the submit button. I got the JavaScript submit working only to find my Drupal form no longer worked.
+</p>
+
+
+<p>
+It seems that the Drupal submit handlers are not called if the form doesn&#8217;t have a submit button. I can&#8217;t see any reference to this in the Drupal API, but adding the  button back in and hiding it via CSS works fine.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/06/28/things-to-like-about-symfony-so-far/">Things to Like About Symfony So Far</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-06-28T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+A few days into learning Symfony and so far I&#8217;m keen on
+</p>
+
+
+<ul>
+    <li>configuration check to start with</li>
+    <li>good MVC separation</li>
+    <li>ability to generate initial MVC components from a database definition</li>
+    <li>form validation to match database constraints</li>
+    <li>wrapping various HTTP functions and globals in a request and response object</li>
+    <li>separate dev and prod environments</li>
+    <li>ajax integration - like defining a div as draggable in PHP </li>
+    <li> explicit support for initial and test data </li>
+</ul>
+
+
+<p>
+<br />
+Things not to like
+</p>
+
+
+<ul>
+    <li>well there are quite a lot of files</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/06/27/practical-symfony/">Practical Symfony</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-06-27T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Well having found the Definitive Guide to Symfony a bit uninspiring I&#8217;ve spent a bit of time on the &quot;Practical Symfony&quot; book - online. 
+</p>
+
+
+<p>
+http://www.symfony-project.org/jobeet/1_2/Propel/en/
+</p>
+
+
+<p>
+So far it&#8217;s great - the first &quot;three days&quot; lessons went by pretty quick, and I&#8217;m glad I&#8217;d done some background reading.
+</p>
+
+
+<p>
+Putting the two things together I feel I&#8217;ve probably got enough understanding  to start writing a basic app - which is exactly what I need to do to make sense of a load of reading.
+</p>
+
+
+<p>
+Following a step by step guide is a great way top get started - but you never really understand something till you do it for real. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/06/22/less-is-more-css/">Less Is More (CSS)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-06-22T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+CSS revolutionised web development, &lt;font&gt; and &lt;table&gt; were a nightmare in comparison.
+</p>
+
+
+<p>
+But still there are times when CSS feels very limited, if you want to change a colour or margin size and have to hunt through the CSS to calculate the related changes.
+</p>
+
+
+<p>
+But now there is 
+</p>
+
+
+<p>
+http://lesscss.org/
+</p>
+
+
+<p>
+Which looks like it fills in some of the missing gaps - it extends the CSS syntax and to it&#8217;s own format - and then generates standard CSS from this.
+</p>
+
+
+<p>
+I&#8217;m definitely planning on using this for my next project.  
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/06/22/drupal-schema-api-has-problems/">Drupal Schema API Has Problems</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-06-22T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+<a href="http://www.lullabot.com/articles/drupocalypse-now-or-dangerous-integer-handling-drupal-write-record">An interesting post from Lullabot today</a> on problems with Drupal&#8217;s Schema API and the <a href="http://www.google.co.uk/search?q=Twitpocalypse">Twitpocalypse</a>
+</p>
+
+
+<p>
+It turns out that <a href="http://drupal.org/node/333788">the Schema API doesn&#8217;t properly understand the difference between different types of integers</a> 
+</p>
+
+
+<p>I was already concerned that
+<a href="http://drupal.org/node/200953">Schema API lacks the &lsquo;time&rsquo; and &lsquo;date&rsquo; type</a></p>
+
+<p>
+I don&#8217;t really understand why the Drupal team has decided to try and roll it&#8217;s own database abstraction layer, and make it a core part of the system in the current state. 
+</p>
+
+
+<p>
+There seem to be <a href="http://drupal.org/project/issues/search/drupal?text=&amp;assigned=&amp;submitted=&amp;participant=&amp;status[]=Open&amp;priorities[]=1&amp;priorities[]=2&amp;categories[]=bug&amp;version[]=6.x&amp;component[]=database+system&amp;issue_tags=">quite a few bugs</a>
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/06/07/adding-more-data-types-to-schema-api-for-drupal-7/">Adding More Data Types to Schema API for Drupal 7</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-06-07T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve written a patch for Drupal 7 to enable date and time data types to be defined for the schema API.</p>
+
+<p><a href="http://drupal.org/node/200953">http://drupal.org/node/200953</a></p>
+
+<p>Update : <a href="https://www.drupal.org/node/866340">it got removed</a></p>
+
+<!--break-->
+
+
+<p>There seems to be some resistance to this idea due to concerns about compatibility between database versions (Drupal now supports MySQL, PostgreSQL and sqlite).</p>
+
+<p>Personally I don&rsquo;t think Drupal can afford to work at lowest common denominator level if the aim is to be a serious option for the enterprise</p>
+
+<p>Most professionally developed Drupal sites will have some (maybe a lot of) custom coding - this code is written with full awareness of which database will be used - and vendor specific SQL may be appropriate.</p>
+
+<p>For publicly available modules vendor neutral code is desirable but can&rsquo;t be guaranteed with the current schema API.</p>
+
+<p>Sqlite is never going to be able to do all the things &lsquo;real&rsquo; databases can do, there may be some cases that some of the work can be done in PHP instead, or it may be that some modules just won&rsquo;t work for all systems.</p>
+
+<p>Having said all this date and time data types are pretty standard stuff and hopefully my patch can be included in Drupal without rocking the boat.</p>
+
+<p>I used a git mirror of the Drupal repository to develop this patch, and I&rsquo;m pretty impressed with git - it is blazingly fast - it was great to be able to make local commits - and then to &lsquo;rebase&rsquo; these wrapping several small commits into one really cleanup up my repository history.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/06/06/first-look-at-drupal-7/">First Look at Drupal 7</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-06-06T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve just been checking out the latest development version of Drupal 7 to see what this latest release will offer.
+</p>
+
+
+<p>
+The official notes for the release are here:&nbsp; <a href="http://drupal.org/node/156281">http://drupal.org/node/156281</a> 
+</p>
+
+
+<p>
+It seems like the main user visible changes are improvements to the user interface for creating new pages.
+</p>
+
+
+<p>
+I&#8217;ve created a screencast of Drupal 7 in action&nbsp;</p>
+
+
+<p> <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://active.macromedia.com/flash5/cabs/swflash.cab#version=5,0,0,0" height="567" width="785">
+<param name="movie" value="/drupal-7-edit-page.swf">
+<param name="play" value="true">
+<param name="loop" value="false">
+<param name="quality" value="low">
+<embed src="http://www.practicalweb.co.uk/drupal-7-edit-page.swf" mce_src="drupal-7-edit-page.swf" quality="low" loop="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" height="567" width="785"></p>
+
+<p></object></p>
+
+<p>
+Drupal 7 doesn&#8217;t look radically different, better yes - but still basically the same thing. While I think this is in many ways a good thing I don&#8217;t quite see how this amount of change justifies the Drupal policy of no backward compatibility.
+</p>
+
+
+<p>
+From a development point of view each version of Drupal is a big step forward and certainly I would want to start any new project on the latest version. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/13">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/11">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

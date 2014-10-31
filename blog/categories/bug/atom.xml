@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Bug | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/bug/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[MySQL AUTO_INCREMENT Updates]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/03/24/mysql-auto_increment-updates/"/>
+    <updated>2010-03-24T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/03/24/mysql-auto_increment-updates</id>
+    <content type="html"><![CDATA[<p>I just found out the painful way that if you manually update a column which is normally calculated automatically as an auto_increment it seems to work at first ..</p>
+
+<p>but MySQL doesn&rsquo;t update the auto_increment value for the table - so subsequent inserts can fail.</p>
+
+<p>The solution seems to be to delete and re-insert the row.</p>
+
+<p><a href="http://bugs.mysql.com/bug.php?id=12434">http://bugs.mysql.com/bug.php?id=12434</a></p>
+
+<p>Test code:
+<code>
+mysql> create table test (id int(10) unsigned NOT NULL, col1 varchar(255), PRIMARY KEY (id));
+Query OK, 0 rows affected (0.00 sec)</p>
+
+<p>mysql> insert into test (col1) VALUES (&lsquo;test1&rsquo;);
+Query OK, 1 row affected, 1 warning (0.00 sec)</p>
+
+<p>mysql> select * from test;
++&mdash;-+&mdash;&mdash;-+
+| id | col1  |
++&mdash;-+&mdash;&mdash;-+
+|  0 | test1 |
++&mdash;-+&mdash;&mdash;-+
+1 row in set (0.00 sec)</p>
+
+<p>mysql> update test set id= 1  where id=0;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0</p>
+
+<p>mysql> insert into test (col1) VALUES (&lsquo;test2&rsquo;);
+Query OK, 1 row affected, 1 warning (0.00 sec)</p>
+
+<p>mysql> select * from test;
++&mdash;-+&mdash;&mdash;-+
+| id | col1  |
++&mdash;-+&mdash;&mdash;-+
+|  1 | test1 |
+|  0 | test2 |
++&mdash;-+&mdash;&mdash;-+
+2 rows in set (0.00 sec)</p>
+
+<p>mysql> insert into test (col1) VALUES (&lsquo;test3&rsquo;);
+ERROR 1062 (23000): Duplicate entry &lsquo;0&rsquo; for key 1</p>
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+</feed>

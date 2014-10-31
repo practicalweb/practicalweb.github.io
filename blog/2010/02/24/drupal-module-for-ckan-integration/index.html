@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Drupal Module for CKAN Integration - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="Here&rsquo;s a basic Drupal Module that pulls CKAN data into Drupal. It provides a simple search interface - when the user views a CKAN package for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2010/02/24/drupal-module-for-ckan-integration">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Drupal Module for CKAN Integration</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-24T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Here&rsquo;s a basic Drupal Module that pulls CKAN data into Drupal.</p>
+
+<p>It provides a simple search interface - when the user views a CKAN package for the first time a corresponding node is created.</p>
+
+<p>When this node is then viewed Drupal loads the package details - I&rsquo;m only displaying notes and title here as I&rsquo;ve run out of time tonight - but the rest of the data is there.</p>
+
+<p>You can then have user comments, voting, etc on these pages.</p>
+
+<p>This is fairly quickly put together code and it&rsquo;s incomplete - but it should be enough to get people started - if there&rsquo;s interest I&rsquo;ll carry on with this so please add comments.</p>
+
+<p>I&rsquo;ve created a github repository for it and I&rsquo;ll start using the issue tracker there.</p>
+
+<p><a href="http://github.com/practicalweb/drupal-ckan">http://github.com/practicalweb/drupal-ckan</a></p>
+
+<p>&lt;?php</p>
+
+<p>/<em>*
+ * @file
+ * A Module to Integrate CKAN and Drupal.
+ *
+ * This works by
+ *
+ *   1. providing a serach and listing interface to CKAN with links to this Drupal site
+ *   2. using a wildcard menu handler to match these links in the first instance
+ *   3. this loads the packages and creates matching nodes (storing the ckan name)
+ *   4. the node has a url alias which overrides the wildcard match
+ * <br/>
+ *   Now we have Drupal nodes which can have user commments associated with them, fivestar votes etc&hellip;
+ *
+ * @author Sean Burlington www.practicalweb.co.uk
+ * @copyright PracticalWeb Ltd
+ * @license <a href="http://opensource.org/licenses/gpl-license.php">http://opensource.org/licenses/gpl-license.php</a> GNU Public License
+ *
+ </em>/</p>
+
+<p>function ckan_menu(){
+    $items = array();</p>
+
+<pre><code>// link to the search form page
+$items['ckan_search'] = array(
+'title'           =&gt; t('Search CKAN'),
+'page callback'   =&gt; 'drupal_get_form',
+'page arguments'  =&gt; array('ckan_search_form'),
+'access callback' =&gt; TRUE,
+);
+
+$items['ckan/search/%'] = array(
+'page callback'     =&gt; 'ckan_search_results_page',
+'page arguments'    =&gt; array(2),
+'access arguments'  =&gt; array('access content'),
+'type'              =&gt; MENU_CALLBACK,
+);
+
+$items['ckan/data/%'] = array(
+'page callback'   =&gt; 'ckan_new',
+'page arguments'  =&gt; array(2),
+'access arguments' =&gt; array('access content'),
+'type'            =&gt; MENU_CALLBACK,
+);
+
+
+return $items;
+</code></pre>
+
+<p>}</p>
+
+<p>/<em>*
+ * Gets the ckan Object
+ * Initialises it in one central place reusing it if needed.
+ *<br/>
+ * @return Ckan $ckan
+ </em>/
+function ckan_ckan(){
+    static $ckan=null;
+    if (!$ckan){
+        require_once(dirname(<strong>FILE</strong>) . &lsquo;/ckan.php&rsquo;);
+        $ckan=new Ckan(variable_get(&lsquo;ckan_site&rsquo;, &lsquo;<a href="http://www.ckan.net/">http://www.ckan.net/</a>&rsquo;));
+    }
+    return $ckan;
+}</p>
+
+<p>/<em>*
+ * Implements hook_form
+ *
+ * @param Array $form_state
+ * @return Array $form
+ </em>/
+function ckan_search_form(&amp;$form_state){</p>
+
+<pre><code>$form = array();
+$form['q'] = array(
+               '#type'          =&gt; 'textfield',
+               '#default_value' =&gt; '',
+);
+$form['submit'] = array(
+               '#type'          =&gt; 'submit',
+               '#value'         =&gt; t('Search CKAN'),
+);
+
+return $form;
+</code></pre>
+
+<p>}</p>
+
+<p>function ckan_search_form_submit($form, &amp;$form_state) {
+      // The search form relies on control of the redirect destination for its
+  // functionality, so we override any static destination set in the request,
+  // for example by drupal_access_denied() or drupal_not_found()
+  // (see <a href="http://drupal.org/node/292565">http://drupal.org/node/292565</a>).
+  if (isset($<em>REQUEST[&lsquo;destination&rsquo;])) {
+    unset($</em>REQUEST[&lsquo;destination&rsquo;]);
+  }
+  if (isset($<em>REQUEST[&lsquo;edit&rsquo;][&lsquo;destination&rsquo;])) {
+    unset($</em>REQUEST[&lsquo;edit&rsquo;][&lsquo;destination&rsquo;]);
+  }</p>
+
+<p>  $form_state[&lsquo;redirect&rsquo;] = &lsquo;ckan/search/&rsquo;. trim($form_state[&lsquo;values&rsquo;][&lsquo;q&rsquo;]);</p>
+
+<p>}</p>
+
+<p>function ckan_search_results_page($search){
+//  return $search;
+    try {
+     $ckan = ckan_ckan();</p>
+
+<pre><code> $results = $ckan-&gt;search(check_plain($search));
+} catch (Exception $e){
+    return $e-&gt;getMessage();
+}
+return theme('ckan_search_results', $results);
+</code></pre>
+
+<p>}</p>
+
+<p>/<em>*
+ * Create the node the first time this package is seen.
+ *
+ * This creates a specific URL which override the wildcard one subsequently
+ *
+ * @param String $ckan_name
+ </em>/
+function ckan_new($ckan_name){</p>
+
+<pre><code>$ckan = ckan_ckan();
+try {
+    $ckan_data = $ckan-&gt;getPackage($ckan_name);
+} catch (CkanException $e){
+    drupal_set_message($e-&gt;getMessage(), 'error');
+    drupal_set_title("Error");
+    return "Error" ;
+}
+$node = ckan_create_node($ckan_data);
+drupal_goto('node/'. $node-&gt;nid);
+</code></pre>
+
+<p>}</p>
+
+<p>function ckan_create_node($ckan_data){
+    $node = array(
+              &lsquo;title&rsquo;   => $ckan_data->title,
+              &lsquo;uid&rsquo;     => 1,
+              &lsquo;body&rsquo;    => $ckan_data->name,
+              &lsquo;promote&rsquo; => 1,
+              &lsquo;path&rsquo;    => &lsquo;ckan/data/&rsquo; . $ckan_data->name,
+              &lsquo;type&rsquo;    => &lsquo;ckan&rsquo;,
+              &lsquo;comment&rsquo; => 2,</p>
+
+<pre><code>);
+
+if ($node = node_submit($node)) {
+    node_save($node);
+} else {
+    drupal_set_message("Failed to create node for package.");
+}
+return $node;
+</code></pre>
+
+<p>}</p>
+
+<p>function ckan_node_info() {</p>
+
+<pre><code>return array(
+'ckan' =&gt; array(
+  'name'           =&gt; t('CKAN Package'),
+  'module'         =&gt; 'ckan',
+  'description'    =&gt; t('A package of Open Data.'),
+  'has_title'      =&gt; TRUE,
+  'title_label'    =&gt; t('Title'),
+  'has_body'       =&gt; TRUE,
+  'body_label'     =&gt; t('Package Description'),
+  'min_word_count' =&gt; 0,
+  'locked'         =&gt; TRUE
+)
+);
+</code></pre>
+
+<p>}</p>
+
+<p>function ckan_load($node){
+    $ckan = ckan_ckan();
+    try {
+        $node->ckan = $ckan->getPackage($node->body);
+    } catch(Exception $e){
+        drupal_set_message($e->getMessage(), &lsquo;error&rsquo;);
+    }
+//  print_r($node->ckan);
+    return $node;
+}</p>
+
+<p>function ckan_view($node, $teaser = FALSE, $page = FALSE) {</p>
+
+<p>  $node = node_prepare($node, $teaser);
+  $node->content[&lsquo;title&rsquo;][&lsquo;#value&rsquo;]  = check_plain($node->ckan->title);
+  $node->content[&lsquo;body&rsquo;][&lsquo;#value&rsquo;] = nl2br(check_plain($node->ckan->notes));</p>
+
+<p>  return $node;
+}</p>
+
+<p>function ckan_theme() {
+    return array(
+    &lsquo;ckan_search_results&rsquo; => array(&lsquo;arguments&rsquo; => array(&lsquo;results&rsquo;)),
+    );
+}</p>
+
+<p>function theme_ckan_search_results($results) {
+    $content = &lsquo;&rsquo;;
+    $content .= &ldquo;<p>&rdquo; . $results->count . &ldquo; Results found</p>&rdquo;;
+    foreach ($results->results as $package){
+        $content .= &lsquo;<h2>&rsquo; . l($package->title, &lsquo;ckan/data/&rsquo; . urlencode(check_plain($package->name))) . &lsquo;</h2>&rsquo;;
+        $content .= &lsquo;<p>&rsquo; . nl2br(check_plain($package->notes)) . &lsquo;</p>&rsquo;;
+        $content .= &lsquo;<p>&rsquo;;
+        foreach ($package->groups as $i => $group){
+            $content .= &lsquo;<b>&rsquo; . check_plain($group) . &lsquo;</b> &rsquo;;
+        }
+        $content .= &lsquo;</p>&rsquo;;
+    }
+    return $content;</p>
+
+<p>}
+?></p>
+
+<p>see also <a href="/blog/10/02/23/accessing-ckan-data-php">Accessing CKAN data from PHP</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2010-02-24T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ckan/'>ckan</a>, <a class='category' href='/blog/categories/drupal/'>drupal</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2010/02/24/drupal-module-for-ckan-integration/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2010/02/24/drupal-module-for-ckan-integration/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/02/23/drupal-the-missing-api/" title="Previous Post: Drupal - the missing API">&laquo; Drupal - the missing API</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/03/15/easy-drupal-upgrades-using-subversion/" title="Next Post: Easy Drupal Upgrades using Subversion">Easy Drupal Upgrades using Subversion &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2010/02/24/drupal-module-for-ckan-integration/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2010/02/24/drupal-module-for-ckan-integration/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

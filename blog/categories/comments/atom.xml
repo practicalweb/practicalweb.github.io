@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Comments | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/comments/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Use Google Comments on Your Blog]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/11/19/how-to-use-google-comments-on-your-blog/"/>
+    <updated>2013-11-19T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/11/19/how-to-use-google-comments-on-your-blog</id>
+    <content type="html"><![CDATA[<p>To use google plus comments on your site all you need to do is insert the following code on teh page where you want the comments to appear</p>
+
+<p>url should be the full url to the page, then any comments in google plus with this url will appear to any user who can see them (ie public commnts or those from people in the viewers circles).</p>
+
+<p>width is just how wide you want the comment box</p>
+
+<p>BLOGGER This method is as far as I can see only officially supported for Blogger comments and only this value seems to work</p>
+
+<p>FILTERED_POSTMOD similarly seems to be just what people use - I didn&rsquo;t find docs for this so I&rsquo;m unsure if other values work</p>
+
+<p>&#8220;`html</p>
+
+<script src="https://apis.google.com/js/plusone.js">
+</script>
+
+
+<p>&lt;g:comments
+    href=&ldquo;The url of the blog post&rdquo;
+    width=&ldquo;500&rdquo;
+    first_party_property=&ldquo;BLOGGER&rdquo;
+    view_type=&ldquo;FILTERED_POSTMOD&rdquo;>
+&lt;/g:comments></p>
+
+<p>&#8220;`</p>
+]]></content>
+  </entry>
+  
+</feed>

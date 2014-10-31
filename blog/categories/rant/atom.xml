@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rant | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/rant/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Safari Books - Bad Redesign]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/11/04/safari-books-bad-redesign/"/>
+    <updated>2009-11-04T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/11/04/safari-books-bad-redesign</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve had an account with O&#8217;Reilly&#8217;s <a href="http://my.safaribooksonline.com/">Safari books</a> on and off for years
+</p>
+
+
+<p>
+I&#8217;ve cancelled it before beacuase of design issues that rendered it unworkable for me.
+</p>
+
+
+<p>
+This time they have &quot;upgraded&quot; the site from an AJAX based layout which allowed me to choose between &quot;print fidelity&quot; and &quot;HTML view&quot;.
+</p>
+
+
+<p>
+The new layout uses Flash to render the pages as they look in print in a scrollable window.
+</p>
+
+
+<p>
+I hate this because
+</p>
+
+
+<ul>
+    <li>I work on a widescreen laptop with development toolbars and tabs in my browser - this layout of a tall thin view just doesn&#8217;t fit on my screen.</li>
+    <li>I can&#8217;t scroll the Safari menu and banner offscreen </li>
+    <li>Most of the time I don&#8217;t care too much about formatting I just want to read it and HTML is easier to read</li>
+    <li>The scrolling doesn&#8217;t respond to my mousewheel</li>
+    <li>I like to get a nice big page of text onscreen and the use the browsers search to quickly home in on the bit I want to read. </li>
+</ul>
+
+
+<p>Oh well - back to books for now and another incentive to try and get the perfect ereader&hellip;</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Packaging | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/packaging/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Manually Unpack a .deb File]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2008/06/08/how-to-manually-unpack-a-deb-file/"/>
+    <updated>2008-06-08T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2008/06/08/how-to-manually-unpack-a-deb-file</id>
+    <content type="html"><![CDATA[<p>Sometimes you want to look at the contents of a package without installing it.</p>
+
+<p>Sometimes you want to compare your installed version with the original package.</p>
+
+<p>Run the following commands</p>
+
+<pre><code class="bash">mkdir ~/temp
+dpkg -x somepackage.deb ~/temp/
+</code></pre>
+
+<p>To unpack (without installing) in a temp directory.</p>
+]]></content>
+  </entry>
+  
+</feed>

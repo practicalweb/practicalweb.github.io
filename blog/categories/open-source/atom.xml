@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Open Source | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/open-source/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Phonegap]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/03/24/phonegap/"/>
+    <updated>2009-03-24T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/03/24/phonegap</id>
+    <content type="html"><![CDATA[<p>
+Phonegap is an open source compatibility layer for mobile development.
+</p>
+
+
+<p>
+It provides access to common mobile functionality such as geolocation, sound, contacts etc via a JavaScript API
+</p>
+
+
+<p>
+The idea is to make phone development more like web development, and to make deploying cross platform pas much easier.
+</p>
+
+
+<p>
+This project looks to be in fairly early stages, but already very powerful.
+</p>
+
+
+<p>
+<a href="http://www.phonegap.com/">www.phonegap.com</a>  
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>

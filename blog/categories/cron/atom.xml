@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Cron | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/cron/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Drupal Cron Getting Stuck]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/02/05/drupal-cron-getting-stuck/"/>
+    <updated>2010-02-05T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/02/05/drupal-cron-getting-stuck</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve just run into the drupal cron problem again  
+</p>
+
+
+<p>
+Cron fails and the error log says 
+</p>
+
+
+<p>
+&quot;Attempting 
+to re-run cron while it is already running.&quot;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<ul>
+    <li>delete from variable where name=&#8217;cron_semaphore&#8217;;</li>
+    <li>clear caches</li>
+    <li>run cron from the web page </li>
+</ul>
+
+
+<p>That seems to do the trick.</p>
+
+
+
+
+<p>Now cron runs OK fom drush or web.</p>
+
+]]></content>
+  </entry>
+  
+</feed>

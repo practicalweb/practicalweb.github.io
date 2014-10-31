@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Selenium | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/selenium/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Selenium WebDriver Annotations and Firefox Connection Trouble]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/05/02/selenium-webdriver-annotations-and-firefox-connection-trouble/"/>
+    <updated>2012-05-02T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/05/02/selenium-webdriver-annotations-and-firefox-connection-trouble</id>
+    <content type="html"><![CDATA[<p>
+I needed to run some selenium tests written by a Java team using maven
+</p>
+
+
+<p>
+I ran into a couple of errors
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+<strong>Annotations are not supported in -source 1.3
+</strong>
+</p>
+
+
+<p>
+This error is because by default maven comples code to be compatible with an older version of Java
+</p>
+
+
+<p>
+To fix I had to add the foloowing to then pom.xml file
+</p>
+
+
+<p>
+ &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;<br />
+&lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;<br />
+&lt;version&gt;2.3.2&lt;/version&gt;<br />
+&lt;configuration&gt;<br />
+&lt;source&gt;1.6&lt;/source&gt;<br />
+&lt;target&gt;1.6&lt;/target&gt;&lt;/configuration&gt;<br />
+&lt;/plugin&gt;
+</p>
+
+
+<p>
+This allows the use of more recent code constructs 
+</p>
+
+
+<p>
+Next I had a firefox error 
+</p>
+
+
+<p>
+<strong>org.openqa.selenium.firefox.NotConnectedException: Unable to connect to host 127.0.0.1 on port 7055 after 45000 ms. Firefox console output:</strong>
+</p>
+
+
+<p>
+It seems that maven was targetting an older version of firefox than I am using, this time I changed the selenium version number in the config as below
+</p>
+
+
+<p>
+             &lt;dependency&gt;<br />
+                 &lt;groupId&gt;org.seleniumhq.selenium&lt;/groupId&gt;<br />
+                 &lt;artifactId&gt;selenium-java&lt;/artifactId&gt;<br />
+-                &lt;version&gt;2.14.0&lt;/version&gt;<br />
++                &lt;version&gt;2.19.0&lt;/version&gt;<br />
+             &lt;/dependency&gt;  
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Selenium Test for computedStyle]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/06/28/selenium-test-for-computedstyle/"/>
+    <updated>2011-06-28T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/06/28/selenium-test-for-computedstyle</id>
+    <content type="html"><![CDATA[<p>I wanted to write some automated tests for CSS changes and bugs, these type of issues are quite prone to regression so re-running the tests has a large benefit.</p>
+
+<p>It is possible to add new assertions to selenium via the user-extensions.js file</p>
+
+<p>The following adds a test for computed style, this only works in firefox as far as I know - but some automation is better than none</p>
+
+<p><code>
+//only works in firefox
+Selenium.prototype.assertStyle = function(locator, text) {
+    var params = text.split(&lsquo;=&rsquo;, 2);</p>
+
+<pre><code>var propertyName = params[0];
+var expectedValue = params[1];
+
+var element = this.page().findElement(locator);
+var actualValue = this.browserbot.getCurrentWindow().getComputedStyle(element, null).getPropertyValue(propertyName);
+Assert.matches(expectedValue, actualValue);
+</code></pre>
+
+<p>};</p>
+
+<p></code></p>
+
+<p>Now I can add a selenium test like
+<code></p>
+
+<table>
+<tr>
+    <td>assertStyle</td>
+    <td>//td[@class='lender'][1]</td>
+    <td>text-align=center</td>
+</tr>
+
+</table>
+
+
+<p></code>
+Selenium only lets me pass two parameters and really I want three (locator, css property, expected value). So I&rsquo;ve hacked this and put two parameters into one - which is a bit smelly but for now gets the job done - comments on better methods very welcome.</p>
+
+<p>I need to at least check that the &lsquo;text&rsquo; parameter is validated properly - but I figured I&rsquo;d blog now and update later as I&rsquo;ve a deadline to meet today.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Selenium UI-Elements Rollups]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/06/02/selenium-ui-elements-rollups/"/>
+    <updated>2011-06-02T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/06/02/selenium-ui-elements-rollups</id>
+    <content type="html"><![CDATA[<p>I wasn&rsquo;t 100% clear from the docs how to implement rollup rules in selenium ui-elements and searching the web didn&rsquo;t return much - so here&rsquo;s an example in case it&rsquo;s helpful to others.</p>
+
+<p>Add this to the user-extensions.js file</p>
+
+<p><code>
+var manager = new RollupManager();</p>
+
+<p>manager.addRollupRule({
+    name: &lsquo;compare_product&rsquo;
+    , description: &lsquo;gets to the reults on a compare product page&rsquo;
+    , args: [
+        {
+          name: &lsquo;term&rsquo;
+        , description: &lsquo;the aliased term name of the category&rsquo;
+        }
+        , {
+            name: &lsquo;provider&rsquo;
+          , description: &lsquo;the provider name&rsquo;
+          }
+        , {
+            name: &lsquo;product&rsquo;
+          , description: &lsquo;the product name&rsquo;
+          }
+    ]
+    , commandMatchers: [
+        {
+            command: &lsquo;click.+&rsquo;
+            , target: &lsquo;starRatingsCompareProduct::search_go\(.+&rsquo;
+        }
+    ]
+    , getExpandedCommands: function(args) {
+        var commands = [];</p>
+
+<pre><code>    commands.push({
+        command: 'open'
+            , target: '/star-ratings/find-star-ratings/'+args.term
+    });
+
+    commands.push({
+        command: 'selectAndWait'
+            , target: 'edit-provider'
+    , value: args.provider
+    });
+
+    commands.push({
+          command: 'pause'
+        , target: '1000'
+    });
+    commands.push({
+          command: 'selectAndWait'
+        , target: 'edit-product'
+        , value: args.product
+    });
+    commands.push({
+          command: 'waitForElementPresent'
+        , target: 'star-ratings-badge'
+    });
+    commands.push({
+          command: 'clickAndWait'
+        , target: 'edit-same-rating'
+    });
+    commands.push({
+          command: 'waitForTextPresent'
+        , target: 'Products with the same Star Rating'
+    });
+    return commands;
+}
+</code></pre>
+
+<p>});</p>
+
+<p></code></p>
+
+<p>Then you can use it in selenium as below</p>
+
+<p><code>
+<tr>
+    <td>rollup</td>
+    <td>compare_product</td>
+    <td>term=buy-let-insurance, provider=Cactus Cover, product=Residential Let</td>
+</tr></p>
+
+<p></code></p>
+
+<p>This avoids me repeating chunks of code that I would otherwise need to get the page to the point at which I want to test it.</p>
+
+<p>NB I&rsquo;ve kind of ignored the commandmatcher bit for the time being (this is a nicety to help the IDE notice a rollup while recording - it&rsquo;s a required field - but doesn&rsquo;t have to be useful).</p>
+
+<p><b>This blog post sponsored by www.defaqto.com (they like their team to give back to the community)</b></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Selenium UI-Elements]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/05/19/selenium-ui-elements/"/>
+    <updated>2011-05-19T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/05/19/selenium-ui-elements</id>
+    <content type="html"><![CDATA[<p>While playing around with selenium IDE I discovered a fantatsic tool that makes test (and results) more readable while making the suite of tests easier to adapt to layout changes.</p>
+
+<p>What it does is to allow you to centrally define most of the xpath (and related) statements and give page elements meaningful names.</p>
+
+<p>So instead of testing for some element like
+<code>
+//form[@id=&lsquo;search-block-form&rsquo;]//input[@type=&lsquo;text&rsquo;]
+</code></p>
+
+<p>You can test for
+<code>
+ui=allPages::mainSearchField()
+</code></p>
+
+<p>Now - not only is this more readable but if the id of the search form changes during development you don&rsquo;t have to change it in every test case for the form - but only in the file that defines &ldquo;mainSearchField&rdquo;.</p>
+
+<p>You could centralise these definitions in code - but then the IDE would be of less help - and crucially the test results would contain xpath instead of the more semantic names.</p>
+
+<p>I found the documentation a little hard to get my head around at first, but the basics are quite straightforward.</p>
+
+<p>To keep things simple I&rsquo;m going to focus on tests within the IDE but without going all-out to optimise this.</p>
+
+<h2>Getting a basic Test running</h2>
+
+
+<p>My Test case (written for www.defaqto.com) is</p>
+
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">consumer-nav</td></tr>
+</thead><tbody>
+<tr>
+    <td>open</td>
+    <td>/home</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>ui=allPages::mainLogo()</td>
+    <td></td>
+</tr>
+<tr>
+    <td>type</td>
+    <td>ui=allPages::searchField()</td>
+    <td>credit cards</td>
+</tr>
+<tr>
+    <td>clickAndWait</td>
+    <td>ui=allPages::searchButton()</td>
+    <td></td>
+</tr>
+</tbody></table>
+
+
+<p>And the ui-elements are defined as</p>
+
+<p><code>
+var myMap = new UIMap();</p>
+
+<p>myMap.addPageset(
+  {
+    name: &lsquo;allPages&rsquo;
+  , description: &lsquo;defaqto.com pages&rsquo;
+  , pathRegexp: &lsquo;.*&rsquo;
+  }
+);</p>
+
+<p>myMap.addElement(&lsquo;allPages&rsquo;,
+  {
+    name: &lsquo;mainLogo&rsquo;
+  , description: &lsquo;the defaqto logo visible on every page&rsquo;
+  , locator: &ldquo;logo&rdquo;
+}</p>
+
+<p>);</p>
+
+<p>myMap.addElement(&lsquo;allPages&rsquo;,
+    {
+      name: &lsquo;searchField&rsquo;
+    , description: &lsquo;top search input&rsquo;
+    , locator: &ldquo;//form[@id=&lsquo;search-block-form&rsquo;]//input[@type=&lsquo;text&rsquo;]&rdquo;
+    }
+);</p>
+
+<p>myMap.addElement(&lsquo;allPages&rsquo;,
+    {
+      name: &lsquo;searchButton&rsquo;
+    , description: &lsquo;top search button&rsquo;
+    , locator: &ldquo;//form[@id=&lsquo;search-block-form&rsquo;]//input[@type=&lsquo;submit&rsquo;]&rdquo;
+    }</p>
+
+<p>);
+</code></p>
+
+<p>To run this test install <a href="http://seleniumhq.org/download/">selenium IDE</a> in firefox (you may need the <a href="https://addons.mozilla.org/en-US/firefox/addon/add-on-compatibility-reporter/">add on compatibility reporter plugin</a> to get this to work in Firefox 4).</p>
+
+<p>Then open the IDE (in the tools menu)</p>
+
+<p>In the IDE click the options menu and the sub-item options</p>
+
+<p>Browse to the <a href="http://www.practicalweb.co.uk/sites/default/files/defaqto-map.js.txt">javascript map file</a> for the Selenium core extensions (NB if you download mine rename it to remove the .txt extension)</p>
+
+<p>Click OK</p>
+
+<p>close and re-open the IDE to make it pick up the change</p>
+
+<p>There is an &ldquo;activate developer tools&rdquo; checkbox on the options dialog which allows you to reload the map file when you edit it - but it doesn&rsquo;t seem to work until the file has been loaded once.</p>
+
+<p>At this point selenium should know about the ui map and will auto-complete the terms.</p>
+
+<p>Open the <a href="http://www.practicalweb.co.uk/sites/default/files/consumer-nav.html">test case</a> (from the file menu)</p>
+
+<p>Make sure the base url refers to <a href="http://www.defaqto.com/">http://www.defaqto.com/</a> if you want to run this test (although the search form elements should work on most drupal sites).</p>
+
+<p>Run the test case.</p>
+
+<h2>Documentation - the short version</h2>
+
+
+<p>The full docs <a href="http://ttwhy.org/code/ui-doc.html">http://ttwhy.org/code/ui-doc.html</a> look daunting - but there are only a few key functions.</p>
+
+<p>Every UI map file has to start by creating a new UIMap object.</p>
+
+<p><code>
+var myMap = new UIMap();
+</code></p>
+
+<p>This object has methods to add pagesets, elements and rollups.</p>
+
+<p>You only <em>need</em> one pageset and this can cover all pages.</p>
+
+<p><code>
+myMap.addPageset(
+  {
+    name: &lsquo;allPages&rsquo;
+  , description: &lsquo;all pages&rsquo;
+  , pathRegexp: &lsquo;.*&rsquo;
+  }
+);
+</code></p>
+
+<p>You can add more pagesets - where each pageset represents a group of pages - for example defaqto could have a set of consumer pages and another set of adviser pages, this makes the tests more readable as you can tell really quickly that the element is one specific to a subset of pages. It also helps unclutter the IDE as the autocompleter has fewer options to offer once you have started typing a specific pageset.</p>
+
+<p>But to get started one pageset will do.</p>
+
+<p>Next you need to add element definitions.</p>
+
+<p><code>
+myMap.addElement(&lsquo;allPages&rsquo;,
+    {
+      name: &lsquo;searchField&rsquo;
+    , description: &lsquo;top search input&rsquo;
+    , locator: &ldquo;//form[@id=&lsquo;search-block-form&rsquo;]//input[@type=&lsquo;text&rsquo;]&rdquo;
+    }
+);
+</code></p>
+
+<p>All this does is map a name to an xpath locator - now the IDE will use this when you record and action of filling in this field, and you can type it in and it will auto-complete.</p>
+
+<p>Crucially - if development causes the id of the form to change it will be really easy to fix the test cases.</p>
+
+<p>Really this is all that is needed to get UI elements working, there is a lot more that it can do.</p>
+
+<p>There are powerful ways to define pageset: manually managed array, regex,URL parameters, or even defining rules to detect the page content.</p>
+
+<p>Each UI-element can  take arguments (so one locator can find the nth element in a list for example) - it can also be used as the basis of finding related elements.</p>
+
+<h2>Rollup Rules</h2>
+
+
+<p>I haven&rsquo;t played with this yet - but it looks really cool&hellip;</p>
+
+<p>As well as the UIMap there is a RollupManager</p>
+
+<p><code>
+var manager = new RollupManager();</p>
+
+<p>manager.addRollupRule({ &hellip; });
+manager.addRollupRule({ &hellip; });
+</code></p>
+
+<p>What this purports to do is to represent a sequence of steps that can be reused throughout test cases.</p>
+
+<p>So you can centralise steps like logging in which may need to be used in many test cases.</p>
+
+<h2>Thanks</h2>
+
+
+<p>Thanks to Haw-Bin Chai <a href="http://ttwhy.org/home/blog/category/selenium/">http://ttwhy.org/home/blog/category/selenium/</a> for this functionality and to Mahesh Narayanan for this post
+<a href="http://functionaltestautomation.blogspot.com/2009/09/ui-elements-all-about-it.html">http://functionaltestautomation.blogspot.com/2009/09/ui-elements-all-about-it.html</a></p>
+
+<p>Thanks also to my client <a href="http://www.defaqto.com/">Defaqto Ltd</a> for supporting not only their team in adopting best practices but also encouraging posts like this to contribute back to the wider community.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SeleniumRC and Self Signed SSL Certs]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2011/05/13/seleniumrc-and-self-signed-ssl-certs/"/>
+    <updated>2011-05-13T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2011/05/13/seleniumrc-and-self-signed-ssl-certs</id>
+    <content type="html"><![CDATA[<p>One of the nice things about selenium tests is that you get a clean browser session each time (so no problems with cookies etc left over from earlier)</p>
+
+<p>But the way this is achieved is by using a new profile each time and this profile doesn&rsquo;t know about your SSL exceptions for avoiding error messages with those self-signed certs on the dev server.</p>
+
+<p>This causes access to SSL via selenium to fail.</p>
+
+<p>You can get around this by creating a custom firefox profile</p>
+
+<p>Create a new profile with
+<code>
+firefox -no-remote -P
+</code></p>
+
+<p>Follow the stpes to creaet a profile (and call it &ldquo;selenium&rdquo;)</p>
+
+<p>Visit your site and accept the SSL cert - set the start page to be blank and close the browser.</p>
+
+<p>Now find the profile directory something like</p>
+
+<p><code>
+~/.mozilla/firefox/8h1w7nkh.selenium
+</code></p>
+
+<p>Run the selenium server like</p>
+
+<p><code>
+java -jar selenium-server-standalone-2.0b3.jar -firefoxProfileTemplate ~/.mozilla/firefox/8h1w7nkh.selenium/
+</code></p>
+
+<p>and it should work.</p>
+
+<p>I found it a bit annoying that I was seeing warnings about extra plugins that selenium installs. So I copied these to my profile</p>
+
+<p><code></p>
+
+<h1>extract them from the jar file</h1>
+
+<p>jar xf selenium-server-standalone-2.0b3</p>
+
+<h1>copy to my profile</h1>
+
+<p>cp -R customProfileDirCUSTFFCHROME/extensions ~/.mozilla/firefox/8h1w7nkh.selenium/extensions</p>
+
+<h1>start the profile manually to see the warnings once</h1>
+
+<p>firefox -no-remote -P selenium
+</code></p>
+
+<p>Now I don&rsquo;t see those warnings any more.</p>
+
+<p>As far as I can see the above only works for firefox, I think the best solution is to just buy a real SSL certificate - they are much cheaper than developer time. But if office politics makes this difficult at least this profile means you can get started.</p>
+]]></content>
+  </entry>
+  
+</feed>

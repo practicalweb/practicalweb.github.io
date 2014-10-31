@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Jmter | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/jmter/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[jMeter Cookies and Redirects]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/04/04/jmeter-cookies-and-redirects/"/>
+    <updated>2012-04-04T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/04/04/jmeter-cookies-and-redirects</id>
+    <content type="html"><![CDATA[<p>This just took me a while to figure out</p>
+
+<p>I have a jmeter test plan which POSTs to a url, resulting in cookies being set and a redirect</p>
+
+<p>I was not seeing the cookies retained.</p>
+
+<p>The solution was to</p>
+
+<p>enable &ldquo;Follow redirects&rdquo; and disable &ldquo;Auto redirect&rdquo; on the HTTP request sampler.</p>
+
+<p>Tree view now shows the POST and subsequent GET separately - and the cookies are retained (I am using an HTTP cookie manager)</p>
+
+<p>Another solution if you know what the redirect will be is to disable both redirects and add another sampler for the subsequent GET</p>
+
+<p>This has the benefit that each step can be monitored seperately</p>
+]]></content>
+  </entry>
+  
+</feed>

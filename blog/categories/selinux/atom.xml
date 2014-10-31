@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Selinux | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/selinux/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Changing Default Port of Memcache on Centos 6]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/11/12/changing-default-port-of-memcache-on-centos-6/"/>
+    <updated>2012-11-12T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/11/12/changing-default-port-of-memcache-on-centos-6</id>
+    <content type="html"><![CDATA[<p>One of those things that just took me a lot longer than I expected&#8230;</p>
+
+
+
+
+<p>Changing memcache port sdeems simple enough - just edit 
+/etc/sysconfig/memcached and change the PORT value</p>
+
+
+
+
+<p>BUT on a new centOS install memecache failed to start on any non-standard port.</p>
+
+
+<p>To see any error message I had to edit the file /etc/init.d/memcached</p></p>
+
+<p>and change the start line to </p>
+
+
+<p><code></p>
+
+<p>daemon &ndash;pidfile ${pidfile} memcached -d -v -p $PORT -u $USER  -m $CACHESIZE -c $MAXCONN -P ${pidfile} $OPTIONS
+</code></p>
+
+<p>Just adding the -v makes output verbose and I could see an error like </p>
+
+
+<p><code>
+memcache failed to listen on TCP port 11311 : Permission denied
+</code></p>
+
+<p>At this point I realised selinux was enabled by default, I tend to forget about this as it is so common for it to be disabled.</p>
+
+
+
+
+<p><p>In order to add a new allowed port I added the following packages to edit selinux rules<p></p>
+
+<p><code>policycoreutils-python
+setroubleshoot-server</code></p>
+
+<p><p>To check the name of the memcache port</p>
+<code>
+semanage port -l | grep memcache
+</code>
+<p>Then to allow the new port</p>
+<code>
+sudo semanage port -a -t memcache_port_t -p tcp 11311
+</code></p>
+
+<p><p>And now memcache works on the port I need for this project.</p></p>
+
+<p><p>Sadly I don&rsquo;t see any good puppet modules to help with this, and it still seems selinux is very commonly disabled as it is tricky to work with.</p></p>
+]]></content>
+  </entry>
+  
+</feed>

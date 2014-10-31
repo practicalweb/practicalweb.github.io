@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Google | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/google/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Merge Google Plus Accounts]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/11/19/merge-google-plus-accounts/"/>
+    <updated>2013-11-19T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/11/19/merge-google-plus-accounts</id>
+    <content type="html"><![CDATA[<p>If you have a gmail account, you get a google plus account with it, many of end of with several of each. For mail this is usually what you want but for plus with it&#8217;s circles you usually just want one account and to split post by circle. Fortunately there is a way to redirect one account to another.</p>
+
+
+
+
+<p>This way anyone looking for you at the account you don&#8217;t really use or looking you up via an alternate email  gets redirected to your active account.</p>
+
+
+
+
+<p>First make sure you are only logged in to the google account you want to transfer your connections away from</p>
+
+
+
+
+<p>Go to <a href="https://www.google.com/settings/takeout/custom">Google takeout</a>, this is usually used to download backups of your data.</p>
+
+
+
+
+<p>On the google circles line is a little folder icon, the mousover text tells you this is to &quot;Transfer your google+ connections to another account&quot;</p>
+
+
+
+
+<p>Follow this link and you&#8217;ll have to log into your destination account.</p>
+
+
+
+
+<p>That should set up your transfer.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to Use Google Comments on Your Blog]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2013/11/19/how-to-use-google-comments-on-your-blog/"/>
+    <updated>2013-11-19T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2013/11/19/how-to-use-google-comments-on-your-blog</id>
+    <content type="html"><![CDATA[<p>To use google plus comments on your site all you need to do is insert the following code on teh page where you want the comments to appear</p>
+
+<p>url should be the full url to the page, then any comments in google plus with this url will appear to any user who can see them (ie public commnts or those from people in the viewers circles).</p>
+
+<p>width is just how wide you want the comment box</p>
+
+<p>BLOGGER This method is as far as I can see only officially supported for Blogger comments and only this value seems to work</p>
+
+<p>FILTERED_POSTMOD similarly seems to be just what people use - I didn&rsquo;t find docs for this so I&rsquo;m unsure if other values work</p>
+
+<p>&#8220;`html</p>
+
+<script src="https://apis.google.com/js/plusone.js">
+</script>
+
+
+<p>&lt;g:comments
+    href=&ldquo;The url of the blog post&rdquo;
+    width=&ldquo;500&rdquo;
+    first_party_property=&ldquo;BLOGGER&rdquo;
+    view_type=&ldquo;FILTERED_POSTMOD&rdquo;>
+&lt;/g:comments></p>
+
+<p>&#8220;`</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Going Google]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/11/25/going-google/"/>
+    <updated>2009-11-25T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/11/25/going-google</id>
+    <content type="html"><![CDATA[<p>
+I seem to be progressivly going Google, it started with search but for a long time I resisted the lure of Googles other treats.
+</p>
+
+
+<p>
+However since I got an Android phone I&#8217;ve been getting slowly sucked in with accounts on Gmail, Picassa, Google, Calender, and now Google Apps 
+</p>
+
+
+<p>
+One thing I found out is that you <a href="http://www.google.com/support/forum/p/Google+Apps/thread?tid=5e6502d85823b15f&amp;hl=en&amp;fid=5e6502d85823b15f000479078747d294">can&#8217;t upgrade from a Gmail account to a Google Apps one</a> what you have to do is create a new account and do a lot of exporting/importing.
+</p>
+
+
+<p>
+A Google apps account allows you to use your own domain name for email, and manage all accounts at that domain but is otherwise not so different to a Gmail account.
+</p>
+
+
+<p>
+The lack of upgrade path is a pain but the actual account creation and migration process was easy; I had my email going to the new account within half an hour.
+</p>
+
+
+<p>
+The next snag was updating my Android phone to use the new account; there is no obvious way to do this but a bit of googling gave me the answer:
+</p>
+
+
+<p>
+Go to Setting &gt; Application &gt; Manage Application 
+</p>
+
+
+<p>
+Then for each of 
+</p>
+
+
+<ul>
+    <li>Gmail</li>
+    <li>Gmail storage</li>
+    <li>Google apps</li>
+    <li>Google search</li>
+</ul>
+
+
+<p>
+&quot;clear data&quot;
+</p>
+
+
+<p>
+You should shortly be prompted to enter your new account details.
+</p>
+
+
+<p>
+Make sure you have imported your contacts and calender to the new account before doing this so that your cleared data gets restored quickly. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Google Android]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2009/01/18/google-android/"/>
+    <updated>2009-01-18T00:00:00+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2009/01/18/google-android</id>
+    <content type="html"><![CDATA[<p>I have just got the new gphone, the G1 which is a collaborative venture: google provide the OS, HTC make the hardware, T-Mobile provide the netwwork, and loads of software is written by many people - and made available via Google marketplace.</p>
+
+<p>While a few things feel a little beta still; on the whole it all hangs together very well indeed.</p>
+
+<p>First of all it&rsquo;s worth saying the actual phone works very well, something all too easily overlooked.</p>
+
+<p>The rest of the gadgets work great - well enogh for me to write this on the bus.</p>
+]]></content>
+  </entry>
+  
+</feed>

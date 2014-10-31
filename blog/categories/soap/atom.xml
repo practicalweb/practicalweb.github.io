@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Soap | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/soap/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Debugging SOAP With Xdebug and Eclipse]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse/"/>
+    <updated>2010-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s been a while since I&rsquo;ve worked on a project which is providing as well as consuming web services.</p>
+
+<p>In this case I need to debug incoming requests that are not initiated from with the browser (I&rsquo;m using <a href="http://www.soapui.org/">soapui</a> as a test tool).</p>
+
+<p>In order to allow Eclipse to pick up xdebug responses triggered by requests from soapui I just needed to</p>
+
+<ul>
+<li>start a debuging session within eclipse as normal</li>
+<li>ensure that the query string ?XDEBUG_SESSION_START=ECLIPSE_DBGP is appended to all requests by editing the WSDL file so that the address looks like
+<code>
+<soap:address location="http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP"/>
+</code>
+</li>
+
+<li>make requests via soapui</li>
+</ul>
+
+
+<p>Now eclipse is picking up the soap requests and I can step through as normal (some tools apply a timeout which can be a nuisance while debugging - I haven&rsquo;t been using soapui long enough yet to see if that&rsquo;s the case here)</p>
+]]></content>
+  </entry>
+  
+</feed>

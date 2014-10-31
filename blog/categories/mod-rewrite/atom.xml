@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mod-rewrite | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/mod-rewrite/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T16:31:24+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Static Export of Drupal Site]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/14/static-export-of-drupal-site/"/>
+    <updated>2014-10-14T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/14/static-export-of-drupal-site</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve exported this site from Drupal using wget to create a static html version like</p>
+
+<pre><code>wget  --mirror -p  -e robots=off --base=./ -k -P ./ http://localhost/
+</code></pre>
+
+<p>Then rsync to the server and use mod rewrite to retain the paged links like frontpage?page=4</p>
+
+<p>I&rsquo;ve had some trouble getting mod rewrite to work, it seems that getting apache to serve content from filenames containing question marks is tricky.</p>
+
+<p>in apache 2.4 this worked</p>
+
+<pre><code class="ApacheConf">&lt;VirtualHost *:80&gt;
+   ServerName practicalweb.localhost
+   DocumentRoot /home/sean/rescue/localhost
+   RewriteEngine on
+   LogLevel alert rewrite:trace3
+     &lt;Directory /home/sean/rescue/localhost&gt;
+       RewriteCond %{QUERY_STRING} !=&amp;quot;&amp;quot;
+       RewriteRule ^(.*) /home/sean/rescue/localhost/$1\%3F%{QUERY_STRING}? [L]
+
+       Options Indexes FollowSymLinks MultiViews
+      AllowOverride All
+      Require all granted
+   &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>But on apache 2.2 (which my server runs I) needed an external redirect</p>
+
+<pre><code class="ApacheConf">&lt;VirtualHost *:80&gt;
+
+  DocumentRoot /var/www/practicalweb
+  RewriteEngine on
+  RewriteCond %{QUERY_STRING} !=&amp;quot;&amp;quot;
+  RewriteRule ^(.*) $1\%3F%{QUERY_STRING}? [last,noescape,R]
+    &lt;Directory /&gt;
+        Options FollowSymLinks
+        AllowOverride None
+    &lt;/Directory&gt;
+    &lt;Directory /var/www/practicalweb&gt;
+
+        Options None
+        AllowOverride None
+        Order allow,deny
+        allow from all
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>It still basically works - but users see a slightly changed URL which isn&rsquo;t quite what I wanted.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Can't Login to Drupal (404)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2012/04/25/cant-login-to-drupal-404/"/>
+    <updated>2012-04-25T00:00:00+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2012/04/25/cant-login-to-drupal-404</id>
+    <content type="html"><![CDATA[<p>
+I&#8217;ve been working on a project for a while on my main dev machine, but needed to run it on my laptop too.
+</p>
+
+
+<p>
+Usually copying a sitre across is quick but this time I re-installed the OS too, everything wnet OK except for some reason I couldn&#8217;t log in to my drupal site.
+</p>
+
+
+<p>
+Eventually I noticed that while the site appeared to be working, every page was being served with a 404 header.
+</p>
+
+
+<p>
+What happpend is that I hadn&#8217;t enabled mod_rewrite
+</p>
+
+
+<p>
+The .htaccess had been configured to serve drupal 404 pages, but in this case Drupal (once started as a 404 handler) correctly processed the URL - but presumably without the form data.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+]]></content>
+  </entry>
+  
+</feed>
