@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="One of the great things about Debian/Ubuntu is the consistency with which system documentation is placed in /usr/share/doc/ Assuming you have a web &hellip;">
+  <meta name="description" content="Having just upgraded to Ubuntu 8.10 my key observation is that it's important to read the release notes first. http://www.ubuntu.com/getubuntu/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,75 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/01/ubuntu-8-10/">Ubuntu 8.10</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-11-01T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Having just upgraded to Ubuntu 8.10 my key observation is that it&#8217;s important to read the release notes first.
+</p>
+
+
+<p>
+http://www.ubuntu.com/getubuntu/releasenotes/810
+</p>
+
+
+<p>
+There are a few bugs which have affected me
+</p>
+
+
+<ul>
+    <li>there is no bluetooth support in KDE</li>
+    <li>my wifi card only works in the US<br />
+    (there&#8217;s a workaround and I&#8217;m back online)</li>
+    <li> Dual head display with xrandr is causing problems<br />
+    (my screen flashes and KDE is putting widgets in parts of the screen I can&#8217;t see)</li>
+    <li>Subversion has moved to version 1.5 and getting Eclipse to use a compatible svn library is proving tricky</li>
+</ul>
+
+
+<p>
+On the plus side KDE 4.1 is looking very pretty, and the move to subversion 1.5 will be very useful in the long run.
+</p>
+
+
+<p>
+I had hoped to get my 3G connection working as a previous update seems to have broken it - but so far still no joy. 
+</p>
+
+
+<p>
+update:<br />
+There&#8217;s a solution for the Kubuntu Intrepid Dual Monitor Blinking<br />
+issue here: http://blog.nixternal.com/2008.10.22/kubuntu-intrepid-dual-monitor-blinking/ 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -768,128 +837,6 @@ phpinfo() should now show
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/07/20/drupal-object-orientation/">Drupal Object Orientation</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-07-20T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-One of the surprising things about Drupal is that it doesn&#8217;t use object oriented coding.
-</p>
-
-
-<p>
-There&#8217;s a good page in the Drupal documentation about this
-</p>
-
-
-<p>
-<a href="http://api.drupal.org/api/file/developer/topics/oop.html">http://api.drupal.org/api/file/developer/topics/oop.html</a>
-</p>
-
-
-<p>
-It makes a good case for the design of Drupal, and goes a long way to explain why Drupal feels more OO than the code looks at first glance.
-</p>
-
-
-<p>
-There has been discussion on the mailing list
-</p>
-
-
-<p>
-Endless debate:<br />
-<a href="http://lists.drupal.org/pipermail/development/2006-July/thread.html#17264">lists.drupal.org/pipermail/development/2006-July/thread.html#17264</a>
-</p>
-
-
-<p>
-Objects vs Arrays:<br />
-<a href="http://lists.drupal.org/pipermail/development/2007-January/021746.html">lists.drupal.org/pipermail/development/2007-January/021746.html</a>
-</p>
-
-
-<p>
-Why use the object notation:<br />
-<a href="http://lists.drupal.org/pipermail/development/2005-July/thread.html#7137"> lists.drupal.org/pipermail/development/2005-July/thread.html#7137</a>
-</p>
-
-
-<p>
-A lot of that discussion boils down to personal preference - but one of the key issues seems to be that OO support in PHP4 is poor. 
-</p>
-
-
-<p>
-As an enterprise CMS I don&#8217;t believe that Drupal has had any business considering PHP4 for a long time; I&#8217;m glad that PHP5 will be required for Drupal 7 - but that&#8217;s still a long way off.
-</p>
-
-
-<p>
-Another oft-quoted argument is that Object performance is worse than array equivalents: this this performance difference seems marginal at best - reducing the number of queries per page is likely to make a far bigger difference. CPU cycles are way cheaper than programmer hours  - and in any case better structures lead to more efficient programming which ends up producing faster code. 
-</p>
-
-
-<p>
-There&#8217;s a great Post from merlinofchaos on how Drupal might look<br />
-<a href="http://www.angrydonuts.com/what_if_fapi_were_oo">www.angrydonuts.com/what_if_fapi_were_oo</a>
-</p>
-
-
-<p>
-To my mind one of the biggest reasons to use OO constructs would be to define structure in a way that would generate errors when mistakes are made. If you look at the <a href="http://api.drupal.org/api/file/developer/topics/forms_api_reference.html/5">form api page</a> you will see endless comments like &quot;Property names without # signs causes havoc.&quot; this is a direct result of using a complex array to build forms - if objects were used it would be much easier to generate errors when the wrong attribute name was used. Drupal has much to strong a tendency to be silent about errors - making debugging much harder than it needs to be.
-</p>
-
-
-<p>
-WebChick wrote a great post about making Drupal E_ALL compliant<br />
-<a href="http://drupal.org/node/99625">drupal.org/node/99625</a>
-</p>
-
-
-<p>
-Using well defined objects would aid debugging in exactly the same way.
-</p>
-
-
-<p>
-But for me the biggest productivity gain of a move to Objects would be auto-completion.
-</p>
-
-
-<p>
-I use the Eclipse IDE for development and find auto-completion invaluable (along with the pop-up documentation and &quot;open declaration&quot;). To work this requires that the IDE be able to determine something about the variable in question. The IDE knows the allowed property names and methods of variables when they are a defined object type - but if all you know is that a function returns an array - none of this help is available.
-</p>
-
-
-<p>
-The above argument doesn&#8217;t even touch on the benefits of encapsulation, code re-use, and so on that have revolutionised software development. Even without full-on adoption of OO methodology - just adopting object structures over array structure would provide a huge boost in productivity. 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/17">&larr; Older</a>
@@ -907,6 +854,10 @@ The above argument doesn&#8217;t even touch on the benefits of encapsulation, co
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
@@ -920,10 +871,6 @@ The above argument doesn&#8217;t even touch on the benefits of encapsulation, co
     
       <li class="post">
         <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
       </li>
     
   </ul>

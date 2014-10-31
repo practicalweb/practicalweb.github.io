@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Most of the time I can get what I want out of SQL using the standard aggregate functions, but today I needed to find the latest timestamp from any &hellip;">
+  <meta name="description" content="xdebug is an immensely powerful tool for exploring what your code really does. You can get a long way using print_r  but ultimately this always &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/21/xdebug-and-eclipse/">Xdebug and Eclipse</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-21T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+xdebug is an immensely powerful tool for exploring what your code really does.
+</p>
+
+
+<p>
+You can get a long way using print_r  but ultimately this always requires that you predict the path your code will take - and the tricky bit about debugging is you need it when your predications have gone wrong.
+</p>
+
+
+<p>
+It&#8217;s generally pretty easy to set up
+</p>
+
+
+<ul>
+    <li> install the php5-xdebug package</li>
+    <li>check that the Eclipse PHP preferences have xdebug as an option</li>
+    <li>if you&#8217;re debugging locally the default settings should be OK</li>
+    <li>create a site configuration in the debug dialog</li>
+    <li>set a break point</li>
+    <li>start debugging</li>
+</ul>
+
+
+<p>
+If it doesn&#8217;t work at first restart Eclipse
+</p>
+
+
+<p>
+Check that you have a browser configured in Eclipse
+</p>
+
+
+<p>
+Not all settings seem to be picked up immediately  
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -669,56 +736,6 @@ There seem to be <a href="http://drupal.org/project/issues/search/drupal?text=&a
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/06/07/adding-more-data-types-to-schema-api-for-drupal-7/">Adding More Data Types to Schema API for Drupal 7</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-06-07T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve written a patch for Drupal 7 to enable date and time data types to be defined for the schema API.</p>
-
-<p><a href="http://drupal.org/node/200953">http://drupal.org/node/200953</a></p>
-
-<p>Update : <a href="https://www.drupal.org/node/866340">it got removed</a></p>
-
-<!--break-->
-
-
-<p>There seems to be some resistance to this idea due to concerns about compatibility between database versions (Drupal now supports MySQL, PostgreSQL and sqlite).</p>
-
-<p>Personally I don&rsquo;t think Drupal can afford to work at lowest common denominator level if the aim is to be a serious option for the enterprise</p>
-
-<p>Most professionally developed Drupal sites will have some (maybe a lot of) custom coding - this code is written with full awareness of which database will be used - and vendor specific SQL may be appropriate.</p>
-
-<p>For publicly available modules vendor neutral code is desirable but can&rsquo;t be guaranteed with the current schema API.</p>
-
-<p>Sqlite is never going to be able to do all the things &lsquo;real&rsquo; databases can do, there may be some cases that some of the work can be done in PHP instead, or it may be that some modules just won&rsquo;t work for all systems.</p>
-
-<p>Having said all this date and time data types are pretty standard stuff and hopefully my patch can be included in Drupal without rocking the boat.</p>
-
-<p>I used a git mirror of the Drupal repository to develop this patch, and I&rsquo;m pretty impressed with git - it is blazingly fast - it was great to be able to make local commits - and then to &lsquo;rebase&rsquo; these wrapping several small commits into one really cleanup up my repository history.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/13">&larr; Older</a>
@@ -736,6 +753,10 @@ There seem to be <a href="http://drupal.org/project/issues/search/drupal?text=&a
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
@@ -749,10 +770,6 @@ There seem to be <a href="http://drupal.org/project/issues/search/drupal?text=&a
     
       <li class="post">
         <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
       </li>
     
   </ul>

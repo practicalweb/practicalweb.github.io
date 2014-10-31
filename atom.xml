@@ -4,7 +4,7 @@
   <title><![CDATA[PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-10-31T17:58:19+00:00</updated>
+  <updated>2014-10-31T18:43:23+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,41 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Drupageddon]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/31/drupageddon/"/>
+    <updated>2014-10-31T18:30:52+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/31/drupageddon</id>
+    <content type="html"><![CDATA[<p>Drupal has been in the new today for all the wrong reasons</p>
+
+<p><a href="http://www.bbc.co.uk/news/technology-29846539">Millions of websites hit by Drupal hack attack</a></p>
+
+<p><a href="http://arstechnica.com/security/2014/10/drupal-sites-had-hours-to-patch-before-attacks-started/">Drupal sites had “hours” to patch before attacks started</a></p>
+
+<p><a href="http://www.pcworld.com/article/2841372/drupal-if-you-werent-quick-to-patch-assume-your-site-was-hacked.html">Drupal users: Assume your site was hacked if you didn&rsquo;t apply Oct. 15 patch immediately</a></p>
+
+<p><a href="http://www.forbes.com/sites/thomasbrewster/2014/10/30/did-drupal-drop-the-ball-users-who-didnt-update-within-7-hours-should-assume-theyve-been-hacked/">Did Drupal Drop The Ball? Users Who Didn&rsquo;t Update Within 7 Hours &lsquo;Should Assume They&rsquo;ve Been Hacked&rsquo;</a></p>
+
+<p>The biggest headache for me was the Public Service Announcement <a href="https://www.drupal.org/PSA-2014-003">https://www.drupal.org/PSA-2014-003</a> which is clearly written to alarm users into updating.</p>
+
+<p>We did update our clients site - within 24 hours which at the time seemed pretty good considering the timezones and chaneg control processes involved.</p>
+
+<p>Fortunately we also reload our entire database and other content on each deploy - so even though we took longer than 7 hours to update we consider we are pretty safe (never say 100%) and beyond that we have a lot of other security in place.</p>
+
+<p>However I find myself wondering what else we could have done.</p>
+
+<p>I wish we had a member on the drupal security team - that seems to have helped some people.</p>
+
+<p>I see now there were a couple of (low key) advance notices <a href="https://groups.drupal.org/node/445893">https://groups.drupal.org/node/445893</a> <a href="https://twitter.com/drupalsecurity/status/522128826101669888">https://twitter.com/drupalsecurity/status/522128826101669888</a></p>
+
+<p>I will try to pay better attention to those in the future, but we may also have to enhance our out of hours work, the security annoucment came in at the end of the day - perhaps we will ahve to work overnight another time to review, test, and help the client upgrade.</p>
+
+<p>Hopefully good will come from the thread at <a href="https://groups.drupal.org/node/447468">Follow up Drupageddon responsibly</a></p>
+
+<p>Drupal will need to learn and grow from this.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Now Hosted on Github Pages]]></title>
@@ -884,46 +919,6 @@ sqlite3 ~/.Skype/${username}/main.db \
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Puppet - Apache Virtualhost Docroot Provided by Rpm]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2013/03/11/puppet-apache-virtualhost-docroot-provided-by-rpm/"/>
-    <updated>2013-03-11T00:00:00+00:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2013/03/11/puppet-apache-virtualhost-docroot-provided-by-rpm</id>
-    <content type="html"><![CDATA[<p>This has been annoying to work out.</p>
-
-
-
-
-<p>The <a href="https://forge.puppetlabs.com/puppetlabs/apache">puppet apache module</a> will by default create the document root for a virtualhost if it is not already defined. But since I wanted the documentroot to be managed by a custom   RPM I don&#8217;t have a reference to the actual directory in puppet.</p>
-
-
-
-
-<p>It seems the thing to do is to create file named after the document root - but with an alternate path property. This way puppet/apache knows not to create the documentroot, and the one I make in puppet doesn&#8217;t then get in the way of the RPM one.</p>
-
-
-<p><code></p>
-
-<p>  apache::vhost { &lsquo;www.vagrant&rsquo;:
-    priority        => &lsquo;10&rsquo;,
-    port            => &lsquo;80&rsquo;,
-    docroot         => &ldquo;/var/www/html/foo&rdquo;,
-    docroot_owner   => &lsquo;root&rsquo;,
-    docroot_group   => &lsquo;root&rsquo;,
-    override        => &lsquo;All&rsquo;,
-    require         => Package[&lsquo;foo&rsquo;],
-  }</p>
-
-<p>  file {&lsquo;/var/www/html/foo&rsquo;:
-      path => &ldquo;/usr/share/doc/foo&rdquo;,
-      content => &ldquo;Puppet needs a file with an object name of teh docroot defined, this is that dummy file, the real docroot is defined in an rpm\n &rdquo;,
-      owner => root,
-  }</p>
-
-<p></code></p>
 ]]></content>
   </entry>
   

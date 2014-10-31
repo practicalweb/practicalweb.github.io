@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Drupal 6 has been out for a while now, Drupal 7 is in the works, and yet most sites still seem to be using Drupal 5. Is it time to upgrade yet? If &hellip;">
+  <meta name="description" content="One of the surprising things about Drupal is that it doesn't use object oriented coding. There's a good page in the Drupal documentation about this &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,128 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/20/drupal-object-orientation/">Drupal Object Orientation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-07-20T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+One of the surprising things about Drupal is that it doesn&#8217;t use object oriented coding.
+</p>
+
+
+<p>
+There&#8217;s a good page in the Drupal documentation about this
+</p>
+
+
+<p>
+<a href="http://api.drupal.org/api/file/developer/topics/oop.html">http://api.drupal.org/api/file/developer/topics/oop.html</a>
+</p>
+
+
+<p>
+It makes a good case for the design of Drupal, and goes a long way to explain why Drupal feels more OO than the code looks at first glance.
+</p>
+
+
+<p>
+There has been discussion on the mailing list
+</p>
+
+
+<p>
+Endless debate:<br />
+<a href="http://lists.drupal.org/pipermail/development/2006-July/thread.html#17264">lists.drupal.org/pipermail/development/2006-July/thread.html#17264</a>
+</p>
+
+
+<p>
+Objects vs Arrays:<br />
+<a href="http://lists.drupal.org/pipermail/development/2007-January/021746.html">lists.drupal.org/pipermail/development/2007-January/021746.html</a>
+</p>
+
+
+<p>
+Why use the object notation:<br />
+<a href="http://lists.drupal.org/pipermail/development/2005-July/thread.html#7137"> lists.drupal.org/pipermail/development/2005-July/thread.html#7137</a>
+</p>
+
+
+<p>
+A lot of that discussion boils down to personal preference - but one of the key issues seems to be that OO support in PHP4 is poor. 
+</p>
+
+
+<p>
+As an enterprise CMS I don&#8217;t believe that Drupal has had any business considering PHP4 for a long time; I&#8217;m glad that PHP5 will be required for Drupal 7 - but that&#8217;s still a long way off.
+</p>
+
+
+<p>
+Another oft-quoted argument is that Object performance is worse than array equivalents: this this performance difference seems marginal at best - reducing the number of queries per page is likely to make a far bigger difference. CPU cycles are way cheaper than programmer hours  - and in any case better structures lead to more efficient programming which ends up producing faster code. 
+</p>
+
+
+<p>
+There&#8217;s a great Post from merlinofchaos on how Drupal might look<br />
+<a href="http://www.angrydonuts.com/what_if_fapi_were_oo">www.angrydonuts.com/what_if_fapi_were_oo</a>
+</p>
+
+
+<p>
+To my mind one of the biggest reasons to use OO constructs would be to define structure in a way that would generate errors when mistakes are made. If you look at the <a href="http://api.drupal.org/api/file/developer/topics/forms_api_reference.html/5">form api page</a> you will see endless comments like &quot;Property names without # signs causes havoc.&quot; this is a direct result of using a complex array to build forms - if objects were used it would be much easier to generate errors when the wrong attribute name was used. Drupal has much to strong a tendency to be silent about errors - making debugging much harder than it needs to be.
+</p>
+
+
+<p>
+WebChick wrote a great post about making Drupal E_ALL compliant<br />
+<a href="http://drupal.org/node/99625">drupal.org/node/99625</a>
+</p>
+
+
+<p>
+Using well defined objects would aid debugging in exactly the same way.
+</p>
+
+
+<p>
+But for me the biggest productivity gain of a move to Objects would be auto-completion.
+</p>
+
+
+<p>
+I use the Eclipse IDE for development and find auto-completion invaluable (along with the pop-up documentation and &quot;open declaration&quot;). To work this requires that the IDE be able to determine something about the variable in question. The IDE knows the allowed property names and methods of variables when they are a defined object type - but if all you know is that a function returns an array - none of this help is available.
+</p>
+
+
+<p>
+The above argument doesn&#8217;t even touch on the benefits of encapsulation, code re-use, and so on that have revolutionised software development. Even without full-on adoption of OO methodology - just adopting object structures over array structure would provide a huge boost in productivity. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -817,67 +939,6 @@ Without these settings I could browse the repository - but I couldn&#8217;t comm
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/06/08/subversion-three-co-uk-proxy-trouble/">Subversion + three.co.uk = Proxy Trouble</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-06-08T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>If you try to access a subversion repository over http while using a 3G connection from three.co.uk you may receive an error message like.</p>
-
-<blockquote>
-svn: PROPFIND request failed on &#8216;/repos&#8217;
-svn: Processing PROPFIND request response failed: Premature end of file. (/repos) 
-</blockquote>
-
-
-<p>This is because three.co.uk uses a <a href="http://en.wikipedia.org/wiki/Proxy_server#Intercepting_proxy_server">proxy</a> to interecept web traffic on their network.</p>
-
-<p>This proxy does not understand all the <a href="http://subversion.tigris.org/faq.html#proxy">commands that are used by subversion</a>.</p>
-
-<p>It is perfectly possible to access subversion repositories through a proxy - just not through the one at three.co.uk.</p>
-
-<p>Three only filter traffic on port 80 - the standard web port. Well, at least as far as I can tell that&rsquo;s all they do.</p>
-
-<p>So if you can set up subversion to access a different proxy - one that does play nice - then you can access your repository over your 3G connection.</p>
-
-<p>Under Linux the subversion proxy settings are in the file:</p>
-
-<p><code>
-~/.subversion/servers
-</code></p>
-
-<p>Just add settings as below:</p>
-
-<p><code>
-[global]
-http-proxy-host = www.exaple.com
-http-proxy-port = 3128
-http-proxy-username = nobody
-http-proxy-password = secret
-</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/18">&larr; Older</a>
@@ -895,6 +956,10 @@ http-proxy-password = secret
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
@@ -908,10 +973,6 @@ http-proxy-password = secret
     
       <li class="post">
         <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
       </li>
     
   </ul>

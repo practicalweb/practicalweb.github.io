@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Sql | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/sql/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-10-31T17:58:19+00:00</updated>
+  <updated>2014-10-31T18:43:23+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,41 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Drupageddon]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/31/drupageddon/"/>
+    <updated>2014-10-31T18:30:52+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/31/drupageddon</id>
+    <content type="html"><![CDATA[<p>Drupal has been in the new today for all the wrong reasons</p>
+
+<p><a href="http://www.bbc.co.uk/news/technology-29846539">Millions of websites hit by Drupal hack attack</a></p>
+
+<p><a href="http://arstechnica.com/security/2014/10/drupal-sites-had-hours-to-patch-before-attacks-started/">Drupal sites had “hours” to patch before attacks started</a></p>
+
+<p><a href="http://www.pcworld.com/article/2841372/drupal-if-you-werent-quick-to-patch-assume-your-site-was-hacked.html">Drupal users: Assume your site was hacked if you didn&rsquo;t apply Oct. 15 patch immediately</a></p>
+
+<p><a href="http://www.forbes.com/sites/thomasbrewster/2014/10/30/did-drupal-drop-the-ball-users-who-didnt-update-within-7-hours-should-assume-theyve-been-hacked/">Did Drupal Drop The Ball? Users Who Didn&rsquo;t Update Within 7 Hours &lsquo;Should Assume They&rsquo;ve Been Hacked&rsquo;</a></p>
+
+<p>The biggest headache for me was the Public Service Announcement <a href="https://www.drupal.org/PSA-2014-003">https://www.drupal.org/PSA-2014-003</a> which is clearly written to alarm users into updating.</p>
+
+<p>We did update our clients site - within 24 hours which at the time seemed pretty good considering the timezones and chaneg control processes involved.</p>
+
+<p>Fortunately we also reload our entire database and other content on each deploy - so even though we took longer than 7 hours to update we consider we are pretty safe (never say 100%) and beyond that we have a lot of other security in place.</p>
+
+<p>However I find myself wondering what else we could have done.</p>
+
+<p>I wish we had a member on the drupal security team - that seems to have helped some people.</p>
+
+<p>I see now there were a couple of (low key) advance notices <a href="https://groups.drupal.org/node/445893">https://groups.drupal.org/node/445893</a> <a href="https://twitter.com/drupalsecurity/status/522128826101669888">https://twitter.com/drupalsecurity/status/522128826101669888</a></p>
+
+<p>I will try to pay better attention to those in the future, but we may also have to enhance our out of hours work, the security annoucment came in at the end of the day - perhaps we will ahve to work overnight another time to review, test, and help the client upgrade.</p>
+
+<p>Hopefully good will come from the thread at <a href="https://groups.drupal.org/node/447468">Follow up Drupageddon responsibly</a></p>
+
+<p>Drupal will need to learn and grow from this.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Drupal Live and Dev Sync]]></title>
@@ -58,7 +93,7 @@ My solution which assumes you have .my.cnf set up to provide login locally is be
 
 <h1>make sure test mails never go to real users!</h1>
 
-<p>echo &ldquo;update users set mail=&lsquo;<a href="&#109;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#x6d;&#101;&#64;&#101;&#x78;&#97;&#109;&#112;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;">&#109;&#x65;&#x40;&#x65;&#120;&#x61;&#x6d;&#112;&#x6c;&#x65;&#46;&#x63;&#x6f;&#109;</a>&rsquo;&rdquo; | mysql devdb
+<p>echo &ldquo;update users set mail=&lsquo;<a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#x6d;&#x65;&#x40;&#x65;&#120;&#97;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#99;&#111;&#109;">&#x6d;&#x65;&#64;&#x65;&#x78;&#x61;&#x6d;&#x70;&#108;&#101;&#46;&#x63;&#111;&#x6d;</a>&rsquo;&rdquo; | mysql devdb
 </code></p>
 ]]></content>
   </entry>
@@ -213,75 +248,6 @@ http://drupal.org/node/146843
 
 <p>
 &nbsp;
-</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Number Crunching : Database vs OOP]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2008/10/05/number-crunching-database-vs-oop/"/>
-    <updated>2008-10-05T00:00:00+01:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2008/10/05/number-crunching-database-vs-oop</id>
-    <content type="html"><![CDATA[<p>
-For the last few months I&#8217;ve been working on a project that is part website and part data processing.
-</p>
-
-
-<p>
-In theory the website is the bulk of the project, but in practice processing the data has taken a disproportionate amount of resources.
-</p>
-
-
-<p>
-Data exchange with another organisation is always tricky - and in this case we have incoming data that doesn&#8217;t conform to specification, business rules that change, and a daily data import to run.
-</p>
-
-
-<p>
-The code I&#8217;ve been working on has been through a couple of versions, and now I have in mind a third 
-</p>
-
-
-<ol>
-    <li>process data from file a line at a time, comparing each record with the database individually</li>
-    <li>load all data from file into a temporary table, apply all rules as SQL updates to the whole table - joined to other tables where comparisons are needed.</li>
-    <li>load all data from file into a temporary table, retrieving data joined with the comparison data - process in batches say 1000 lines at a time.</li>
-</ol>
-
-
-<p>
-Version 1 was impossibly slow, and it was bad code we inherited so it had to go.
-</p>
-
-
-<p>
-Version 2 is much faster, but as the business rules are documented per record and we&#8217;re performing set based operations it has proved very hard to verify that the code matches the required logic.  It&#8217;s also very hard to unit test as all the logic is performed in the database.
-</p>
-
-
-<p>
-Version 3 probably won&#8217;t get written now - as is the way of programming - you always learn how you&#8217;d do it next time.
-</p>
-
-
-<p>
-I have one colleague in particular who thinks that the database should do the heavy lifting as that is what it is optimised for, and to an extent I agree. But the more I get into unit testing the more I want to write code that neatly packages up logic in a testable way.
-</p>
-
-
-<p>
-It has also become apparent just how important it is to have code that follows business rules in a clear way. It&#8217;s not enough that the output should be right. I recently handed this code to a very capable developer - he&#8217;s normally so polite - but trying to reconcile a flowchart with a long series of SQL queries tested his patience.
-</p>
-
-
-<p>
-In the end leaning so hard on the database has made the system much harder to read, test, change, and maintain.
-</p>
-
-
-<p>
-I wonder if version 3 would be any slower anyway - it might even be faster. In fact version 3 could be run multithreaded - or split into multiple processes&#8230;. 
 </p>
 
 ]]></content>

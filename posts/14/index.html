@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I've just been reading some good stuff on developing accessible web applications that still benefit from rich interactivity. http://www.w3.org/TR/ &hellip;">
+  <meta name="description" content="I recently finished work on a project that really suffered from a lack of build tools. It was a large project, and while many of us were keen on &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,159 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/08/continuous-integration-testing-for-drupal-with-cruisecontrol-part-1/">Continuous Integration Testing for Drupal With CruiseControl (Part 1)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-08T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I recently finished work on a project that really suffered from a lack of build tools.
+</p>
+
+
+<p>
+It was a large project, and while many of us were keen on writing tests we weren&#8217;t able to get management sign of to spend some time automating the test process. So even though we did some of the work we didn&#8217;t get all the benefits.
+</p>
+
+
+<p>
+It was really frustrating to come back to a piece of work that was well covered by unit tests, only to find those tests broken  
+</p>
+
+
+<p>
+Well, right now I&#8217;ve decided to take some time to explore automated testing a bit more. I&#8217;ve got a Drupal site and a bunch of simpletest tests - I want the tests run on every commit, and while I&#8217;m at it I want to run some other checks too.
+</p>
+
+
+<p>
+The following records what I&#8217;ve done so far, problems I encountered, and how I solved them.
+</p>
+
+
+<p>
+Download 
+</p>
+
+
+<ul>
+    <li><a href="http://cruisecontrol.sourceforge.net/">cruisecontrol</a> <a href="http://phpundercontrol.org/about.html"><br />
+    </a></li>
+    <li><a href="http://phpundercontrol.org/about.html">phpundercontrol</a></li>
+    <li><a href="http://demo.codesetter.com/drupal5-macgyver-cruisecontrol">simpletest runner for cruise control</a> (thanks Adnan)</li>
+</ul>
+
+
+<p>
+Checkout and configure my Drupal site, create the settings for this as a CruiseControl project.
+</p>
+
+
+<p>
+At this point I had CruiseControl setup, I could see my project, but no useful reports.
+</p>
+
+
+<p>
+Debugging
+</p>
+
+
+<ul>
+    <li>read the logfiles (doh!)</li>
+    <li>run each process separately</li>
+</ul>
+
+
+<p>
+CruiseControl is a big beast and trying to debug small parts of it by running it all wasn&#8217;t much fun.
+</p>
+
+
+<p>
+CruiseControl runs each step of a build via <a href="http://ant.apache.org/">ant</a>  - this is a fairly standard tool (available via apt-get if you&#8217;re a Debian user) 
+</p>
+
+
+<p>
+Running ant manually gave me much greater visibility of errors that were occuring at this stage (I&#8217;d put my test runner script in the wrong place).
+</p>
+
+
+<p>$ cd cruisecontrol/projects/myproject
+$ ant </p>
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+This gives nice easy to read output for each step of the build.
+</p>
+
+
+<p>
+Once CruiseControl has built your project it merges the xml logfiles; the merged file is stored in cruisecontrol/logs/myproject/
+</p>
+
+
+<p>
+The web application part of CruiseControl uses xsl to transform these logfiles into output, and a little jsp to select which xsl files to use. Again I found it easier to debug the xsl part of the process by running the xsl manually (either on the combined logfile - or individual ones wrapped in &lt;cruisecontrol&gt; tags).
+</p>
+
+
+<p>$ xsltproc webapps/cruisecontrol/xsl/checkstyle.xsl  projects/myproject/build/logs/checkstyle.xml</p>
+
+<p>
+And what I found was that my xml log wasn&#8217;t xml after all (I&#8217;d hit a <a href="http://pear.php.net/bugs/bug.php?id=14409">bug in phpcodesniffer</a> which was outputting error messages at the top of the file). 
+</p>
+
+
+<p>
+Right now I have a continuous integration server up and running. It&#8217;s not quite how I want it yet but now I understand how CruiseControl works I don&#8217;t think it&#8217;ll take too long to get right - but it&#8217;s the sort of thing that I expect to grow and tweak as I go along.
+</p>
+
+
+<p>
+I&#8217;ve found CruiseControl hard to setup, seen too many Java stacktraces, and blank screens when xsl didn&#8217;t work as expected.
+</p>
+
+
+<p>
+Some things could probably be done better via svn commit hooks (if you have access to the svn server), and certainly it would have been faster to cobble together some cron jobs.
+</p>
+
+
+<p>
+But I&#8217;ve persevered because CruiseControl comes with a wealth of plugins including many version control systems, and many notification methods. I&#8217;m hoping that I&#8217;ve overcome the initial learning curve and will start to reap the rewards.
+</p>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -493,115 +646,6 @@ I came across this PDF slideshow from a talk on optimising PHP, it&#8217;s well 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/12/15/updating-drupal/">Updating Drupal</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-12-15T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-For most of 2008 I&#8217;ve been working on a large Drupal installation (around 10 developers,  something like 100 custom modules, 17 languages, split over 2 sites).
-</p>
-
-
-<p>
-This all adds up to a lot of updates, and schema changes.
-</p>
-
-
-<p>
-Drupal&#8217;s hook_install, and hook_update_N functions are pretty good, but not perfect at bringing order to this chaos.
-</p>
-
-
-<p>
-These functions provide a basic way for developers to provide database installation and update functions, it&#8217;s great that these can combine full code functionality (eg for data migration) synchronised with schema changes. 
-</p>
-
-
-<p>
-As we have  something like 10 Drupal installs fro various, stage, test and UAT purposes, plus 2 per developer - having these updates scripted is essential. 
-</p>
-
-
-<p>
-But all too frequently we have issues 
-</p>
-
-
-<ul>
-    <li>Loading a MySQL backup on top of an existing database leaves newly created  tables in place even though they don&#8217;t exist in the backup (solution - always drop and recreate the database before loading a backup).</li>
-    <li>A developer changes an update hook - assuming incorrectly that it hasn&#8217;t been run yet.</li>
-    <li>An update hook misses some functionality that the developer added to their own database - but forgot to put in the hook.</li>
-</ul>
-
-
-<p>
-Another problem is that the update interface gives no warning of the changes about to be enacted - you get a list of SQL command run afterwards. 
-</p>
-
-
-<p>
-In short I&#8217;ve found that this update system is targeted more at distribution of open source code to the public, and doesn&#8217;t work so smoothly for rapid development amongst a largish team. 
-</p>
-
-
-<p>
-We&#8217;re still on Drupal 5 and are not likely to upgrade - the benefits just aren&#8217;t worth the costs for such a large codebase.
-</p>
-
-
-<p>
-I&#8217;m curious though about Drupal 6&#8217;s schema API, it seems like it ought to be possible to use this to run an update that doesn&#8217;t just make changes based on version numbers. It could actually examine the existing schema, compare this to the required one - report changes it suggests and run them after they are approved.
-</p>
-
-
-<p>
-It could also be used in development to verify that the developers altered schema is properly recorded in the code. 
-</p>
-
-
-<p>
-I expect that level of functionality may be some way off though. 
-</p>
-
-
-<p>
-http://drupal.org/project/schema
-</p>
-
-
-<p>
-http://drupal.org/node/146843 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/15">&larr; Older</a>
@@ -619,6 +663,10 @@ http://drupal.org/node/146843
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
@@ -632,10 +680,6 @@ http://drupal.org/node/146843
     
       <li class="post">
         <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
       </li>
     
   </ul>
