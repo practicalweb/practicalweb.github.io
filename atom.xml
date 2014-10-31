@@ -4,7 +4,7 @@
   <title><![CDATA[PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-10-31T16:31:24+00:00</updated>
+  <updated>2014-10-31T17:58:19+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,17 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Now Hosted on Github Pages]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/31/now-hosted-on-github-pages/"/>
+    <updated>2014-10-31T17:55:14+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/31/now-hosted-on-github-pages</id>
+    <content type="html"><![CDATA[<p>Since I&rsquo;ve moved to a static site I&rsquo;m saving myself some hosting fees and moved to <a href="https://help.github.com/categories/github-pages-basics/">Github Pages</a></p>
+
+<p>It&rsquo;s free and fast, saves me from managing a server.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Creating New Vagrant Base Boxes With Veewee]]></title>
@@ -913,35 +924,6 @@ sqlite3 ~/.Skype/${username}/main.db \
   }</p>
 
 <p></code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Eclipse Hangs]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2013/03/11/eclipse-hangs/"/>
-    <updated>2013-03-11T00:00:00+00:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2013/03/11/eclipse-hangs</id>
-    <content type="html"><![CDATA[<p>This worked for me today - saving it here so I can find it again</p>
-
-
-
-
-<p><a href="http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/">http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/</a></p>
-
-
-
-
-<pre>
-cd .metadata/.plugins
-mv org.eclipse.core.resources org.eclipse.core.resources.bak
-Start eclipse. (It should show an error message or an empty workspace because no project is found.)
-Close all open editors tabs.
-Exit eclipse.
-rm -rf org.eclipse.core.resources (Delete the newly created directory.)
-mv org.eclipse.core.resources.bak/ org.eclipse.core.resources (Restore the original directory.)
-Start eclipse and start working. :-)
-</pre>
-
 ]]></content>
   </entry>
   

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Reading Greg&rsquo;s post on security upgrades and a few mentions of patches in the following discussion got me thinking about upgrade methods. The &hellip;">
+  <meta name="description" content="It&rsquo;s been a while since I&rsquo;ve worked on a project which is providing as well as consuming web services. In this case I need to debug &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse/">Debugging SOAP With Xdebug and Eclipse</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-14T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s been a while since I&rsquo;ve worked on a project which is providing as well as consuming web services.</p>
+
+<p>In this case I need to debug incoming requests that are not initiated from with the browser (I&rsquo;m using <a href="http://www.soapui.org/">soapui</a> as a test tool).</p>
+
+<p>In order to allow Eclipse to pick up xdebug responses triggered by requests from soapui I just needed to</p>
+
+<ul>
+<li>start a debuging session within eclipse as normal</li>
+<li>ensure that the query string ?XDEBUG_SESSION_START=ECLIPSE_DBGP is appended to all requests by editing the WSDL file so that the address looks like
+<code>
+<soap:address location="http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP"/>
+</code>
+</li>
+
+<li>make requests via soapui</li>
+</ul>
+
+
+<p>Now eclipse is picking up the soap requests and I can step through as normal (some tools apply a timeout which can be a nuisance while debugging - I haven&rsquo;t been using soapui long enough yet to see if that&rsquo;s the case here)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -514,53 +561,6 @@ content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytyp
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/06/10/is-git-now-a-mature-toolset/">Is Git Now a Mature Toolset?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-06-10T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve been looking into git for a while, the core toolset has been mature for ages but it just didn&#8217;t seem to have the wider support I wanted.
-</p>
-
-
-<p>
-Now I look again and the egit plugin for eclipse has improved massively with full eclipse integration http://wiki.eclipse.org/EGit/User_Guide
-</p>
-
-
-<p>
-There is a git plugin for trac http://trac-hacks.org/wiki/GitPlugin
-</p>
-
-
-<p>
-It looks like it&#8217;s time for me to dive into git properly :-) 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/8">&larr; Older</a>
@@ -578,6 +578,10 @@ It looks like it&#8217;s time for me to dive into git properly :-)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -591,10 +595,6 @@ It looks like it&#8217;s time for me to dive into git properly :-)
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="This just took me a while to figure out I have a jmeter test plan which POSTs to a url, resulting in cookies being set and a redirect I was not &hellip;">
+  <meta name="description" content="I've been working on a project for a while on my main dev machine, but needed to run it on my laptop too. Usually copying a sitre across is quick &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/25/cant-login-to-drupal-404/">Can&#8217;t Login to Drupal (404)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-25T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been working on a project for a while on my main dev machine, but needed to run it on my laptop too.
+</p>
+
+
+<p>
+Usually copying a sitre across is quick but this time I re-installed the OS too, everything wnet OK except for some reason I couldn&#8217;t log in to my drupal site.
+</p>
+
+
+<p>
+Eventually I noticed that while the site appeared to be working, every page was being served with a 404 header.
+</p>
+
+
+<p>
+What happpend is that I hadn&#8217;t enabled mod_rewrite
+</p>
+
+
+<p>
+The .htaccess had been configured to serve drupal 404 pages, but in this case Drupal (once started as a 404 handler) correctly processed the URL - but presumably without the form data.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -578,47 +645,6 @@ svn propdel -R svn:mergeinfo ./*
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/07/13/henri-bergius-secret-agenda-for-php-content-management-systems/">Henri Bergius&#8217; Secret Agenda for PHP Content Management Systems</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-07-13T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I read this post the other day and found it really inspiring - so many things to do and learn&hellip;</p>
-
-<p><a href="http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/">http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/</a></p>
-
-<p>Links within that blog that I found especially interesting</p>
-
-<p><a href="https://github.com/indeyets/appserver-in-php">https://github.com/indeyets/appserver-in-php</a></p>
-
-<p><a href="http://documentcloud.github.com/backbone/">http://documentcloud.github.com/backbone/</a></p>
-
-<p><a href="https://github.com/bergie/VIE">https://github.com/bergie/VIE</a></p>
-
-<p><a href="http://phpcr.github.com/">http://phpcr.github.com/</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/6">&larr; Older</a>
@@ -636,6 +662,10 @@ svn propdel -R svn:mergeinfo ./*
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -649,10 +679,6 @@ svn propdel -R svn:mergeinfo ./*
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>

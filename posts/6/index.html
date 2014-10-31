@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I wanted to write some automated tests for CSS changes and bugs, these type of issues are quite prone to regression so re-running the tests has a &hellip;">
+  <meta name="description" content="I read this post the other day and found it really inspiring - so many things to do and learn&hellip; http://bergie.iki.fi/blog/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/13/henri-bergius-secret-agenda-for-php-content-management-systems/">Henri Bergius&#8217; Secret Agenda for PHP Content Management Systems</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-07-13T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I read this post the other day and found it really inspiring - so many things to do and learn&hellip;</p>
+
+<p><a href="http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/">http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/</a></p>
+
+<p>Links within that blog that I found especially interesting</p>
+
+<p><a href="https://github.com/indeyets/appserver-in-php">https://github.com/indeyets/appserver-in-php</a></p>
+
+<p><a href="http://documentcloud.github.com/backbone/">http://documentcloud.github.com/backbone/</a></p>
+
+<p><a href="https://github.com/bergie/VIE">https://github.com/bergie/VIE</a></p>
+
+<p><a href="http://phpcr.github.com/">http://phpcr.github.com/</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -971,53 +1012,6 @@ function my_views_uninstall() {
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse/">Debugging SOAP With Xdebug and Eclipse</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-10-14T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It&rsquo;s been a while since I&rsquo;ve worked on a project which is providing as well as consuming web services.</p>
-
-<p>In this case I need to debug incoming requests that are not initiated from with the browser (I&rsquo;m using <a href="http://www.soapui.org/">soapui</a> as a test tool).</p>
-
-<p>In order to allow Eclipse to pick up xdebug responses triggered by requests from soapui I just needed to</p>
-
-<ul>
-<li>start a debuging session within eclipse as normal</li>
-<li>ensure that the query string ?XDEBUG_SESSION_START=ECLIPSE_DBGP is appended to all requests by editing the WSDL file so that the address looks like
-<code>
-<soap:address location="http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP"/>
-</code>
-</li>
-
-<li>make requests via soapui</li>
-</ul>
-
-
-<p>Now eclipse is picking up the soap requests and I can step through as normal (some tools apply a timeout which can be a nuisance while debugging - I haven&rsquo;t been using soapui long enough yet to see if that&rsquo;s the case here)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/7">&larr; Older</a>
@@ -1035,6 +1029,10 @@ function my_views_uninstall() {
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -1048,10 +1046,6 @@ function my_views_uninstall() {
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>

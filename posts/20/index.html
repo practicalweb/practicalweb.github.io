@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I’ve just spent ages trying to find out why I couldn’t add some default views to drupal I’d set up my views, exported them added them to a module in &hellip;">
+  <meta name="description" content="I’ve just upgraded to firefox 3 beta and it looks pretty cool I got my plugins working by following these steps Open about:config in the address bar &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/02/14/firefox-3-firebug-eclipse/">Firefox 3 + Firebug + Eclipse</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-02-14T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="post-entry">
+<p>
+I’ve just upgraded to firefox 3 beta and it looks pretty cool
+</p>
+<p>
+I got my plugins working by following these steps
+</p>
+<ol>
+    <li>Open about:config in the address bar.</li>
+    <li>Right click on the list and create a boolean: extensions.checkCompatibility</li>
+    <li>Set its value to false.</li>
+    <li>Restart browser.</li>
+</ol>
+<p>
+Firebug works in FF3 even withgout this step if you get the latest beta from here<br />
+<a href="http://fireclipse.xucia.com/">fireclipse.xucia.com</a>
+</p>
+<p>
+The really exiting thing is the eclipse plugin<br />
+<a href="http://www.uncertainty.org.uk/wordpress/wp-content/uploads/2008/02/fireclipsepositionseditor.jpg" title="Eclipse Console With Editor Positioned by Fireclipse"><img src="http://www.uncertainty.org.uk/wordpress/wp-content/uploads/2008/02/fireclipsepositionseditor.thumbnail.jpg" alt="Eclipse Console With Editor Positioned by Fireclipse" /></a>
+</p>
+<p>
+<a href="http://fireclipse.svn.sourceforge.net/viewvc/*checkout*/fireclipse/trunk/FireclipseDocumentation/screenshots.htm">More screenshots</a>
+</p>
+</div>
+
+
+<!-- END POST-ENTRY  -->
+
+
+<!-- <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description rdf:about="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/"
+dc:identifier="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/"
+dc:title="firefox 3 + firebug + eclipse"
+trackback:ping="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/trackback/" />
+</rdf:RDF> &#8211;>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -823,50 +890,6 @@ mdadm &#8211;manage &#8211;add /dev/md1 /dev/hdc2
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2005/08/09/full-text-searching-on-postgresql-with-tsearch2/">Full Text Searching on PostgreSQL With Tsearch2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2005-08-09T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2005</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I’ve just been experimenting with text searches: <a href="http://www.sai.msu.su/%7Emegera/postgres/gist/tsearch/V2/docs/tsearch-V2-intro.html"><a href="http://www.sai.msu.su/~megera/postgres/gist/tsearch/V2/docs/tsearch-V2-intro.html">http://www.sai.msu.su/~megera/postgres/gist/tsearch/V2/docs/tsearch-V2-intro.html</a></a></p>
-
-<div class="post-entry">
-<p>
-It’s worth noting that most of the commands in the above tutorial
-assume you are running as the database superuser, this is required to
-run the setup script but then you can grant permission for an ordinary
-user for the search tables (in the public schema names starting pg_ts_)
-</p>
-<p>
-The search will only match words that start with the search term,
-but is very fast and can search over several columns by maintaining a
-combined index.
-</p>
-</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/21">&larr; Older</a>
@@ -884,6 +907,10 @@ combined index.
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -897,10 +924,6 @@ combined index.
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>

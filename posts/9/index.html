@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Here&rsquo;s a basic Drupal Module that pulls CKAN data into Drupal. It provides a simple search interface - when the user views a CKAN package for &hellip;">
+  <meta name="description" content="I've long been puzzled by the official advice on upgrading Drupal It basically says you should delete everything, unpack a new Drupal version, and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,75 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/03/15/easy-drupal-upgrades-using-subversion/">Easy Drupal Upgrades Using Subversion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-03-15T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve long been puzzled by the <a href="http://drupal.org/upgrade/downloading-drupal-gui">official advice on upgrading Drupal</a></p>
+
+
+<p></p>
+
+<p>It basically says you should delete everything, unpack a new Drupal version, and replace your customisations.</p>
+
+
+
+
+<p>I like to use version control to manage my site.</p>
+
+
+
+
+<p>My current project uses the pressflow fork of Drupal, I downloaded the current and new versions of this, added them to my repository and then upgrading my working copy is as easy as</p>
+
+
+<p><code>
+svn merge &ndash;ignore-ancestry <a href="https://example.com/svn/vendor/pressflow-6.15.73">https://example.com/svn/vendor/pressflow-6.15.73</a> <a href="https://example.com/svn/vendor/pressflow-6.16.77">https://example.com/svn/vendor/pressflow-6.16.77</a> ./
+</code></p>
+
+<p>This merges in all the changes (including file/directory additions/deletes).</p>
+
+
+
+
+<p>Then I play around with the newly upgraded site, have a look at the code that changed, check all is OK and when I&#8217;m happy - commit the changes.</p>
+
+
+
+
+<p>If I later find a bug that might be related to an upgrade I&#8217;ve got the changes ready via the usual tools (annotate, log, diff).</p>
+
+
+
+
+<p>Even better - this retains any changes I&#8217;ve made to core without any need to keep a list of patches. If the core update contains a fix I&#8217;ve applied locally then I&#8217;ll get a conflict which I can resolve.</p>
+
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -908,70 +977,6 @@ svn: OPTIONS of &lsquo;<a href="https://195.99.1.93/svn">https://195.99.1.93/svn
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/02/bug-in-trac-on-ubuntu-jaunty/">Bug in Trac on Ubuntu Jaunty</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-02-02T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-There is a bug in Ubunty Jaunty which cause Trac to have errors.
-</p>
-
-
-<p>
- Attachments do not work, the admin interface for milestones doesn&#8217;t work properly - and there may be other issues.
-</p>
-
-
-<p>
-The bug report is at https://bugs.launchpad.net/ubuntu/+source/trac/+bug/369792
-</p>
-
-
-<p>
-And the solution is 
-</p>
-
-
-<p>
-&quot;go to <a href="http://packages.ubuntu.com/karmic/trac">http://packages.ubuntu.com/karmic/trac</a>
-and scroll all the way down. There you&#8217;ll find a download link for the 
-karmic package which you can download and install via
-</p>
-
-
-<p>
-sudo dpkg -i trac_0.11.5-2ubuntu1_all.deb&quot;
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/10">&larr; Older</a>
@@ -989,6 +994,10 @@ sudo dpkg -i trac_0.11.5-2ubuntu1_all.deb&quot;
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -1002,10 +1011,6 @@ sudo dpkg -i trac_0.11.5-2ubuntu1_all.deb&quot;
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>

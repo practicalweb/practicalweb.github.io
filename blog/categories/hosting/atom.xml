@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Hosting | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/hosting/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-10-31T17:58:19+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Now Hosted on Github Pages]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/10/31/now-hosted-on-github-pages/"/>
+    <updated>2014-10-31T17:55:14+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/10/31/now-hosted-on-github-pages</id>
+    <content type="html"><![CDATA[<p>Since I&rsquo;ve moved to a static site I&rsquo;m saving myself some hosting fees and moved to <a href="https://help.github.com/categories/github-pages-basics/">Github Pages</a></p>
+
+<p>It&rsquo;s free and fast, saves me from managing a server.</p>
+]]></content>
+  </entry>
+  
+</feed>

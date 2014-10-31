@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Drupal update hooks can return info about queries run - and this is well documented. If you want to return other informative messages about updates &hellip;">
+  <meta name="description" content="I've been looking into git for a while, the core toolset has been mature for ages but it just didn't seem to have the wider support I wanted. Now I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/10/is-git-now-a-mature-toolset/">Is Git Now a Mature Toolset?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-06-10T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been looking into git for a while, the core toolset has been mature for ages but it just didn&#8217;t seem to have the wider support I wanted.
+</p>
+
+
+<p>
+Now I look again and the egit plugin for eclipse has improved massively with full eclipse integration http://wiki.eclipse.org/EGit/User_Guide
+</p>
+
+
+<p>
+There is a git plugin for trac http://trac-hacks.org/wiki/GitPlugin
+</p>
+
+
+<p>
+It looks like it&#8217;s time for me to dive into git properly :-) 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -782,75 +829,6 @@ ERROR 1062 (23000): Duplicate entry &lsquo;0&rsquo; for key 1</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/03/15/easy-drupal-upgrades-using-subversion/">Easy Drupal Upgrades Using Subversion</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-03-15T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&#8217;ve long been puzzled by the <a href="http://drupal.org/upgrade/downloading-drupal-gui">official advice on upgrading Drupal</a></p>
-
-
-<p></p>
-
-<p>It basically says you should delete everything, unpack a new Drupal version, and replace your customisations.</p>
-
-
-
-
-<p>I like to use version control to manage my site.</p>
-
-
-
-
-<p>My current project uses the pressflow fork of Drupal, I downloaded the current and new versions of this, added them to my repository and then upgrading my working copy is as easy as</p>
-
-
-<p><code>
-svn merge &ndash;ignore-ancestry <a href="https://example.com/svn/vendor/pressflow-6.15.73">https://example.com/svn/vendor/pressflow-6.15.73</a> <a href="https://example.com/svn/vendor/pressflow-6.16.77">https://example.com/svn/vendor/pressflow-6.16.77</a> ./
-</code></p>
-
-<p>This merges in all the changes (including file/directory additions/deletes).</p>
-
-
-
-
-<p>Then I play around with the newly upgraded site, have a look at the code that changed, check all is OK and when I&#8217;m happy - commit the changes.</p>
-
-
-
-
-<p>If I later find a bug that might be related to an upgrade I&#8217;ve got the changes ready via the usual tools (annotate, log, diff).</p>
-
-
-
-
-<p>Even better - this retains any changes I&#8217;ve made to core without any need to keep a list of patches. If the core update contains a fix I&#8217;ve applied locally then I&#8217;ll get a conflict which I can resolve.</p>
-
-
-<p></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/9">&larr; Older</a>
@@ -868,6 +846,10 @@ svn merge &ndash;ignore-ancestry <a href="https://example.com/svn/vendor/pressfl
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -881,10 +863,6 @@ svn merge &ndash;ignore-ancestry <a href="https://example.com/svn/vendor/pressfl
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I've worked on a few internationalised sites in the past and it always raises challenges, Drupal makes some things easy - this post provides some &hellip;">
+  <meta name="description" content="This has just taken me a suprisingly long time to work out ... I needed to output a file with the follwing as a marker in various places. ♦ U+2666 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,85 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/23/how-to-enter-a-multibyte-unicode-string-in-php/">How to Enter a Multibyte Unicode String in PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-05-23T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+This has just taken me a suprisingly long time to work out &#8230;
+</p>
+
+
+<p>
+I needed to output a file with the follwing as a marker in various places.
+</p>
+
+
+<blockquote>
+    ♦ U+2666 BLACK DIAMOND SUIT<br />
+    <br />
+    General Character Properties<br />
+    <br />
+    Unicode category: Symbol, Other<br />
+    <br />
+    Various Useful Representations<br />
+    <br />
+    UTF-8: 0xE2 0x99 0xA6<br />
+    UTF-16: 0x2666<br />
+    <br />
+    C octal escaped UTF-8: \342\231\246<br />
+    XML decimal entity: &amp;#9830;
+</blockquote>
+
+
+<p>
+OK so I know the hex code I think I&#8217;ll just use <a href="http://uk.php.net/chr">chr()</a> but no&#8230; this only works for ASCII&#8230;
+</p>
+
+
+
+
+<p>&#8230;and the mbstring functions are great for working with multi-byte strings but don&#8217;t help enter them</p>
+
+
+
+
+<p>
+It turns out that you can either copy a literal ♦ into your source code - or use the <a href="http://uk.php.net/pack">pack()</a> function 
+</p>
+
+
+<p>&lt;?php
+header(&lsquo;Content-Type: text/plain;charset=utf-8&rsquo;);
+echo &ldquo;♦\n&rdquo;;</p>
+
+<p>echo pack(&ldquo;ccc&rdquo;, 0xE2, 0x99, 0xA6) .&ldquo;\n&rdquo;;</p>
+
+<p>?></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -778,73 +857,6 @@ This is probably a more specialist solution - but I&#8217;ve recently been using
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/02/14/firefox-3-firebug-eclipse/">Firefox 3 + Firebug + Eclipse</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-02-14T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class="post-entry">
-<p>
-I’ve just upgraded to firefox 3 beta and it looks pretty cool
-</p>
-<p>
-I got my plugins working by following these steps
-</p>
-<ol>
-    <li>Open about:config in the address bar.</li>
-    <li>Right click on the list and create a boolean: extensions.checkCompatibility</li>
-    <li>Set its value to false.</li>
-    <li>Restart browser.</li>
-</ol>
-<p>
-Firebug works in FF3 even withgout this step if you get the latest beta from here<br />
-<a href="http://fireclipse.xucia.com/">fireclipse.xucia.com</a>
-</p>
-<p>
-The really exiting thing is the eclipse plugin<br />
-<a href="http://www.uncertainty.org.uk/wordpress/wp-content/uploads/2008/02/fireclipsepositionseditor.jpg" title="Eclipse Console With Editor Positioned by Fireclipse"><img src="http://www.uncertainty.org.uk/wordpress/wp-content/uploads/2008/02/fireclipsepositionseditor.thumbnail.jpg" alt="Eclipse Console With Editor Positioned by Fireclipse" /></a>
-</p>
-<p>
-<a href="http://fireclipse.svn.sourceforge.net/viewvc/*checkout*/fireclipse/trunk/FireclipseDocumentation/screenshots.htm">More screenshots</a>
-</p>
-</div>
-
-
-<!-- END POST-ENTRY  -->
-
-
-<!-- <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
-xmlns:dc="http://purl.org/dc/elements/1.1/"
-xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
-<rdf:Description rdf:about="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/"
-dc:identifier="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/"
-dc:title="firefox 3 + firebug + eclipse"
-trackback:ping="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/trackback/" />
-</rdf:RDF> &#8211;>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/20">&larr; Older</a>
@@ -862,6 +874,10 @@ trackback:ping="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefo
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -875,10 +891,6 @@ trackback:ping="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefo
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>

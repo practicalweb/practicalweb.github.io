@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I have far too many books, both technical and diversionary, I read a great deal online, and still find myself printing a lot out: so I've been &hellip;">
+  <meta name="description" content="There are many great services online that can help build fantastic websites at little cost. In particular Google maps and you tube offer facilities &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,93 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/08/free-services-may-have-hidden-costs/">Free Services May Have Hidden Costs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-12-08T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+There are many great services online that can help build fantastic websites at little cost.
+</p>
+
+
+<p>
+In particular Google maps and you tube offer facilities that may not otherwise be available at no financial cost.
+</p>
+
+
+<p>
+There has always been a bit of doubt with these services, what if your site depends on them and then Google changes the way they work.
+</p>
+
+
+<p>
+Interesting to see adverts now appearing over images in You Tube
+</p>
+
+
+<p>
+<img src="/sites/default/files/u1/google-video-ads.png" width="500" height="364" /> (Found while looking for Christmas presents for my nephew!) This also shows an oddity of contextual advertising - where inappropriate adverts may be shown.
+</p>
+
+
+<p>
+I used to work for a charity who still use you tube video on their site, it would be quite odd if this became overlaid with adverts.
+</p>
+
+
+<p>
+There&#8217;s an <a href="http://www.nearby.org.uk/blog/2008/12/08/between-a-rock-and-a-hard-place/">interesting post on Google Maps API license</a> the key concern here is the extent of rights to your data that Google take in return for their service.
+</p>
+
+
+<p>
+Casual users may not bother reading the full terms and conditions of these services; but business users should take the time. 
+</p>
+
+
+<p>
+These services are valuable, and it may well be worth taking the risk after all Maps and videos have now been available without ads for some years. On the other hand some sites may choose  to host their own mapping or video to keep full control.
+</p>
+
+
+<p>
+I&#8217;ve worked on a couple of projects that built thier own mapping (<a href="/project/project-ramblers-walks-finder">Walks finder</a> and <a href="/project/project-use-your-paths">Use Your Paths</a> )
+</p>
+
+
+<p>
+Incorporating video in a Drupal site without a third party service seems fairly standard, there are several good flash video players available. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -698,66 +785,6 @@ issue here: http://blog.nixternal.com/2008.10.22/kubuntu-intrepid-dual-monitor-b
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/10/18/how-to-read-compressed-apache-docs/">How to Read Compressed Apache Docs</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-10-18T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-One of the great things about Debian/Ubuntu is the consistency with which system documentation is placed in /usr/share/doc/
-</p>
-
-
-<p>
-Assuming you have a web server installed this documentation is then available at http://localhost/doc/
-</p>
-
-
-<p>
-But to keep filesize down - many files are compressed and have to be decompressed before you can read them.
-</p>
-
-
-<p>
-The browser can actually do that compression on the fly - if it receives the right headers - what it needs to be told is that the content is compressed plain text. 
-</p>
-
-
-<p>
-To achieve this add the following lines to your default apache config for the docs directory (there should already be a docs section)
-</p>
-
-
-<p>
-&lt;Directory &quot;/usr/share/doc/&quot;&gt;<br />
-AddEncoding x-gzip gz tgz<br />
-AddType text/plain .gz<br />
-&lt;/Direcory&gt;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/16">&larr; Older</a>
@@ -775,6 +802,10 @@ AddType text/plain .gz<br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -788,10 +819,6 @@ AddType text/plain .gz<br />
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>

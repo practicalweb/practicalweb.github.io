@@ -9,7 +9,9 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I've been working in the CMS arena for 10 years, and the whole time I've been expecting one or more “industry standard” CMS's to come along, but &hellip;">
+  <meta name="description" content="Drupal is a very
+flexible CMS which can be extended to provide the functionality
+needed for may different types of website. I've worked on a few &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +67,430 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/03/when-to-choose-drupal/">When to Choose Drupal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-11-03T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Drupal is a very
+flexible CMS which can be extended to provide the functionality
+needed for may different types of website.
+</p>
+
+
+<p>
+I&#8217;ve worked on a few
+projects where I was brought in for my Drupal expertise, but in the
+end felt that Drupal wasn&#8217;t a good solution in these particular
+circumstances. So I&#8217;ve been pondering what sorts of projects is
+Drupal best suited to.
+</p>
+
+
+<p>
+I&#8217;m not thinking about
+small brochureware websites that might be best managed using
+Wordpress, Joomla or the like as almost all my experience is of
+larger projects where the alternatives are frameworks such as
+Symfony, Rails, Struts etc – or pure custom code. 
+</p>
+
+
+<p>
+I&#8217;m know it&#8217;s possible
+to run a successful Drupal project that doesn&#8217;t have all the good
+points and does have some bad points from the lists below – I&#8217;ve
+done it.
+</p>
+
+
+<p>
+But if anyone has
+successfully delivered a regularly upgraded, high traffic, fully
+tested web application with inflexible requirements using a large
+team of OO programmers with little prior Drupal experience – well
+I&#8217;d love to hear about it.
+</p>
+
+
+<h2>Drupal Positives</h2>
+
+
+<ul>
+    <li>
+    Small team
+    </li>
+    <li>
+    Drupal experience
+    </li>
+    <li>
+    There is a maintenance plan 
+    </li>
+    <li>
+    A single release
+    </li>
+    <li>
+    Flexible specifications
+    </li>
+    <li>
+    Content Oriented
+    </li>
+    <li>
+    Greenfield project
+    </li>
+    <li>
+    Moderate traffic
+    </li>
+</ul>
+
+
+<h2>Drupal Negatives</h2>
+
+
+<ul>
+    <li>
+    Large team
+    </li>
+    <li>
+    Minimal Drupal experience
+    </li>
+    <li>
+    OO skills
+    </li>
+    <li>
+    No/low maintenance budget
+    </li>
+    <li>
+    Regular upgrade cycle 
+    </li>
+    <li>
+    Inflexible requirements
+    </li>
+    <li>
+    Web Application
+    </li>
+    <li>
+    AJAX heavy
+    </li>
+    <li>
+    High traffic
+    </li>
+    <li>
+    Testing a high priority
+    </li>
+    <li>
+    Legacy systems integration
+    </li>
+</ul>
+
+
+<h2>Team Size</h2>
+
+
+<p>
+I spent a year working on a Drupal project that
+had about 15 developers, plus test team, designers, project
+management etc.
+</p>
+
+
+<p>
+It&#8217;s possible, but with this size team we ran into
+several problems.
+</p>
+
+
+<p>
+In order to compose modules, content types, views,
+blocks, menus etc to build useful functionality the developer
+effectively works in the database a lot of the time. With small team
+it is possible to share a database so that work done there can be
+promoted directly to live just by selecting the required tables, with
+a large team sharing the database would lead to too much downtime
+(introduce a bad configuration and you have 14 people waiting for you
+to fix it).
+</p>
+
+
+<p>
+Databases aren&#8217;t easy to version control –
+especially when you need to take into account auto increment fields
+so you don&#8217;t get conflicting IDs when merging work from several
+developers.
+</p>
+
+
+<p>
+Drupal&#8217;s install and update hooks can be useful
+but they are targeted more at distribution than team synchronisation.
+</p>
+
+
+<p>
+Generally we fond that the Drupal hook system
+provides power without restraint – making it all too easy for a
+module to implement something like hook_form_alter() in a way that
+subtly breaks the behavior of an unrelated module elsewhere. 
+</p>
+
+
+<h2>Drupal vs OO experience</h2>
+
+
+<p>
+I&#8217;ve worked with some developers that love Drupal
+some that didn&#8217;t know it, and others that hate it. It&#8217;s all to easy
+when selecting a new technology to get carried away by the
+possibilities, but don&#8217;t forget technologies don&#8217;t build websites –
+people do.
+</p>
+
+
+<p>
+“<em>For the overwhelming majority of the
+bankrupt projects we studied, there was not a single technological
+issue to explain the failure.” </em> 
+<a href="/review/peopleware">Peopleware</a>
+</p>
+
+
+<p>
+If your team
+hates Drupal and loves OO then be very careful about selecting it for
+your project, conversely if you&#8217;re  Drupal shop full of experienced
+Drupal developers you can probably get away with using Drupal when
+it&#8217;s outrageously unsuited to the task.
+</p>
+
+
+<h2>Maintenance</h2>
+
+
+<p>
+Any website
+complex enough to consider using Drupal is going to need some
+maintenance, but I am surprised by the frequency of Drupal updates
+that need to be applied to keep the site secure.
+</p>
+
+
+<p>
+I have written
+applications without the benefit of a framework or CMS that after the
+first month or two neither needed nor received any development work
+for a period of years. I worked for a long time on an application
+that has now run for seven years – during which time you might see
+three or four incompatible Drupal versions released.
+</p>
+
+
+<p>
+Security releases
+are in general a good thing, and Drupal support is not short term so
+this may not be a major concern for many projects – but Drupal is
+not a “fire and forget” solution.
+</p>
+
+
+<h2>Release
+Frequency</h2>
+
+
+<p>
+Deployment is
+well accepted as being one of Drupal&#8217;s weaknesses 
+</p>
+
+
+<p>
+&quot;<em>Deployment of code, content, and configuration changes continue to be one of the big challenges in Drupal</em>&quot; <a href="http://association.drupal.org/Building-redesign-community-infrastructure-Administrators-wanted">Kieran Lal</a> 
+</p>
+
+
+<p>
+If your project
+is something you build, test, release, and finish: then deployment
+isn&#8217;t a problem.
+</p>
+
+
+<p>
+If you need to
+apply verified patches to fix bugs, while rolling out major upgrades
+every couple of months: I can tell you from bitter experience that
+Drupal can be a challenge.
+</p>
+
+
+<h2>Flexible
+Specifications</h2>
+
+
+<p>
+Drupal can help
+you develop functionality very quickly by using existing modules. But
+these modules will already have an interface and a certain way of
+doing things; if you can be flexible in the interpretation of
+requirements then Drupal can be great. However if your project has to
+meet specific client expectations and Drupal doesn&#8217;t work quite that
+way you may find yourself working very hard to alter Drupal to fit. 
+</p>
+
+
+<p>
+See also<a href="http://www.sunlightlabs.com/blog/2009/content-management-systems-just-dont-work/"> http://www.sunlightlabs.com/blog/2009/content-management-systems-just-dont-work/</a>
+</p>
+
+
+<h2>Content Site or Web Application</h2>
+
+
+<p>
+Drupal is a very flexible CMS, and you can build
+other things with it, but I don&#8217;t think it qualifies as a framework
+and so I wouldn&#8217;t use it in that way to create an application.
+</p>
+
+
+<p>
+Drupal has a very thin database layer, it doesn&#8217;t
+separate  the MVC components very well (theme, menu and model
+functions all in the same module), and there are many holes in the
+Drupal API.
+</p>
+
+
+<p>
+On the other hand Drupal has a lot of content
+oriented tools so if your project needs these it may well save a lot
+of development time.
+</p>
+
+
+<h2>Greenfield or Legacy Integration</h2>
+
+
+<p>
+Drupal requires a certain database structure, with
+even less flexibility if you use CCK if you already have a database
+structure which you can&#8217;t change it would be difficult to use Drupal.
+You can integrate existing databases with Drupal but everyone I&#8217;ve
+spoken to who has done this has ended up writing an import routine
+that converts existing data into Drupal nodes, even if this involves
+loading and submitting thousands of virtual Drupal forms.
+</p>
+
+
+<h2>AJAX</h2>
+
+
+<p>
+I&#8217;ve just finished a project which made heavy use
+of AJAX, and I was surprised to find that Drupal did very little to
+facilitate this and that I had to <a href="http://www.drupaler.co.uk/blog/naming-form-items-drupal/429">work around some problems</a>.
+</p>
+
+
+<p>
+Sure you can do AJAX in Drupal – but if you&#8217;re
+going to be doing a lot of AJAX you might want to use a framework
+that targets this.
+</p>
+
+
+<h2>Traffic levels</h2>
+
+
+<p>
+Drupal is resource intensive, CCK and Views can
+hit the database pretty hard, Drupal&#8217;s hook system gives you
+flexibility but you pay for this by allowing each module to act
+separately on the same event when a single action might be more
+efficient.
+</p>
+
+
+<p>
+If you throw enough hardware at Drupal you can
+make it scale massively as Comic Relief does to notable effect –
+but they do have to do a lot of work synchronising data and assets to
+make this work.   
+</p>
+
+
+<p>
+For sites with a normal amount of traffic Drupal
+will be just fine anyway.
+</p>
+
+
+<h2>Testing</h2>
+
+
+<p>
+I&#8217;ve used Drupal&#8217;s test framework where I can and
+it&#8217;s clearly been important in the development of Drupal 7 – but I
+don&#8217;t see it being used by developers day to day. I think this is
+because Drupal isn&#8217;t very test friendly. Any function may use the
+database at any point, functions cache data internally, global
+variables are used – tests are hard to isolate and run slowly.
+</p>
+
+
+<p>
+For many websites rigorous testing isn&#8217;t a
+priority – but if it is there many frameworks offer strong support
+for testing throughout development which may be helpful.
+</p>
+
+
+<h2>Conclusion</h2>
+
+
+<p>
+I hope people find these thoughts useful, they are
+only intended as pointers based on my experience.
+</p>
+
+
+<p>
+Many Drupal projects will succeed which have some
+of the bad points listed above, just as other projects which could be
+very good candidates for Drupal will succeed even if built using
+other tools.
+</p>
+
+
+<p>
+But if anyone has heard of Drupal success stories
+that have none of my good points and all of the bad ones – please
+do let me know about it.
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -558,7 +984,7 @@ My solution which assumes you have .my.cnf set up to provide login locally is be
 
 <h1>make sure test mails never go to real users!</h1>
 
-<p>echo &ldquo;update users set mail=&lsquo;<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#x6d;&#101;&#64;&#101;&#120;&#x61;&#109;&#x70;&#x6c;&#x65;&#x2e;&#99;&#x6f;&#109;">&#x6d;&#101;&#x40;&#x65;&#120;&#97;&#x6d;&#112;&#108;&#x65;&#46;&#99;&#111;&#109;</a>&rsquo;&rdquo; | mysql devdb
+<p>echo &ldquo;update users set mail=&lsquo;<a href="&#109;&#97;&#x69;&#108;&#116;&#111;&#x3a;&#109;&#x65;&#x40;&#101;&#120;&#97;&#x6d;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;">&#x6d;&#101;&#x40;&#x65;&#x78;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#x6f;&#109;</a>&rsquo;&rdquo; | mysql devdb
 </code></p>
 </div>
   
@@ -706,62 +1132,6 @@ Not all settings seem to be picked up immediately 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/21/sql-greatest-and-least/">SQL Greatest and Least</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-07-21T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Most of the time I can get what I want out of SQL using the standard aggregate functions, but today I needed to find the latest timestamp from any one of three columns.
-</p>
-
-
-<p>
-I achieved this using the GREATEST() function, it&#8217;s not party of the SQL standard but is commonly available.
-</p>
-
-
-<p>
-GREATEST(<em>value</em> [<span class="OPTIONAL">, &#8230;</span>])<br />
-</p>
-
-
-<pre class="SYNOPSIS">
-LEAST(<em>value</em> [<span class="OPTIONAL">, ...</span>])
-</pre>
-
-
-<p>
-The GREATEST and LEAST
-functions select the largest or smallest value from a list of any
-number of expressions. 
-</p>
-
-
-<p><br /></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/12">&larr; Older</a>
@@ -779,6 +1149,10 @@ number of expressions. 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -792,10 +1166,6 @@ number of expressions. 
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>

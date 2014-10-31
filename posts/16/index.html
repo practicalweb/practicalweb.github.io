@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I just discovered a nifty little utility Often working copies are only partially updated, this command gives a very quick command-line summary of &hellip;">
+  <meta name="description" content="One of the great things about Debian/Ubuntu is the consistency with which system documentation is placed in /usr/share/doc/ Assuming you have a web &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/10/18/how-to-read-compressed-apache-docs/">How to Read Compressed Apache Docs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-10-18T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+One of the great things about Debian/Ubuntu is the consistency with which system documentation is placed in /usr/share/doc/
+</p>
+
+
+<p>
+Assuming you have a web server installed this documentation is then available at http://localhost/doc/
+</p>
+
+
+<p>
+But to keep filesize down - many files are compressed and have to be decompressed before you can read them.
+</p>
+
+
+<p>
+The browser can actually do that compression on the fly - if it receives the right headers - what it needs to be told is that the content is compressed plain text. 
+</p>
+
+
+<p>
+To achieve this add the following lines to your default apache config for the docs directory (there should already be a docs section)
+</p>
+
+
+<p>
+&lt;Directory &quot;/usr/share/doc/&quot;&gt;<br />
+AddEncoding x-gzip gz tgz<br />
+AddType text/plain .gz<br />
+&lt;/Direcory&gt;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -830,73 +890,6 @@ The above argument doesn&#8217;t even touch on the benefits of encapsulation, co
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/07/18/time-to-upgrade-to-drupal-6/">Time to Upgrade to Drupal 6?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-07-18T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Drupal 6 has been out for a while now, Drupal 7 is in the works, and yet most sites still seem to be using Drupal 5. Is it time to upgrade yet?
-</p>
-
-
-<p>
-If it was just the core features the answer would be simple, Drupal 6 is better and is fully stable.
-</p>
-
-
-<p>
-The problem is that many (maybe most) of the features of a Drupal website are powered by contributed modules, and modules written for Drupal 5 don&#8217;t work with Drupal 6.
-</p>
-
-
-<p>
-This site uses 17 contributed modules; of these 9 have a clear upgrade path, 4 have new versions that are not yet stable, and 4 have no upgrade path.
-</p>
-
-
-<p>
-I could write upgrades for the 4 problem modules (but I don&#8217;t really have time). I could decide I don&#8217;t need those features.
-</p>
-
-
-<p>
-But Drupal 5 is still the only option if you want e-commerce, CiviCRM, and a whole host of other features.
-</p>
-
-
-<p>
-I won&#8217;t be upgrading for now - for me Drupal 5 still provides the most flexibility. 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/17">&larr; Older</a>
@@ -914,6 +907,10 @@ I won&#8217;t be upgrading for now - for me Drupal 5 still provides the most fle
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -927,10 +924,6 @@ I won&#8217;t be upgrading for now - for me Drupal 5 still provides the most fle
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>

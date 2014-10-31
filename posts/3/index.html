@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="One of those things that happens from time to time on a dual boot system... Windows breaks grub, usually if I've reinstalled windows, this can lead &hellip;">
+  <meta name="description" content="This worked for me today - saving it here so I can find it again http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/ cd &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,55 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/11/eclipse-hangs/">Eclipse Hangs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-11T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This worked for me today - saving it here so I can find it again</p>
+
+
+
+
+<p><a href="http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/">http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/</a></p>
+
+
+
+
+<pre>
+cd .metadata/.plugins
+mv org.eclipse.core.resources org.eclipse.core.resources.bak
+Start eclipse. (It should show an error message or an empty workspace because no project is found.)
+Close all open editors tabs.
+Exit eclipse.
+rm -rf org.eclipse.core.resources (Delete the newly created directory.)
+mv org.eclipse.core.resources.bak/ org.eclipse.core.resources (Restore the original directory.)
+Start eclipse and start working. :-)
+</pre>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1103,74 +1152,6 @@ On your local dev machine</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/28/monitor-filesystem-for-deletions/">Monitor Filesystem for Deletions</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-09-28T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>On a project I&#8217;m working on at the moment we have a problem, files are going missing.</p>
-
-
-
-
-<p>We don&#8217;t know which part of the system could be trashing these files (user uploaded images in this case) and they are on a shared filesystem so there are plenty of places to point fingers.</p>
-
-
-
-
-<p>I&#8217;ve discovered a very handy toolset <a href="https://github.com/rvoicilas/inotify-tools/wiki">inotify-tools</a> Which hooks into the linix kernel and allows you to monitor actions like file deletion.</p>
-
-
-
-
-<p>I my case all I need to do right now is monitor the files on each sytem that has access - and I&#8217;m hoping to catch which one does the delete</p>
-
-
-<p><In my build script is now the code</p></p>
-
-<p><code></p>
-
-<h1>stop monitoring for deletes through the build</h1>
-
-<p>[ -f ~/inotifywait.pid ] &amp;&amp; kill $(cat ~/inotifywait.pid)</p>
-
-<p>git pull
-./build.sh</p>
-
-<h1>if the tool is installed - monitor file delets</h1>
-
-<p>which inotifywait &amp;&amp;
-{
- nohup inotifywait -mr &ndash;timefmt &lsquo;%d/%m/%y %H:%M&rsquo; &ndash;format &lsquo;%T %w %f %e&rsquo; -e delete /var/www/sites/default/files/ &amp;> ~/build-${JOB_NAME}-$(BUILD_NUMBER)-delete.log  &amp;
- echo $! > ~/inotifywait.pid
-}</p>
-
-<p></code></p>
-
-<p>This should create a log of any user files that get deleted between builds</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/4">&larr; Older</a>
@@ -1188,6 +1169,10 @@ On your local dev machine</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
       </li>
     
@@ -1201,10 +1186,6 @@ On your local dev machine</p>
     
       <li class="post">
         <a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a>
       </li>
     
   </ul>
