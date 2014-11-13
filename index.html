@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Drupal has been in the new today for all the wrong reasons Millions of websites hit by Drupal hack attack Drupal sites had “hours” to patch before &hellip;">
+  <meta name="description" content="Recently I&rsquo;ve been reviewing security and realised I&rsquo;ve been relying too much on my routers firewall - which isn&rsquo;t even present if &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,124 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-13T14:41:12+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>2:41 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently I&rsquo;ve been reviewing security and realised I&rsquo;ve been relying too much on my routers firewall - which isn&rsquo;t even present if I work on an open wifi connection somewhere.</p>
+
+<p>Steps so far</p>
+
+<p>Reinstalled Ubuntu with full disk encryption, apart from the need to back and restore data this was a painless process. I don&rsquo;t see a noticeable performance impact (though I have a fast system with SSD) the biggest drawback I can see is that if I mess around with a custom kernel and break the boot sequence - I don&rsquo;t know if I can boot from a live CD to fix it.</p>
+
+<p>Setup a restrictive local firewall</p>
+
+<p>as root</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+</span><span class='line'>iptables -I INPUT <span class="m">1</span> -i lo -j ACCEPT
+</span><span class='line'>iptables -P INPUT DROP
+</span><span class='line'>iptables -S
+</span><span class='line'>apt-get install iptables-persistent
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>edit /etc/postfix/main.cf</p>
+
+<p>set</p>
+
+<p>inet_interfaces = 127.0.0.1</p>
+
+<p>and <code>/etc/init.d/postfix restart</code></p>
+
+<p>I will review open ports each time I configure a new service and ensure I don&rsquo;t have services I only need local accessible externally.</p>
+
+<p>By both configuring firewall <strong>and</strong> limiting services I am applying the principle of defence in depth and even if there is a weakness (or I make a mistake) in one place I will still be protected.</p>
+
+<p>Where I do need to share services between systems on my home/office network I have realised my old router is not sophisticated enough and am purchasing one that can separate secure and insecure networks.</p>
+
+<p>All systems are now being configured for automatic updates, since I want patches as soon as possible, small frequent updates are easier to debug than problems with large updates, and generally I only delay updating out of inertia rather than any deliberate action. This way I don&rsquo;t even have to think about it.</p>
+
+<p>from  <a href="http://www.richud.com/wiki/Ubuntu_Enable_Automatic_Updates_Unattended_Upgrades">http://www.richud.com/wiki/Ubuntu_Enable_Automatic_Updates_Unattended_Upgrades</a></p>
+
+<p>my config files are now</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cat /etc/apt/apt.conf.d/50unattended-upgrades  <span class="p">|</span> grep -v ^//
+</span><span class='line'>Unattended-Upgrade::Allowed-Origins <span class="o">{</span>
+</span><span class='line'>  <span class="s2">&quot;${distro_id}:${distro_codename}-security&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="s2">&quot;${distro_id}:${distro_codename}-updates&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="o">}</span><span class="p">;</span>
+</span><span class='line'>Unattended-Upgrade::Package-Blacklist <span class="o">{</span>
+</span><span class='line'><span class="o">}</span><span class="p">;</span>
+</span><span class='line'>Unattended-Upgrade::MinimalSteps <span class="s2">&quot;true&quot;</span><span class="p">;</span>
+</span><span class='line'>Unattended-Upgrade::Mail <span class="s2">&quot;root&quot;</span><span class="p">;</span>
+</span><span class='line'>Unattended-Upgrade::Remove-Unused-Dependencies <span class="s2">&quot;false&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cat /etc/apt/apt.conf.d/10periodic  <span class="p">|</span> grep -v ^//
+</span><span class='line'>APT::Periodic::Update-Package-Lists <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+</span><span class='line'>APT::Periodic::Download-Upgradeable-Packages <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+</span><span class='line'>APT::Periodic::AutocleanInterval <span class="s2">&quot;7&quot;</span><span class="p">;</span>
+</span><span class='line'>APT::Periodic::Unattended-Upgrade <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+</span><span class='line'>APT::Periodic::Verbose <span class="s2">&quot;2&quot;</span><span class="p">;</span>
+</span><span class='line'>APT::Periodic::RandomSleep <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Also set /root/.forward to ensure I get root mail</p>
+
+<p>I have also realised I rely too much on browser stored passwords, and while this is useful for low-security logins I will not be using it for any important site.</p>
+
+<p>Funnily I&rsquo;ve also found I needed to revisit my backup policy and actually delete more stuff <strong>not</strong> backing up code and documents which are business confidential and are already backed up centrally. In this case I realised my own backups were just causing a data management problem just increasing the risk that the data gets accidentally disclosed.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -620,64 +738,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/11/19/how-to-use-google-comments-on-your-blog/">How to Use Google Comments on Your Blog</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-11-19T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>To use google plus comments on your site all you need to do is insert the following code on teh page where you want the comments to appear</p>
-
-<p>url should be the full url to the page, then any comments in google plus with this url will appear to any user who can see them (ie public commnts or those from people in the viewers circles).</p>
-
-<p>width is just how wide you want the comment box</p>
-
-<p>BLOGGER This method is as far as I can see only officially supported for Blogger comments and only this value seems to work</p>
-
-<p>FILTERED_POSTMOD similarly seems to be just what people use - I didn&rsquo;t find docs for this so I&rsquo;m unsure if other values work</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://apis.google.com/js/plusone.js&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;/script&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;g:comments</span>
-</span><span class='line'>    <span class="na">href=</span><span class="s">&quot;The url of the blog post&quot;</span>
-</span><span class='line'>    <span class="na">width=</span><span class="s">&quot;500&quot;</span>
-</span><span class='line'>    <span class="na">first_party_property=</span><span class="s">&quot;BLOGGER&quot;</span>
-</span><span class='line'>    <span class="na">view_type=</span><span class="s">&quot;FILTERED_POSTMOD&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;/g:comments&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -693,6 +753,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
@@ -706,10 +770,6 @@
     
       <li class="post">
         <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
       </li>
     
   </ul>

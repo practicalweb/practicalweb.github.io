@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="If you&rsquo;ve ever tried to debug your update hooks via drush you may (like me) have been puzzled as to why your breakpoints don&rsquo;t seem to &hellip;">
+  <meta name="description" content="I&rsquo;ve found altering CCK node types as part of a fully scripted deployment phase to be quite challenging. The best I&rsquo;ve come up with is to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/25/programatically-altering-a-cck-node-type/">Programatically Altering a CCK Node Type</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-06-25T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve found altering CCK node types as part of a fully scripted deployment phase to be quite challenging.</p>
+
+<p>The best I&rsquo;ve come up with is to use features for the main config changes and adding fields, but this won&rsquo;t remove any fields - but CCK provides functions for this.</p>
+
+<p>Oddly installing the features module doesn&rsquo;t make the database schema changes until after caches are cleared.</p>
+
+<p>The following code updates my CCK type, with new fields and settings.</p>
+
+<p>I want to change a text field to a link field - there doesn&rsquo;t seem to be a direct way to do this so I add the new link field in features, copy the data via SQL, then delete the old field.</p>
+
+<p>The one thing I can&rsquo;t see a way to do is to delete a field group.</p>
+
+<p>None of this is fully tested yet - I&rsquo;m writing up as I go and will update if I hit issues.</p>
+
+<p>&lt;?php</p>
+
+<p>// update CCK type via features module
+drupal_install_modules(array( &lsquo;features&rsquo;, &lsquo;mytype&rsquo;));</p>
+
+<p>// flush caches to make schema change take effect
+drupal_flush_all_caches();</p>
+
+<p>// copy data from old text field to link
+$items[] = update_sql(&ldquo;update content_type_mytype set field_mytype_link_url=field_mytype_url_value&rdquo;);</p>
+
+<p>// delete old text field
+content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytype&rsquo;, FALSE);</p>
+
+<p>// I&rsquo;d like to delete a group but THIS DOESN&rsquo;T WORK!
+//  content_field_instance_delete(&lsquo;group_groupname_info&rsquo;, &lsquo;mytype&rsquo;, TRUE);</p>
+
+<p>?></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -749,70 +809,6 @@ Contains Ordnance Survey data (c) Crown copyright and database right 2010
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/03/29/drupal-hook_user-reset/">Drupal Hook_user Reset</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-03-29T00:00:00+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I need a user hook that sends password reset events.</p>
-
-<p>I created a very simple module to do this - but it doesn&rsquo;t work.</p>
-
-<p>I think this is because user_pass_reset() calls drupal_goto() after a login link is used - and that this bypasses my extra form handler.</p>
-
-<p>and according to</p>
-
-<p><a href="http://www.advomatic.com/blogs/marco-carbone/drupal-privacy-configuring-your-site-to-work-without-cookies-for-anonymous-users">http://www.advomatic.com/blogs/marco-carbone/drupal-privacy-configuring-your-site-to-work-without-cookies-for-anonymous-users</a></p>
-
-<blockquote>
-form_alter on &#8216;user_pass_reset&#8217; doesn&#8217;t work reliably, due to how the one-time login form is implemented
-</blockquote>
-
-
-<p>&lt;?php</p>
-
-<p>function userresethook_form_alter(&amp;$form, &amp;$form_state, $form_id){
-  if ($form_id == &lsquo;user_pass_reset&rsquo;){
-    $form[&lsquo;#submit&rsquo;][] = &lsquo;userresethook_submit&rsquo;;
-  } else {
-    return;
-  }
-}</p>
-
-<p>//This doesn&rsquo;t get called!
-function userresethook_submit($form, &amp;$form_state){
-  global $user;
-  user_module_invoke(&lsquo;reset&rsquo;, $form, $user);
-}</p>
-
-<p>?></p>
-
-<p>This is a shame as this could be a useful hook and I prefer not to patch the user module (which is what I&rsquo;ve done for the time being).</p>
-
-<p>Am I missing something? Is my code wrong? Is there a better way&hellip;</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/9">&larr; Older</a>
@@ -830,6 +826,10 @@ function userresethook_submit($form, &amp;$form_state){
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
@@ -843,10 +843,6 @@ function userresethook_submit($form, &amp;$form_state){
     
       <li class="post">
         <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
       </li>
     
   </ul>

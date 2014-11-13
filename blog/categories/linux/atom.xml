@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-10-31T18:43:23+00:00</updated>
+  <updated>2014-11-13T15:10:58+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,77 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Quick Steps to Secure Ubuntu Linux]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/"/>
+    <updated>2014-11-13T14:41:12+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux</id>
+    <content type="html"><![CDATA[<p>Recently I&rsquo;ve been reviewing security and realised I&rsquo;ve been relying too much on my routers firewall - which isn&rsquo;t even present if I work on an open wifi connection somewhere.</p>
+
+<p>Steps so far</p>
+
+<p>Reinstalled Ubuntu with full disk encryption, apart from the need to back and restore data this was a painless process. I don&rsquo;t see a noticeable performance impact (though I have a fast system with SSD) the biggest drawback I can see is that if I mess around with a custom kernel and break the boot sequence - I don&rsquo;t know if I can boot from a live CD to fix it.</p>
+
+<p>Setup a restrictive local firewall</p>
+
+<p>as root</p>
+
+<pre><code class="bash ">iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -I INPUT 1 -i lo -j ACCEPT
+iptables -P INPUT DROP
+iptables -S
+apt-get install iptables-persistent
+</code></pre>
+
+<p>edit /etc/postfix/main.cf</p>
+
+<p>set</p>
+
+<p>inet_interfaces = 127.0.0.1</p>
+
+<p>and <code>/etc/init.d/postfix restart</code></p>
+
+<p>I will review open ports each time I configure a new service and ensure I don&rsquo;t have services I only need local accessible externally.</p>
+
+<p>By both configuring firewall <strong>and</strong> limiting services I am applying the principle of defence in depth and even if there is a weakness (or I make a mistake) in one place I will still be protected.</p>
+
+<p>Where I do need to share services between systems on my home/office network I have realised my old router is not sophisticated enough and am purchasing one that can separate secure and insecure networks.</p>
+
+<p>All systems are now being configured for automatic updates, since I want patches as soon as possible, small frequent updates are easier to debug than problems with large updates, and generally I only delay updating out of inertia rather than any deliberate action. This way I don&rsquo;t even have to think about it.</p>
+
+<p>from  <a href="http://www.richud.com/wiki/Ubuntu_Enable_Automatic_Updates_Unattended_Upgrades">http://www.richud.com/wiki/Ubuntu_Enable_Automatic_Updates_Unattended_Upgrades</a></p>
+
+<p>my config files are now</p>
+
+<pre><code class="bash">cat /etc/apt/apt.conf.d/50unattended-upgrades  | grep -v ^//
+Unattended-Upgrade::Allowed-Origins {
+    "${distro_id}:${distro_codename}-security";
+    "${distro_id}:${distro_codename}-updates";
+};
+Unattended-Upgrade::Package-Blacklist {
+};
+Unattended-Upgrade::MinimalSteps "true";
+Unattended-Upgrade::Mail "root";
+Unattended-Upgrade::Remove-Unused-Dependencies "false";
+</code></pre>
+
+<pre><code class="bash">cat /etc/apt/apt.conf.d/10periodic  | grep -v ^//
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Download-Upgradeable-Packages "1";
+APT::Periodic::AutocleanInterval "7";
+APT::Periodic::Unattended-Upgrade "1";
+APT::Periodic::Verbose "2";
+APT::Periodic::RandomSleep "1";
+</code></pre>
+
+<p>Also set /root/.forward to ensure I get root mail</p>
+
+<p>I have also realised I rely too much on browser stored passwords, and while this is useful for low-security logins I will not be using it for any important site.</p>
+
+<p>Funnily I&rsquo;ve also found I needed to revisit my backup policy and actually delete more stuff <strong>not</strong> backing up code and documents which are business confidential and are already backed up centrally. In this case I realised my own backups were just causing a data management problem just increasing the risk that the data gets accidentally disclosed.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Headless VPN on Linux With Minimal VPN Traffic and Selective DNS]]></title>
@@ -241,119 +312,6 @@ baseurl=http://yum.example.com/myrepo
 <p></code></p>
 
 <p>This should create a log of any user files that get deleted between builds</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Device Eth0 Does Not Seem to Be Present, Delaying Initialization.]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2012/05/02/device-eth0-does-not-seem-to-be-present-delaying-initialization/"/>
-    <updated>2012-05-02T00:00:00+01:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2012/05/02/device-eth0-does-not-seem-to-be-present-delaying-initialization</id>
-    <content type="html"><![CDATA[<p>
-I had a centos VM that I hadn&#8217;t used in a while, I think I cloned it from another version.
-</p>
-
-
-<p>
-When I came to use it again I had no network andtrying to start the network I got the error message in the title.
-</p>
-
-
-<p>
-There seem to be a few issues
-</p>
-
-
-<p>
-Firstly netowrking isn&#8217;t endabled by default 
-</p>
-
-
-<p>
-<a href="http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90">http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90</a> 
-</p>
-
-
-<p>
-Secondly the cloned image appears to get a different mac address for the network card, but theconfig doesn&#8217;t auto detect this
-</p>
-
-
-<p>
-Thirdly the new machine seemed to have eth1 instead of eth0
-</p>
-
-
-<p>
-and finally I needed to enable dhcp
-</p>
-
-
-<p>
-What this meant was copying the new mac address from the virtualbox network settings tab (inserting a colon every second charecter  to match the format required)
-</p>
-
-
-<p>
-I placed this in both 
-</p>
-
-
-<p>
-/etc/udev/rules.d/70-persistant-net.rules
-</p>
-
-
-<p>
-and  
-</p>
-
-
-<p>
-/etc/sysconfig/network-scripts/ifcfg-eth0
-</p>
-
-
-<p>
-Where I also set 
-</p>
-
-
-<p>
-ONBOOT=&quot;yes&quot;  <br />
-BOOTPROTO=&quot;dhcp&quot;
-</p>
-
-
-<p>
-Finally /etc/init.d/networking restart got my network up 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
 ]]></content>
   </entry>
   

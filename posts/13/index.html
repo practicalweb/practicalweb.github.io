@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I&rsquo;ve written a patch for Drupal 7 to enable date and time data types to be defined for the schema API. http://drupal.org/node/200953 Update : &hellip;">
+  <meta name="description" content="An interesting post from Lullabot today on problems with Drupal's Schema API and the Twitpocalypse It turns out that the Schema API doesn't properly &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/06/22/drupal-schema-api-has-problems/">Drupal Schema API Has Problems</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-06-22T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+<a href="http://www.lullabot.com/articles/drupocalypse-now-or-dangerous-integer-handling-drupal-write-record">An interesting post from Lullabot today</a> on problems with Drupal&#8217;s Schema API and the <a href="http://www.google.co.uk/search?q=Twitpocalypse">Twitpocalypse</a>
+</p>
+
+
+<p>
+It turns out that <a href="http://drupal.org/node/333788">the Schema API doesn&#8217;t properly understand the difference between different types of integers</a> 
+</p>
+
+
+<p>I was already concerned that
+<a href="http://drupal.org/node/200953">Schema API lacks the &lsquo;time&rsquo; and &lsquo;date&rsquo; type</a></p>
+
+<p>
+I don&#8217;t really understand why the Drupal team has decided to try and roll it&#8217;s own database abstraction layer, and make it a core part of the system in the current state. 
+</p>
+
+
+<p>
+There seem to be <a href="http://drupal.org/project/issues/search/drupal?text=&amp;assigned=&amp;submitted=&amp;participant=&amp;status[]=Open&amp;priorities[]=1&amp;priorities[]=2&amp;categories[]=bug&amp;version[]=6.x&amp;component[]=database+system&amp;issue_tags=">quite a few bugs</a>
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -684,98 +734,6 @@ After this the virtual machine worked fine - and the new network settings are gr
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/27/cross-platform-testing-with-selenium-and-virtualbox/">Cross Platform Testing With Selenium and VirtualBox</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-04-27T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-As well as following standards such as those laid down by www.w3.org I always try and test websites I develop across a range of browsers. Despite improvements in compatibility in recent years, browsers do still vary in implementation and even relatively minor browsers are still used by large numbers of people.
-</p>
-
-
-<p>
-However all this testing can be hard to keep on top of and sometimes I just have to push out what seems like a small code change with only limited testing.
-</p>
-
-
-<p>
-I&#8217;m aiming to automate as much testing as possible, this is a little more work up front - but makes re-running tests trivial and so more likely to happen.
-</p>
-
-
-<p>
-I use VirtualBox to run multiple environments, and am happy to find that the newer releases (2.1 and up) support improved networking.
-</p>
-
-
-<p>
-So I have installed <a href="http://seleniumhq.org/projects/remote-control/">Selenium RC</a> on a virtual machine, and by running this simple script I can test on Internet Explorer - from my Linux development machine.
-</p>
-
-
-<p>&lt;?php</p>
-
-<p>set_include_path(get_include_path() . PATH_SEPARATOR . &lsquo;./PEAR/&rsquo;);
-require_once &lsquo;Testing/Selenium.php&rsquo;;</p>
-
-<p>$selenium = new Testing_Selenium(&ldquo;*iexplore&rdquo;, &ldquo;<a href="http://www.google.com">http://www.google.com</a>&rdquo;, &lsquo;192.168.0.7&rsquo;);</p>
-
-<p>$selenium->start();</p>
-
-<p>$selenium->open(&ldquo;/&rdquo;);
-$selenium->type(&ldquo;q&rdquo;, &ldquo;hello world&rdquo;);
-$selenium->click(&ldquo;btnG&rdquo;);
-$selenium->waitForPageToLoad(10000);
-print (preg_match(&ldquo;/Google Search/&rdquo;, $selenium->getTitle())) ? &ldquo;pass\n&rdquo; : &ldquo;fail\n&rdquo;;
-$selenium->stop();</p>
-
-<p>?></p>
-
-<p>Note that I can specify which Virtual Machine to test on just by providing the appropriate IP address.</p>
-
-
-
-
-<p>This example is in PHP because that&#8217;s what I use, it requires the Pear package Testing_Selenium which I installed on Ubuntu by the command</p>
-
-
-<p><code>
-sudo pear install channel://pear.php.net/Testing_Selenium-0.4.3
-</code></p>
-
-<p>
-Now all I need to do is integrate this into my unit testing framework and add some scripts to start up and shut down the virtual machines.
-</p>
-
-
-
-
-<p>There is also Selenium Grid which is aimed at distributing tests across multiple machines in parallel - but as this is all running on one physical machine (my laptop) I don&#8217;t really want parallelisation here.</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/14">&larr; Older</a>
@@ -793,6 +751,10 @@ Now all I need to do is integrate this into my unit testing framework and add so
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
@@ -806,10 +768,6 @@ Now all I need to do is integrate this into my unit testing framework and add so
     
       <li class="post">
         <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
       </li>
     
   </ul>

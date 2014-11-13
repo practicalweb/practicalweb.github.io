@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="For most of 2008 I've been working on a large Drupal installation (around 10 developers,  something like 100 custom modules, 17 languages, split &hellip;">
+  <meta name="description" content="When you want to see what svn update is about to do you may try svn update &ndash;dry-run But this doesn&rsquo;t work. You can get the results you &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/14/show-what-svn-update-is-about-to-do/">Show What Svn Update Is About to Do</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-01-14T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When you want to see what svn update is about to do you may try</p>
+
+<p><code>svn update &ndash;dry-run</code></p>
+
+<p>But this doesn&rsquo;t work.</p>
+
+<p>You can get the results you need by running</p>
+
+<p><code>svn status -u </code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -737,94 +774,6 @@ I now have a true copy of IE6 on Ubuntu and can test away.
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/11/02/eclipse-pdt-and-subversion/">Eclipse PDT and Subversion</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-11-02T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>
-Version conflicts to be aware of
-</h2>
-
-
-<p>
-Ubuntu 8.10 (Intrepid Ibex) now ships with Subversion 1.5 
-</p>
-
-
-<p>
-You can&#8217;t use a svn 1.4 client and a svn 1.5 client on the same working copy.
-</p>
-
-
-<p>
-While the subversion integration in Eclipse is great I still prefer to do some things on the command line and some with kdesvn.
-</p>
-
-
-<p>
-Then you need to upgrade your subclipse plugin to subclipse 1.4
-</p>
-
-
-<p>
-If you can - then upgrade to Eclipse 3.4 
-</p>
-
-
-<p>
-But Eclipse 3.4 doesn&#8217;t run the latest stable version of PDT - and last time I tried to use an Integration build it was unusable - I may try again sometime but right now I want a small upgrade.
-</p>
-
-
-<p>
-I followed this instructions here http://subclipse.tigris.org/install.html
-</p>
-
-
-<p>
-But Eclipse reported a &quot;Network problem&quot;
-</p>
-
-
-<p>
-So I downloaded the zip file<br />
-http://subclipse.tigris.org/files/documents/906/43792/site-1.4.5.zip
-</p>
-
-
-<p>
-Unpacked it in a folder on my local webserver, pointed Eclipse at this location and the installation worked!
-</p>
-
-
-<p>
-Phew - I have a working Eclipse for PHP development on Ubuntu 8.10 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/16">&larr; Older</a>
@@ -842,6 +791,10 @@ Phew - I have a working Eclipse for PHP development on Ubuntu 8.10
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
@@ -855,10 +808,6 @@ Phew - I have a working Eclipse for PHP development on Ubuntu 8.10
     
       <li class="post">
         <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a>
       </li>
     
   </ul>

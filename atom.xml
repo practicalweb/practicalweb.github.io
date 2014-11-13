@@ -4,7 +4,7 @@
   <title><![CDATA[PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-10-31T18:43:23+00:00</updated>
+  <updated>2014-11-13T15:10:58+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,104 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Quick Steps to Secure Ubuntu Linux]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/"/>
+    <updated>2014-11-13T14:41:12+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux</id>
+    <content type="html"><![CDATA[<p>Recently I&rsquo;ve been reviewing security and realised I&rsquo;ve been relying too much on my routers firewall - which isn&rsquo;t even present if I work on an open wifi connection somewhere.</p>
+
+<p>Steps so far</p>
+
+<p>Reinstalled Ubuntu with full disk encryption, apart from the need to back and restore data this was a painless process. I don&rsquo;t see a noticeable performance impact (though I have a fast system with SSD) the biggest drawback I can see is that if I mess around with a custom kernel and break the boot sequence - I don&rsquo;t know if I can boot from a live CD to fix it.</p>
+
+<p>Setup a restrictive local firewall</p>
+
+<p>as root</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+</span><span class='line'>iptables -I INPUT <span class="m">1</span> -i lo -j ACCEPT
+</span><span class='line'>iptables -P INPUT DROP
+</span><span class='line'>iptables -S
+</span><span class='line'>apt-get install iptables-persistent
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>edit /etc/postfix/main.cf</p>
+
+<p>set</p>
+
+<p>inet_interfaces = 127.0.0.1</p>
+
+<p>and <code>/etc/init.d/postfix restart</code></p>
+
+<p>I will review open ports each time I configure a new service and ensure I don&rsquo;t have services I only need local accessible externally.</p>
+
+<p>By both configuring firewall <strong>and</strong> limiting services I am applying the principle of defence in depth and even if there is a weakness (or I make a mistake) in one place I will still be protected.</p>
+
+<p>Where I do need to share services between systems on my home/office network I have realised my old router is not sophisticated enough and am purchasing one that can separate secure and insecure networks.</p>
+
+<p>All systems are now being configured for automatic updates, since I want patches as soon as possible, small frequent updates are easier to debug than problems with large updates, and generally I only delay updating out of inertia rather than any deliberate action. This way I don&rsquo;t even have to think about it.</p>
+
+<p>from  <a href="http://www.richud.com/wiki/Ubuntu_Enable_Automatic_Updates_Unattended_Upgrades">http://www.richud.com/wiki/Ubuntu_Enable_Automatic_Updates_Unattended_Upgrades</a></p>
+
+<p>my config files are now</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cat /etc/apt/apt.conf.d/50unattended-upgrades  <span class="p">|</span> grep -v ^//
+</span><span class='line'>Unattended-Upgrade::Allowed-Origins <span class="o">{</span>
+</span><span class='line'>  <span class="s2">&quot;${distro_id}:${distro_codename}-security&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="s2">&quot;${distro_id}:${distro_codename}-updates&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="o">}</span><span class="p">;</span>
+</span><span class='line'>Unattended-Upgrade::Package-Blacklist <span class="o">{</span>
+</span><span class='line'><span class="o">}</span><span class="p">;</span>
+</span><span class='line'>Unattended-Upgrade::MinimalSteps <span class="s2">&quot;true&quot;</span><span class="p">;</span>
+</span><span class='line'>Unattended-Upgrade::Mail <span class="s2">&quot;root&quot;</span><span class="p">;</span>
+</span><span class='line'>Unattended-Upgrade::Remove-Unused-Dependencies <span class="s2">&quot;false&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cat /etc/apt/apt.conf.d/10periodic  <span class="p">|</span> grep -v ^//
+</span><span class='line'>APT::Periodic::Update-Package-Lists <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+</span><span class='line'>APT::Periodic::Download-Upgradeable-Packages <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+</span><span class='line'>APT::Periodic::AutocleanInterval <span class="s2">&quot;7&quot;</span><span class="p">;</span>
+</span><span class='line'>APT::Periodic::Unattended-Upgrade <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+</span><span class='line'>APT::Periodic::Verbose <span class="s2">&quot;2&quot;</span><span class="p">;</span>
+</span><span class='line'>APT::Periodic::RandomSleep <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Also set /root/.forward to ensure I get root mail</p>
+
+<p>I have also realised I rely too much on browser stored passwords, and while this is useful for low-security logins I will not be using it for any important site.</p>
+
+<p>Funnily I&rsquo;ve also found I needed to revisit my backup policy and actually delete more stuff <strong>not</strong> backing up code and documents which are business confidential and are already backed up centrally. In this case I realised my own backups were just causing a data management problem just increasing the risk that the data gets accidentally disclosed.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Drupageddon]]></title>
@@ -812,110 +910,6 @@ sqlite3 ~/.Skype/${username}/main.db \
 <p><code>git update-index &ndash;no-skip-worktree $filename</code></p>
 
 <p>There is also a assume-unchanged option - but this is aimed more at performance and bug workarounds - it realy does assume the file is unchanged - which in my case is incorrect.</p>
-
-
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Headless VPN on Linux With Minimal VPN Traffic and Selective DNS]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2013/03/12/headless-vpn-on-linux-with-minimal-vpn-traffic-and-selective-dns/"/>
-    <updated>2013-03-12T00:00:00+00:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2013/03/12/headless-vpn-on-linux-with-minimal-vpn-traffic-and-selective-dns</id>
-    <content type="html"><![CDATA[<p>I needed to setup a VPN client connection on a headless system where the VPN is slow and so I want to route the minimal amount of traffic through it. I need DNS to use the VPN but only for one domain.</p>
-
-<p>This is my setup using pptp and dnsmasq (tested on centOS)</p>
-
-<p>Basic VPN config is here</p>
-
-<p><code>/etc/ppp/peers/office</code></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># written by pptpsetup
-</span><span class='line'>pty "pptp vpn.example.com --nolaunchpppd"
-</span><span class='line'>lock
-</span><span class='line'>noauth
-</span><span class='line'>nobsdcomp
-</span><span class='line'>nodeflate
-</span><span class='line'>refuse-eap
-</span><span class='line'>usepeerdns
-</span><span class='line'>defaultroute
-</span><span class='line'>name sean.burlington
-</span><span class='line'>remotename office
-</span><span class='line'>ipparam office
-</span><span class='line'>require-mppe-128</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Startup script adds a default route for the network I need to access via vpn and adds the DNS server to dnsmasq config</p>
-
-<p><code>/etc/ppp/ip-up.local</code></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">for</span> net in 192.168.128.0/17 <span class="p">;</span> <span class="k">do</span>
-</span><span class='line'>  /sbin/route -v add -net <span class="nv">$net</span> dev <span class="nv">$IFNAME</span>
-</span><span class='line'>  logger -t pppd <span class="s2">&quot;added route for $net&quot;</span>
-</span><span class='line'><span class="k">done</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
-</span><span class='line'>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;server=/example.com/${DNS1}&quot;</span> &gt;&gt; /etc/dnsmasq.conf
-</span><span class='line'>
-</span><span class='line'>service dnsmasq restart
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>When disconnecting VPN reset dnsmasq, in my case I need the public DNS for example.com when not on VPN</p>
-
-<p><code>/etc/ppp/ip-down.local</code></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
-</span><span class='line'>
-</span><span class='line'>cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
-</span><span class='line'>
-</span><span class='line'>service dnsmasq restart
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>My <code>/etc/resolv.conf</code> points first to localhost where dnsmaq runs, then to my router which provides the upstream DNS</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>nameserver 127.0.0.1
-</span><span class='line'>nameserver 192.168.0.1
-</span></code></pre></td></tr></table></div></figure>
 
 
 
