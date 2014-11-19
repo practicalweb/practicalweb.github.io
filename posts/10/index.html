@@ -9,8 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="To remove static blocks and replace with as custom block. Implement hook_block specifying the default visibility and so on &lt;?php
-$blocks[&lsquo; &hellip;">
+  <meta name="description" content="The drush script which provides comman line acceess to drupal functionality emits an error message when run as a cron job tput: No value for $TERM &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,138 @@ $blocks[&lsquo; &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/18/drush-tput-no-value-for-term-and-no-t-specified/">Drush &#8220;Tput: No Value for $TERM and No -T Specified&#8221;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-18T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The drush script which provides comman line acceess to drupal functionality emits an error message when run as a cron job</p>
+
+
+<p><code>
+tput: No value for $TERM and no -T specified
+</code></p>
+
+<p><code></p>
+
+<h1>If it is not exported determine and export the number of columns.</h1>
+
+<p>if [ -z $COLUMNS ]; then
+  export COLUMNS=$(tput cols)
+fi
+</code></p>
+
+<p>I presume drush uses this information to calculate layout of output.</p>
+
+
+
+
+<p>However when running as a cron job COLUMNS is not set and tput gives the above error.</p>
+
+
+
+
+<p>To resolve this specify a COLUMNS value in your cron job, setting an appropriate size for viewing in email</p>
+
+
+<p></p>
+
+<p><p>cron now runs the following for me.</p>
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<p>cd /var/www/mysite/public_html</p>
+
+<p>COLUMNS=80 /home/me/bin/drush cron
+</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/05/drupal-cron-getting-stuck/">Drupal Cron Getting Stuck</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-05T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve just run into the drupal cron problem again  
+</p>
+
+
+<p>
+Cron fails and the error log says 
+</p>
+
+
+<p>
+&quot;Attempting 
+to re-run cron while it is already running.&quot;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<ul>
+    <li>delete from variable where name=&#8217;cron_semaphore&#8217;;</li>
+    <li>clear caches</li>
+    <li>run cron from the web page </li>
+</ul>
+
+
+<p>That seems to do the trick.</p>
+
+
+
+
+<p>Now cron runs OK fom drush or web.</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -550,183 +681,6 @@ It&#8217;s a great little command line utility with a very forgetable name.
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/11/25/going-google/">Going Google</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-11-25T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I seem to be progressivly going Google, it started with search but for a long time I resisted the lure of Googles other treats.
-</p>
-
-
-<p>
-However since I got an Android phone I&#8217;ve been getting slowly sucked in with accounts on Gmail, Picassa, Google, Calender, and now Google Apps 
-</p>
-
-
-<p>
-One thing I found out is that you <a href="http://www.google.com/support/forum/p/Google+Apps/thread?tid=5e6502d85823b15f&amp;hl=en&amp;fid=5e6502d85823b15f000479078747d294">can&#8217;t upgrade from a Gmail account to a Google Apps one</a> what you have to do is create a new account and do a lot of exporting/importing.
-</p>
-
-
-<p>
-A Google apps account allows you to use your own domain name for email, and manage all accounts at that domain but is otherwise not so different to a Gmail account.
-</p>
-
-
-<p>
-The lack of upgrade path is a pain but the actual account creation and migration process was easy; I had my email going to the new account within half an hour.
-</p>
-
-
-<p>
-The next snag was updating my Android phone to use the new account; there is no obvious way to do this but a bit of googling gave me the answer:
-</p>
-
-
-<p>
-Go to Setting &gt; Application &gt; Manage Application 
-</p>
-
-
-<p>
-Then for each of 
-</p>
-
-
-<ul>
-    <li>Gmail</li>
-    <li>Gmail storage</li>
-    <li>Google apps</li>
-    <li>Google search</li>
-</ul>
-
-
-<p>
-&quot;clear data&quot;
-</p>
-
-
-<p>
-You should shortly be prompted to enter your new account details.
-</p>
-
-
-<p>
-Make sure you have imported your contacts and calender to the new account before doing this so that your cleared data gets restored quickly. 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/11/25/getting-calibre-working-on-debian-lenny/">Getting Calibre Working on Debian Lenny</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-11-25T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I recently bought a Sony e-reader, the main Linux package to support this is calibre but I found that it wouldn&#8217;t automatically sync my ebooks.
-</p>
-
-
-<p>
- <a href="http://calibre.kovidgoyal.net/user_manual/faq.html#what-devices-does-app-support">The FAQ says </a>
-</p>
-
-
-<p>
- &quot;The linux kernel can export two version of SYSFS, one of which is deprecated.&quot;
-</p>
-
-
-<p>
-Apparently Debian Lenny exports the deprecated version and you have to recompile the kernel to undo this.
-</p>
-
-
-<p>
-I wanted to make the minimum change possible to my system and continue using the packaging system : I follwed roughly the following steps:
-</p>
-
-
-<p><code>
-sudo aptitude install kernel-package ncurses-dev fakeroot wget bzip2 linux-source-2.6.26
-mkdir ~/linux
-cd ~/linux
-tar -xjf /usr/src/linux-source-2.6.26.tar.bz2
-cd linux-source-2.6.26
-cp /boot/config-2.6.26-2-686 .config
-make menuconfig
-</code></p>
-
-<p><p>
-In the config menu I selected
-<pre>
-General setup &ndash;>
-         [] Create deprecated sysfs layout for older userspace tools
-</pre>
-<p>And made sure I specified a custom revision to differentiate my custom package from the standard one</p></p>
-
-<p><code>
-make-kpkg &ndash;rootcmd fakeroot &ndash;initrd &ndash;revision=custom.001 kernel_image kernel_headers
-cd ..
-sudo dpkg -i linux*deb
-</code></p>
-
-<p><p>Then reboot ensuring the new kernel is loaded.</p></p>
-
-<p><p>I meant to write this up as I went but I&rsquo;m doing it a few days later so please take care if following them - and adjust to suit your kernel version etc.<p></p>
-
-<p><p>The above sounds like a pain but was actually fairly easy, and calibre is much better than the official Sony software which I tried on a Windows machine but it was slow and kept crashing.</p></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/11">&larr; Older</a>
@@ -744,6 +698,14 @@ sudo dpkg -i linux*deb
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
       </li>
     
@@ -753,14 +715,6 @@ sudo dpkg -i linux*deb
     
       <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
       </li>
     
   </ul>

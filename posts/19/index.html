@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Docbook is a great standard for technical documentation, it is easily converted into a range of formats (html, pdf etc) and while it can be styled &hellip;">
+  <meta name="description" content="I bought a Dell laptop with pre-installed Linux and it's been just great - all the hardware just works (better than a similar laptop with Windows) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,131 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/31/i-dell/">I ♥ Dell</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-05-31T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I bought a Dell laptop with pre-installed Linux and it&#8217;s been just great - all the hardware just works (better than a similar laptop with Windows)
+</p>
+
+
+<p>
+One of the great benefits of Linux is that you get far more frequent upgrades than with other systems, as a developer it pays to keep ahaed of the curve. 
+</p>
+
+
+<p>
+The downside of this can be problems with those upgrades. But I&#8217;ve just found that Dell have a site telling me how to fix the few problems I&#8217;ve come accross with my current upgrade. 
+</p>
+
+
+<p>
+<a href="http://linux.dell.com/wiki/index.php/Ubuntu_8.04" title="Dell Ubuntu 8.04  Wiki">http://linux.dell.com/wiki/index.php/Ubuntu_8.04</a>
+</p>
+
+
+<p>
+I&#8217;m very happy <img src="/sites/default/modules/tinymce/tinymce/jscripts/tiny_mce/plugins/emotions/images/smiley-smile.gif" alt="Smile" title="Smile" /> 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/28/aptitude-search/">Aptitude Search</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-05-28T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+The basic search is:
+</p>
+
+
+<p>
+aptitude search apache 
+</p>
+
+
+<p>
+Returns all packages that match
+</p>
+
+
+<p>
+To search only for the installed versions
+</p>
+
+
+<p>
+aptitude search ~iapache
+</p>
+
+
+<p>
+To search for the packages that aren&#8217;t installed 
+</p>
+
+
+<p>
+aptitude search \!\(~i\)apache2
+</p>
+
+
+<p>
+Search Term reference
+</p>
+
+
+<p>
+<a href="http://algebraicthunk.net/~dburrows/projects/aptitude/doc/en/ch02s03s05.html ">http://algebraicthunk.net/~dburrows/projects/aptitude/doc/en/ch02s03s05.html
+</a>
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -865,160 +990,6 @@ www.creditsafe.co.uk
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/04/04/testing-websites-in-ie-verions-6-to-8/">Testing Websites in IE - Verions 6 to 8</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-04-04T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-When developing a website it&#8217;s important to test it in as many different web browsers as possible. 
-</p>
-
-
-<p>
-If a client has a problem viewing the page there&#8217;s little point saying &quot;but it works on my machine&quot;
-</p>
-
-
-<p>
- 
-I have found that the differences between different versions of firefox to be small enough that testing in one version is sufficient.
-</p>
-
-
-<p>
-Internet Explorer is so different between versions that each target version must be tested seperately.
-</p>
-
-
-<p>
-There is a <a href="http://tredosoft.com/Multiple_IE">package for multiple IEs</a>.
-</p>
-
-
-<p>
-But you can&#8217;t then install the developer toolbar, and I&#8217;m not quite convinced that install is 100% the same as having a standard browser.
-</p>
-
-
-<p>
-Fortunately Microsoft are aware of the problem and make a test virtual machine available.
-</p>
-
-
-<p>
-I&#8217;ve used this for a while for testing IE6 - and it works very well.
-They have now released a verion of IE8 - time to check that my websites won&#8217;t break when users start updating.
-</p>
-
-
-<p>
-<a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=6D58729D-DFA8-40BF-AFAF-20BCB7F01CD1&amp;displaylang=en">the virtual machine</a>
-<a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=21EABB90-958F-4B64-B5F1-73D0A413C8EF&amp;displaylang=en">images for ie6, ie7 and ie8</a>
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/03/03/debugging-multiple-concurrent-sessions-ajax-soap/">Debugging Multiple Concurrent Sessions (AJAX/SOAP)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-03-03T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve recently been working with AJAX and SOAP which both result in multiple sessions running concurrently.
-</p>
-
-
-<p>
-For example if you have an AJAX progress bar for a large file upload one session is uploading the file while a series of shorter sessions check on progress and update the bar.
-</p>
-
-
-<p>
-How to track both parts of this cleanly has had me scratching my head a bit - but the solution is fiendishly simple.
-</p>
-
-
-<p>
-It turns out that there is a buried configuration setting in Eclipse (my IDE of choice) which allows you to debug multiple sessions.
-</p>
-
-
-<p>
-in Eclipse go to:
-</p>
-
-
-<p>
-Window | Preferences &#8230; | PHP | Debug | Installed Debuggers | XDebug | Configure
-</p>
-
-
-<p>
-Then check the box that says &#8216;Use Multisession&#8217;
-</p>
-
-
-<p>
-<img src="/sites/default/files/multisession.png" alt="screenshot" />
-</p>
-
-
-<p>
-Lo and Behold the debug pane now has a multisession manager and allows you to see what is happening on both sessions.
-</p>
-
-
-<p>
-see also
-<br />
-http://dev.eclipse.org/newslists/news.eclipse.tools.pdt/msg01476.html
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/20">&larr; Older</a>
@@ -1036,6 +1007,14 @@ http://dev.eclipse.org/newslists/news.eclipse.tools.pdt/msg01476.html
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
       </li>
     
@@ -1045,14 +1024,6 @@ http://dev.eclipse.org/newslists/news.eclipse.tools.pdt/msg01476.html
     
       <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
       </li>
     
   </ul>

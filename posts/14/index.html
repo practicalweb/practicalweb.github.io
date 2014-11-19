@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="As well as following standards such as those laid down by www.w3.org I always try and test websites I develop across a range of browsers. Despite &hellip;">
+  <meta name="description" content="Oh cool :-) I just noticed that selenium IDE has the option to export tests as PHP unit tests. This is great - the IDE is a good way to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,138 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/27/selenium-ide-exports-to-php/">Selenium IDE Exports to PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-27T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Oh cool :-)
+</p>
+
+
+<p>
+I just noticed that selenium IDE has the option to export tests as PHP unit tests.
+</p>
+
+
+<p>
+This is great - the IDE is a good way to interactively build up tests by recording a set of actions and tweaking what it records. 
+</p>
+
+
+<p>
+And being able to save them as unit tests makes it easy to integrate this with automated testing.
+</p>
+
+
+<p>
+Interestingly they are created as PHPunit tests - not simpletest tests.
+</p>
+
+
+<p>
+It does look like I&#8217;m being pushed more towards PHPunit - though I wonder how I&#8217;ll integrate this with Drupal development and it&#8217;s focus on simpletest.  
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/27/nework-error-after-virtualbox-upgrade/">Nework Error After VirtualBox Upgrade</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-27T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I decided to upgrade  VirtualBox because the newer versions have much better support for networks that allow virtual computer to be visible on the real network.
+</p>
+
+
+<p>
+But after upgrade I encountered the error
+</p>
+
+
+<p>
+&quot;HostInterface&#8217;: The attribute &#8216;name&#8217; is required but missing.&quot;
+</p>
+
+
+<p>
+It seems others have had similar issues
+</p>
+
+
+<p>
+http://forums.virtualbox.org/viewtopic.php?p=58720&amp;sid=f3759d4d938c30120502ad5610833caa
+</p>
+
+
+<p>
+I resolved this by deleting this entry: 
+</p>
+
+
+<p><code>
+<HostInterface/>  
+</code></p>
+
+<p>
+from the config file, in my case this was 
+</p>
+
+
+<p><code>
+.VirtualBox/Machines/WinXP/WinXP.xml
+</code></p>
+
+<p>
+After this the virtual machine worked fine - and the new network settings are great. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -606,101 +738,6 @@ I came across this PDF slideshow from a talk on optimising PHP, it&#8217;s well 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/03/11/overriding-drupal-database-variables/">Overriding Drupal Database Variables</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-03-11T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Tucked away at the bottom of settings.php is the following comment.</p>
-
-<p><code>
-/<em>*
- * Variable overrides:
- *
- * To override specific entries in the &lsquo;variable&rsquo; table for this site,
- * set them here. You usually don&rsquo;t need to use this feature. This is
- * useful in a configuration file for a vhost or directory, rather than
- * the default settings.php. Any configuration setting from the &lsquo;variable&rsquo;
- * table can be given a new value.
- *
- * Remove the leading hash signs to enable.
- </em>/</p>
-
-<h1>$conf = array(</h1>
-
-<h1>&lsquo;site_name&rsquo; => &lsquo;My Drupal site&rsquo;,</h1>
-
-<h1>&lsquo;theme_default&rsquo; => &lsquo;minnelli&rsquo;,</h1>
-
-<h1>&lsquo;anonymous&rsquo; => &lsquo;Visitor&rsquo;,</h1>
-
-<h1>);</h1>
-
-<p></code></p>
-
-<p>What this allows is for you to store Drupal settings in code that override those in the database.</p>
-
-<p>This is especially useful if you have live and dev sites, load the live database to dev periodically but want to retain some dev specific settings.</p>
-
-<p>It&rsquo;s easy to miss, but very handy.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/01/18/google-android/">Google Android</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-01-18T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have just got the new gphone, the G1 which is a collaborative venture: google provide the OS, HTC make the hardware, T-Mobile provide the netwwork, and loads of software is written by many people - and made available via Google marketplace.</p>
-
-<p>While a few things feel a little beta still; on the whole it all hangs together very well indeed.</p>
-
-<p>First of all it&rsquo;s worth saying the actual phone works very well, something all too easily overlooked.</p>
-
-<p>The rest of the gadgets work great - well enogh for me to write this on the bus.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/15">&larr; Older</a>
@@ -718,6 +755,14 @@ I came across this PDF slideshow from a talk on optimising PHP, it&#8217;s well 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
       </li>
     
@@ -727,14 +772,6 @@ I came across this PDF slideshow from a talk on optimising PHP, it&#8217;s well 
     
       <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
       </li>
     
   </ul>

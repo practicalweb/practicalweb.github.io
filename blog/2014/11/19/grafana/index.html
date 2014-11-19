@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Grafana - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I&rsquo;ve been playing with some new toys. What motivated me was a desire to be better able to interpret load test data and performance metrics. I &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2014/11/19/grafana">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Grafana</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-19T10:07:55+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:07 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&rsquo;ve been playing with some new toys.</p>
+
+<p>What motivated me was a desire to be better able to interpret load test data and performance metrics.</p>
+
+<p>I love graphs, for me the visualisation they provide allows me to recognise patterns and figure out cause/effects massively faster than any other way.</p>
+
+<p>In the past I&rsquo;ve mainly relied on Munin which is very easy to setup, and I&rsquo;ve even customised graphs. My most successful case was when two servers in a pool of four kept falling down, by graphing apache hits per second and severer load for all for servers on the same page - it provided convincing proof that the two servers which fell down did so under no extra load and at the exact same moment. It later turned out these two were VMs on the same host OS which was having previously unnoticed problems.</p>
+
+<p>This visualisation transformed a conversation from one of what could or couldn&rsquo;t be wrong to acceptance and how to fix it.</p>
+
+<p>But with Munin I had to define the graph and then collect the data - I had to wait for another outage.</p>
+
+<p>I wanted to be able to compose graphs on the fly to test hypotheses with existing data - grab the data now and define the graphs to visualise what I want to see after the fact.</p>
+
+<p>Enter <a href="http://play.grafana.org/">Grafana</a> I just love this tool, it allows me to compose graphs entirely on the fly, mixing and matching any data I want on the same graph, or multiple graphs on the same page.</p>
+
+<p>With the <a href="http://graphite.readthedocs.org/en/latest/functions.html#graphite.render.functions.timeShift">timeshift</a> function I can even put say this weeks and last weeks data on the same graph for easy comparison.</p>
+
+<p>I hope to work on some screenshots and maybe screencaps - the tool is so interactive it&rsquo;s hard to explain - for now go an play with it.</p>
+
+<p>Grafana works by calling the json API of graphite-web, one thing that threw me at first was the <a href="http://grafana.org/docs/#graphite-&amp;-elasticsearch-setup-example">initial config example</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="err">datasources:</span> <span class="p">{</span>
+</span><span class='line'>  <span class="err">graphite:</span> <span class="err">{</span>
+</span><span class='line'>    <span class="err">type:</span> <span class="err">&#39;graphite&#39;,</span>
+</span><span class='line'>    <span class="err">url:</span> <span class="nt">&quot;http://my.graphite.server.com:8080&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="p">}</span><span class="err">,</span>
+</span><span class='line'><span class="err">},</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I wasn&rsquo;t sure which server component I was meant to be connecting to on 8080, this is just the regular graphite-web service from apache - in my case on port 80.</p>
+
+<p>It&rsquo;s also worth noting that <a href="graphite%20cannot%20exist%20in%20a%20subdirctory">https://github.com/graphite-project/graphite-web/issues/223</a> at least not for the version I am running.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-11-19T10:07:55+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:07 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/grafana/'>grafana</a>, <a class='category' href='/blog/categories/graphing/'>graphing</a>, <a class='category' href='/blog/categories/graphite/'>graphite</a>, <a class='category' href='/blog/categories/metrics/'>metrics</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2014/11/19/grafana/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2014/11/19/grafana/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/" title="Previous Post: Quick Steps to secure Ubuntu Linux">&laquo; Quick Steps to secure Ubuntu Linux</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/" title="Next Post: Graphite statsd/bucky and collectd">Graphite statsd/bucky and collectd &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2014/11/19/grafana/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2014/11/19/grafana/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

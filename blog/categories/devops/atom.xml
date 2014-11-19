@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Devops | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/devops/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-11-13T15:10:58+00:00</updated>
+  <updated>2014-11-19T14:55:09+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,223 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Graphite Statsd/bucky and Collectd]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/"/>
+    <updated>2014-11-19T10:09:23+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd</id>
+    <content type="html"><![CDATA[<blockquote><p>Graphite is a highly scalable real-time graphing system.</p></blockquote>
+
+<p>It took me a while to realise but the data input to graphite is <em>incredibly</em> simple</p>
+
+<p>The message input format is just</p>
+
+<pre><code>metric_path value timestamp\n
+
+So for example, "foo.bar.baz 42 74857843"
+</code></pre>
+
+<p>Wow: just a label the number you want to store and the timestamp it relates to.</p>
+
+<p>That&rsquo;s really basic, there is nothing there about what kind of data it is, no difference between something you want to count (say page hits) and a number you want to average (like load)</p>
+
+<p><a href="https://github.com/etsy/statsd/blob/master/docs/graphite.md">Configuring Graphite for StatsD</a> is a <em>very</em> important doc to read if you want to use these tools together.</p>
+
+<p>The default config in graphite keeps data at 1 minute resolution for 1 day <strong>and then discards it</strong> and if you are sending data to graphite every 10 seconds graphite has to figure out how to convert 6 data points (or some nulls and some data) to 1 data point for the minute.</p>
+
+<p>You really need the statsd specific config to ensure counts are not averaged and infrequent data is not dropped.</p>
+
+<p>I needed to install on Centos using just official and EPEL packages, I wanted to use collected to gather system metrics and while version 5 can log direct to graphite version 4 ships with Centos 6.5 and that can&rsquo;t log direct.</p>
+
+<p>In any case I wanted to use statsd to allow easy logging of custom data from production code, the original written by etsy is a node service and probably doesn&rsquo;t run with stock packages on Centos,</p>
+
+<p>Centos does provide a python-bucky package which acts both as a statsd server and as a bridge to collectd.</p>
+
+<p>The full list of packages I needed is</p>
+
+<ul>
+<li>graphite-web</li>
+<li>graphite-web-selinux</li>
+<li>python-carbon</li>
+<li>python-whisper</li>
+<li>collectd</li>
+<li>python-bucky</li>
+</ul>
+
+
+<p>Apache config</p>
+
+<pre><code class="apache">
+&lt;VirtualHost *:80&gt;
+  ServerName graphite.example.com
+
+  ## Vhost docroot
+  DocumentRoot "/var/www/html"
+  ## Alias declarations for resources outside the DocumentRoot
+  Alias /grafana/ "/var/www/grafana/"
+  Alias /media/ "/usr/lib/python2.6/site-packages/django/contrib/admin/media/"
+
+
+
+  ## Directories, there should at least be a declaration for /var/www/html
+
+
+  &lt;Directory "/var/www/html"&gt;
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+  &lt;/Directory&gt;
+
+  ## Load additional static includes
+
+
+  ## Logging
+  ErrorLog "/var/log/httpd/graphite.example.com_error.log"
+  ServerSignature Off
+  CustomLog "/var/log/httpd/graphite.example.com_access.log" combined
+
+
+
+  WSGIImportScript /usr/share/graphite/graphite-web.wsgi application-group=%{GLOBAL} process-group=%{GLOBAL}
+  WSGIScriptAlias / "/usr/share/graphite/graphite-web.wsgi"
+
+  ## Custom fragment
+
+    &lt;Location "/content/"&gt;
+        SetHandler None
+    &lt;/Location&gt;
+
+    &lt;Location "/media/"&gt;
+        SetHandler None
+    &lt;/Location&gt;
+
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>Graphite Config</p>
+
+<p>Storage-schames.conf</p>
+
+<pre><code>[carbon]
+pattern = ^carbon\.
+retentions = 60:90d
+
+[stats]
+pattern = ^stats.*
+retentions = 10s:6h,1min:6d,10min:1800d
+
+
+# unsure if this is redundant - does .* match stats_counts ?
+[stats_counts]
+pattern = ^stats_counts.*
+retentions = 10s:6h,1min:6d,10min:1800d
+
+
+# collectd 
+[com]
+pattern = ^com.*
+retentions = 10s:6h,1min:6d,10min:1800d
+
+[default_1min_for_1day]
+pattern = .*
+retentions = 60s:1d
+</code></pre>
+
+<p>storage-aggregation.conf</p>
+
+<pre><code>[min]
+pattern = \.lower$
+xFilesFactor = 0.1
+aggregationMethod = min
+
+[max]
+pattern = \.upper(_\d+)?$
+xFilesFactor = 0.1
+aggregationMethod = max
+
+[sum]
+pattern = \.sum$
+xFilesFactor = 0
+aggregationMethod = sum
+
+[count]
+pattern = \.count$
+xFilesFactor = 0
+aggregationMethod = sum
+
+[count_legacy]
+pattern = ^stats_counts.*
+xFilesFactor = 0
+aggregationMethod = sum
+
+[default_average]
+pattern = .*
+xFilesFactor = 0.3
+aggregationMethod = average
+</code></pre>
+
+<p>Statsd caught me out with a debug mode that <em>only</em> prints to stdout and doesn&rsquo;t actually log any data to graphite, I expected debug mode to print out data in addition to regular duties.</p>
+
+<p>I did need to make statsd listen on all networks instead of just localhost, and still need to wrap it properly as a service.</p>
+
+<p>Edit collectd.conf to enable the plugins you want, the only problem I had here was collectd silently dying if I had a config error.</p>
+
+<p>You need to setup an initial graphite users database</p>
+
+<p>More details at <a href="http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4">http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4</a></p>
+
+<p><code>`bash
+/usr/bin/python /usr/lib/python2.6/site-packages/graphite/manage.py syncdb
+</code></p>
+
+<p>Another useful post <a href="https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/">https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/</a></p>
+
+<p>Writing this up now it all seems quite simple - but I haven&rsquo;t really found it so, I think the main problem has been understanding what graphite is actually doing, and not taking the trouble to optimise that config as a first step.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Grafana]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/11/19/grafana/"/>
+    <updated>2014-11-19T10:07:55+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/11/19/grafana</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been playing with some new toys.</p>
+
+<p>What motivated me was a desire to be better able to interpret load test data and performance metrics.</p>
+
+<p>I love graphs, for me the visualisation they provide allows me to recognise patterns and figure out cause/effects massively faster than any other way.</p>
+
+<p>In the past I&rsquo;ve mainly relied on Munin which is very easy to setup, and I&rsquo;ve even customised graphs. My most successful case was when two servers in a pool of four kept falling down, by graphing apache hits per second and severer load for all for servers on the same page - it provided convincing proof that the two servers which fell down did so under no extra load and at the exact same moment. It later turned out these two were VMs on the same host OS which was having previously unnoticed problems.</p>
+
+<p>This visualisation transformed a conversation from one of what could or couldn&rsquo;t be wrong to acceptance and how to fix it.</p>
+
+<p>But with Munin I had to define the graph and then collect the data - I had to wait for another outage.</p>
+
+<p>I wanted to be able to compose graphs on the fly to test hypotheses with existing data - grab the data now and define the graphs to visualise what I want to see after the fact.</p>
+
+<p>Enter <a href="http://play.grafana.org/">Grafana</a> I just love this tool, it allows me to compose graphs entirely on the fly, mixing and matching any data I want on the same graph, or multiple graphs on the same page.</p>
+
+<p>With the <a href="http://graphite.readthedocs.org/en/latest/functions.html#graphite.render.functions.timeShift">timeshift</a> function I can even put say this weeks and last weeks data on the same graph for easy comparison.</p>
+
+<p>I hope to work on some screenshots and maybe screencaps - the tool is so interactive it&rsquo;s hard to explain - for now go an play with it.</p>
+
+<p>Grafana works by calling the json API of graphite-web, one thing that threw me at first was the <a href="http://grafana.org/docs/#graphite-&amp;-elasticsearch-setup-example">initial config example</a></p>
+
+<pre><code class="json">datasources: {
+  graphite: {
+    type: 'graphite',
+    url: "http://my.graphite.server.com:8080",
+  },
+},
+</code></pre>
+
+<p>I wasn&rsquo;t sure which server component I was meant to be connecting to on 8080, this is just the regular graphite-web service from apache - in my case on port 80.</p>
+
+<p>It&rsquo;s also worth noting that <a href="graphite%20cannot%20exist%20in%20a%20subdirctory">https://github.com/graphite-project/graphite-web/issues/223</a> at least not for the version I am running.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Install Graphite/grafana and Import Data From Munin]]></title>
@@ -160,47 +377,6 @@
 
 <p>The Vagrantfile runs puppet in standalone mode, but the modules <em>should</em> work with a client/server Puppet setup - so hopefully migrating the Vagrant setup to any Puppet manged system should be easy.</p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Satellite vs Puppet]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2012/11/20/satellite-vs-puppet/"/>
-    <updated>2012-11-20T00:00:00+00:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2012/11/20/satellite-vs-puppet</id>
-    <content type="html"><![CDATA[<p>I&#8217;ve been using Puppet for a little while and am now working on a project that will be using RedHat&#8217;s Satellite (the upstream project is Spacewalk).</p>
-
-
-
-
-<p>I haven&#8217;t really used puppet in anger on production systems yet, I&#8217;m referring to the open source edition of Puppet, and have only read about Satellite, but I didn&#8217;t find much comparison out there so thought it worth writing up what I&#8217;ve found.</p>
-
-
-
-
-<p><p>They key differences that strike me are<p></p>
-
-<p><ul>
-<li>Satellite is RedHat/Centos only, Puppet works on multiple distributions, and even on Windows to some extent</li>
-<li>Satellite is primarily a GUI driven system whereas Puppet is primarily text configuration (puppet has a web dashboard but it&rsquo;s really just a log viewer)</li></p>
-
-<p><li>Satellite can manage provisioning of new systems (I&rsquo;m using openstack for provisioning new VMs anyway, Razor is said to work well with Puppet for provisioning)</li></p>
-
-<p><li>Satellite manages configuration via simple templates with limited variable use, Puppets templates are fully scriptable</li></p>
-
-<p><li>Puppet has a very rich dependency system (eg you can trigger an Apache restart whenever a configuration change occurs</li></p>
-
-<p><li>Satellite uses a mixture of technologies (python, Java, C) puppet is written in Ruby.</li></p>
-
-<p><li>Puppet is available as a package on Ubuntu/debian systems, on Redhat/centos it has to be installed via the EPEL repo, pulling in extra dependencies</li></p>
-
-<p></ul></p>
-
-<p><p>Personally I much prefer puppet&rsquo;s approach, it&rsquo;s easy to keep all the config in git and test changes in a dev env before rolling out.</p></p>
-
-<p><p>I love puppets declarative approach, and the ability to chain dependencies</p></p>
-
-<p><p>That said I&rsquo;m really looking forward to playing with Satellite, finding out how provisioning works when all the servers are VMs and seeing how we manage the dependency tracking</p></p>
 ]]></content>
   </entry>
   

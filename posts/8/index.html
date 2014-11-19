@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I&rsquo;ve found altering CCK node types as part of a fully scripted deployment phase to be quite challenging. The best I&rsquo;ve come up with is to &hellip;">
+  <meta name="description" content="Installing Ubuntu on a new netbook proved remarkably easy once I got past a couple of hurdles BIOS settings - in order to install a new OS I needed &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,110 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/09/06/ubuntu-on-a-samsung-n150-netbook/">Ubuntu on a Samsung N150 Netbook</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-09-06T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Installing Ubuntu on a new netbook proved remarkably easy once I got past a couple of hurdles
+</p>
+
+
+<ul>
+    <li>BIOS settings - in order to install a new OS I needed to configure the BIOS to boot from a USB key. At first it seemed like the netbook didn&#8217;t offer this option and I found several posts online from people having similar problems - but posts from others who had succeeded encouraged me and in the end I just had to guess the right points in the boot sequence to press the escape key and see a BIOS menu</li>
+    <li>Bootable USB key, I followed the instructions at http://www.ubuntu.com/desktop/get-ubuntu/download but no matter what the USB key wouldn&#8217;t boot.<br />
+    So I repartitioned and reformatted it on an existing Linux system, ran the USB Installer software again and this time it worked.</li>
+    <li>Wireless network driver, I needed to update the system (over a wired network) before this worked - just following onscreen prompts.</li>
+</ul>
+
+
+<p>
+As far as I can see everything now works (video, audio, webcam, wifi, power management etc)
+</p>
+
+
+<p>
+I have a dev version of my current web project running with MySQL and Apache, MP3s play, I have a full office suite and all the utilities I could wish for.
+</p>
+
+
+<p>
+I was impressed by the USB installers live mode allowing me to run Linux on the system before installing it fully, and then to repartition the hard drive leaving me with a dual boot system.
+</p>
+
+
+<p>
+I wasn&#8217;t impressed with Windows though - very slow to get up and running (an hour of installs, updates and reboots - on a pre-installed system?!)  Constant alerts from the security software - and no useful software installed on the base system.
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/02/delete-drupal-view-programatically/">Delete Drupal View Programatically</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-07-02T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Quick function to delete a view.</p>
+
+<p>This is basically what the UI form submit does.</p>
+
+<p>&lt;?php</p>
+
+<p>function delete_view($name) {</p>
+
+<pre><code>$view = views_ui_cache_load($name);
+$view-&gt;delete();
+views_object_cache_clear('view', $view-&gt;name);
+</code></pre>
+
+<p>}</p>
+
+<p>?></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -536,279 +640,6 @@ function mymodule_hook_info() {
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/09/resizing-an-ext3-filesystem-on-lvm/">Resizing an Ext3 Filesystem on LVM</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-04-09T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-When I installed my system I wasn&#8217;t quite happy with the way the installer divided my hard disk - but at the time I was in a hurry&#8230;
-</p>
-
-
-<p>
-I have since found that repeated loading of databases during development used up all available space in /var and debug files were filling /tmp
-</p>
-
-
-<p>
-So I had to figure out how to resize them.
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-Thanks to 
-</p>
-
-
-<p>
-http://blog.dhampir.no/content/resizing-an-ext3-filesystem-on-an-lvm
-</p>
-
-
-<p><code>
-reboot # into single user mode
-df
-umount /tmp
-umount /home/
-umount /var/</p>
-
-<h1>can&rsquo;t umount var - why not?</h1>
-
-<p>lsof | grep var</p>
-
-<h1>OK - need to shut down some services</h1>
-
-<p>ifdown eth0
-lsof | grep var
-/etc/init.d/nfs-common stop
-lsof | grep var
-/etc/init.d/portmap stop
-lsof | grep var
-umount /var/</p>
-
-<h1>get some info about my setup and save it</h1>
-
-<p>lvs
-lvs &gt; maybe_useful_lvs.txt</p>
-
-<h1>check what volume groups I have</h1>
-
-<p>vgscan
-ls -lh /dev/lonlinpdev01/</p>
-
-<h1>check all filesystems I&rsquo;m about to change are OK</h1>
-
-<p>e2fsck -f /dev/lonlinpdev01/home
-e2fsck -f /dev/lonlinpdev01/var
-e2fsck -f /dev/lonlinpdev01/tmp</p>
-
-<h1>reduce /home partition</h1>
-
-<p>resize2fs -p /dev/lonlinpdev01/home 80G
-e2fsck -f /dev/lonlinpdev01/home</p>
-
-<h1>reduce home volume (leaving soem spare space)</h1>
-
-<p>lvreduce -L85G /dev/lonlinpdev01/home</p>
-
-<h1>extend /tmp to 20Gb</h1>
-
-<p>lvextend -L 20G /dev/lonlinpdev01/tmp</p>
-
-<h1>find out what physical volume I&rsquo;m using</h1>
-
-<p>pvs</p>
-
-<h1>extend /var to use all available space</h1>
-
-<p>lvextend  /dev/lonlinpdev01/var /dev/sda2</p>
-
-<h1>check disks</h1>
-
-<p>e2fsck -f /dev/lonlinpdev01/tmp
-e2fsck -f /dev/lonlinpdev01/var
-e2fsck -f /dev/lonlinpdev01/tmp</p>
-
-<h1>now resize all filesystems to match the partitions</h1>
-
-<p>resize2fs -p /dev/lonlinpdev01/var
-e2fsck -f /dev/lonlinpdev01/var
-resize2fs -p /dev/lonlinpdev01/home
-e2fsck -f /dev/lonlinpdev01/home
-e2fsck -f /dev/lonlinpdev01/home
-reboot
-</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/01/os-open-data/">OS Open Data</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-04-01T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-For several years I worked as a web developer for <a href="http://www.ramblers.org.uk/">the Ramblers</a> and this experience very much colours my view of <a href="http://www.ordnancesurvey.co.uk/opendata">todays release</a> of free maps and postcode data.
-</p>
-
-
-<p>
-This is a fantastic and significant step in the direction of ensuring that some of the worlds best mapping assets do the most good for society as a whole.
-</p>
-
-
-<p>
-It will no doubt lead to an explosion of new applications and innovations.
-</p>
-
-
-<p>
-Not least I expect we&#8217;ll see much better maps being used everywhere that couldn&#8217;t previously negotiate an OS license - not only were licenses expensive they were notoriously unclear.
-</p>
-
-
-<p>
-However I can see why <a href="http://www.ramblers.org.uk/news/latest_news/OSfreemaps">the Ramblers are unhappy</a> at todays release   
-</p>
-
-
-<p>
-If I want to show a map of a walk in the Lake district 
-</p>
-
-
-<p>
-<img src="/sites/default/files/u1/lakes1.jpeg" width="413" height="337" /> 
-</p>
-
-
-<p>
-That&#8217;s the Lakes&#8230;
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-<img src="/sites/default/files/u1/lakes2.jpeg" width="384" height="322" /> 
-</p>
-
-
-<p>
-Near Ulswater&#8230;
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-<img src="/sites/default/files/u1/lakes3.jpeg" width="446" height="338" /> 
-</p>
-
-
-<p>
-It was from Glenridding up towards Helvelyn&#8230;
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-<img src="/sites/default/files/u1/lakes4.jpeg" width="500" height="344" />
-</p>
-
-
-<p>
-&#8230;Er.. yeah that&#8217;s the place - but where&#8217;s the path! 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-So this is a brilliant release and even for the Ramblers there&#8217;s loads of stuff they can do today that they either couldn&#8217;t do yesterday or it would have been more expensive and complex. 
-</p>
-
-
-<p>
-And loads of smaller organisations will benefit from free maps and postcode data - these will become common on small websites.
-</p>
-
-
-<p>
-But the release doesn&#8217;t quite give out the assets required to build the apps I always wanted to build for the Ramblers (walking routes, enhanced walks finder, path problem report tools etc). 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-Contains Ordnance Survey data (c) Crown copyright and database right 2010
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/9">&larr; Older</a>
@@ -826,6 +657,14 @@ Contains Ordnance Survey data (c) Crown copyright and database right 2010
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
       </li>
     
@@ -835,14 +674,6 @@ Contains Ordnance Survey data (c) Crown copyright and database right 2010
     
       <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
       </li>
     
   </ul>

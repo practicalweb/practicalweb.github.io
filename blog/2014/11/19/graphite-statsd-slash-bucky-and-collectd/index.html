@@ -1,0 +1,517 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Graphite Statsd/bucky and Collectd - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="Graphite is a highly scalable real-time graphing system. It took me a while to realise but the data input to graphite is incredibly simple The &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Graphite Statsd/bucky and Collectd</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-19T10:09:23+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:09 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><blockquote><p>Graphite is a highly scalable real-time graphing system.</p></blockquote>
+
+<p>It took me a while to realise but the data input to graphite is <em>incredibly</em> simple</p>
+
+<p>The message input format is just</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>metric_path value timestamp\n
+</span><span class='line'>
+</span><span class='line'>So for example, "foo.bar.baz 42 74857843"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Wow: just a label the number you want to store and the timestamp it relates to.</p>
+
+<p>That&rsquo;s really basic, there is nothing there about what kind of data it is, no difference between something you want to count (say page hits) and a number you want to average (like load)</p>
+
+<p><a href="https://github.com/etsy/statsd/blob/master/docs/graphite.md">Configuring Graphite for StatsD</a> is a <em>very</em> important doc to read if you want to use these tools together.</p>
+
+<p>The default config in graphite keeps data at 1 minute resolution for 1 day <strong>and then discards it</strong> and if you are sending data to graphite every 10 seconds graphite has to figure out how to convert 6 data points (or some nulls and some data) to 1 data point for the minute.</p>
+
+<p>You really need the statsd specific config to ensure counts are not averaged and infrequent data is not dropped.</p>
+
+<p>I needed to install on Centos using just official and EPEL packages, I wanted to use collected to gather system metrics and while version 5 can log direct to graphite version 4 ships with Centos 6.5 and that can&rsquo;t log direct.</p>
+
+<p>In any case I wanted to use statsd to allow easy logging of custom data from production code, the original written by etsy is a node service and probably doesn&rsquo;t run with stock packages on Centos,</p>
+
+<p>Centos does provide a python-bucky package which acts both as a statsd server and as a bridge to collectd.</p>
+
+<p>The full list of packages I needed is</p>
+
+<ul>
+<li>graphite-web</li>
+<li>graphite-web-selinux</li>
+<li>python-carbon</li>
+<li>python-whisper</li>
+<li>collectd</li>
+<li>python-bucky</li>
+</ul>
+
+
+<p>Apache config</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='apache'><span class='line'><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nb">ServerName</span> graphite.example.com
+</span><span class='line'>
+</span><span class='line'>  <span class="c">## Vhost docroot</span>
+</span><span class='line'>  <span class="nb">DocumentRoot</span> <span class="s2">&quot;/var/www/html&quot;</span>
+</span><span class='line'>  <span class="c">## Alias declarations for resources outside the DocumentRoot</span>
+</span><span class='line'>  <span class="nb">Alias</span> <span class="sx">/grafana/</span> <span class="s2">&quot;/var/www/grafana/&quot;</span>
+</span><span class='line'>  <span class="nb">Alias</span> <span class="sx">/media/</span> <span class="s2">&quot;/usr/lib/python2.6/site-packages/django/contrib/admin/media/&quot;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="c">## Directories, there should at least be a declaration for /var/www/html</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&lt;Directory</span> <span class="s">&quot;/var/www/html&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nb">Options</span> Indexes FollowSymLinks MultiViews
+</span><span class='line'>    <span class="nb">AllowOverride</span> <span class="k">None</span>
+</span><span class='line'>    <span class="nb">Order</span> allow,deny
+</span><span class='line'>    <span class="nb">Allow</span> from <span class="k">all</span>
+</span><span class='line'>  <span class="nt">&lt;/Directory&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c">## Load additional static includes</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="c">## Logging</span>
+</span><span class='line'>  <span class="nb">ErrorLog</span> <span class="s2">&quot;/var/log/httpd/graphite.example.com_error.log&quot;</span>
+</span><span class='line'>  <span class="nb">ServerSignature</span> <span class="k">Off</span>
+</span><span class='line'>  <span class="nb">CustomLog</span> <span class="s2">&quot;/var/log/httpd/graphite.example.com_access.log&quot;</span> combined
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="nb">WSGIImportScript</span> <span class="sx">/usr/share/graphite/graphite-web.wsgi</span> application-group=%{GLOBAL} process-group=%{GLOBAL}
+</span><span class='line'>  <span class="nb">WSGIScriptAlias</span> / <span class="s2">&quot;/usr/share/graphite/graphite-web.wsgi&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c">## Custom fragment</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;Location</span> <span class="s">&quot;/content/&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nb">SetHandler</span> <span class="k">None</span>
+</span><span class='line'>    <span class="nt">&lt;/Location&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;Location</span> <span class="s">&quot;/media/&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nb">SetHandler</span> <span class="k">None</span>
+</span><span class='line'>    <span class="nt">&lt;/Location&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/VirtualHost&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Graphite Config</p>
+
+<p>Storage-schames.conf</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='apache'><span class='line'><span class="err">[carbon]</span>
+</span><span class='line'><span class="nb">pattern</span> = ^carbon\.
+</span><span class='line'><span class="nb">retentions</span> = <span class="m">60</span>:90d
+</span><span class='line'>
+</span><span class='line'><span class="err">[stats]</span>
+</span><span class='line'><span class="nb">pattern</span> = ^stats.*
+</span><span class='line'><span class="nb">retentions</span> = <span class="m">10</span>s:6h,1min:6d,10min:1800d
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c"># unsure if this is redundant - does .* match stats_counts ?</span>
+</span><span class='line'><span class="err">[stats_counts]</span>
+</span><span class='line'><span class="nb">pattern</span> = ^stats_counts.*
+</span><span class='line'><span class="nb">retentions</span> = <span class="m">10</span>s:6h,1min:6d,10min:1800d
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c"># collectd </span>
+</span><span class='line'><span class="err">[com]</span>
+</span><span class='line'><span class="nb">pattern</span> = ^com.*
+</span><span class='line'><span class="nb">retentions</span> = <span class="m">10</span>s:6h,1min:6d,10min:1800d
+</span><span class='line'>
+</span><span class='line'><span class="err">[default_1min_for_1day]</span>
+</span><span class='line'><span class="nb">pattern</span> = .*
+</span><span class='line'><span class="nb">retentions</span> = <span class="m">60</span>s:1d
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>storage-aggregation.conf</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='apache'><span class='line'><span class="err">[min]</span>
+</span><span class='line'><span class="nb">pattern</span> = \.lower$
+</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>.1
+</span><span class='line'><span class="nb">aggregationMethod</span> = <span class="k">min</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">[max]</span>
+</span><span class='line'><span class="nb">pattern</span> = \.upper(_\d+)?$
+</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>.1
+</span><span class='line'><span class="nb">aggregationMethod</span> = max
+</span><span class='line'>
+</span><span class='line'><span class="err">[sum]</span>
+</span><span class='line'><span class="nb">pattern</span> = \.sum$
+</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>
+</span><span class='line'><span class="nb">aggregationMethod</span> = sum
+</span><span class='line'>
+</span><span class='line'><span class="err">[count]</span>
+</span><span class='line'><span class="nb">pattern</span> = \.count$
+</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>
+</span><span class='line'><span class="nb">aggregationMethod</span> = sum
+</span><span class='line'>
+</span><span class='line'><span class="err">[count_legacy]</span>
+</span><span class='line'><span class="nb">pattern</span> = ^stats_counts.*
+</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>
+</span><span class='line'><span class="nb">aggregationMethod</span> = sum
+</span><span class='line'>
+</span><span class='line'><span class="err">[default_average]</span>
+</span><span class='line'><span class="nb">pattern</span> = .*
+</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>.3
+</span><span class='line'><span class="nb">aggregationMethod</span> = average
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Statsd caught me out with a debug mode that <em>only</em> prints to stdout and doesn&rsquo;t actually log any data to graphite, I expected debug mode to print out data in addition to regular duties.</p>
+
+<p>I did need to make statsd listen on all networks instead of just localhost, and still need to wrap it properly as a service.</p>
+
+<p>Edit collectd.conf to enable the plugins you want, the only problem I had here was collectd silently dying if I had a config error.</p>
+
+<p>You need to setup an initial graphite users database</p>
+
+<p>More details at <a href="http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4">http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4</a></p>
+
+<p><code>`bash
+/usr/bin/python /usr/lib/python2.6/site-packages/graphite/manage.py syncdb
+</code></p>
+
+<p>Another useful post <a href="https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/">https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/</a></p>
+
+<p>Writing this up now it all seems quite simple - but I haven&rsquo;t really found it so, I think the main problem has been understanding what graphite is actually doing, and not taking the trouble to optimise that config as a first step.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-11-19T10:09:23+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:09 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bucky/'>bucky</a>, <a class='category' href='/blog/categories/collectd/'>collectd</a>, <a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/graphite/'>graphite</a>, <a class='category' href='/blog/categories/metrics/'>metrics</a>, <a class='category' href='/blog/categories/statsd/'>statsd</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/11/19/grafana/" title="Previous Post: Grafana">&laquo; Grafana</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

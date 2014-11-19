@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Bucky | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/bucky/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-11-19T14:55:09+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Graphite Statsd/bucky and Collectd]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/"/>
+    <updated>2014-11-19T10:09:23+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd</id>
+    <content type="html"><![CDATA[<blockquote><p>Graphite is a highly scalable real-time graphing system.</p></blockquote>
+
+<p>It took me a while to realise but the data input to graphite is <em>incredibly</em> simple</p>
+
+<p>The message input format is just</p>
+
+<pre><code>metric_path value timestamp\n
+
+So for example, "foo.bar.baz 42 74857843"
+</code></pre>
+
+<p>Wow: just a label the number you want to store and the timestamp it relates to.</p>
+
+<p>That&rsquo;s really basic, there is nothing there about what kind of data it is, no difference between something you want to count (say page hits) and a number you want to average (like load)</p>
+
+<p><a href="https://github.com/etsy/statsd/blob/master/docs/graphite.md">Configuring Graphite for StatsD</a> is a <em>very</em> important doc to read if you want to use these tools together.</p>
+
+<p>The default config in graphite keeps data at 1 minute resolution for 1 day <strong>and then discards it</strong> and if you are sending data to graphite every 10 seconds graphite has to figure out how to convert 6 data points (or some nulls and some data) to 1 data point for the minute.</p>
+
+<p>You really need the statsd specific config to ensure counts are not averaged and infrequent data is not dropped.</p>
+
+<p>I needed to install on Centos using just official and EPEL packages, I wanted to use collected to gather system metrics and while version 5 can log direct to graphite version 4 ships with Centos 6.5 and that can&rsquo;t log direct.</p>
+
+<p>In any case I wanted to use statsd to allow easy logging of custom data from production code, the original written by etsy is a node service and probably doesn&rsquo;t run with stock packages on Centos,</p>
+
+<p>Centos does provide a python-bucky package which acts both as a statsd server and as a bridge to collectd.</p>
+
+<p>The full list of packages I needed is</p>
+
+<ul>
+<li>graphite-web</li>
+<li>graphite-web-selinux</li>
+<li>python-carbon</li>
+<li>python-whisper</li>
+<li>collectd</li>
+<li>python-bucky</li>
+</ul>
+
+
+<p>Apache config</p>
+
+<pre><code class="apache">
+&lt;VirtualHost *:80&gt;
+  ServerName graphite.example.com
+
+  ## Vhost docroot
+  DocumentRoot "/var/www/html"
+  ## Alias declarations for resources outside the DocumentRoot
+  Alias /grafana/ "/var/www/grafana/"
+  Alias /media/ "/usr/lib/python2.6/site-packages/django/contrib/admin/media/"
+
+
+
+  ## Directories, there should at least be a declaration for /var/www/html
+
+
+  &lt;Directory "/var/www/html"&gt;
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+  &lt;/Directory&gt;
+
+  ## Load additional static includes
+
+
+  ## Logging
+  ErrorLog "/var/log/httpd/graphite.example.com_error.log"
+  ServerSignature Off
+  CustomLog "/var/log/httpd/graphite.example.com_access.log" combined
+
+
+
+  WSGIImportScript /usr/share/graphite/graphite-web.wsgi application-group=%{GLOBAL} process-group=%{GLOBAL}
+  WSGIScriptAlias / "/usr/share/graphite/graphite-web.wsgi"
+
+  ## Custom fragment
+
+    &lt;Location "/content/"&gt;
+        SetHandler None
+    &lt;/Location&gt;
+
+    &lt;Location "/media/"&gt;
+        SetHandler None
+    &lt;/Location&gt;
+
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>Graphite Config</p>
+
+<p>Storage-schames.conf</p>
+
+<pre><code>[carbon]
+pattern = ^carbon\.
+retentions = 60:90d
+
+[stats]
+pattern = ^stats.*
+retentions = 10s:6h,1min:6d,10min:1800d
+
+
+# unsure if this is redundant - does .* match stats_counts ?
+[stats_counts]
+pattern = ^stats_counts.*
+retentions = 10s:6h,1min:6d,10min:1800d
+
+
+# collectd 
+[com]
+pattern = ^com.*
+retentions = 10s:6h,1min:6d,10min:1800d
+
+[default_1min_for_1day]
+pattern = .*
+retentions = 60s:1d
+</code></pre>
+
+<p>storage-aggregation.conf</p>
+
+<pre><code>[min]
+pattern = \.lower$
+xFilesFactor = 0.1
+aggregationMethod = min
+
+[max]
+pattern = \.upper(_\d+)?$
+xFilesFactor = 0.1
+aggregationMethod = max
+
+[sum]
+pattern = \.sum$
+xFilesFactor = 0
+aggregationMethod = sum
+
+[count]
+pattern = \.count$
+xFilesFactor = 0
+aggregationMethod = sum
+
+[count_legacy]
+pattern = ^stats_counts.*
+xFilesFactor = 0
+aggregationMethod = sum
+
+[default_average]
+pattern = .*
+xFilesFactor = 0.3
+aggregationMethod = average
+</code></pre>
+
+<p>Statsd caught me out with a debug mode that <em>only</em> prints to stdout and doesn&rsquo;t actually log any data to graphite, I expected debug mode to print out data in addition to regular duties.</p>
+
+<p>I did need to make statsd listen on all networks instead of just localhost, and still need to wrap it properly as a service.</p>
+
+<p>Edit collectd.conf to enable the plugins you want, the only problem I had here was collectd silently dying if I had a config error.</p>
+
+<p>You need to setup an initial graphite users database</p>
+
+<p>More details at <a href="http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4">http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4</a></p>
+
+<p><code>`bash
+/usr/bin/python /usr/lib/python2.6/site-packages/graphite/manage.py syncdb
+</code></p>
+
+<p>Another useful post <a href="https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/">https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/</a></p>
+
+<p>Writing this up now it all seems quite simple - but I haven&rsquo;t really found it so, I think the main problem has been understanding what graphite is actually doing, and not taking the trouble to optimise that config as a first step.</p>
+]]></content>
+  </entry>
+  
+</feed>

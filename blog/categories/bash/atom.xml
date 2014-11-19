@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Bash | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/bash/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-11-13T15:10:58+00:00</updated>
+  <updated>2014-11-19T14:55:09+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -31,7 +31,7 @@
 <p>git stash
 git checkout master
 git fetch
-git log &ndash;oneline master..origin/master | mail -s &ldquo;site updated &rdquo; <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#x3a;&#109;&#101;&#x40;&#x65;&#120;&#97;&#x6d;&#112;&#x6c;&#101;&#46;&#x63;&#x6f;&#109;">&#109;&#x65;&#x40;&#x65;&#x78;&#x61;&#x6d;&#x70;&#108;&#x65;&#x2e;&#99;&#111;&#109;</a>
+git log &ndash;oneline master..origin/master | mail -s &ldquo;site updated &rdquo; <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#109;&#x65;&#x40;&#101;&#120;&#97;&#109;&#112;&#x6c;&#x65;&#46;&#99;&#111;&#109;">&#x6d;&#x65;&#64;&#x65;&#120;&#x61;&#x6d;&#112;&#108;&#101;&#46;&#99;&#x6f;&#x6d;</a>
 mit merge origin/master
 ./build.sh</p>
 

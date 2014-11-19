@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I needed to setup a VPN client connection on a headless system where the VPN is slow and so I want to route the minimal amount of traffic through it &hellip;">
+  <meta name="description" content="To have a jenkins job which acts on a remote server via ssh - and has a parameter to choose which server(s) to use. check This build is parameterized &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/18/jenkins-publish-over-ssh-parameterized/">Jenkins Publish Over Ssh - Parameterized</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-04-18T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To have a jenkins job which acts on a remote server via ssh - and has a parameter to choose which server(s) to use.</p>
+
+
+
+
+<ol>
+<li>check <i>This build is parameterized</i></li>
+
+<li>Make the parameter name something like TARGET_SERVER</li>
+<li>add build step <i>Send files or execute commands over SSH</i></li>
+<li>Add server</li>
+<li>In server details click <i>advanced</i></li>
+<li>add a value for <i>Label</i></li>
+<li>at the end of the ssh section check <i>Parameterized publishing</i></li>
+<li>specify the  <i>Parameter name</i> from earlier (TARGET_SERVER)</li>
+
+</ol>
+
+
+
+
+<p><p>Now when you run the job supply a value for the TARGET_SERVER parameter that can be a regex, the job will run the ssh sections on any servers that have a matching label.<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/25/git-files-with-local-changes-i-dont-want-committed/">Git Files With Local Changes I Don&#8217;t Want Committed</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-25T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;m working on a project where I find I want to semi-regularly adjust a config file for local testing, but want to be sure I don&#8217;t commit that file by mistake.</p>
+
+
+
+
+<p>Seems the best approach is</p>
+
+
+<p><code>git update-index &ndash;skip-worktree $filename</code></p>
+
+<p>This tells git to skip this file when I push, if the remote file changes it will warn me </p>
+
+
+
+
+<p>To switch back</p>
+
+
+<p><code>git update-index &ndash;no-skip-worktree $filename</code></p>
+
+<p>There is also a assume-unchanged option - but this is aimed more at performance and bug workarounds - it realy does assume the file is unchanged - which in my case is incorrect.</p>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -647,200 +749,6 @@ DAEMON_OPTS=&ldquo;-a :6081,:7081 \
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/21/how-to-create-a-custom-yum-repository-on-centos-6/">How to Create a Custom Yum Repository on Centos 6</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-11-21T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>If you want to create custom rpms and install then with the usual automated dependency management you&rsquo;ll need your own yum repository. This is just the RPMS and metadata in the format of static xml files served by a webserver.</p>
-
-<h2>First you need a GPG key to sign your packages.</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># make some randomness if running headless </span>
-</span><span class='line'>sudo rngd -r /dev/urandom
-</span><span class='line'><span class="c"># start the agent</span>
-</span><span class='line'>gpg-agent --use-standard-socket --daemon
-</span><span class='line'><span class="c"># interactive key generation (accept the defaults for key type, provide your name and email when promted)</span>
-</span><span class='line'>gpg --gen-key
-</span><span class='line'><span class="c"># </span>
-</span><span class='line'>gpg --export -a <span class="s1">&#39;My Name&#39;</span> &gt; MY-RPM-GPG-KEY
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You won&rsquo;t need the random generator if you do this on a desktop, but on a headless system I found I needed this. These actions will store a private key in your keyring, and a public key in the specified file.</p>
-
-<h2>Build your rpm</h2>
-
-<p>First configure rpm to use the key you just added to your key ring, checing you don&rsquo;t oveerwrite earlier configuration).</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span> ! -f ~/.rpmmacros <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s1">&#39;%_signature gpg</span>
-</span><span class='line'><span class="s1">%_gpg_name  My Name</span>
-</span><span class='line'><span class="s1">&#39;</span> &gt; ~/.rpmmacros
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now build your RPM (assuming you are already setup to do this).</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rpmbuild -bb --sign ~/rpmbuild/SPECS/my-project.spec
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Setup the Yum Repo</h2>
-
-<p>Setup apache, make the directory structure, with teh repo files. This can be the same or a different server to your build machine.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># make the repo base url</span>
-</span><span class='line'>sudo mkdir -p /var/www/html/myrepo
-</span><span class='line'><span class="c"># make it wrietable by you normal account</span>
-</span><span class='line'>sudo chown <span class="k">$(</span>id -un<span class="k">)</span>.<span class="k">$(</span>id -gn<span class="k">)</span> /var/www/html/myrepo
-</span><span class='line'><span class="c"># copy you rpm files</span>
-</span><span class='line'>cp *rpm /var/www/html/myrepo
-</span><span class='line'><span class="c"># create the metadata</span>
-</span><span class='line'>createrepo /var/www/html/myrepo
-</span><span class='line'>
-</span><span class='line'><span class="c"># Setup an apache Alias for this directory</span>
-</span><span class='line'><span class="nb">echo</span> <span class="s1">&#39;Alias /myrepo/ /var/www/html/myrepo/</span>
-</span><span class='line'><span class="s1">&#39;</span> &gt; /etc/httpd/conf.d/my-yum-repo
-</span><span class='line'>
-</span><span class='line'><span class="c"># restart Apache to pickup the change</span>
-</span><span class='line'>service restart httpd
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Configure the system that will use the custom repo</h2>
-
-<p>Copy over the GPG key, and import it into the  rpm database.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo rpm --import MY-RPM-GPG-KEY
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Configure yum to use the new repo.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> <span class="err">&#39;</span><span class="o">[</span>my-repo<span class="o">]</span>
-</span><span class='line'><span class="nv">name</span><span class="o">=</span>My Custom Packages
-</span><span class='line'><span class="nv">baseurl</span><span class="o">=</span>http://yum.example.com/myrepo
-</span><span class='line'>&gt; /etc/yum.repos.d/my.repo
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now you should be able to install your custom packages with regular yum commands. When you update your rpms just re-run the createrepo command to update the metadata.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/20/satellite-vs-puppet/">Satellite vs Puppet</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-11-20T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&#8217;ve been using Puppet for a little while and am now working on a project that will be using RedHat&#8217;s Satellite (the upstream project is Spacewalk).</p>
-
-
-
-
-<p>I haven&#8217;t really used puppet in anger on production systems yet, I&#8217;m referring to the open source edition of Puppet, and have only read about Satellite, but I didn&#8217;t find much comparison out there so thought it worth writing up what I&#8217;ve found.</p>
-
-
-
-
-<p><p>They key differences that strike me are<p></p>
-
-<p><ul>
-<li>Satellite is RedHat/Centos only, Puppet works on multiple distributions, and even on Windows to some extent</li>
-<li>Satellite is primarily a GUI driven system whereas Puppet is primarily text configuration (puppet has a web dashboard but it&rsquo;s really just a log viewer)</li></p>
-
-<p><li>Satellite can manage provisioning of new systems (I&rsquo;m using openstack for provisioning new VMs anyway, Razor is said to work well with Puppet for provisioning)</li></p>
-
-<p><li>Satellite manages configuration via simple templates with limited variable use, Puppets templates are fully scriptable</li></p>
-
-<p><li>Puppet has a very rich dependency system (eg you can trigger an Apache restart whenever a configuration change occurs</li></p>
-
-<p><li>Satellite uses a mixture of technologies (python, Java, C) puppet is written in Ruby.</li></p>
-
-<p><li>Puppet is available as a package on Ubuntu/debian systems, on Redhat/centos it has to be installed via the EPEL repo, pulling in extra dependencies</li></p>
-
-<p></ul></p>
-
-<p><p>Personally I much prefer puppet&rsquo;s approach, it&rsquo;s easy to keep all the config in git and test changes in a dev env before rolling out.</p></p>
-
-<p><p>I love puppets declarative approach, and the ability to chain dependencies</p></p>
-
-<p><p>That said I&rsquo;m really looking forward to playing with Satellite, finding out how provisioning works when all the servers are VMs and seeing how we manage the dependency tracking</p></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/4">&larr; Older</a>
@@ -858,6 +766,14 @@ DAEMON_OPTS=&ldquo;-a :6081,:7081 \
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
       </li>
     
@@ -867,14 +783,6 @@ DAEMON_OPTS=&ldquo;-a :6081,:7081 \
     
       <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
       </li>
     
   </ul>

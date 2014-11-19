@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="The music player banshee which is part of the default Ubuntu setup pops up a message each time a new track starts playing. To turn this off Open &hellip;">
+  <meta name="description" content="This wasn&rsquo;t obvious There are various other posts on this - but mostly assuming you will put a file. In my case I want to put the contents of a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,101 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/21/using-php-and-curl-with-http-put-on-string-data/">Using PHP and Curl With Http PUT on String Data</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-09-21T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This wasn&rsquo;t obvious</p>
+
+<p>There are various other posts on this - but mostly assuming you will put a file.</p>
+
+<p>In my case I want to put the contents of a string so I needed to craete a temporary filehandle.</p>
+
+<p>&lt;?php</p>
+
+<p>function put_it($url, $string) {
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_PUT, TRUE);
+  // create tempoary file handle
+  $oneMB = 1024 * 1024;
+  $fp = fopen(&ldquo;php://temp/maxmemory:$oneMB&rdquo;, &lsquo;r+&rsquo;);
+  fputs($fp, $string);
+  rewind($fp);
+  curl_setopt($ch, CURLOPT_INFILE,  $fp);
+  curl_setopt($ch, CURLOPT_INFILESIZE, strlen($string));
+  $response = curl_exec($ch);
+  fclose($fp);</p>
+
+<p>?></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/20/raid-ext4-disk-problems/">RAID Ext4 Disk Problems</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-09-20T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of those posts for myself in case I need to come back to this later</p>
+
+<p>I have a new PC which is very fast apart from problems with disc access seeming slow (and the disks being physically noisy)</p>
+
+<p>The following related links led me to try a solution</p>
+
+<p><a href="http://forums.gentoo.org/viewtopic-t-843292.html">http://forums.gentoo.org/viewtopic-t-843292.html</a></p>
+
+<p><a href="http://marc.info/?l=linux-raid&amp;m=128506852210452&amp;w=2">http://marc.info/?l=linux-raid&amp;m=128506852210452&amp;w=2</a></p>
+
+<p>/etc/fstab
+<code>
+UUID=317f7912-9956-41f1-9855-7bee69c950b3 /               ext4    errors=remount-ro,barrier=0 0       1
+</code></p>
+
+<p>NB adding barrier=0 here seems to have solved the problem</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -777,235 +872,6 @@ git-svn show-ignore > .gitignore
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/05/13/seleniumrc-and-self-signed-ssl-certs/">SeleniumRC and Self Signed SSL Certs</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-05-13T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One of the nice things about selenium tests is that you get a clean browser session each time (so no problems with cookies etc left over from earlier)</p>
-
-<p>But the way this is achieved is by using a new profile each time and this profile doesn&rsquo;t know about your SSL exceptions for avoiding error messages with those self-signed certs on the dev server.</p>
-
-<p>This causes access to SSL via selenium to fail.</p>
-
-<p>You can get around this by creating a custom firefox profile</p>
-
-<p>Create a new profile with
-<code>
-firefox -no-remote -P
-</code></p>
-
-<p>Follow the stpes to creaet a profile (and call it &ldquo;selenium&rdquo;)</p>
-
-<p>Visit your site and accept the SSL cert - set the start page to be blank and close the browser.</p>
-
-<p>Now find the profile directory something like</p>
-
-<p><code>
-~/.mozilla/firefox/8h1w7nkh.selenium
-</code></p>
-
-<p>Run the selenium server like</p>
-
-<p><code>
-java -jar selenium-server-standalone-2.0b3.jar -firefoxProfileTemplate ~/.mozilla/firefox/8h1w7nkh.selenium/
-</code></p>
-
-<p>and it should work.</p>
-
-<p>I found it a bit annoying that I was seeing warnings about extra plugins that selenium installs. So I copied these to my profile</p>
-
-<p><code></p>
-
-<h1>extract them from the jar file</h1>
-
-<p>jar xf selenium-server-standalone-2.0b3</p>
-
-<h1>copy to my profile</h1>
-
-<p>cp -R customProfileDirCUSTFFCHROME/extensions ~/.mozilla/firefox/8h1w7nkh.selenium/extensions</p>
-
-<h1>start the profile manually to see the warnings once</h1>
-
-<p>firefox -no-remote -P selenium
-</code></p>
-
-<p>Now I don&rsquo;t see those warnings any more.</p>
-
-<p>As far as I can see the above only works for firefox, I think the best solution is to just buy a real SSL certificate - they are much cheaper than developer time. But if office politics makes this difficult at least this profile means you can get started.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/05/12/integrating-selenium-and-hudson/">Integrating Selenium and Hudson</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-05-12T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Hudson http://hudson-ci.org/ is a continuous integration server - it runs and monitors &#8216;jobs&#8217; in a way that is useful to regularly build software and report on any errors.
-</p>
-
-
-<p>
-Selenium http://seleniumhq.org/ is a suite of tools specifically for testing web
-applications - it tests the full website by automating the running of one or more browsers (so you can test all that pointy clicky ajaxy stuff)
-</p>
-
-
-<p>
-You can generate selenium tests with a firefox plugin http://seleniumhq.org/projects/ide/ basic tests can be generated just by recording your actions on a website - and saved as an html test suite.
-</p>
-
-
-<p>
-The seleniumhq plugin for hudson http://wiki.hudson-ci.org/display/HUDSON/Seleniumhq+Plugin will start the seleniumrc server, run this test suite, monitor test/failure status and display the selenium report. 
-</p>
-
-
-<p>
-Just add this plugin to hudson, ensure you have the seleniumrc jar file available and configured in the global settings page.
-</p>
-
-
-<p>
-If you are running hudson on your local development system you may just need to download all the components and configure a job for it to just work. BUT if you want to run these jobs on a machine you are not logged in to you will need to run Xvfb to provide a fake display that the browser can use. 
-</p>
-
-
-<p>
-I&#8217;ve done this by 
-</p>
-
-
-<p>
-setting the environment variable DISPLAY to :99 
-</p>
-
-
-<p>
-running the following shell script before the selenium test suite
-</p>
-
-
-<p><code>
-Xvfb :99 -fp /usr/share/X11/fonts/misc -screen 0 1024x768x24 &gt; xvfb.log 2&amp;>1 &amp;<br />
-echo $! &gt; xvfp.pid
-</code></p>
-
-<p>
-The SeleniumHQ testSuite config needs to know which browser to use, the staturl, where to find the tests and where to log the results  
-</p>
-
-
-<p><code>
-kill $(cat xvfp.pid)
-rm xvfb.pid
-</code></p>
-
-<p>
-and checked the &quot;Publish Selenium Report&quot; option - configured to match the results file as above. 
-</p>
-
-
-<p>
-I had hoped that I could export the DISPLAY variable within the script but that didn&#8217;t work - the environment variable setting is global so I&#8217;ve limited hudson to run one job at a time as they all share a display.
-</p>
-
-
-<p>
-I have redirected all output from xvfb to a logfile otherwise hudson complains about leaking file descriptors.
-</p>
-
-
-<p>
-So far this is great - my tests get run regularly and reported consistently over time.
-</p>
-
-
-<p>
-But these tests are written in selenese (an html table based markup) which while having a great deal to offer does not have the full power of a programming language so my next step is to run tests via phpunit (this way I can access the database, loop over my test suite for a range of browsers, and more)
-</p>
-
-
-<p>
-This time I need to manage starting the selenium server as well as xvfb
-</p>
-
-
-<p><code>
-Xvfb :99   -screen 0 1024x768x24 &amp;> xvfb.log &amp;
-echo $! > xvfb.pid
-export DISPLAY=:99
-sleep 10
-java -jar /path-to/selenium-server.jar &amp;> selenium.log &amp;
-echo $! > selenium.pid
-sleep 30</p>
-
-<p>phpunit &ndash;log-xml phpunit.xml Example.php</p>
-
-<p>kill $(cat xvfb.pid)
-rm xvfb.pid
-kill $(cat selenium.pid)
-rm selenium.pid    
-</code></p>
-
-<p>
-I have instructed phpunit to log in xml format (aka junit format in more recent versions - but I&#8217;m running an old version of debian at the moment) 
-</p>
-
-
-<p>
-I added the xunit plugin http://wiki.hudson-ci.org/display/HUDSON/xUnit+Plugin to hudson and configured &quot;Publish JUnit test result report&quot; for my project specifying phpunit.xml as in the above script.
-</p>
-
-
-<p><p>It&rsquo;s worth noting that Drupals simpletest can also provide output in junit format at least according to <a href="http://drupal.org/node/1024426">http://drupal.org/node/1024426</a> so it should be possible to mix test types and aggregate the reports.
-<p>
-So now it all seems to be working an I can run all my tests overnight - all software has bugs - but at least now we should see fewer bugs reoccur as we&rsquo;ll keep adding tests to prevent these things creeping up on us.
-</p></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/7">&larr; Older</a>
@@ -1023,6 +889,14 @@ So now it all seems to be working an I can run all my tests overnight - all soft
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
       </li>
     
@@ -1032,14 +906,6 @@ So now it all seems to be working an I can run all my tests overnight - all soft
     
       <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
       </li>
     
   </ul>

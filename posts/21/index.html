@@ -9,7 +9,9 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Shamelessly copied from: www.geocities.com/arhuaco/doc/subversion/apache-subversion-in-debian.html Configure Apache SSL and Subversion in Debian in &hellip;">
+  <meta name="description" content="I’ve just been working on a site that uses sIFR
+to incorporate a specific font into the design - this works very well
+generally but we had a problem &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +67,129 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/01/08/sifr3-fancy-fonts-on-web-pages/">sIFR3 - Fancy Fonts on Web Pages</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-01-08T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I’ve just been working on a site that uses <a href="http://wiki.novemberborn.net/sifr/What+is+sIFR">sIFR</a>
+to incorporate a specific font into the design - this works very well
+generally but we had a problem where links did not work on the MAC or
+in IE6.<br /></p>
+
+<div class="post-entry">
+<p>
+<br />
+This problem seems to have been solved in sIFR3 which also brings much
+more flexibility - styles can change within the replaced text, filters
+like drop shadow area available - and actions like mouseover can
+trigger javascript callbacks.
+</p>
+<p>
+The only thing I couldn’t see a way of doing was changing the background color of a link on hover…
+</p>
+<p>
+Documentation is at : <a href="http://wiki.novemberborn.net/sifr3/">wiki.novemberborn.net/sifr3/</a>
+</p>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/01/03/version-control-and-drupal/">Version Control and Drupal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-01-03T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I’ve
+been using open source software and developing php for a decade or so
+now - but until recently the two have been fairly seperate.</p>
+
+<div class="post-entry">
+<p>
+Now I’m working on Drupal I need to keep track of my work - and merge in the changes from ‘upstream’.
+</p>
+<p>
+here’s the useful info I found …
+</p>
+<p>
+Drupal advise<br />
+Drupal.org » Forum » Support » Post installation : Repository setup<br />
+<a href="http://drupal.org/node/118936">http://drupal.org/node/118936</a>
+</p>
+<p>
+Vendor Branches<br />
+<a href="http://svnbook.red-bean.com/en/1.0/ch07s04.html">http://svnbook.red-bean.com/en/1.0/ch07s04.html</a>
+</p>
+<p>
+Subversion Externals<br />
+<a href="http://svnbook.red-bean.com/en/1.0/ch07s03.html">http://svnbook.red-bean.com/en/1.0/ch07s03.html</a>
+</p>
+<p>
+svn load dirs (need for upgrading the vendor release)<br />
+<a href="http://docs.ofbiz.org/display/OFBIZ/SVN+Tips+-+svn_load_dirs+Vendor+Branch">http://docs.ofbiz.org/display/OFBIZ/SVN+Tips+-+svn_load_dirs+Vendor+Branch</a>
+</p>
+<p>
+CVS to subversion scripts<br />
+<a href="http://drupal.org/node/71232">http://drupal.org/node/71232</a>
+</p>
+<p>
+Update Status (to track new modules)<br />
+<a href="http://drupal.org/project/update_status">http://drupal.org/project/update_status</a>
+</p>
+<p>
+In the end I’ve decided to put all my projects in one repository
+(I’ll need to upgrade trac 0.11 soon to host project management on a
+per project basis)
+</p>
+<p>
+Each project has a copy of drupal core + contrib modules I plan to use svn:externals to link in my own modules
+</p>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -992,128 +1117,9 @@ The new design is pure CSS using CSS hacks to workaround bugs in various browser
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2005/02/02/spamassassin-troubleshooting/">Spamassassin Troubleshooting</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2005-02-02T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2005</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Having been running spamassassin at home with great success for some time, I have just set it up at work but had a few problems setting up a new Debian Linux box for this from scratch.<br />
-<br />
-I found that spam was just not being detected nearly as well as at home, and the machine was struggling with the load (load average around 3).<br />
-<br />
-1.<br />
-<br />
-I noticed that the blacklists were not being used,<br />
-after a bit of digging (wiki.apache.org/spamassassin/DnsBlocklists I discovered I needed to install the package libnet-dns-perl<br />
-This package is only recommended by the spamassasin package, not required by it.<br />
-2.<br />
-<br />
-The blacklists stopped working again, it turned out that the IP address of the DNS server had been changed. The docs recommend using a local caching DNS server for speed but I’ll see how things go as they are.<br />
-3.<br />
-<br />
-Spam still wasn’t being detected properly and the machine load was to high, I assume that either some tests or the whole spam checking process was timing out - more memory fixed this (I later found out that I might have been able to just reduce the number of child processes spawned by spamd).<br />
-<br />
-I hope that fixes it - I haven’t had enough mail yet to tell.<br />
-<br />
-What has made an immediate and obvious difference is rejecting viruses and executable attachments, we previously relied Windows software which quarantined the attachments but sent the body of the mail on to users. Rejecting this mail has already reduced the number of IT support calls of the ‘have I just got a virus?’ nature.<br />
-<br />
-It remains to be seen if we end up rejecting any legitimate mail, and how useful whitelisting can be in avoiding this.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2005/02/02/reconfiguring-the-x-server-on-debian/">Reconfiguring the X Server on Debian</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2005-02-02T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2005</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is one of those tasks that I do infrequently and forget how it works…</p>
-
-<div class="post-entry">
-<p>
-I just got a nice big new monitor <img class="wp-smiley" src="http://www.uncertainty.org.uk/wordpress/wp-includes/images/smilies/icon_smile.gif" alt=":-)" /> 
-</p>
-<p>
-The command is
-</p>
-<pre>
-dpkg-reconfigure xserver-xfree86
-</pre>
-<p>
-But this will silently fail to update the XF86Config-4 file if the
-file has been modified, if you read the file carefully you will see a
-useful explanation - but I missed this.
-</p>
-<pre>
-# XF86Config-4 (XFree86 X Window System server configuration file)
-#
-# This file was generated by dexconf, the Debian X Configuration tool, using
-# values from the debconf database.
-#
-# Edit this file with caution, and see the XF86Config-4 manual page.
-# (Type &quot;man XF86Config-4&quot; at the shell prompt.)
-#
-# This file is automatically updated on xserver-xfree86 package upgrades *only*
-# if it has not been modified since the last upgrade of the xserver-xfree86
-# package.
-#
-# <strong>If you have edited this file but would like it to be automatically updated
-# again, run the following commands as root</strong>:
-#
-#   cp /etc/X11/XF86Config-4 /etc/X11/XF86Config-4.custom
-#   md5sum /etc/X11/XF86Config-4 &gt;/var/lib/xfree86/XF86Config-4.md5sum
-#   dpkg-reconfigure xserver-xfree86
-</pre>
-<p>
-see also<br />
-<a href="http://www.tulrich.com/geekstuff/debian_tricks.html">www.tulrich.com/geekstuff/debian_tricks.html</a><br />
-<a href="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=223929">bugs.debian.org/cgi-bin/bugreport.cgi?bug=223929</a>
-</p>
-</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/posts/22">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -1128,6 +1134,14 @@ see also<br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
       </li>
     
@@ -1137,14 +1151,6 @@ see also<br />
     
       <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
       </li>
     
   </ul>

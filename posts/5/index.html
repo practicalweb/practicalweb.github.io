@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I needed to run some selenium tests written by a Java team using maven I ran into a couple of errors &nbsp; Annotations are not supported in -source &hellip;">
+  <meta name="description" content="In a busy team, with ongoing testing I often find we have a production version of the site, a version under test, and another version being actively &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,107 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/12/check-drupal-for-update-hook-changes/">Check Drupal for Update Hook Changes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-07-12T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In a busy team, with ongoing testing I often find we have a production version of the site, a version under test, and another version being actively developed.</p>
+
+<p>In fact it can be less clear than this if release planning isn&rsquo;t a priority, some teams simply churn out releases some of which get tested and eventually released.</p>
+
+<p>This can lead to developers being unsure which update hooks have actually run on production (or will have run by the time the next release goes live).</p>
+
+<p>In this case it&rsquo;s important for somebody to manually review all install files that have been edited and check that we don&rsquo;t end up releasing update hooks that have been edited after they have been run.</p>
+
+<p>This script fires up a visual diff tool for the changed files.</p>
+
+<p>test_tag = the tag of the release currently under test and close to being launched</p>
+
+<p>future_release_tag = the tag of the subsequent expected release</p>
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<p>test_tag=$1
+future_release_tag=$2</p>
+
+<p>git checkout ${test_tag}
+./download-database.sh
+./build.sh</p>
+
+<h1>make a note of update hooks run</h1>
+
+<p>for f in $(git log &ndash;oneline &ndash;name-only ${test_tag}..${future_release_tag}  | sort | uniq | grep \.install | sed &ldquo;s/.<em>\/(.</em>).install/\1/&rdquo;) ; do echo &ldquo;select name, schema_version from system where name =&lsquo;$f&rsquo;&rdquo; | drush sqlc  ; done</p>
+
+<h1>this tells you the schema version at the end of the first update for modules that have edited install files</h1>
+
+<p>for f in $(git log &ndash;oneline &ndash;name-only ${test_tag}..${future_release_tag}  | sort | uniq | grep \.install) ; do git difftool -y ${test_tag} ${future_release_tag} &ndash; $f ; done</p>
+
+<h1>review update hook edits</h1>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/01/jenkins-build-artifacts-subdirectories/">Jenkins Build Artifacts - Subdirectories</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-06-01T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It took me an unreasonable amount of guesswork to figure out how to get jenkins to archive files at multiple folder levels</p>
+
+<p>In the end this line worked for me</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Webdriver-framework/target/surefire-reports/*,Webdriver-framework/target/surefire-reports/**/*.png </span></code></pre></td></tr></table></div></figure>
+
+
+<p>This grabs a report in one level - and images it references in subdirectories</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -700,101 +801,6 @@ $node->field_g4_cat_tag[&lsquo;und&rsquo;][0][&lsquo;tid&rsquo;] = &lsquo;autocr
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/21/using-php-and-curl-with-http-put-on-string-data/">Using PHP and Curl With Http PUT on String Data</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-09-21T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This wasn&rsquo;t obvious</p>
-
-<p>There are various other posts on this - but mostly assuming you will put a file.</p>
-
-<p>In my case I want to put the contents of a string so I needed to craete a temporary filehandle.</p>
-
-<p>&lt;?php</p>
-
-<p>function put_it($url, $string) {
-  $ch = curl_init($url);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_PUT, TRUE);
-  // create tempoary file handle
-  $oneMB = 1024 * 1024;
-  $fp = fopen(&ldquo;php://temp/maxmemory:$oneMB&rdquo;, &lsquo;r+&rsquo;);
-  fputs($fp, $string);
-  rewind($fp);
-  curl_setopt($ch, CURLOPT_INFILE,  $fp);
-  curl_setopt($ch, CURLOPT_INFILESIZE, strlen($string));
-  $response = curl_exec($ch);
-  fclose($fp);</p>
-
-<p>?></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/20/raid-ext4-disk-problems/">RAID Ext4 Disk Problems</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-09-20T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One of those posts for myself in case I need to come back to this later</p>
-
-<p>I have a new PC which is very fast apart from problems with disc access seeming slow (and the disks being physically noisy)</p>
-
-<p>The following related links led me to try a solution</p>
-
-<p><a href="http://forums.gentoo.org/viewtopic-t-843292.html">http://forums.gentoo.org/viewtopic-t-843292.html</a></p>
-
-<p><a href="http://marc.info/?l=linux-raid&amp;m=128506852210452&amp;w=2">http://marc.info/?l=linux-raid&amp;m=128506852210452&amp;w=2</a></p>
-
-<p>/etc/fstab
-<code>
-UUID=317f7912-9956-41f1-9855-7bee69c950b3 /               ext4    errors=remount-ro,barrier=0 0       1
-</code></p>
-
-<p>NB adding barrier=0 here seems to have solved the problem</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/6">&larr; Older</a>
@@ -812,6 +818,14 @@ UUID=317f7912-9956-41f1-9855-7bee69c950b3 /               ext4    errors=remount
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
       </li>
     
@@ -821,14 +835,6 @@ UUID=317f7912-9956-41f1-9855-7bee69c950b3 /               ext4    errors=remount
     
       <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
       </li>
     
   </ul>

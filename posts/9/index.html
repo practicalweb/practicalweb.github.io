@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I need a user hook that sends password reset events. I created a very simple module to do this - but it doesn&rsquo;t work. I think this is because &hellip;">
+  <meta name="description" content="When I installed my system I wasn't quite happy with the way the installer divided my hard disk - but at the time I was in a hurry... I have since &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,279 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/09/resizing-an-ext3-filesystem-on-lvm/">Resizing an Ext3 Filesystem on LVM</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-04-09T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+When I installed my system I wasn&#8217;t quite happy with the way the installer divided my hard disk - but at the time I was in a hurry&#8230;
+</p>
+
+
+<p>
+I have since found that repeated loading of databases during development used up all available space in /var and debug files were filling /tmp
+</p>
+
+
+<p>
+So I had to figure out how to resize them.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+Thanks to 
+</p>
+
+
+<p>
+http://blog.dhampir.no/content/resizing-an-ext3-filesystem-on-an-lvm
+</p>
+
+
+<p><code>
+reboot # into single user mode
+df
+umount /tmp
+umount /home/
+umount /var/</p>
+
+<h1>can&rsquo;t umount var - why not?</h1>
+
+<p>lsof | grep var</p>
+
+<h1>OK - need to shut down some services</h1>
+
+<p>ifdown eth0
+lsof | grep var
+/etc/init.d/nfs-common stop
+lsof | grep var
+/etc/init.d/portmap stop
+lsof | grep var
+umount /var/</p>
+
+<h1>get some info about my setup and save it</h1>
+
+<p>lvs
+lvs &gt; maybe_useful_lvs.txt</p>
+
+<h1>check what volume groups I have</h1>
+
+<p>vgscan
+ls -lh /dev/lonlinpdev01/</p>
+
+<h1>check all filesystems I&rsquo;m about to change are OK</h1>
+
+<p>e2fsck -f /dev/lonlinpdev01/home
+e2fsck -f /dev/lonlinpdev01/var
+e2fsck -f /dev/lonlinpdev01/tmp</p>
+
+<h1>reduce /home partition</h1>
+
+<p>resize2fs -p /dev/lonlinpdev01/home 80G
+e2fsck -f /dev/lonlinpdev01/home</p>
+
+<h1>reduce home volume (leaving soem spare space)</h1>
+
+<p>lvreduce -L85G /dev/lonlinpdev01/home</p>
+
+<h1>extend /tmp to 20Gb</h1>
+
+<p>lvextend -L 20G /dev/lonlinpdev01/tmp</p>
+
+<h1>find out what physical volume I&rsquo;m using</h1>
+
+<p>pvs</p>
+
+<h1>extend /var to use all available space</h1>
+
+<p>lvextend  /dev/lonlinpdev01/var /dev/sda2</p>
+
+<h1>check disks</h1>
+
+<p>e2fsck -f /dev/lonlinpdev01/tmp
+e2fsck -f /dev/lonlinpdev01/var
+e2fsck -f /dev/lonlinpdev01/tmp</p>
+
+<h1>now resize all filesystems to match the partitions</h1>
+
+<p>resize2fs -p /dev/lonlinpdev01/var
+e2fsck -f /dev/lonlinpdev01/var
+resize2fs -p /dev/lonlinpdev01/home
+e2fsck -f /dev/lonlinpdev01/home
+e2fsck -f /dev/lonlinpdev01/home
+reboot
+</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/01/os-open-data/">OS Open Data</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-04-01T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+For several years I worked as a web developer for <a href="http://www.ramblers.org.uk/">the Ramblers</a> and this experience very much colours my view of <a href="http://www.ordnancesurvey.co.uk/opendata">todays release</a> of free maps and postcode data.
+</p>
+
+
+<p>
+This is a fantastic and significant step in the direction of ensuring that some of the worlds best mapping assets do the most good for society as a whole.
+</p>
+
+
+<p>
+It will no doubt lead to an explosion of new applications and innovations.
+</p>
+
+
+<p>
+Not least I expect we&#8217;ll see much better maps being used everywhere that couldn&#8217;t previously negotiate an OS license - not only were licenses expensive they were notoriously unclear.
+</p>
+
+
+<p>
+However I can see why <a href="http://www.ramblers.org.uk/news/latest_news/OSfreemaps">the Ramblers are unhappy</a> at todays release   
+</p>
+
+
+<p>
+If I want to show a map of a walk in the Lake district 
+</p>
+
+
+<p>
+<img src="/sites/default/files/u1/lakes1.jpeg" width="413" height="337" /> 
+</p>
+
+
+<p>
+That&#8217;s the Lakes&#8230;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+<img src="/sites/default/files/u1/lakes2.jpeg" width="384" height="322" /> 
+</p>
+
+
+<p>
+Near Ulswater&#8230;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+<img src="/sites/default/files/u1/lakes3.jpeg" width="446" height="338" /> 
+</p>
+
+
+<p>
+It was from Glenridding up towards Helvelyn&#8230;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+<img src="/sites/default/files/u1/lakes4.jpeg" width="500" height="344" />
+</p>
+
+
+<p>
+&#8230;Er.. yeah that&#8217;s the place - but where&#8217;s the path! 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+So this is a brilliant release and even for the Ramblers there&#8217;s loads of stuff they can do today that they either couldn&#8217;t do yesterday or it would have been more expensive and complex. 
+</p>
+
+
+<p>
+And loads of smaller organisations will benefit from free maps and postcode data - these will become common on small websites.
+</p>
+
+
+<p>
+But the release doesn&#8217;t quite give out the assets required to build the apps I always wanted to build for the Ramblers (walking routes, enhanced walks finder, path problem report tools etc). 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+Contains Ordnance Survey data (c) Crown copyright and database right 2010
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -833,138 +1106,6 @@ patch -p0 &lt; shorturl_1.patch
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/18/drush-tput-no-value-for-term-and-no-t-specified/">Drush &#8220;Tput: No Value for $TERM and No -T Specified&#8221;</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-02-18T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The drush script which provides comman line acceess to drupal functionality emits an error message when run as a cron job</p>
-
-
-<p><code>
-tput: No value for $TERM and no -T specified
-</code></p>
-
-<p><code></p>
-
-<h1>If it is not exported determine and export the number of columns.</h1>
-
-<p>if [ -z $COLUMNS ]; then
-  export COLUMNS=$(tput cols)
-fi
-</code></p>
-
-<p>I presume drush uses this information to calculate layout of output.</p>
-
-
-
-
-<p>However when running as a cron job COLUMNS is not set and tput gives the above error.</p>
-
-
-
-
-<p>To resolve this specify a COLUMNS value in your cron job, setting an appropriate size for viewing in email</p>
-
-
-<p></p>
-
-<p><p>cron now runs the following for me.</p>
-
-<p><code></p>
-
-<h1>!/bin/bash</h1>
-
-<p>cd /var/www/mysite/public_html</p>
-
-<p>COLUMNS=80 /home/me/bin/drush cron
-</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/05/drupal-cron-getting-stuck/">Drupal Cron Getting Stuck</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-02-05T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve just run into the drupal cron problem again  
-</p>
-
-
-<p>
-Cron fails and the error log says 
-</p>
-
-
-<p>
-&quot;Attempting 
-to re-run cron while it is already running.&quot;
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<ul>
-    <li>delete from variable where name=&#8217;cron_semaphore&#8217;;</li>
-    <li>clear caches</li>
-    <li>run cron from the web page </li>
-</ul>
-
-
-<p>That seems to do the trick.</p>
-
-
-
-
-<p>Now cron runs OK fom drush or web.</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/10">&larr; Older</a>
@@ -982,6 +1123,14 @@ to re-run cron while it is already running.&quot;
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/grafana/">Grafana</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
       </li>
     
@@ -991,14 +1140,6 @@ to re-run cron while it is already running.&quot;
     
       <li class="post">
         <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/">Install Graphite/grafana and Import Data From Munin</a>
       </li>
     
   </ul>
