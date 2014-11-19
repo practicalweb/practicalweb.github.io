@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="To have a jenkins job which acts on a remote server via ssh - and has a parameter to choose which server(s) to use. check This build is parameterized &hellip;">
+  <meta name="description" content=" ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,36 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/10/script-to-download-all-jenkins-job-configs/">Script to Download All Jenkins Job Configs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-05-10T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script src="https://gist.github.com/practicalweb/5554803.js"></script>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -679,76 +709,6 @@ The downside here is that the external reference has to be added manually to any
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/22/varnish-on-two-ports-with-separate-backends/">Varnish on Two Ports, With Separate Backends</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-11-22T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>We have a site with a hardware ssl accelerator wich routes http traffic to port 80 and decrypted https traffic (so back to http) to port 443. We wanted varnish to cache the 443 traffic, and I came up with this proof of concept config, in reality you&#8217;d want to have a bunhch of different rules for your https site to ensure you cache only what you want to. </p>
-
-
-
-
-<p>in /etc/varnish/default.vcl</p>
-
-
-<p><code>
-backend default {
-    .host = &ldquo;www.example.com&rdquo;;
-    .port = &ldquo;80&rdquo;;
-}</p>
-
-<p>backend secure {
-        .host = &ldquo;www.example.com&rdquo;;
-        .port = &ldquo;443&rdquo;;
-}</p>
-
-<p>sub vcl_recv {</p>
-
-<p>set req.http.Host = &ldquo;www.example.com&rdquo;;</p>
-
-<p>if (server.port == 7081) {
-                set req.http.host = &ldquo;www.example.com&rdquo;;
-                set req.http.port = 443;
-                set req.backend = secure;
-                return(lookup);
-}
-</code></p>
-
-<p>and in /etc/default/varnish</p>
-
-
-<p><code>
-DAEMON_OPTS=&ldquo;-a :6081,:7081 \
-             -T localhost:6082 \
-             -f /etc/varnish/default.vcl \
-             -S /etc/varnish/secret \
-             -s malloc,256m&rdquo;</p>
-
-<p></code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/4">&larr; Older</a>
@@ -766,6 +726,10 @@ DAEMON_OPTS=&ldquo;-a :6081,:7081 \
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -779,10 +743,6 @@ DAEMON_OPTS=&ldquo;-a :6081,:7081 \
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="When I installed my system I wasn't quite happy with the way the installer divided my hard disk - but at the time I was in a hurry... I have since &hellip;">
+  <meta name="description" content="To make a Drupal module that provides triggers you need to Use module_invoke_all at the point your code triggers an event. This basically defines a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,104 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/30/triggers-in-drupal/">Triggers in Drupal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-04-30T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To make a Drupal module that provides triggers you need to</p>
+
+<ol>
+
+<li>Use module_invoke_all at the point your code triggers an event. 
+
+<?php
+module_invoke_all('mymodule', $op, $arg1, $arg2, ....);
+?>
+
+This basically defines a hook that your module provides - it has to be called after the name of your module because of <a href="http://drupal.org/node/368573">a bug</a>
+
+</li>
+
+<!--break-->
+
+<li>Define your modules implementation of this hook to run any actions registered for it.
+
+<?php 
+
+function mymodule_mymodule($op, $arg1, $arg2...){
+   $aids = _trigger_get_hook_aids('mymodule', $op);
+   $context = array(
+     'hook' => &#8216;mymodule&#8217;,
+     &#8216;op&#8217; => $op,
+     &#8216;arg2&#8217; => $arg2,
+      (arg3 etc) 
+   );
+   actions_do(array_keys($aids), $arg1, $context);
+
+}
+
+?>
+
+You can wrap up as many arguments as you like in the context array, $op can be used to define related actions like the way the user module has op for insert, delete, update etc.
+
+$arg1 is passed by reference as the $object parameter to actions.
+
+</li>
+
+<li>Tell Drupal about your triggers by implementing hook_hook_info
+
+This adds the triggers on the triggers admin page
+
+<?php
+function mymodule_hook_info() {
+  return array(
+      'mymodule' => array(
+        &#8216;mymodule&#8217; => array(
+          &#8216;some_op&#8217; => array(
+            &#8216;runs when&#8217; => t(&#8216;Text to explain when the trigger runs&#8217;),
+           ),
+           &#8216;some_other_op&#8217; => array(
+             &#8216;runs when&#8217; => t(&#8216;more user text&#8217;),
+           ),
+         ),
+       ),
+   );
+}
+
+?>
+
+</li>
+
+<li>Now you can use the admin interface to run actions when your triggers fire.</li>
+
+</ol>
+
+
+<p>See <a href="http://drupal.org/node/375833">Writing triggers (Drupal 6.x)</a> for more details - I wrote this up as I found it helpful to approach the issue in reverse order to that page.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1067,45 +1165,6 @@ patch -p0 &lt; shorturl_1.patch
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/19/ssh-port-forwarding/">Ssh Port Forwarding</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-02-19T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Every now and again I find I have ssh access to one server - which has access to somewhere I need to get to - but I want direct access (eg to forward an X session)</p>
-
-<p><code></p>
-
-<p>ssh -L 2222:otherserver:22 server</p>
-
-<p>ssh -X -p 2222 localhost</p>
-
-<p></code></p>
-
-<p>an now I&rsquo;m  logged into othersever with forwarded X</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/10">&larr; Older</a>
@@ -1123,6 +1182,10 @@ patch -p0 &lt; shorturl_1.patch
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -1136,10 +1199,6 @@ patch -p0 &lt; shorturl_1.patch
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

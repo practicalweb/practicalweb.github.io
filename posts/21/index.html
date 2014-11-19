@@ -9,9 +9,9 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I’ve just been working on a site that uses sIFR
-to incorporate a specific font into the design - this works very well
-generally but we had a problem &hellip;">
+  <meta name="description" content="specifically
+I wanted to create a patch equal to the changes between two versions of
+Drupal - but it turns out that a packaging script adds some info &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,67 @@ generally but we had a problem &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/01/11/creating-a-patch-from-cvs/">Creating a Patch From Cvs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-01-11T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>specifically
+I wanted to create a patch equal to the changes between two versions of
+Drupal - but it turns out that a packaging script adds some info to
+releases that isn’t in the cvs version so this doesn’t quite do what I
+wanted.</p>
+
+<div class="post-entry">
+<p>
+it’s still useful though …
+</p>
+<ul>
+    <li>checkout the current version</li>
+    <li>generate the patch as a diff between the previos version and this one</li>
+    <li>optionally run a diff to compare the two versions (cvs and svn) to check they are the same</li>
+</ul>
+<p>
+<br />
+cvs -z6 -d:pserver:anonymous:anonymous@cvs.drupal.org:/cvs/drupal checkout -d drupal5 -r DRUPAL-5-6 drupal
+</p>
+<p>
+cd drupal<br />
+cvs diff -N -u -rDRUPAL-5-5 -r DRUPAL-5-6 &gt; ../drupal-5-5-to-5-6.txt<br />
+cd ..<br />
+diff -r drupal-cvs/ drupal | grep -v .svn | grep -v CVS | less<br />
+</p>
+<p>
+In eclipse open the svn drupal project - go to teams - apply patch
+</p>
+<p>
+and (except for the packaging stuff) you have an updated drupal for your svn repository.
+</p>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1068,55 +1129,6 @@ More about Apache’s <a href="http://httpd.apache.org/docs-2.0/mod/mod_vhost_al
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2005/02/03/css-bugs-in-msie6/">CSS Bugs in MSIE6</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2005-02-03T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2005</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>At work we recently redesigned our website:
-the old design was created in front page and made heavy use of tables, font tags, fixed size divs and a smattering of css.
-The new design is pure CSS using CSS hacks to workaround bugs in various browsers.</p>
-
-<p>The old design had only ever been tested in MSIE and was a little quirky in other browsers, tables based layouts always seem to look more or less the same though. Mind you when there was a problem it would take me hours of trwling through nested tables to find and fix it.</p>
-
-<p>Having lived with this design for a while I have found it to be a little more fragile (in MSIE) in some ways: put an oversized image in the wrong place and the menu which should float to the right drops to the bottom of the page.</p>
-
-<p>The worst problem turned out to be a bug in the way MSIE calculates the size of italic text.</p>
-
-<p>www.positioniseverything.net/explorer/italicbug-ie.html</p>
-
-<p>Now I have found this bug I can easily work around it by avoiding excessive italics (italics tend to look rubbish anyway) or adding the odd bit of white space.</p>
-
-<p>I have also found problems with some divs - if there isn’t enough content -tthe content is all invisible untill you scroll down and then scroll back.</p>
-
-<p>Adding a line-height : 1.1em rule to the containg div fixes it</p>
-
-<p>www.dracos.co.uk/web/css/ie6floatbug/</p>
-
-<p>On the whole I am happy with the CSS design and spend less time fixing layout problems, our site has a much more consistent look and feel, editors don’t have to get involved in layout issues and the whole design can be tweaked accross the site easily.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/22">&larr; Older</a>
@@ -1134,6 +1146,10 @@ The new design is pure CSS using CSS hacks to workaround bugs in various browser
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -1147,10 +1163,6 @@ The new design is pure CSS using CSS hacks to workaround bugs in various browser
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

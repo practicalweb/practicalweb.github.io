@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="We often work on large websites with strict change control practices and scheduled release cycles. Sometimes we also hand over the systems to the &hellip;">
+  <meta name="description" content="I&rsquo;ve exported this site from Drupal using wget to create a static html version like wget --mirror -p -e robots=off --base=./ -k -P ./ http:// &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,118 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-14T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve exported this site from Drupal using wget to create a static html version like</p>
+
+<pre><code>wget  --mirror -p  -e robots=off --base=./ -k -P ./ http://localhost/
+</code></pre>
+
+<p>Then rsync to the server and use mod rewrite to retain the paged links like frontpage?page=4</p>
+
+<p>I&rsquo;ve had some trouble getting mod rewrite to work, it seems that getting apache to serve content from filenames containing question marks is tricky.</p>
+
+<p>in apache 2.4 this worked</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ApacheConf'><span class='line'><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
+</span><span class='line'>   <span class="nb">ServerName</span> practicalweb.localhost
+</span><span class='line'>   <span class="nb">DocumentRoot</span> <span class="sx">/home/sean/rescue/localhost</span>
+</span><span class='line'>   <span class="nb">RewriteEngine</span> <span class="k">on</span>
+</span><span class='line'>   <span class="nb">LogLevel</span> <span class="k">alert</span> rewrite:trace3
+</span><span class='line'>     <span class="nt">&lt;Directory</span> <span class="s">/home/sean/rescue/localhost</span><span class="nt">&gt;</span>
+</span><span class='line'>       <span class="nb">RewriteCond</span> %{QUERY_STRING} !=&amp;quot;&amp;quot;
+</span><span class='line'>       <span class="nb">RewriteRule</span> ^(.*) <span class="sx">/home/sean/rescue/localhost/</span>$1\%3F%{QUERY_STRING}? [L]
+</span><span class='line'>
+</span><span class='line'>       <span class="nb">Options</span> Indexes FollowSymLinks MultiViews
+</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">All</span>
+</span><span class='line'>      <span class="nb">Require</span> <span class="k">all</span> granted
+</span><span class='line'>   <span class="nt">&lt;/Directory&gt;</span>
+</span><span class='line'><span class="nt">&lt;/VirtualHost&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But on apache 2.2 (which my server runs I) needed an external redirect</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ApacheConf'><span class='line'><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nb">DocumentRoot</span> <span class="sx">/var/www/practicalweb</span>
+</span><span class='line'>  <span class="nb">RewriteEngine</span> <span class="k">on</span>
+</span><span class='line'>  <span class="nb">RewriteCond</span> %{QUERY_STRING} !=&amp;quot;&amp;quot;
+</span><span class='line'>  <span class="nb">RewriteRule</span> ^(.*) $1\%3F%{QUERY_STRING}? [last,noescape,R]
+</span><span class='line'>  <span class="nt">&lt;Directory</span> <span class="s">/</span><span class="nt">&gt;</span>
+</span><span class='line'>      <span class="nb">Options</span> FollowSymLinks
+</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">None</span>
+</span><span class='line'>  <span class="nt">&lt;/Directory&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;Directory</span> <span class="s">/var/www/practicalweb</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nb">Options</span> <span class="k">None</span>
+</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">None</span>
+</span><span class='line'>      <span class="nb">Order</span> allow,deny
+</span><span class='line'>      <span class="nb">allow</span> from <span class="k">all</span>
+</span><span class='line'>  <span class="nt">&lt;/Directory&gt;</span>
+</span><span class='line'><span class="nt">&lt;/VirtualHost&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It still basically works - but users see a slightly changed URL which isn&rsquo;t quite what I wanted.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -682,36 +794,6 @@ sqlite3 ~/.Skype/${username}/main.db \
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/10/script-to-download-all-jenkins-job-configs/">Script to Download All Jenkins Job Configs</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-05-10T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><script src="https://gist.github.com/practicalweb/5554803.js"></script>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/3">&larr; Older</a>
@@ -729,6 +811,10 @@ sqlite3 ~/.Skype/${username}/main.db \
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -742,10 +828,6 @@ sqlite3 ~/.Skype/${username}/main.db \
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

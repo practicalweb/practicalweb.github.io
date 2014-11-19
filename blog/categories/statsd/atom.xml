@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Statsd | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/statsd/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-11-19T14:55:09+00:00</updated>
+  <updated>2014-11-19T20:45:44+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -179,13 +179,20 @@ aggregationMethod = average
 
 <p>More details at <a href="http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4">http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4</a></p>
 
-<p><code>`bash
-/usr/bin/python /usr/lib/python2.6/site-packages/graphite/manage.py syncdb
-</code></p>
-
-<p>Another useful post <a href="https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/">https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/</a></p>
+<pre><code class="bash">/usr/bin/python /usr/lib/python2.6/site-packages/graphite/manage.py syncdb
+</code></pre>
 
 <p>Writing this up now it all seems quite simple - but I haven&rsquo;t really found it so, I think the main problem has been understanding what graphite is actually doing, and not taking the trouble to optimise that config as a first step.</p>
+
+<p>Pages I found useful</p>
+
+<ul>
+<li><a href="https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/">https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/</a></li>
+<li><a href="http://blog.pkhamre.com/2012/07/24/understanding-statsd-and-graphite/">http://blog.pkhamre.com/2012/07/24/understanding-statsd-and-graphite/</a></li>
+<li><a href="http://statsd.readthedocs.org/en/latest/types.html#counters">http://statsd.readthedocs.org/en/latest/types.html#counters</a></li>
+<li><a href="http://code.hootsuite.com/accurate-counting-with-graphite-and-statsd/">http://code.hootsuite.com/accurate-counting-with-graphite-and-statsd/</a></li>
+</ul>
+
 ]]></content>
   </entry>
   

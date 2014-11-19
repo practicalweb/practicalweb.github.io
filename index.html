@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Graphite is a highly scalable real-time graphing system. It took me a while to realise but the data input to graphite is incredibly simple The &hellip;">
+  <meta name="description" content="To use eclipse with Maven you need to add the maven plugin to eclipse, it seems to be part of the Indigo update site so this should be &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-19T16:11:44+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:11 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To use eclipse with Maven you need to add the maven plugin to eclipse, it seems to be part of the Indigo update site so this should be straightforward.</p>
+
+<p>It&rsquo;s also at <a href="http://download.eclipse.org/technology/m2e/releases">http://download.eclipse.org/technology/m2e/releases</a></p>
+
+<p>More instructions at <a href="http://maven.apache.org/guides/mini/guide-ide-eclipse.html">http://maven.apache.org/guides/mini/guide-ide-eclipse.html</a></p>
+
+<p>To run the debugger you need to do two things: you need to tell maven to run surefire, and run a remote java debug listening to that surefire</p>
+
+<p>Setup a new &ldquo;Debug configuration&rdquo; > &ldquo;Remote Java Application&rdquo;</p>
+
+<p>It should look like</p>
+
+<p><img src="/images/eclipse/maven/surefire.png" alt="screenshot" /></p>
+
+<p>Next you need to run your maven code with the -Dmaven.surefire.debug</p>
+
+<p>You can do this by adding it to the debug config like this</p>
+
+<p><img src="/images/eclipse/maven/main-project.png" alt="screenshot" /></p>
+
+<p>I&rsquo;ve used the debug mode - but maybe a run configuration would work too</p>
+
+<p>An alternative is to run the maven project on command line</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mvn <span class="nb">test</span> -Dmaven.surefire.debug
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Generally if I&rsquo;m using eclipse I prefer to do everything in the IDE (I stands for integrated after all) and it&rsquo;s useful to have the console output in the same place</p>
+
+<p>Either way run the project to debug and maven will stop with output</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Listening <span class="k">for</span> transport dt_socket at address: 5005
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and wait till your debugger is attached</p>
+
+<p>Now you have to start the remote application debug in eclipse</p>
+
+<p>Execution will now stop at breakpoints and you will be able top explore the stack and all variables set</p>
+
+<p><img src="/images/eclipse/maven/debug.png" alt="screenshot" /></p>
+
+<p>This is an incredibly powerful way to explore running code, <em>especially</em> if you are unfamiliar with it. Even if you are familiar a debugger session can often be very enlightening.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -350,13 +425,22 @@
 
 <p>More details at <a href="http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4">http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4</a></p>
 
-<p><code>`bash
-/usr/bin/python /usr/lib/python2.6/site-packages/graphite/manage.py syncdb
-</code></p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>/usr/bin/python /usr/lib/python2.6/site-packages/graphite/manage.py syncdb
+</span></code></pre></td></tr></table></div></figure>
 
-<p>Another useful post <a href="https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/">https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/</a></p>
 
 <p>Writing this up now it all seems quite simple - but I haven&rsquo;t really found it so, I think the main problem has been understanding what graphite is actually doing, and not taking the trouble to optimise that config as a first step.</p>
+
+<p>Pages I found useful</p>
+
+<ul>
+<li><a href="https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/">https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/</a></li>
+<li><a href="http://blog.pkhamre.com/2012/07/24/understanding-statsd-and-graphite/">http://blog.pkhamre.com/2012/07/24/understanding-statsd-and-graphite/</a></li>
+<li><a href="http://statsd.readthedocs.org/en/latest/types.html#counters">http://statsd.readthedocs.org/en/latest/types.html#counters</a></li>
+<li><a href="http://code.hootsuite.com/accurate-counting-with-graphite-and-statsd/">http://code.hootsuite.com/accurate-counting-with-graphite-and-statsd/</a></li>
+</ul>
+
 </div>
   
   
@@ -875,118 +959,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-10-14T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve exported this site from Drupal using wget to create a static html version like</p>
-
-<pre><code>wget  --mirror -p  -e robots=off --base=./ -k -P ./ http://localhost/
-</code></pre>
-
-<p>Then rsync to the server and use mod rewrite to retain the paged links like frontpage?page=4</p>
-
-<p>I&rsquo;ve had some trouble getting mod rewrite to work, it seems that getting apache to serve content from filenames containing question marks is tricky.</p>
-
-<p>in apache 2.4 this worked</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='ApacheConf'><span class='line'><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
-</span><span class='line'>   <span class="nb">ServerName</span> practicalweb.localhost
-</span><span class='line'>   <span class="nb">DocumentRoot</span> <span class="sx">/home/sean/rescue/localhost</span>
-</span><span class='line'>   <span class="nb">RewriteEngine</span> <span class="k">on</span>
-</span><span class='line'>   <span class="nb">LogLevel</span> <span class="k">alert</span> rewrite:trace3
-</span><span class='line'>     <span class="nt">&lt;Directory</span> <span class="s">/home/sean/rescue/localhost</span><span class="nt">&gt;</span>
-</span><span class='line'>       <span class="nb">RewriteCond</span> %{QUERY_STRING} !=&amp;quot;&amp;quot;
-</span><span class='line'>       <span class="nb">RewriteRule</span> ^(.*) <span class="sx">/home/sean/rescue/localhost/</span>$1\%3F%{QUERY_STRING}? [L]
-</span><span class='line'>
-</span><span class='line'>       <span class="nb">Options</span> Indexes FollowSymLinks MultiViews
-</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">All</span>
-</span><span class='line'>      <span class="nb">Require</span> <span class="k">all</span> granted
-</span><span class='line'>   <span class="nt">&lt;/Directory&gt;</span>
-</span><span class='line'><span class="nt">&lt;/VirtualHost&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But on apache 2.2 (which my server runs I) needed an external redirect</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='ApacheConf'><span class='line'><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nb">DocumentRoot</span> <span class="sx">/var/www/practicalweb</span>
-</span><span class='line'>  <span class="nb">RewriteEngine</span> <span class="k">on</span>
-</span><span class='line'>  <span class="nb">RewriteCond</span> %{QUERY_STRING} !=&amp;quot;&amp;quot;
-</span><span class='line'>  <span class="nb">RewriteRule</span> ^(.*) $1\%3F%{QUERY_STRING}? [last,noescape,R]
-</span><span class='line'>  <span class="nt">&lt;Directory</span> <span class="s">/</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nb">Options</span> FollowSymLinks
-</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">None</span>
-</span><span class='line'>  <span class="nt">&lt;/Directory&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;Directory</span> <span class="s">/var/www/practicalweb</span><span class="nt">&gt;</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="nb">Options</span> <span class="k">None</span>
-</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">None</span>
-</span><span class='line'>      <span class="nb">Order</span> allow,deny
-</span><span class='line'>      <span class="nb">allow</span> from <span class="k">all</span>
-</span><span class='line'>  <span class="nt">&lt;/Directory&gt;</span>
-</span><span class='line'><span class="nt">&lt;/VirtualHost&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It still basically works - but users see a slightly changed URL which isn&rsquo;t quite what I wanted.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1002,6 +974,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -1015,10 +991,6 @@
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

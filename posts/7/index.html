@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="One of the nice things about selenium tests is that you get a clean browser session each time (so no problems with cookies etc left over from earlier &hellip;">
+  <meta name="description" content="You&rsquo;ll need to have git and git-svn installed. The code samples are run in bash on Linux. Initial Import The import process can be slow if you &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,100 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/14/import-an-svn-repository-to-git/">Import an Svn Repository to Git</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-05-14T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>You&rsquo;ll need to have git and git-svn installed.</p>
+
+<p>The code samples are run in bash on Linux.</p>
+
+<h2>Initial Import</h2>
+
+
+<p>The import process can be slow if you have a lot of history to import as git-svn has to pull in every single revision individally. I&rsquo;ve found it worthwhile creating a tiny svn repository to practice with as imports are quick and mistakes cheap.</p>
+
+<p><code>
+mkdir mynewgitrepo
+cd mynewgitrepo
+git svn init <svn repo url>  &ndash;tags=tags &ndash;branches=branches &ndash;trunk=trunk &ndash;prefix=svn
+git svn fetch  # this takes ages
+</code></p>
+
+<p>You can use git-svn rebase to pull in further updates from svn and git-svn dcommit to commit back.</p>
+
+<p>NB - if you are doing a one shot import and abandoning svn the look into the <a href="http://www.au.kernel.org/software/scm/git/docs/git-svn.html">authors-file and no-metadata options</a> - though <a href="http://www.au.kernel.org/software/scm/git/docs/git-filter-branch.html">git-filter-branch</a> may be a better way of cleaning up the history.</p>
+
+<h2>Local and remote Branches</h2>
+
+
+<p>git-svn creates remote branches that track changes in the svn repository, if you want to work on these branches you will need local copies, I&rsquo;ve used the prefix &ldquo;svn&rdquo; on importing which will be applied to the remote branches which allows me to create local branches with the same name as is used in svn.</p>
+
+<p>To create a local copy of branch 1.0
+<code>
+git branch 1.0 svn/1.0
+</code></p>
+
+<p>To create local copies of all svn branches</p>
+
+<p><code>
+for branch in $(git branch -r | grep -v tags | grep -v trunk) ; do echo git branch ${branch#svn/} $branch ; done > local_branches</p>
+
+<h1>review local_branches file</h1>
+
+<p>. local_branches
+</code></p>
+
+<p>NB when a new branch is created in svn it won&rsquo;t appear automatically in git - use git svn fetch to achive this and then create a local copy of it if needed.</p>
+
+<h2>Tags</h2>
+
+
+<p>Subversion doesn&rsquo;t really distinguish between tags and branches - there is just a convention that copies of trunk are stored in &ldquo;branches&rdquo; for further commits and in &ldquo;tags&rdquo; to be left as a record of a a point in time. But you can in fact continue to work on subversion tags.</p>
+
+<p>What git-svn does is to import tags as branches prefixed with /tags if the tag has commits git-svn creates a branch for each commit named tags/$tagname@$revison_id</p>
+
+<p>If you want to you can make true git tags from these and delete the git branches - though you will (presumably) lose the ability to obtain further updates on these later.</p>
+
+<p><code>
+for tag in $(git branch -r | grep tags) ; do echo &ldquo;git tag ${tag#tags/} $tag &amp;&amp; git branch -r -d $tag &rdquo;; done > converttags</p>
+
+<h1>review converttags file</h1>
+
+<p>. converttags
+</code></p>
+
+<h2>Further git settings</h2>
+
+
+<p>Migrate svn ignore settings
+<code>
+git-svn show-ignore > .gitignore
+</code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -616,53 +710,6 @@ DAEMON_OPTS=&ldquo;-c -a -w $logfile -D -P $pidfile&rdquo;
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/10/01/varnish-acl/">Varnish ACL</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-10-01T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>To setup an IP based access control list so that only allowed users may access the site.</p>
-
-<p><code>
-sub vcl_recv {</p>
-
-<p>  if (!(client.ip ~ testers)) {
-    error 403 &ldquo;Access Denied - server in test mode (IP not in ACL)&rdquo;;
-  }</p>
-
-<p>}</p>
-
-<p>acl testers {
-    &ldquo;localhost&rdquo;;
-    &ldquo;www.example.com&rdquo;;
-    &ldquo;192.168.0.1&rdquo;;
-}
-</code></p>
-
-<p>In my case I need to be able to test a dev site but don&rsquo;t want to make it public, we tried using password authentication but that made it harder to test varnish as the authentication headers affected caching.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/8">&larr; Older</a>
@@ -680,6 +727,10 @@ sub vcl_recv {</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -693,10 +744,6 @@ sub vcl_recv {</p>
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

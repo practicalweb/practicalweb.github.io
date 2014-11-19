@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Comments in code are widely used and generally (but not universally) accepted as a good thing. Databases can also accommodate comments - but these &hellip;">
+  <meta name="description" content="It seems there is a bug in MySQL which is causing restores to run very slowly (hours instead of minutes) http://bugs.mysql.com/bug.php?id=33057 The &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/08/04/mysql-restore-is-very-slow/">MySQL Restore Is Very Slow</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-08-04T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+It seems there is a bug in MySQL which is causing restores to run very slowly (hours instead of minutes)
+</p>
+
+
+<p>
+<a href="http://bugs.mysql.com/bug.php?id=33057">http://bugs.mysql.com/bug.php?id=33057</a>
+</p>
+
+
+<p>
+The bug is fixed in <a href="http://dev.mysql.com/doc/refman/5.0/en/releasenotes-cs-5-0-67.html">release 5.0.67</a>
+</p>
+
+
+<p>
+But Ubuntu hasn&#8217;t updated yet&#8230;.
+</p>
+
+
+<p>
+Fortunately this bug is specific to the command line client. 
+</p>
+
+
+<p>
+Workaround: use the MySQL Administrator GUI instead. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1012,55 +1069,6 @@ Having got this far though the improvements look generally useful; I&#8217;ll go
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/06/30/simpletest-expecting-exceptions/">SimpleTest - Expecting Exceptions</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-06-30T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>SimpleTest is a great testing framework for PHP, with a Drupal module available too.</p>
-
-<p>Many tests are based on assert statements, but this patterns doesn&rsquo;t work for functions which are expected to throw Exceptions. As at the time of writing Drupal&rsquo;s simpletest module doesn&rsquo;t catch exceptions and so the whole test run stalls.</p>
-
-<p>In that case the following patterns are often useful.</p>
-
-<p>&lt;?php
-try {
-  foo($good_input);
-  pass(&lsquo;Good input didn\&rsquo;t throw and exeption&rsquo;);
-} catch (MyException $e) {
-  $this->fail($e->getMessage());
-}</p>
-
-<p>try {
-  foo($bad_input);
-  $this->fail($e->getMessage());
-} catch (MyException $e) {
-  pass(&lsquo;Bad input correctly threw an exception&rsquo;);
-}
-?></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/18">&larr; Older</a>
@@ -1078,6 +1086,10 @@ try {
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -1091,10 +1103,6 @@ try {
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

@@ -9,7 +9,8 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Having been running spamassassin at home with great success for some time, I have just set it up at work but had a few problems setting up a new &hellip;">
+  <meta name="description" content="At work we recently redesigned our website:
+the old design was created in front page and made heavy use of tables, font tags, fixed size divs and a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,55 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2005/02/03/css-bugs-in-msie6/">CSS Bugs in MSIE6</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2005-02-03T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2005</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>At work we recently redesigned our website:
+the old design was created in front page and made heavy use of tables, font tags, fixed size divs and a smattering of css.
+The new design is pure CSS using CSS hacks to workaround bugs in various browsers.</p>
+
+<p>The old design had only ever been tested in MSIE and was a little quirky in other browsers, tables based layouts always seem to look more or less the same though. Mind you when there was a problem it would take me hours of trwling through nested tables to find and fix it.</p>
+
+<p>Having lived with this design for a while I have found it to be a little more fragile (in MSIE) in some ways: put an oversized image in the wrong place and the menu which should float to the right drops to the bottom of the page.</p>
+
+<p>The worst problem turned out to be a bug in the way MSIE calculates the size of italic text.</p>
+
+<p>www.positioniseverything.net/explorer/italicbug-ie.html</p>
+
+<p>Now I have found this bug I can easily work around it by avoiding excessive italics (italics tend to look rubbish anyway) or adding the odd bit of white space.</p>
+
+<p>I have also found problems with some divs - if there isn’t enough content -tthe content is all invisible untill you scroll down and then scroll back.</p>
+
+<p>Adding a line-height : 1.1em rule to the containg div fixes it</p>
+
+<p>www.dracos.co.uk/web/css/ie6floatbug/</p>
+
+<p>On the whole I am happy with the CSS design and spend less time fixing layout problems, our site has a much more consistent look and feel, editors don’t have to get involved in layout issues and the whole design can be tweaked accross the site easily.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -202,6 +252,10 @@ see also<br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -215,10 +269,6 @@ see also<br />
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

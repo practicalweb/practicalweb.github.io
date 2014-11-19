@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="The drush script which provides comman line acceess to drupal functionality emits an error message when run as a cron job tput: No value for $TERM &hellip;">
+  <meta name="description" content="Every now and again I find I have ssh access to one server - which has access to somewhere I need to get to - but I want direct access (eg to forward &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/19/ssh-port-forwarding/">Ssh Port Forwarding</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-19T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Every now and again I find I have ssh access to one server - which has access to somewhere I need to get to - but I want direct access (eg to forward an X session)</p>
+
+<p><code></p>
+
+<p>ssh -L 2222:otherserver:22 server</p>
+
+<p>ssh -X -p 2222 localhost</p>
+
+<p></code></p>
+
+<p>an now I&rsquo;m  logged into othersever with forwarded X</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -635,52 +674,6 @@ It&#8217;s a great little command line utility with a very forgetable name.
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/12/03/hard-drive-testing-using-smartmontools/">Hard Drive Testing Using Smartmontools</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-12-03T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Test the hard drive with</p>
-
-
-<p><code>
- smartctl -t long /dev/hd?
-</code></p>
-
-<p>This may take hours to run and will do so as a background process.</p>
-
-
-
-
-<p>Once complete run the following to see results</p>
-
-
-<p><code>
- smartctl -l selftest /dev/hd?
-</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/11">&larr; Older</a>
@@ -698,6 +691,10 @@ It&#8217;s a great little command line utility with a very forgetable name.
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -711,10 +708,6 @@ It&#8217;s a great little command line utility with a very forgetable name.
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

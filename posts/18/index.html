@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I&rsquo;ve just been trying to get a paged query working with Drupal, and after a frustrating hour I realise the problem is that the function is case &hellip;">
+  <meta name="description" content="SimpleTest is a great testing framework for PHP, with a Drupal module available too. Many tests are based on assert statements, but this patterns &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,55 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/06/30/simpletest-expecting-exceptions/">SimpleTest - Expecting Exceptions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-06-30T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SimpleTest is a great testing framework for PHP, with a Drupal module available too.</p>
+
+<p>Many tests are based on assert statements, but this patterns doesn&rsquo;t work for functions which are expected to throw Exceptions. As at the time of writing Drupal&rsquo;s simpletest module doesn&rsquo;t catch exceptions and so the whole test run stalls.</p>
+
+<p>In that case the following patterns are often useful.</p>
+
+<p>&lt;?php
+try {
+  foo($good_input);
+  pass(&lsquo;Good input didn\&rsquo;t throw and exeption&rsquo;);
+} catch (MyException $e) {
+  $this->fail($e->getMessage());
+}</p>
+
+<p>try {
+  foo($bad_input);
+  $this->fail($e->getMessage());
+} catch (MyException $e) {
+  pass(&lsquo;Bad input correctly threw an exception&rsquo;);
+}
+?></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -611,48 +660,6 @@ The &lt;title&gt; will be used as the &quot;docblock title&quot; and the &lt;bod
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/06/02/linkedin/">Linkedin</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-06-02T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I just created a profile for myself on linkedin - a much better designed site than facebook.  
-</p>
-
-
-<p>
-Read more about me there 
-</p>
-
-
-<p>
-<a href="http://www.linkedin.com/in/seanburlington">www.linkedin.com/in/seanburlington</a>
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/19">&larr; Older</a>
@@ -670,6 +677,10 @@ Read more about me there
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -683,10 +694,6 @@ Read more about me there
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

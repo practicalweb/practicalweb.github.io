@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Maven | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/maven/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-11-19T14:55:09+00:00</updated>
+  <updated>2014-11-19T20:45:44+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,57 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Debugging With Maven and Eclipse]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/11/19/debugging-with-maven-and-eclipse/"/>
+    <updated>2014-11-19T16:11:44+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/11/19/debugging-with-maven-and-eclipse</id>
+    <content type="html"><![CDATA[<p>To use eclipse with Maven you need to add the maven plugin to eclipse, it seems to be part of the Indigo update site so this should be straightforward.</p>
+
+<p>It&rsquo;s also at <a href="http://download.eclipse.org/technology/m2e/releases">http://download.eclipse.org/technology/m2e/releases</a></p>
+
+<p>More instructions at <a href="http://maven.apache.org/guides/mini/guide-ide-eclipse.html">http://maven.apache.org/guides/mini/guide-ide-eclipse.html</a></p>
+
+<p>To run the debugger you need to do two things: you need to tell maven to run surefire, and run a remote java debug listening to that surefire</p>
+
+<p>Setup a new &ldquo;Debug configuration&rdquo; > &ldquo;Remote Java Application&rdquo;</p>
+
+<p>It should look like</p>
+
+<p><img src="/images/eclipse/maven/surefire.png" alt="screenshot" /></p>
+
+<p>Next you need to run your maven code with the -Dmaven.surefire.debug</p>
+
+<p>You can do this by adding it to the debug config like this</p>
+
+<p><img src="/images/eclipse/maven/main-project.png" alt="screenshot" /></p>
+
+<p>I&rsquo;ve used the debug mode - but maybe a run configuration would work too</p>
+
+<p>An alternative is to run the maven project on command line</p>
+
+<pre><code class="bash">mvn test -Dmaven.surefire.debug
+</code></pre>
+
+<p>Generally if I&rsquo;m using eclipse I prefer to do everything in the IDE (I stands for integrated after all) and it&rsquo;s useful to have the console output in the same place</p>
+
+<p>Either way run the project to debug and maven will stop with output</p>
+
+<pre><code>Listening for transport dt_socket at address: 5005
+</code></pre>
+
+<p>and wait till your debugger is attached</p>
+
+<p>Now you have to start the remote application debug in eclipse</p>
+
+<p>Execution will now stop at breakpoints and you will be able top explore the stack and all variables set</p>
+
+<p><img src="/images/eclipse/maven/debug.png" alt="screenshot" /></p>
+
+<p>This is an incredibly powerful way to explore running code, <em>especially</em> if you are unfamiliar with it. Even if you are familiar a debugger session can often be very enlightening.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Selenium WebDriver Annotations and Firefox Connection Trouble]]></title>

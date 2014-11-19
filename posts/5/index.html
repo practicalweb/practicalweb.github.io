@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="In a busy team, with ongoing testing I often find we have a production version of the site, a version under test, and another version being actively &hellip;">
+  <meta name="description" content="Nice bit of bash fu I discovered today Add this snippet to the top of scripts and the output of lines below will be tee&rsquo;d to a logfile. Handy &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/12/log-output-of-a-script-to-a-file/">Log Output of a Script to a File</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-07-12T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Nice bit of bash fu I discovered today</p>
+
+<p>Add this snippet to the top of scripts and the output of lines below will be tee&rsquo;d to a logfile.</p>
+
+<p>Handy for those scripts you always want a log of</p>
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<h1>log all output</h1>
+
+<p>[ -d ~/logs/ ] || mkdir ~/logs/
+exec > >(tee -a ~/logs/${release}.log)
+exec 2> >(tee -a ~/logs/${release}.log)</p>
+
+<h1>do stuff &hellip;</h1>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -754,53 +801,6 @@ groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group a
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/22/node_save-tags-by-term-name-with-auto-addition-of-new-tags/">Node_save Tags by Term Name With Auto Addition of New Tags</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-09-22T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Drupal lets you add a taxonomy term to a node and if you use the GUI you can have a nice auto-complete widget that takes term name - and iof the term doesn&rsquo;t exist yet you get a new term created when you save the node.</p>
-
-<p>I wanted to access the same functionality on node I am generating from external data.</p>
-
-<p>The key is to create the term array with tid = &lsquo;autocreate&rsquo; - this and the vocabulary ID are enough to trigger the taxonomy module to lookup the tid for you - and adda new term is required.</p>
-
-<p>&lt;?php
-$node = new stdClass();
-$node->type=&lsquo;mytype&rsquo;;
-$node-title=&lsquo;foo&rsquo;;
-$node->body = &lsquo;bar&rsquo;;</p>
-
-<p>$node->field_cat_tag[&lsquo;und&rsquo;][0][&lsquo;name&rsquo;] =  $name;
-$node->field_cat_tag[&lsquo;und&rsquo;][0][&lsquo;vocabulary_machine_name&rsquo;] = $vocab_machine_name; // optional - helps performance if in a loop<br/>
-$node->field_g4_cat_tag[&lsquo;und&rsquo;][0][&lsquo;vid&rsquo;] = $vid;
-$node->field_g4_cat_tag[&lsquo;und&rsquo;][0][&lsquo;tid&rsquo;] = &lsquo;autocreate&rsquo;;</p>
-
-<p>$node_save($node);
-?></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/6">&larr; Older</a>
@@ -818,6 +818,10 @@ $node->field_g4_cat_tag[&lsquo;und&rsquo;][0][&lsquo;tid&rsquo;] = &lsquo;autocr
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -831,10 +835,6 @@ $node->field_g4_cat_tag[&lsquo;und&rsquo;][0][&lsquo;tid&rsquo;] = &lsquo;autocr
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>

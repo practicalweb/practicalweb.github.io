@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="The selected file could not be uploaded, because the destination is not properly configured This "feature" has bitten me before. It's one of those &hellip;">
+  <meta name="description" content="It's often handy to look at the changes made by a commit ignoring whitespace changes. This is often required when a dveloper has made some &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/21/svn-diff-ignoring-whitespace/">SVN Diff Ignoring Whitespace</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-11-21T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+It&#8217;s often handy to look at the changes made by a commit ignoring whitespace changes.
+</p>
+
+
+
+
+<p><p>This is often required when a dveloper has made some formatting changes and you just want to see the functional differences.
+<code>
+svn diff &ndash;diff-cmd diff -x -uw
+</code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -761,63 +800,6 @@ I wonder if version 3 would be any slower anyway - it might even be faster. In 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/08/04/mysql-restore-is-very-slow/">MySQL Restore Is Very Slow</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-08-04T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-It seems there is a bug in MySQL which is causing restores to run very slowly (hours instead of minutes)
-</p>
-
-
-<p>
-<a href="http://bugs.mysql.com/bug.php?id=33057">http://bugs.mysql.com/bug.php?id=33057</a>
-</p>
-
-
-<p>
-The bug is fixed in <a href="http://dev.mysql.com/doc/refman/5.0/en/releasenotes-cs-5-0-67.html">release 5.0.67</a>
-</p>
-
-
-<p>
-But Ubuntu hasn&#8217;t updated yet&#8230;.
-</p>
-
-
-<p>
-Fortunately this bug is specific to the command line client. 
-</p>
-
-
-<p>
-Workaround: use the MySQL Administrator GUI instead. 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/17">&larr; Older</a>
@@ -835,6 +817,10 @@ Workaround: use the MySQL Administrator GUI instead.
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
       </li>
     
@@ -848,10 +834,6 @@ Workaround: use the MySQL Administrator GUI instead.
     
       <li class="post">
         <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a>
       </li>
     
   </ul>
