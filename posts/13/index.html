@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="A few days into learning Symfony and so far I'm keen on configuration check to start with good MVC separation ability to generate initial MVC &hellip;">
+  <meta name="description" content="I'm working on an AJAX heavy site for a defined audience who all have JavaScript - so I have a form with no submit button that gets submitted by an &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/06/drupal-forms-require-a-submit-button/">Drupal Forms Require a Submit Button</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-06T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;m working on an AJAX heavy site for a defined audience who all have JavaScript - so I have a form with no submit button that gets submitted by an change handler. 
+</p>
+
+
+<p>
+Normally I&#8217;d make sure the site was fully accessible - but not on this project so I just got rid of the submit button. I got the JavaScript submit working only to find my Drupal form no longer worked.
+</p>
+
+
+<p>
+It seems that the Drupal submit handlers are not called if the form doesn&#8217;t have a submit button. I can&#8217;t see any reference to this in the Drupal API, but adding the  button back in and hiding it via CSS works fine.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -673,42 +720,6 @@ Simpletest has a built in webTestCase which allows you to perform some integrati
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/29/how-sure-are-you-that-your-code-doesnt-have-bugs/">How Sure Are You That Your Code Doesn&#8217;t Have Bugs?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-04-29T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There are times you really really want to be sure your code doesn&rsquo;t have any bugs at all.</p>
-
-<p>This is one of those times.</p>
-
-<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/yln_IGDuOCo&hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/yln_IGDuOCo&hl=en&fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>
-
-
-<p>I really hope they had a good set of tests running on thier software before doing that!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/14">&larr; Older</a>
@@ -726,6 +737,10 @@ Simpletest has a built in webTestCase which allows you to perform some integrati
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
@@ -739,10 +754,6 @@ Simpletest has a built in webTestCase which allows you to perform some integrati
     
       <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
   </ul>

@@ -9,7 +9,8 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="It seems there is a bug in MySQL which is causing restores to run very slowly (hours instead of minutes) http://bugs.mysql.com/bug.php?id=33057 The &hellip;">
+  <meta name="description" content="One of the things that is confusing about Drupal is the use of the word node. Going to the dictionary doesn&rsquo;t help much:
+http://dictionary. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/08/05/what-is-a-drupal-node/">What Is a Drupal Node?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-08-05T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of the things that is confusing about Drupal is the use of the word node.</p>
+
+<p>Going to the dictionary doesn&rsquo;t help much:
+<a href="http://dictionary.reference.com/browse/node">http://dictionary.reference.com/browse/node</a>
+<a href="http://www.answers.com/topic/node">http://www.answers.com/topic/node</a></p>
+
+<p>In my opinion &ldquo;node&rdquo; is just the wrong word.</p>
+
+<p>When you read node think content.</p>
+
+<p>Content (in the context of a website) means something that is displayed to users.</p>
+
+<p>Content can be text, images, video, even flash games.</p>
+
+<p>So when you create a node in Drupal you are creating content.</p>
+
+<p>Sometimes Drupal actually uses the word content. The admin interface allows you to create &ldquo;content types&rdquo;, &ldquo;create content&rdquo; takes you to the url node/add, and through &ldquo;content management&rdquo; you get to a list of nodes.</p>
+
+<p>This linguistic confusion can lead people to use nodes where they don&rsquo;t really fit. Nodes aren&rsquo;t so suitable for data storage - if you have a lot of data that isn&rsquo;t displayed to the user - then it isn&rsquo;t content so don&rsquo;t make it into a node.</p>
+
+<p>Data belongs in well designed database tables.</p>
+
+<p>I&rsquo;d like to see node renamed to &ldquo;content&rdquo; but in the meantime I recommend translating node to content mentally.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -834,241 +886,6 @@ What this means for web development is an interesting question. Well managed web
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/07/06/eclipse-3-4-ganymede-first-impressions/">Eclipse 3.4 (Ganymede) First Impressions</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-07-06T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Well the new version of Eclipse (3.4 or Ganymede) is out and I&#8217;ve been trying it out. So far I&#8217;ve just installed it, adding in the components I want; and generally trying to see what&#8217;s new. 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<div style="text-align: center">
-<img src="/sites/default/files/u1/eclipse-splash_0.png" alt="Eclipse Splash Screen" width="300" height="195" />
-</div>
-
-
-<h2>
-Installation 
-</h2>
-
-
-<p>
-I&#8217;m running Linux (Ubuntu 8.04) 
-</p>
-
-
-<p>
-Installing Eclipse 3.4 was a pain: it turns out that Eclipse requires web browser components form Firefox - and didn&#8217;t work with the default Ubuntu package that I had.  Once I found out that I needed to upgrade my xulrunner-1.9 package things were OK.
-</p>
-
-
-<p>
-If you have these problems see
-</p>
-
-
-<ul>
-    <li><a href="http://www.eclipse.org/swt/faq.php#browserlinux">www.eclipse.org/swt/faq.php</a></li>
-    <li><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=213194">bug 213194</a> (and it&#8217;s duplicates)</li>
-</ul>
-
-
-<p>
-Then I needed to install various components, the Eclipse  software updates management is much improved on earlier version, dependencies are resolved automatically. But I still found it hard to work out which packages provide which features. There was quite a lot of back and forth - install, test, install some more &#8230;
-</p>
-
-
-<p>
-Particularly tricky was the subversive svn connector. 
-</p>
-
-
-<h2>Core Eclipse</h2>
-
-
-<p>
-While there appear to be lots of small improvements (better updates UI, case preserving search and replace regex&#8230;) there doesn&#8217;t seem to be anything here to get me to upgrade in itself.
-</p>
-
-
-<h2>PDT - PHP Development</h2>
-
-
-<p>
-This isn&#8217;t actually part of Ganymede, but I downloaded and installed a nightly build as this is the part of Eclipse that I use the most heavily.
-</p>
-
-
-<p>
-Again the changes are incremental - but as this is stuff I use so much small changes can make a big difference.
-</p>
-
-
-<p>
-See <a href="http://wiki.eclipse.org/PDT/1.1_Plan">PDT 1.1 Plan</a>
-</p>
-
-
-<dl><dt>Mark Occurrences</dt>
-<dd>Select a variable or function and all other occurrences of this in the current editor are highlighted (those offscreen are shown in the &#8216;ruler&#8217;</dd>
-<dt>Better OO support</dt>
-<dd>I haven&#8217;t tested this out enough yet - but there seems to be better support for showing the relationship between classes</dd>
-<dt>Code Completion</dt><dt>
-<br />
-</dt><dd>Previous versions of PDT have relied almost entirely on doc comments for code completion, it looks like this version does a better job where there are no doc comments</dd>
-</dl>
-
-
-<p>
-This doesn&#8217;t look like a whole heap of changes, I&#8217;d really hoped for some better refactoring support, but what is there is welcome.
-</p>
-
-
-<h2>Subversive</h2>
-
-
-<p>
-I&#8217;ve always used subclipse before - after reading <a href="http://www.barneyb.com/barneyblog/2006/10/26/subclipse-vs-subversive/">subclipse-vs-subversive</a> and going with the recommendation - but that was a couple of years ago.
-</p>
-
-
-<p>
-Now subversive is a standard part of Eclipse - but annoyingly you do have to download the SVN connectors separately - and the documentation is clearly written by a non-english speaker.
-</p>
-
-
-<p>
-Adding the SVNKit component from Polarion finally got things working for me.
-</p>
-
-
-<p>
-It doesn&#8217;t look all that different so far - except it does recognise the trunk/tags/branches convention which is nice.
-</p>
-
-
-<h2>Mylyn</h2>
-
-
-<p>
-This does appear to have major advances with far deeper integration to Eclipse.
-</p>
-
-
-<blockquote>
-    Mylyn is a Task-Focused Interface for Eclipse that reduces information overload and makes multi-tasking easy.
-</blockquote>
-
-
-<p>
-If you haven&#8217;t used Mylyn yet - you&#8217;re missing out.
-</p>
-
-
-<p>
-Mylyn integrates with your task list or ticketing system, keeps track of the files you open for a task, filters out irrelevant info, reopens the right files if you re-open a task, and fills out half the ticket comment for you when you commit work.
-</p>
-
-
-<p>
-There&#8217;s too long a list of great stuff - see <a href="http://www.eclipse.org/mylyn/new/">Mylyn 3.0 new and noteworthy</a>
-</p>
-
-
-<h2>Communication Framework</h2>
-
-
-<p>
-This part of eclipse is completely new to me; I love the idea of being able to jointly edit a file with a colleague.
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<ul>
-    <li><a href="http://codesurgeonblog.com/2008/06/cola-real-time-shared-editing.html">screencast</a></li>
-    <li><a href="http://wiki.eclipse.org/RT_Shared_Editing">Real Time Shared Editing</a></li>
-    <li><a href="http://wiki.eclipse.org/DocShare_Plugin">Doc Share Plugin</a></li>
-    <li><a href="http://wiki.eclipse.org/ECF_Servers">ECF Servers</a></li>
-</ul>
-
-
-<p>
-I have yet to get this working (requires a suitable colleague and server).
-</p>
-
-
-<p>
-It&#8217;s also possible to run an IRC client inside eclipse (and several proprietary chat protocols) - though I&#8217;m less convinced this is useful.
-</p>
-
-
-<h2>Datatools</h2>
-
-
-<p>
-So far this seems like a step backwards, there is an SQL query builder (but I&#8217;m happy on the command line); but I found the new connection wizard really confusing, and while I have connected to a database - I can&#8217;t seem to browse the tables.
-</p>
-
-
-<h2>Web Tools</h2>
-
-
-<p>
-Seems like more incremental improvements, lots of little productivity gains.
-</p>
-
-
-<p>
-<a href="http://www.eclipse.org/webtools/releases/3.0.0/newandnoteworthy/sourceediting.php">webtools source code editing new and noteworthy</a>
-</p>
-
-
-<h2>Summary</h2>
-
-
-<p>
-So far it doesn&#8217;t seem like there are any compelling reasons to upgrade: if you&#8217;re happy with Eclipse as you have it - stay with it. If the upgrade path was easier maybe I&#8217;d have a different answer.
-</p>
-
-
-<p>
-Having got this far though the improvements look generally useful; I&#8217;ll go ahead and start using Ganymede for day-to-day use.
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/18">&larr; Older</a>
@@ -1086,6 +903,10 @@ Having got this far though the improvements look generally useful; I&#8217;ll go
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
@@ -1099,10 +920,6 @@ Having got this far though the improvements look generally useful; I&#8217;ll go
     
       <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
   </ul>

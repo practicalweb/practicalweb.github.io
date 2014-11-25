@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="To use eclipse with Maven you need to add the maven plugin to eclipse, it seems to be part of the Indigo update site so this should be &hellip;">
+  <meta name="description" content="In order to log from Jmeter to statsd you need to add a statsd library to the jmeter /lib path Then have a beanshell on the thread group setup a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,69 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-25T19:57:40+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>7:57 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In order to log from Jmeter to statsd you need to add <a href="https://github.com/tim-group/java-statsd-client/releases/download/v3.0.1/java-statsd-client-3.0.1.jar">a statsd library</a> to the jmeter /lib path</p>
+
+<p>Then have a beanshell on the thread group setup a statsd object for use by the threads</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.timgroup.statsd.StatsDClient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.timgroup.statsd.NonBlockingStatsDClient</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">StatsDClient</span> <span class="n">statsd</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">NonBlockingStatsDClient</span><span class="o">(</span><span class="s">&quot;jmeter.test&quot;</span><span class="o">,</span> <span class="s">&quot;statsd.exapmle.com&quot;</span><span class="o">,</span> <span class="mi">8125</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&quot;statsd&quot;</span><span class="o">,</span> <span class="n">statsd</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now on the Sampler you want to record data for add a beanshell post processor</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.timgroup.statsd.StatsDClient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.timgroup.statsd.NonBlockingStatsDClient</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">StatsDClient</span> <span class="n">statsd</span> <span class="o">=</span> <span class="o">(</span><span class="n">StatsDClient</span><span class="o">)</span> <span class="n">props</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;statsd&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">statsd</span><span class="o">.</span><span class="na">recordExecutionTime</span><span class="o">(</span><span class="s">&quot;loadtime&quot;</span><span class="o">,</span> <span class="n">prev</span><span class="o">.</span><span class="na">getTime</span><span class="o">());</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I&rsquo;ve put an example test plan on github <a href="https://github.com/practicalweb/jmeter-statsd-demo">https://github.com/practicalweb/jmeter-statsd-demo</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -899,66 +962,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-10-21T15:41:17+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>3:41 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been running this blog (or some version of it) for almost 10 years now.</p>
-
-<p>I write to help clarify my own thoughts, or to note down technical details of a task that I have struggled to figure out. I often found myself coming back and have saved many hours of trying to figure out the same thing again a year or more later.</p>
-
-<p>For a long time this site was running Drupal 5, I set it up at a time when I was getting to know Drupal, starting out as an independant, and had plenty of time to spend on it. At the time this was a very useful excercise, installing lots of modules, and writing some code was good experience. But when Drupal 6 came out and I was busy <a href="/blog/2008/07/18/time-to-upgrade-to-drupal-6}">it wasnt worth upgrading</a>, then when drupal 7 was released and Drupal 5 no longer supported, upgrading was even more difficult as I would have had to upgrade in two steps. Besides Drupal didn&rsquo;t seem like such a good fit for my blog any more.</p>
-
-<p>I don&rsquo;t want to have to apply security updates on a site I&rsquo;m not getting paid for: so a static html site is a great fit for me.</p>
-
-<p>I lose integrated comments, but spam had already killed those for me - I&rsquo;ll try disqus and see how that goes (the need to enable comments in the yaml for each post threw me at first).</p>
-
-<p>Search was useful - but I can grep the source files myself.</p>
-
-<p>I had all sorts of Drupal plugins before - but really I don&rsquo;t think they were very important.</p>
-
-<p>Jekyll seems great, especially because with github&rsquo;s patronage it seems unlikely to become unsupported; and at the end of the day it is just a bunch of simple files so importing to another system should be easy.</p>
-
-<p>Exporting from Drupal 5 needed a <a href="https://github.com/practicalweb/jekyll-import/commit/cfa72281147fd37ce527d2dab1f3ae916e066b04">small patch on the importer</a> without this the categories were seen as some kind of binary object in yaml. The import reads direct from the database, so doesn&rsquo;t run all Drupal&rsquo;s filters and I suspect a drupal export module from drupal would do a much better job. I still need to pull over some old comments and formatting could do with a tidy up, but I need to move to a system that gets me writing new content, and not worry too much about the old.</p>
-
-<p>Jekyll itself didn&rsquo;t use tags in the way I wanted - I find the ability to cross link from one post to similar ones very useful so I am using Octopress which seem to do what I want out of the box.</p>
-
-<p>To get the content in Octopress I just did</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cp jekyll/mysite/_posts/* octopress/source/_posts
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I have switched from pygments highlighter to linguist (this seems to be what github use and supports code highlighting well)</p>
-
-<p>I added a twitter aside for which I just copy pasted the twitter widget into <code>source/_includes/asides/twitter.html</code> and enabled this in _config.yml</p>
-
-<p>I&rsquo;m not a ruby coder, so instaling all the required ruby gems and figuring out how to run a modified version of the jekyll importer took a little while, in the end I think it was just a case of getting all the gems installed that I needed. I didn&rsquo;t blog soon enough!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -974,6 +977,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
@@ -987,10 +994,6 @@
     
       <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
   </ul>

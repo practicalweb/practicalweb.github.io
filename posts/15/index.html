@@ -9,8 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="
-I came across this PDF slideshow from a talk on optimising PHP, it's well balanced and fairly thorough overview.  phpquebec_2009.pdf ">
+  <meta name="description" content="I just came across this http://zoomsplatter.blogspot.com/2009/01/so-phar-so-good.html In that same way that you can package up a java application &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,58 @@ I came across this PDF slideshow from a talk on optimising PHP, it's well balanc
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/03/15/phar-like-jar-but-for-php/">Phar - Like Jar but for Php</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-03-15T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I just came across this http://zoomsplatter.blogspot.com/2009/01/so-phar-so-good.html
+</p>
+
+
+<p>
+In that same way that you can package up a java application into a single archive file (a jar) and run it directly from that file - you can now create a php archive file (a phar) !
+</p>
+
+
+<p>
+Currently this has to be explicitly enabled, but will be standard in PHP 5.3
+</p>
+
+
+<p>
+People often seem to forget that PHP works great on the command line, PHP is so prominent in website building that it is easy to see it as only for the web.
+</p>
+
+
+<p>
+Hopefully this will help raise the profile of PHP for non web tasks :-)  
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -615,85 +666,6 @@ kompare %1 %2
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/11/22/handy-one-liners/">Handy One-liners</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-11-22T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>While creating websites I often find the need to manipulate files in all sorts of ad-hoc ways.</p>
-
-<p>Things that are hard to do by hand, but you don&rsquo;t want to write a whole program for - you&rsquo;ll just use it once and throw it away.</p>
-
-<p>Linux/Unix excels at this sort of task - there is a rich selection of tools and plenty of ready made recipes.</p>
-
-<p>From:</p>
-
-<p><a href="http://www.ibm.com/developerworks/linux/library/l-p101/">http://www.ibm.com/developerworks/linux/library/l-p101/</a></p>
-
-<p>I often use</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>&gt; cat <span class="nb">test</span>
-</span><span class='line'>aaa
-</span><span class='line'>bbb
-</span><span class='line'>ccc
-</span><span class='line'>ddd
-</span><span class='line'>aaa
-</span><span class='line'>&gt; perl -pi -e<span class="s1">&#39;s/aaa/bbb/&#39;</span> <span class="nb">test</span>
-</span><span class='line'>&gt; cat <span class="nb">test</span>
-</span><span class='line'>bbb
-</span><span class='line'>bbb
-</span><span class='line'>ccc
-</span><span class='line'>ddd
-</span><span class='line'>bbb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="http://student.northpark.edu/pemente/sed/sed1line.txt">http://student.northpark.edu/pemente/sed/sed1line.txt</a> gives me a way to print out just the lines near an error is being generated (handy when there is one error line in a gigabyte of data)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sed -n <span class="s1">&#39;7560,7570p&#39;</span> my_big_file.txt
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Though day to day grep, find, locate and thier friends  usually do all I need.</p>
-
-<p>I tried working on Windows a while ago - but found I just couldn&rsquo;t work effectively without these tools.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/16">&larr; Older</a>
@@ -711,6 +683,10 @@ kompare %1 %2
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
@@ -724,10 +700,6 @@ kompare %1 %2
     
       <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
   </ul>

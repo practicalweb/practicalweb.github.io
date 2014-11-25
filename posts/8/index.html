@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="To setup an IP based access control list so that only allowed users may access the site. sub vcl_recv { if (!(client.ip ~ testers)) { error 403 & &hellip;">
+  <meta name="description" content="The default configuration of varnish logs every request twice, once for the client and once for the backend communication edit the line in /etc/init. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/05/varnish-logs-twice/">Varnish Logs Twice</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-05T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The default configuration of varnish logs every request twice, once for the client and once for the backend communication</p>
+
+<p>edit the line in /etc/init.d/varnishncsa to something like</p>
+
+<p><code>
+DAEMON_OPTS=&ldquo;-c -a -w $logfile -D -P $pidfile&rdquo;
+</code></p>
+
+<p>from the varnishncsa man page</p>
+
+<blockquote>
+     -c          Include log entries which result from communication with a client.  If neither -b nor -c is specified, varnishncsa acts as if they both were.
+</blockquote>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -543,52 +585,6 @@ Error 503 Service Unavailable</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/05/13/varnish-caching-passing-a-hostname/">Varnish Caching - Passing a Hostname</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-05-13T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;m using varnish to cache a REST service that&rsquo;s slow enough to cause me grief in development.</p>
-
-<p>Out of the box it assumes you are caching your own server and that the client is already using the right host header.</p>
-
-<p>To specify that it should use a host header to match the backend I&rsquo;m using a config like</p>
-
-<p><code>
-backend default {
-        set backend.host = &ldquo;www.example.com&rdquo;;
-        set backend.port = &ldquo;80&rdquo;;</p>
-
-<p>}</p>
-
-<p>sub vcl_recv {
-        set req.http.host = &ldquo;www.example.com&rdquo;;
-}</p>
-
-<p></code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/9">&larr; Older</a>
@@ -606,6 +602,10 @@ backend default {
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
@@ -619,10 +619,6 @@ backend default {
     
       <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
   </ul>

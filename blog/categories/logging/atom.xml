@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Logging | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/logging/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-11-25T20:03:51+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Log From Jmeter to Statsd]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/"/>
+    <updated>2014-11-25T19:57:40+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/11/25/how-to-log-from-jmeter-to-statsd</id>
+    <content type="html"><![CDATA[<p>In order to log from Jmeter to statsd you need to add <a href="https://github.com/tim-group/java-statsd-client/releases/download/v3.0.1/java-statsd-client-3.0.1.jar">a statsd library</a> to the jmeter /lib path</p>
+
+<p>Then have a beanshell on the thread group setup a statsd object for use by the threads</p>
+
+<pre><code class="java">import com.timgroup.statsd.StatsDClient;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+
+StatsDClient statsd = new NonBlockingStatsDClient("jmeter.test", "statsd.exapmle.com", 8125);
+
+props.put("statsd", statsd);
+</code></pre>
+
+<p>Now on the Sampler you want to record data for add a beanshell post processor</p>
+
+<pre><code class="java">
+import com.timgroup.statsd.StatsDClient;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+
+StatsDClient statsd = (StatsDClient) props.get("statsd");
+statsd.recordExecutionTime("loadtime", prev.getTime());
+</code></pre>
+
+<p>I&rsquo;ve put an example test plan on github <a href="https://github.com/practicalweb/jmeter-statsd-demo">https://github.com/practicalweb/jmeter-statsd-demo</a></p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Every now and again I find I have ssh access to one server - which has access to somewhere I need to get to - but I want direct access (eg to forward &hellip;">
+  <meta name="description" content="Drupal has a couple of modules which allow you to produce your own tinyurl.com type website - complete with your own tracking etc. This has been &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/22/drupal-as-url-shortener/">Drupal as URL Shortener</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-22T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Drupal has a couple of modules which allow you to produce your own tinyurl.com type website - complete with your own tracking etc.</p>
+
+<p>This has been extended for use by the US government at <a href="http://go.usa.com/">http://go.usa.com/</a> and the code re-released to the community.</p>
+
+<p>This mainly adds statistics gathering and reporting</p>
+
+<p>Unfortunately the module maintainer has chosen not to integrate these changes back into the module at drupal.org  - issue here : <a href="http://drupal.org/node/520588">http://drupal.org/node/520588</a></p>
+
+<p>So now the patch doesn&rsquo;t apply cleanly unless you checkout an old version of the module from CVS like this</p>
+
+<p>NB the password for anonymous access to CVS is &ldquo;anonymous&rdquo;</p>
+
+<p><code>
+cvs -d :pserver:anonymous@cvs.drupal.org:/cvs/drupal-contrib login
+cvs -d:pserver:anonymous@cvs.drupal.org:/cvs/drupal-contrib co contributions/modules/shorturl
+cd contributions/modules/shorturl/
+cvs update -r DRUPAL-6&ndash;1  -D 2009-12-01
+wget <a href="http://drupal.org/files/issues/shorturl_1.patch">http://drupal.org/files/issues/shorturl_1.patch</a>
+patch -p0 &lt; shorturl_1.patch
+</code></p>
+
+<p>Update:</p>
+
+<p>I&rsquo;ve managed to merge both branches of development and the bugfix at <a href="http://drupal.org/node/627668">http://drupal.org/node/627668</a></p>
+
+<p>This module is very much a development version - I&rsquo;ve incorporated several people work and the result seems to work OK - but test before using.</p>
+
+<p>Download an updated version of the module</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -632,48 +688,6 @@ Things I forgot
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/12/17/amazon-mp3-downloads-for-linux/">Amazon MP3 Downloads for Linux</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-12-17T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-It&#8217;s great that Amazon actually offer a version of thier MP3 downloader for Linux - just a shame that it doesn&#8217;t work for many distributions.
-</p>
-
-
-<p>
-Fortunately <a href="http://code.google.com/p/clamz/">clamz</a> is available  
-</p>
-
-
-<p>
-It&#8217;s a great little command line utility with a very forgetable name. 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/11">&larr; Older</a>
@@ -691,6 +705,10 @@ It&#8217;s a great little command line utility with a very forgetable name.
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
@@ -704,10 +722,6 @@ It&#8217;s a great little command line utility with a very forgetable name.
     
       <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
   </ul>

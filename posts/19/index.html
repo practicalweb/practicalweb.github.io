@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I just created a profile for myself on linkedin - a much better designed site than facebook.  Read more about me there www.linkedin.com/in/ &hellip;">
+  <meta name="description" content="The Drupal api module is very useful. It's also quite strict in the formats it recognises. If you are having trouble getting it to reconise your doc &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/06/03/drupal-api-module/">Drupal Api Module</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-06-03T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+The Drupal api module is very useful. It&#8217;s also quite strict in the formats it recognises.
+</p>
+
+
+<p>
+If you are having trouble getting it to reconise your doc-comments make sure you are following the Drupal coding standards
+</p>
+
+
+<p>
+<a href="http://drupal.org/coding-standards">drupal.org/coding-standards</a>
+</p>
+
+
+<!--break-->
+
+
+<p>
+In particular function declarations must be like
+</p>
+
+
+<p>&lt;?php
+function my_function($param) {
+?></p>
+
+<p>
+Any missing (or extra) spaces will cause the papi parser to ignore the function.
+</p>
+
+
+<p>
+You can also include html files in your documentation (just save them anywhere the api module has been set to index).
+</p>
+
+
+<p>
+The &lt;title&gt; will be used as the &quot;docblock title&quot; and the &lt;body&gt; of the html will be displayed formatted within your site template.<br/>I haven&#8217;t figured out yet where/if the &quot;docblock title&quot; is displayed</p>
+
+
+<p>Again the parser is quite strict - you must have an &lt;h1&gt; element in the page.</p>
+
+
+<p>Everything up untill the end of the first &lt;h1&gt; element is ignored (which seems odd to me) - and the rest as the body of the documentation.  
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -896,78 +971,6 @@ Thanks to <a href="http://www.nobleprog.co.uk/">Bernard at NobelProg</a>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/05/09/documenting-drupal-websites/">Documenting Drupal Websites</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-05-09T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-With any sizeable project maintaining good documentation is a challenge - it&#8217;s all to easy to skimp on documentation, or to start with good intentions but allow the documentation to get out of date.
-</p>
-
-
-<p>
-The <a href="http://drupal.org/project/api">Drupal API project</a> allows you to set up a documentation website for your project like <a href="http://api.drupal.org">api.drupal.org</a> that covers all your code.
-<br />
-The way this works is that you add doc comments to your code, and the Drupal API module extracts these to create the searchable and cross-referenced documentation.
-</p>
-
-
-<p>
-Because doc comments are in the code it is easier to remember to update the documentation when you make a change.
-To install the API module:
-</p>
-
-
-<ul>
-    <li>Install Drupal</li>
-    <li>add <a href="http://drupal.org/project/api">the api module</a></li>
-    <li>configure the api module<br />
-    <ul>
-        <li>short name is used in urls</li>
-        <li>Long name is displayed as the title</li>
-        <li>Directory is the absolute path to the code you want indexed</li>
-    </ul>
-    </li>
-    <li>
-    <p>
-    Add the special doc comment @mainpage {title} somewhere appropriate, this can either be a dediciated documentation page (with nothing but doc comments) or a doc comment in a logical place within your code.
-    </p>
-    <p>
-    The key thing is that the {title} must be the same as the &quot;long name&quot; you chose earlier.
-    </p>
-    </li>
-    <li>go to the administer blocks page</li>
-    <li>enable the API search and API navigation blocks</li>
-    <li>run cron a few times to get some pages indexed (by default only 10 pages are indexed at a time)</li>
-    <li>That should be it</li>
-</ul>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/20">&larr; Older</a>
@@ -985,6 +988,10 @@ To install the API module:
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
@@ -998,10 +1005,6 @@ To install the API module:
     
       <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
   </ul>

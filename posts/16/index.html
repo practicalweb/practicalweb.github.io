@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="It's often handy to look at the changes made by a commit ignoring whitespace changes. This is often required when a dveloper has made some &hellip;">
+  <meta name="description" content="While creating websites I often find the need to manipulate files in all sorts of ad-hoc ways. Things that are hard to do by hand, but you don&rsquo; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,85 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/22/handy-one-liners/">Handy One-liners</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-11-22T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>While creating websites I often find the need to manipulate files in all sorts of ad-hoc ways.</p>
+
+<p>Things that are hard to do by hand, but you don&rsquo;t want to write a whole program for - you&rsquo;ll just use it once and throw it away.</p>
+
+<p>Linux/Unix excels at this sort of task - there is a rich selection of tools and plenty of ready made recipes.</p>
+
+<p>From:</p>
+
+<p><a href="http://www.ibm.com/developerworks/linux/library/l-p101/">http://www.ibm.com/developerworks/linux/library/l-p101/</a></p>
+
+<p>I often use</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&gt; cat <span class="nb">test</span>
+</span><span class='line'>aaa
+</span><span class='line'>bbb
+</span><span class='line'>ccc
+</span><span class='line'>ddd
+</span><span class='line'>aaa
+</span><span class='line'>&gt; perl -pi -e<span class="s1">&#39;s/aaa/bbb/&#39;</span> <span class="nb">test</span>
+</span><span class='line'>&gt; cat <span class="nb">test</span>
+</span><span class='line'>bbb
+</span><span class='line'>bbb
+</span><span class='line'>ccc
+</span><span class='line'>ddd
+</span><span class='line'>bbb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://student.northpark.edu/pemente/sed/sed1line.txt">http://student.northpark.edu/pemente/sed/sed1line.txt</a> gives me a way to print out just the lines near an error is being generated (handy when there is one error line in a gigabyte of data)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sed -n <span class="s1">&#39;7560,7570p&#39;</span> my_big_file.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Though day to day grep, find, locate and thier friends  usually do all I need.</p>
+
+<p>I tried working on Windows a while ago - but found I just couldn&rsquo;t work effectively without these tools.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -749,57 +828,6 @@ I wonder if version 3 would be any slower anyway - it might even be faster. In 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/08/05/what-is-a-drupal-node/">What Is a Drupal Node?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-08-05T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One of the things that is confusing about Drupal is the use of the word node.</p>
-
-<p>Going to the dictionary doesn&rsquo;t help much:
-<a href="http://dictionary.reference.com/browse/node">http://dictionary.reference.com/browse/node</a>
-<a href="http://www.answers.com/topic/node">http://www.answers.com/topic/node</a></p>
-
-<p>In my opinion &ldquo;node&rdquo; is just the wrong word.</p>
-
-<p>When you read node think content.</p>
-
-<p>Content (in the context of a website) means something that is displayed to users.</p>
-
-<p>Content can be text, images, video, even flash games.</p>
-
-<p>So when you create a node in Drupal you are creating content.</p>
-
-<p>Sometimes Drupal actually uses the word content. The admin interface allows you to create &ldquo;content types&rdquo;, &ldquo;create content&rdquo; takes you to the url node/add, and through &ldquo;content management&rdquo; you get to a list of nodes.</p>
-
-<p>This linguistic confusion can lead people to use nodes where they don&rsquo;t really fit. Nodes aren&rsquo;t so suitable for data storage - if you have a lot of data that isn&rsquo;t displayed to the user - then it isn&rsquo;t content so don&rsquo;t make it into a node.</p>
-
-<p>Data belongs in well designed database tables.</p>
-
-<p>I&rsquo;d like to see node renamed to &ldquo;content&rdquo; but in the meantime I recommend translating node to content mentally.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/17">&larr; Older</a>
@@ -817,6 +845,10 @@ I wonder if version 3 would be any slower anyway - it might even be faster. In 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
@@ -830,10 +862,6 @@ I wonder if version 3 would be any slower anyway - it might even be faster. In 
     
       <li class="post">
         <a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/31/drupageddon/">Drupageddon</a>
       </li>
     
   </ul>
