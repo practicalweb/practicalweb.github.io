@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Devops | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/devops/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-11-25T20:03:51+00:00</updated>
+  <updated>2014-11-26T10:10:42+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -22,6 +22,14 @@
 
 <p>Then have a beanshell on the thread group setup a statsd object for use by the threads</p>
 
+<p>store this in the props variable - JMeterProperties (class java.util.Properties)</p>
+
+<p>Note that <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Properties.html">the docs</a> say</p>
+
+<blockquote><p>Because Properties inherits from Hashtable, the put and putAll methods can be applied to a Properties object. Their use is strongly discouraged as they allow the caller to insert entries whose keys or values are not Strings. The setProperty method should be used instead. If the store or save method is called on a &ldquo;compromised&rdquo; Properties object that contains a non-String key or value, the call will fail. Similarly, the call to the propertyNames or list method will fail if it is called on a &ldquo;compromised&rdquo; Properties object that contains a non-String key.</p></blockquote>
+
+<p>However I didn&rsquo;t find a better place to put the statsd object yet since the ctx variable is thread specific</p>
+
 <pre><code class="java">import com.timgroup.statsd.StatsDClient;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 
@@ -31,6 +39,10 @@ props.put("statsd", statsd);
 </code></pre>
 
 <p>Now on the Sampler you want to record data for add a beanshell post processor</p>
+
+<p>You can retrieve the statsd connection from the props variable, and obtain the request time taken from the prev variable which is a org.apache.jmeter.samplers.SampleResult</p>
+
+<p>Onve we have the pieces together logging teh request time to statsd is simple</p>
 
 <pre><code class="java">
 import com.timgroup.statsd.StatsDClient;
