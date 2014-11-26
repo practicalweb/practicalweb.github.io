@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Statsd | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/statsd/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-11-26T10:10:42+00:00</updated>
+  <updated>2014-11-26T10:14:11+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -42,7 +42,7 @@ props.put("statsd", statsd);
 
 <p>You can retrieve the statsd connection from the props variable, and obtain the request time taken from the prev variable which is a org.apache.jmeter.samplers.SampleResult</p>
 
-<p>Onve we have the pieces together logging teh request time to statsd is simple</p>
+<p>Once we have the pieces together logging the request time to statsd is simple</p>
 
 <pre><code class="java">
 import com.timgroup.statsd.StatsDClient;
