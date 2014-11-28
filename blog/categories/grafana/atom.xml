@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Grafana | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/grafana/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-11-26T10:14:11+00:00</updated>
+  <updated>2014-11-28T18:54:21+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -51,23 +51,6 @@
 <p>I wasn&rsquo;t sure which server component I was meant to be connecting to on 8080, this is just the regular graphite-web service from apache - in my case on port 80.</p>
 
 <p>It&rsquo;s also worth noting that <a href="graphite%20cannot%20exist%20in%20a%20subdirctory">https://github.com/graphite-project/graphite-web/issues/223</a> at least not for the version I am running.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Install Graphite/grafana and Import Data From Munin]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/"/>
-    <updated>2014-10-24T14:09:22+01:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin</id>
-    <content type="html"><![CDATA[<p><a href="http://grafana.org/">Grafana</a> is a fork of <a href="http://www.elasticsearch.org/overview/kibana/">kibana</a> that builds grapshs based on data stored in <a href="http://graphite.wikidot.com/">graphite</a> (it can pull data from other places too but this blog only looks at graphite)</p>
-
-<p>I&rsquo;m looking at using it to replace tools like [munin}(<a href="http://munin-monitoring.org/">http://munin-monitoring.org/</a>) or [cacti}(<a href="http://www.cacti.net/">http://www.cacti.net/</a>) which do a great job of gathering and displaying metrics.</p>
-
-<p>Wwhat Grafana does beyond this is that it allows you to interactivley manipulate the graphs, you can easily create a graph showing related metrics on the same screen (for example add sysem load and apache requestes per second to the same graphic). You can do this in the other tools - but you have to edit config files on the server, in grafana this is all managed via the UI.</p>
-
-<p>It also allows you to look at any period you like - and in any resolution.</p>
-
-<p>sudo yum install graphite-web python-carbon</p>
 ]]></content>
   </entry>
   

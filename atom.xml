@@ -4,7 +4,7 @@
   <title><![CDATA[PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-11-26T10:14:11+00:00</updated>
+  <updated>2014-11-28T18:54:21+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,50 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Import Data to Graphite From Munin]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/11/28/import-data-to-graphite-from-munin/"/>
+    <updated>2014-11-28T18:26:44+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/11/28/import-data-to-graphite-from-munin</id>
+    <content type="html"><![CDATA[<p>To convert data from munin/rrd to graphite/whisper you need to use the <code>rrdwhisper</code> tool which in centos is part of the python-whisper package.</p>
+
+<p>If you want to change the data retention/resolution properties in graphite you will also need to resize the files as well.</p>
+
+<p>Note that Graphites reads from /etc/carbon/storage-aggregation.conf and /etc/carbon/storage-schemas.conf to select the retention and aggregation policies for <em>new</em> data, but since these are set in the file at creation time editing the config file has no effect on existing files (or those created with whisper2rrd).</p>
+
+<p>Recent data is stored at 10 second intervals, when it becomes older 6 lots of 10 second data get aggregated to make a one minute interval. I think this aggregation also happens on newer data if I select say data for the last 2 days since this time period include data at the lower resolution - all the data I get is at this lower resolution.</p>
+
+<p>When this data is aggregated it can be averaged; in my case I&rsquo;m measuring how long something takes - and average is right. But say I was counting something then I&rsquo;d want to know the total over a minute - sum - not average, and if I was recording peaks then I&rsquo;d want the max.</p>
+
+<p>The xFilesFactor as I understand it tells graphite to ignore all the data for an interval if there are too many nulls, but since my original data is at a lower resolution I have loads of nulls and don&rsquo;t want to ignore anything - so I&rsquo;m setting this to zero and my import seems to work well at different scales and on both old and new data.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">for</span> rrd in *rrd <span class="p">;</span> <span class="k">do</span>
+</span><span class='line'>    rrd2whisper --xFilesFactor<span class="o">=</span>0.0 --aggregationMethod<span class="o">=</span>average <span class="nv">$rrd</span>
+</span><span class='line'>    whisper-resize  --xFilesFactor<span class="o">=</span>0.0 --aggregationMethod<span class="o">=</span>average --nobackup <span class="k">${</span><span class="nv">rrd</span><span class="p">%.rrd</span><span class="k">}</span>_42.wsp   10s:6h 1min:6d 10min:1800d
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span> -d /var/lib/carbon/whisper/munin <span class="o">]</span> <span class="o">||</span> sudo -u carbon mkdir -p /var/lib/carbon/whisper/munin
+</span><span class='line'>sudo mv *wsp /var/lib/carbon/whisper/munin
+</span><span class='line'>sudo chown -R carbon:carbon  /var/lib/carbon/whisper/munin
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This script excerpt deals with the basic conversion - I also needed to convert the long filenames munin used to a nested directory structure used by graphite.</p>
+
+<p>That conversion will depend on your use case - if you look at the files stored under /var/lib/carbon/whisper and /var/lib/munin you should be able to see the pattern.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to Log From Jmeter to Statsd]]></title>
@@ -681,23 +725,6 @@
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Install Graphite/grafana and Import Data From Munin]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin/"/>
-    <updated>2014-10-24T14:09:22+01:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2014/10/24/install-graphite-slash-grafana-and-import-data-from-munin</id>
-    <content type="html"><![CDATA[<p><a href="http://grafana.org/">Grafana</a> is a fork of <a href="http://www.elasticsearch.org/overview/kibana/">kibana</a> that builds grapshs based on data stored in <a href="http://graphite.wikidot.com/">graphite</a> (it can pull data from other places too but this blog only looks at graphite)</p>
-
-<p>I&rsquo;m looking at using it to replace tools like [munin}(<a href="http://munin-monitoring.org/">http://munin-monitoring.org/</a>) or [cacti}(<a href="http://www.cacti.net/">http://www.cacti.net/</a>) which do a great job of gathering and displaying metrics.</p>
-
-<p>Wwhat Grafana does beyond this is that it allows you to interactivley manipulate the graphs, you can easily create a graph showing related metrics on the same screen (for example add sysem load and apache requestes per second to the same graphic). You can do this in the other tools - but you have to edit config files on the server, in grafana this is all managed via the UI.</p>
-
-<p>It also allows you to look at any period you like - and in any resolution.</p>
-
-<p>sudo yum install graphite-web python-carbon</p>
 ]]></content>
   </entry>
   
