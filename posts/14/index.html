@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="There are times you really really want to be sure your code doesn&rsquo;t have any bugs at all. This is one of those times. I really hope they had a &hellip;">
+  <meta name="description" content="I had fun this weekend at the PHP London Test Fest, it was a great opportunity to learn something new and meet some great programmers. The tests our &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,176 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/05/12/testing-php/">Testing PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-05-12T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I had fun this weekend at the <a href="http://www.phplondon.org/" mce_href="http://www.phplondon.org/">PHP London</a> Test Fest, it was a great opportunity to learn something new and meet some great programmers.
+</p>
+
+
+<p>
+The tests our team took on were based around the <a href="http://www.php.net/%7Ehelly/php/ext/spl/main.html" mce_href="http://www.php.net/~helly/php/ext/spl/main.html">SPL</a> <a href="http://uk.php.net/manual/en/spl.iterators.php" mce_href="http://uk.php.net/manual/en/spl.iterators.php">iterators</a> I hadn&#8217;t used this part of PHP before and it was a great way to learn about it, especially as many of the functions we tested aren&#8217;t documented yet.
+</p>
+
+
+<p>
+What we did was :
+</p>
+
+
+<ol>
+    <li>Take a copy of <a href="http://www.php.net/anoncvs.php" mce_href="http://www.php.net/anoncvs.php">PHP source code <br>
+    </a></li>
+    <li>extract this and run ./configure</li>
+    <li> create a short script to run tests</li>
+    <li>and another to run the checked out version of PHO</li>
+    <li> Check the <a href="http://gcov.php.net/PHP_5_3/lcov_html/spl/spl_iterators.c.gcov.php" mce_href="http://gcov.php.net/PHP_5_3/lcov_html/spl/spl_iterators.c.gcov.php">test coverage reports</a></li>
+    <li>Find an untested section of code (in red)</li>
+    <li>Figure out what it does</li>
+    <li>Write a test to run this part of code</li>
+    <li>go to 5 </li>
+</ol>
+
+
+<p>
+More details on how to write tests are at http://qa.php.net/write-test.php&nbsp;
+</p>
+
+
+<p>
+I found the hardest bit was interpreting the C source code of PHP - this was made much easier by the mentors at the test fest, and once pointed in the right direction we were able to get going easily enough.
+</p>
+
+
+<p>
+This does give me another reason to read this book: <br /><a href="/review/extending-and-embedding-php" mce_href="/review/extending-and-embedding-php"><img src="http://ecx.images-amazon.com/images/I/415rN3jdDvL._SL160_.jpg" mce_src="http://ecx.images-amazon.com/images/I/415rN3jdDvL._SL160_.jpg" alt="Extending and Embedding PHP Sara Golemon" width="125" height="160"></a>
+</p>
+
+
+<p>
+One thing I didn&#8217;t figure out on the day - in order to regenerate the coverage reports and check that the new tests do add coverage I needed to&nbsp; 
+</p>
+
+
+<p><code>
+aptitude install lcov</p>
+
+<p>make lcov TESTS=./path-to tests
+</code></p>
+
+<p>
+NB you can either run all tests or just a subdirectory
+</p>
+
+
+<p>
+The script to run tests was 
+</p>
+
+
+<p><code></p>
+
+<h1>!/bin/bash</h1>
+
+<p>export TEST_PHP_EXECUTABLE=/path-to/php5.3-200905081030/sapi/cli/php
+$TEST_PHP_EXECUTABLE /path-to/php5.3-200905081030/run-tests.php $*
+</code></p>
+
+<p>
+I also created an alias to sapi/cli/php so that I could run the tests as simple PHP scripts
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/05/06/simpletest-vs-phpunit/">Simpletest vs Phpunit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-05-06T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+There are two main options for unit testing PHP: simpletest and phpunit 
+</p>
+
+
+<p>
+They both do a lot of the same stuff, both have the ability to run suites of tests and create mock objects.
+</p>
+
+
+<p>
+Simpletest has a built in webTestCase which allows you to perform some integration as well as unit testing.
+</p>
+
+
+<p><p>An example web test for simpletest is:
+&lt;?php
+    function testDefaultValue() {
+        $this->get(&lsquo;<a href="http://www.my-site.com/">http://www.my-site.com/</a>&rsquo;);
+        $this->assertField(&lsquo;a&rsquo;, &lsquo;A default&rsquo;);
+        $this->setField(&lsquo;a&rsquo;, &lsquo;New value&rsquo;);
+        $this->click(&lsquo;Go&rsquo;);
+    }</p>
+
+<p>?></p>
+
+<p><p>Drupal has extended this further to include functions specific for Drupal login, creating users etc.</p></p>
+
+<p><p>PHPUnit on the other hand has Selenium integration so that these sorts of integration tests can be run with a real browser (even with multiple browsers).</p></p>
+
+<p><p>PHPUnit also has some useful tools to detect copy pasted code, calculate code soverage of tests, and integrates with Cruise Control</p></p>
+
+<p><p>Simpletest&rsquo;s fake browser should be a lot faster to run than Selenium, but can&rsquo;t truly test JavaScript although ther is the facility to code in form changes that would normally occur via script.</p></p>
+
+<p><p>Both projects are actively maintained, and supported.</p></p>
+
+<p><p>So far I&rsquo;ve mostly used simpletest because it&rsquo;s the default for Drupal; but I&rsquo;m impressed with Selenium, and I&rsquo;m tempted to use PHPUnit.</p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -650,110 +820,6 @@ What&#8217;s great is that it can be as simple as just clearly defining the navi
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/03/26/using-exceptions-in-php/">Using Exceptions in PHP</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-03-26T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-The Drupal project I&#8217;ve been working on for the last year involved some fairly heavy file processing, with lot&#8217;s of validation.
-</p>
-
-
-<p>
-To simplify the code I made extensive use of Exceptions, I didn&#8217;t create that many different Exception classes - but I made sure that any errors which affect the flow of the logic were handled by Exceptions.
-</p>
-
-
-<p>
-This succeeded in making the code much more legible.
-</p>
-
-
-<p>
-And now several months later I&#8217;m updating documentation - and it&#8217;s just great to be able to spot all the error handling code so easily.
-</p>
-
-
-<p>
-It&#8217;s  a shame Drupal doesn&#8217;t use exception handling more in the core. 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/03/24/phonegap/">Phonegap</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-03-24T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Phonegap is an open source compatibility layer for mobile development.
-</p>
-
-
-<p>
-It provides access to common mobile functionality such as geolocation, sound, contacts etc via a JavaScript API
-</p>
-
-
-<p>
-The idea is to make phone development more like web development, and to make deploying cross platform pas much easier.
-</p>
-
-
-<p>
-This project looks to be in fairly early stages, but already very powerful.
-</p>
-
-
-<p>
-<a href="http://www.phonegap.com/">www.phonegap.com</a>  
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/15">&larr; Older</a>
@@ -771,6 +837,14 @@ This project looks to be in fairly early stages, but already very powerful.
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
@@ -780,14 +854,6 @@ This project looks to be in fairly early stages, but already very powerful.
     
       <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/grafana/">Grafana</a>
       </li>
     
   </ul>

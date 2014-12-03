@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="It's great that Amazon actually offer a version of thier MP3 downloader for Linux - just a shame that it doesn't work for many distributions. &hellip;">
+  <meta name="description" content="Drupal has a fairly easy to meet set of requirements http://drupal.org/node/502452 But Drupal projects are free to set their own rules in this area &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,122 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/12/30/make-drush-support-php-5-1/">Make Drush Support PHP-5.1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-12-30T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Drupal has a fairly easy to meet set of requirements http://drupal.org/node/502452 
+</p>
+
+
+<p>
+But Drupal projects are free to set their own rules in this area and Drush has used functions only available in PHP 5.2 - as far as I can see this is just the json functions.
+</p>
+
+
+<p>
+Frustratingly the latest version of RedHat provides PHP 5.1 and this is the second time I&#8217;ve run into the problem with a client who uses RedHat and understandably wants to stick to the standard packages.
+</p>
+
+
+<p>
+Drush provides command line access to Drupal functions and so is incredibly useful - but not quite critical enough for a platform re-evaluation. 
+</p>
+
+
+<p>
+Since my project was using a JSON class anyway I decided to get Drush working using this class instead of requiring PHP 5.1  
+</p>
+
+
+<p>
+<span class="status-body"><span class="entry-content"><a href="http://drupal.org/node/502452" target="_blank">http://drupal.org/node/502452</a> </span></span>
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/12/30/cvs-for-subversion-users/">CVS for Subversion Users</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-12-30T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been using version control for a long time, but I haven&#8217;t used CVS much since the first day I tried Subversion.
+</p>
+
+
+<p>
+(Git seems great but isn&#8217;t the same kind of drop-in upgrade that CVS to Subversion was)
+</p>
+
+
+<p>
+Things I forgot
+</p>
+
+
+<ul>
+    <li>CVS doesn&#8217;t do the nice recursive add that subversion does<br />
+    At the start of a project you need to run <br />
+    cvs import </li>
+    <li>CVS expands keywords by default - this is a problem if like me you want to merge in changes from someone else CVS repository as both sites have changes teh keywords<br />
+    Disable keyword changing by updating with<br />
+    cvs up -d -ko</li>
+    <li>CVS doesn&#8217;t add back deleted directories<br />
+    cvs up -d </li>
+    <li>CVS doesn&#8217;t have a nice equivilant of svn status<br />
+    cvs -q up <br />
+    Not quite the same as it will update stuff - but it does tell you which local files have changed</li>
+    <li>Tagging seems OK but doesn&#8217;t quite do the same thing<br />
+    cvs tag</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1101,165 +1217,6 @@ I&#8217;m sure that for more standard websites which can use readily available m
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/09/30/drupal-is-not-test-friendly/">Drupal Is Not Test Friendly</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-09-30T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I was originally excited about the embrace that Drupal seemed to have given to testing.
-</p>
-
-
-<p>
-However after spending some time with it I&#8217;ve concluded that Drupal really isn&#8217;t very test friendly.
-</p>
-
-
-<p>
-Most tests for Drupal are integration tests not unit tests.
-</p>
-
-
-<p>
-That is to say that they test a bunch of components together - not each bit separately.
-</p>
-
-
-<p>
-This is because Drupal components (modules or functions) are not well encapsulated, global variables are used, data is cached within functions,  passed via the database etc.  
-</p>
-
-
-<p>
-THis makes it much harder for the developer to create tests that validate functional increments, and means the suite of tests run very slowly.
-</p>
-
-
-<p>
-A while ago I tried to run the tests for Drupal 7 - but gave up waiting after an hour. I was very surprised to find that both database and web server were being hit hard - when I was running on the command line!
-</p>
-
-
-<p>
-Even the integration level testing isn&#8217;t all that great, it runs in an environment without JavaScript support - so the AJAX functionality can&#8217;t be tested. 
-</p>
-
-
-<p>
-Testing is better than not testing - but having gotten into testing I&#8217;ve found Drupal&#8217;s environment frustrating. 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/09/04/drupal-has-no-api/">Drupal Has No API</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-09-04T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve been using Drupal for a couple of years now, and know my way around it pretty well.
-</p>
-
-
-<p>
-One of my biggest frustrations though is that it doesn&#8217;t really have an API.
-</p>
-
-
-<p>
-Much of the functionality is only really available through the application, you can do things pretty easily by pointing and clicking, but try and automate part of this and you have to step through code, find form handlers, copy-paste parts of the functions and work out what parameters are required.
-</p>
-
-
-<p>
-The example I found most recently was creating a translated version of a page.
-</p>
-
-
-<p>
-My client is using a translation agency, we send them XML, they translate it and return the translated text in XML. 
-</p>
-
-
-<p>
-So I start with an English page, send off an XML version, and when I get the XML translation back I need to add a new node related to the original.
-</p>
-
-
-<p>
-But Drupal has no function &quot;translation_add()&quot; instead the functionality is embedded in &quot;translation_nodapi()&quot;.
-</p>
-
-
-<p>
-If Drupal had an API there would be a well thought out set of functions to add, delete, and update translations of a node.
-</p>
-
-
-<p>
-The name of Drupal&#8217;s documentation site http://api.drupal.org/ is misleading, this is just general documentation of Drupal functions, it isn&#8217;t an API. 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/12">&larr; Older</a>
@@ -1277,6 +1234,14 @@ The name of Drupal&#8217;s documentation site http://api.drupal.org/ is misleadi
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
@@ -1286,14 +1251,6 @@ The name of Drupal&#8217;s documentation site http://api.drupal.org/ is misleadi
     
       <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/grafana/">Grafana</a>
       </li>
     
   </ul>

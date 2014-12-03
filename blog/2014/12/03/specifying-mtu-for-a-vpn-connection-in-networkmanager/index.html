@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Specifying MTU for a VPN Connection in NetworkManager - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I need to use a VPN which was suffering packet fragmentation due to the overhead involved (actually I use a VPN to connect to a network which then &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3381543-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Specifying MTU for a VPN Connection in NetworkManager</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-12-03T11:34:35+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>11:34 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I need to use a VPN which was suffering packet fragmentation due to the overhead involved (actually I use a VPN to connect to a network which then has another VPN connection to a third network).</p>
+
+<p>To determine the largest MTU size which didn&rsquo;t lead to fragmentation I just ran variations on</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ping -M <span class="k">do</span> -s <span class="m">1327</span> server.example.com
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>-M do</code> prohibits fragmentation so the ping will fail if the packet size is too large</p>
+
+<p>I tried larger/ smaller values till I found the largest number that worked.</p>
+
+<p>Network Manager didn&rsquo;t give me a GUI to set MTU on the VPN connection (it does for ethernet)</p>
+
+<p>So I needed a script in /etc/network/if-up.d/</p>
+
+<p>I called mine like myvpn-mtu (owned by root and executable)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#! /bin/sh</span>
+</span><span class='line'><span class="c"># set low MTU for my VPN otherwise I get packet fragmentation</span>
+</span><span class='line'><span class="nb">set</span> -e
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CONNECTION_ID&quot;</span> <span class="o">=</span> myvpn <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="s2">&quot;$MODE&quot;</span> <span class="o">=</span> start <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span><span class='line'>  /sbin/ifconfig <span class="nv">$IFACE</span> mtu 1327
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nb">exit </span>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Substitute &ldquo;myvpn&rdquo; here for your connection name</p>
+
+<p>The script env has the following variables (I&rsquo;ve anonymised some variables)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">ADDRFAM</span><span class="o">=</span>NetworkManager
+</span><span class='line'><span class="nv">CONNECTION_ID</span><span class="o">=</span>xxxxxxxxxxxxxx
+</span><span class='line'><span class="nv">CONNECTION_UUID</span><span class="o">=</span>xxxxxxx-xxxxx-xxxxx-xxxx-xxxxx
+</span><span class='line'><span class="nv">DEVICE_IFACE</span><span class="o">=</span>wlan0
+</span><span class='line'><span class="nv">DEVICE_IP_IFACE</span><span class="o">=</span>wlan0
+</span><span class='line'><span class="nv">DHCP4_BROADCAST_ADDRESS</span><span class="o">=</span>192.168.0.255
+</span><span class='line'><span class="nv">DHCP4_DHCP_LEASE_TIME</span><span class="o">=</span>86400
+</span><span class='line'><span class="nv">DHCP4_DHCP_MESSAGE_TYPE</span><span class="o">=</span>5
+</span><span class='line'><span class="nv">DHCP4_DHCP_REBINDING_TIME</span><span class="o">=</span>75600
+</span><span class='line'><span class="nv">DHCP4_DHCP_RENEWAL_TIME</span><span class="o">=</span>43200
+</span><span class='line'><span class="nv">DHCP4_DHCP_SERVER_IDENTIFIER</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">DHCP4_DOMAIN_NAME</span><span class="o">=</span>xxx
+</span><span class='line'><span class="nv">DHCP4_DOMAIN_NAME_SERVERS</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">DHCP4_EXPIRY</span><span class="o">=</span>1417685250
+</span><span class='line'><span class="nv">DHCP4_HOST_NAME</span><span class="o">=</span>xxx
+</span><span class='line'><span class="nv">DHCP4_IP_ADDRESS</span><span class="o">=</span>192.168.0.209
+</span><span class='line'><span class="nv">DHCP4_NETWORK_NUMBER</span><span class="o">=</span>192.168.0.0
+</span><span class='line'><span class="nv">DHCP4_ROUTERS</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">DHCP4_SUBNET_MASK</span><span class="o">=</span>255.255.255.0
+</span><span class='line'><span class="nv">IFACE</span><span class="o">=</span>tun0
+</span><span class='line'><span class="nv">IP4_ADDRESS_0</span><span class="o">=</span>192.168.0.209/24 192.168.0.1
+</span><span class='line'><span class="nv">IP4_DOMAINS</span><span class="o">=</span>xxx
+</span><span class='line'><span class="nv">IP4_NAMESERVERS</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">IP4_NUM_ADDRESSES</span><span class="o">=</span>1
+</span><span class='line'><span class="nv">IP4_NUM_ROUTES</span><span class="o">=</span>0
+</span><span class='line'><span class="nv">LOGICAL</span><span class="o">=</span>tun0
+</span><span class='line'><span class="nv">METHOD</span><span class="o">=</span>NetworkManager
+</span><span class='line'><span class="nv">MODE</span><span class="o">=</span>start
+</span><span class='line'><span class="nv">PHASE</span><span class="o">=</span>post-up
+</span><span class='line'><span class="nv">PWD</span><span class="o">=</span>/
+</span><span class='line'><span class="nv">VERBOSITY</span><span class="o">=</span>0
+</span><span class='line'><span class="nv">VPN_IP4_ADDRESS_0</span><span class="o">=</span>192.168.1.48/24 x.x.x.x
+</span><span class='line'><span class="nv">VPN_IP4_NAMESERVERS</span><span class="o">=</span>x.x.x.x
+</span><span class='line'><span class="nv">VPN_IP4_NUM_ADDRESSES</span><span class="o">=</span>1
+</span><span class='line'><span class="nv">VPN_IP4_NUM_ROUTES</span><span class="o">=</span>28
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_0</span><span class="o">=</span>192.168.1.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_1</span><span class="o">=</span>192.168.2.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_2</span><span class="o">=</span>192.168.3.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_3</span><span class="o">=</span>192.168.4.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP_IFACE</span><span class="o">=</span>tun0
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-12-03T11:34:35+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>11:34 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/networking/'>networking</a>, <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/11/28/import-data-to-graphite-from-munin/" title="Previous Post: Import data to Graphite from Munin">&laquo; Import data to Graphite from Munin</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/" title="Next Post: non-root packet capture in wireshark">non-root packet capture in wireshark &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

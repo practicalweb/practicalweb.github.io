@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="While playing around with selenium IDE I discovered a fantatsic tool that makes test (and results) more readable while making the suite of tests &hellip;">
+  <meta name="description" content="I wasn&rsquo;t 100% clear from the docs how to implement rollup rules in selenium ui-elements and searching the web didn&rsquo;t return much - so &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,207 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/06/02/selenium-ui-elements-rollups/">Selenium UI-Elements Rollups</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-06-02T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I wasn&rsquo;t 100% clear from the docs how to implement rollup rules in selenium ui-elements and searching the web didn&rsquo;t return much - so here&rsquo;s an example in case it&rsquo;s helpful to others.</p>
+
+<p>Add this to the user-extensions.js file</p>
+
+<p><code>
+var manager = new RollupManager();</p>
+
+<p>manager.addRollupRule({
+    name: &lsquo;compare_product&rsquo;
+    , description: &lsquo;gets to the reults on a compare product page&rsquo;
+    , args: [
+        {
+          name: &lsquo;term&rsquo;
+        , description: &lsquo;the aliased term name of the category&rsquo;
+        }
+        , {
+            name: &lsquo;provider&rsquo;
+          , description: &lsquo;the provider name&rsquo;
+          }
+        , {
+            name: &lsquo;product&rsquo;
+          , description: &lsquo;the product name&rsquo;
+          }
+    ]
+    , commandMatchers: [
+        {
+            command: &lsquo;click.+&rsquo;
+            , target: &lsquo;starRatingsCompareProduct::search_go\(.+&rsquo;
+        }
+    ]
+    , getExpandedCommands: function(args) {
+        var commands = [];</p>
+
+<pre><code>    commands.push({
+        command: 'open'
+            , target: '/star-ratings/find-star-ratings/'+args.term
+    });
+
+    commands.push({
+        command: 'selectAndWait'
+            , target: 'edit-provider'
+    , value: args.provider
+    });
+
+    commands.push({
+          command: 'pause'
+        , target: '1000'
+    });
+    commands.push({
+          command: 'selectAndWait'
+        , target: 'edit-product'
+        , value: args.product
+    });
+    commands.push({
+          command: 'waitForElementPresent'
+        , target: 'star-ratings-badge'
+    });
+    commands.push({
+          command: 'clickAndWait'
+        , target: 'edit-same-rating'
+    });
+    commands.push({
+          command: 'waitForTextPresent'
+        , target: 'Products with the same Star Rating'
+    });
+    return commands;
+}
+</code></pre>
+
+<p>});</p>
+
+<p></code></p>
+
+<p>Then you can use it in selenium as below</p>
+
+<p><code>
+<tr>
+    <td>rollup</td>
+    <td>compare_product</td>
+    <td>term=buy-let-insurance, provider=Cactus Cover, product=Residential Let</td>
+</tr></p>
+
+<p></code></p>
+
+<p>This avoids me repeating chunks of code that I would otherwise need to get the page to the point at which I want to test it.</p>
+
+<p>NB I&rsquo;ve kind of ignored the commandmatcher bit for the time being (this is a nicety to help the IDE notice a rollup while recording - it&rsquo;s a required field - but doesn&rsquo;t have to be useful).</p>
+
+<p><b>This blog post sponsored by www.defaqto.com (they like their team to give back to the community)</b></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/31/drupal-files-directory-permissions-for-continuous-integration/">Drupal Files Directory Permissions for Continuous Integration</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-05-31T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I want the drupal user uploaded files to be manageable by both apache and a non-root user</p>
+
+<p>In my case I&rsquo;m using hudson to rebuild the site with data and &ldquo;files&rdquo; from live periodically.</p>
+
+<p>So I have added the apache group to the hudson user</p>
+
+<p><code>
+/usr/sbin/usermod -G hudson,apache hudson
+/etc/init.d/hudson restart
+</code></p>
+
+<p>and set the umask for apache so that files are created group writebale</p>
+
+<p>For Redhat
+<code>
+echo &ldquo;umask 002&rdquo; >> /etc/sysconfig/httpd
+/etc/init.d/httpd restart
+</code></p>
+
+<p>For Debian/Ubuntu
+<code>
+echo &ldquo;umask 002&rdquo; >> /etc/apache2/envvars
+/etc/init.d/httpd restart
+</code>
+NB debian based systems use the group www-data for apache</p>
+
+<p>In my build script I can delete my dev files and copy the ones from live - making sure the group for the files is set to apache.</p>
+
+<p><code>
+rm -Rf files
+cp -R /tmp/backup/files/ ./
+chgrp -R apache files
+find files/ -type f -exec chmod 664 &lsquo;{}&rsquo; &lsquo;;&rsquo;
+find files/ -type d -exec chmod 775 &lsquo;{}&rsquo; &lsquo;;&rsquo;
+</code></p>
+
+<p>Now apache can write the files I have created, and I can create the files apache has created - <b>and</b> they are not world writeable.</p>
+
+<p>see also <a href="http://drupal.org/node/244924">http://drupal.org/node/244924</a></p>
+
+<h2>Update - drush</h2>
+
+
+<p>I had a cron job running drush as a different user - this created cached files which hudson couldn&rsquo;t delete.</p>
+
+<p>Now I am running the drush cron via hudson and making sure all the &lsquo;files&rsquo; directory stuff is owned correctly afterwards</p>
+
+<p>NB non-root users don&rsquo;t seem to be able to chgrp files that they don&rsquo;t own</p>
+
+<p>so after running cron I make sure any files created by hudson are chgrp&rsquo;d</p>
+
+<p><code>
+find files -user hudson -exec chgrp apache {} \;
+</code></p>
+
+<p>A simple chgrp -R  caused permission denied errors on those files not owned by hudson - even though they were already group apache so wouldn&rsquo;t have been affected.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -813,93 +1014,6 @@ function my_views_uninstall() {
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/10/09/backport-small-changes-to-stable-releases/">&#8220;Backport Small Changes to Stable Releases&#8221;</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-10-09T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve found the recent thread on distribution support very interesting.</p>
-
-<p>An I&rsquo;m especially excited by the prospects hinted at here</p>
-
-<p><a href="http://drupal.org/node/933846#comment-3545110">http://drupal.org/node/933846#comment-3545110</a></p>
-
-<blockquote>
-#42
-webchick - October 7, 2010 - 21:40
-
-For those who haven&#8217;t read it, http://buytaert.net/8-steps-for-drupal-8 is worth a read. In it, step 6 is &#8220;Backport small changes to stable releases&#8221;. Drupal 7 is the first release we&#8217;ve been able to entertain the idea, since we have a testing framework with 25K tests and a version-specific dependency system. What the boundaries are of such changes isn&#8217;t quite defined yet, because Dries and I have kept pretty busy with, you know, getting Drupal 7 out the door. :P~
-
-</blockquote>
-
-
-<p>For a long time I&rsquo;ve felt that Drupal could get a great deal more engagement from contractors, freelances and other somewhat mercenary entities (myself included) if contributions could have an impact on a smaller timescale.</p>
-
-<p>By allowing changes to core within major releases it potentially becomes possible to contribute patches that get released within months rather than years.</p>
-
-<p>On this timescale it becomes much easier to justify the time spent to a client as there is a reasonable change of it benifitting thier project.</p>
-
-<p><a href="http://drupal.org/node/200953#comment-1674372>I submitted a patch</a> that&rsquo;s actually in Drupal 7 - I may get to use in within 2 years of writing it - but that&rsquo;s several clients on.</p>
-
-<p>I think it&rsquo;s especially an opportunity to flesh out the API and add missing functions</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/10/06/ubuntu-10-04-bluetooth-audio/">Ubuntu 10.04 Bluetooth Audio</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-10-06T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It wasn&rsquo;t immediately obvious to me</p>
-
-<p>What I needed to do to get blutooth audio working was to install the blueman package</p>
-
-<p>After that configuration via GUI was pretty straightforward</p>
-
-<p>Now I have fantastic sound via my bluetooth enabled HIFI :-)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/8">&larr; Older</a>
@@ -917,6 +1031,14 @@ For those who haven&#8217;t read it, http://buytaert.net/8-steps-for-drupal-8 is
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
@@ -926,14 +1048,6 @@ For those who haven&#8217;t read it, http://buytaert.net/8-steps-for-drupal-8 is
     
       <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/grafana/">Grafana</a>
       </li>
     
   </ul>

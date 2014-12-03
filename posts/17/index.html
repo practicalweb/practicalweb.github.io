@@ -9,8 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="One of the things that is confusing about Drupal is the use of the word node. Going to the dictionary doesn&rsquo;t help much:
-http://dictionary. &hellip;">
+  <meta name="description" content="For the last few months I've been working on a project that is part website and part data processing. In theory the website is the bulk of the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,159 @@ http://dictionary. &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/10/05/number-crunching-database-vs-oop/">Number Crunching : Database vs OOP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-10-05T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+For the last few months I&#8217;ve been working on a project that is part website and part data processing.
+</p>
+
+
+<p>
+In theory the website is the bulk of the project, but in practice processing the data has taken a disproportionate amount of resources.
+</p>
+
+
+<p>
+Data exchange with another organisation is always tricky - and in this case we have incoming data that doesn&#8217;t conform to specification, business rules that change, and a daily data import to run.
+</p>
+
+
+<p>
+The code I&#8217;ve been working on has been through a couple of versions, and now I have in mind a third 
+</p>
+
+
+<ol>
+    <li>process data from file a line at a time, comparing each record with the database individually</li>
+    <li>load all data from file into a temporary table, apply all rules as SQL updates to the whole table - joined to other tables where comparisons are needed.</li>
+    <li>load all data from file into a temporary table, retrieving data joined with the comparison data - process in batches say 1000 lines at a time.</li>
+</ol>
+
+
+<p>
+Version 1 was impossibly slow, and it was bad code we inherited so it had to go.
+</p>
+
+
+<p>
+Version 2 is much faster, but as the business rules are documented per record and we&#8217;re performing set based operations it has proved very hard to verify that the code matches the required logic.  It&#8217;s also very hard to unit test as all the logic is performed in the database.
+</p>
+
+
+<p>
+Version 3 probably won&#8217;t get written now - as is the way of programming - you always learn how you&#8217;d do it next time.
+</p>
+
+
+<p>
+I have one colleague in particular who thinks that the database should do the heavy lifting as that is what it is optimised for, and to an extent I agree. But the more I get into unit testing the more I want to write code that neatly packages up logic in a testable way.
+</p>
+
+
+<p>
+It has also become apparent just how important it is to have code that follows business rules in a clear way. It&#8217;s not enough that the output should be right. I recently handed this code to a very capable developer - he&#8217;s normally so polite - but trying to reconcile a flowchart with a long series of SQL queries tested his patience.
+</p>
+
+
+<p>
+In the end leaning so hard on the database has made the system much harder to read, test, change, and maintain.
+</p>
+
+
+<p>
+I wonder if version 3 would be any slower anyway - it might even be faster. In fact version 3 could be run multithreaded - or split into multiple processes&#8230;. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/08/07/drupal-multisite-with-shared-tables/">Drupal Multisite With Shared Tables</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-08-07T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Drupal allows you to create multiple sites sharing some or all of the same code and optionally sharing some database tables.</p>
+
+<p>The documentation for the Drupal settings file
+<a href="http://api.drupal.org/api/file/sites/default/settings.php/5/source">http://api.drupal.org/api/file/sites/default/settings.php/5/source</a></p>
+
+<p>includes the following</p>
+
+<p>&lt;?php
+/<em>
+ * To have all database names prefixed, set $db_prefix as a string:
+ *
+ *   $db_prefix = &lsquo;main<em>&rsquo;;
+ *
+ * To provide prefixes for specific tables, set $db_prefix as an array.
+ * The array&rsquo;s keys are the table names and the values are the prefixes.
+ * The &lsquo;default&rsquo; element holds the prefix for any tables not specified
+ * elsewhere in the array. Example:
+ *
+ *   $db_prefix = array(
+ *     &lsquo;default&rsquo;   => &lsquo;main</em>&rsquo;,
+ *     &lsquo;users&rsquo;     => &lsquo;shared<em>&rsquo;,
+ *     &lsquo;sessions&rsquo;  => &lsquo;shared</em>&rsquo;,
+ *     &lsquo;role&rsquo;      => &lsquo;shared<em>&rsquo;,
+ *     &lsquo;authmap&rsquo;   => &lsquo;shared</em>&rsquo;,
+ *     &lsquo;sequences&rsquo; => &lsquo;shared_&rsquo;,
+ *   );
+ </em>/
+?></p>
+
+<p>This allows you to have several related sites which might (for example) share user tables so that users have single sign on, while having different tables for content.</p>
+
+<p>Note that to get this functionality the sites have to share a single database.</p>
+
+<p>I&rsquo;ve never quite seen the point of multi site Drupal installs for unrelated projects, in theory this could save on upgrade work - but in practice I&rsquo;d rather have the greater control that separate install gives you.</p>
+
+<p>For a family of websites I can see a multi site install with some shared data being a really powerful and effective solution.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -763,141 +915,6 @@ xrandr &ndash;output LVDS &ndash;left-of VGA
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/07/12/keep-your-drupal-theme-simple/">Keep Your Drupal Theme Simple</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-07-12T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-When creating a Drupal theme it is tempting to start with one of the existing themes (Zen and Garland are often used) but I would argue against this approach.
-</p>
-
-
-<p>
-If you start from another theme it feels good at the beginning; after all you start from a position where your site looks good. But the more customisations you make, the more you find that the old theme just adds complexity to your existing theme.
-</p>
-
-
-<p>
-The way Drupal works is that each module can add it&#8217;s own CSS: so tabs, menu trees, filters and so on all come with some sensible styling by default. If you want it to look different you not only have to create the CSS to make it look how you want - you have to make sure this overrides the default rules.
-</p>
-
-
-<p>
-So CSS in Drupal isn&#8217;t simple - don&#8217;t add to the complexity more than you need to.
-</p>
-
-
-<!--break-->
-
-
-<p>
-Start with a blank theme, make only the changes you need.
-</p>
-
-
-<p>
-That way you understand more of the CSS your site uses, changes are much easier to make, and bugs are less likely.
-</p>
-
-
-<p>
-This site is an example of that approach, the main stylesheet is less than 300 lines of code. IE6 specific code, and print style are only another 40 lines each.
-</p>
-
-
-<p>
-More complex themes benefit even more from initial simplicity, the complexity can then be built up systematically without fighting another designers plans.
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/07/10/mobile-internet-reaching-critical-mass/">Mobile Internet Reaching Critical Mass?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-07-10T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Interesting report on the state of mobile internet
-</p>
-
-
-<blockquote>
-    We offer that mobile Internet is today at a point of sufficient mass to sustain a chain reaction of rapid growth in consumer adoption and, in turn, mobile Internet marketing.
-</blockquote>
-
-
-<p>
-According to this in the UK 16% of mobile phone users use their phones to access the internet.
-</p>
-
-
-<p>
-These users access a much smaller range of sites on their phones than desktop users do.
-</p>
-
-
-
-
-<p>
-But the key thing is that there may be enough mobile users to encourage website development to accommodate mobile users, and as the user experience gets better more people will use the mobile net, and from there it all explodes (keeping the critical mass analogy).
-</p>
-
-
-<p>
-What this means for web development is an interesting question. Well managed websites using systems like Drupal will be well placed to take advantage of the new opportunities, reaching new audiences for little extra outlay.
-</p>
-
-
-<ul>
-    <li><a href="http://www.nielsenmobile.com/documents/CriticalMass.pdf">Full report</a> (pdf)</li>
-    <li><a href="http://news.bbc.co.uk/1/hi/technology/7499340.stm">Summary at the BBC</a></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/18">&larr; Older</a>
@@ -915,6 +932,14 @@ What this means for web development is an interesting question. Well managed web
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
@@ -924,14 +949,6 @@ What this means for web development is an interesting question. Well managed web
     
       <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/grafana/">Grafana</a>
       </li>
     
   </ul>

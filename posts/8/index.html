@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="The default configuration of varnish logs every request twice, once for the client and once for the backend communication edit the line in /etc/init. &hellip;">
+  <meta name="description" content="I&rsquo;ve found the recent thread on distribution support very interesting. An I&rsquo;m especially excited by the prospects hinted at here http:// &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,93 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/09/backport-small-changes-to-stable-releases/">&#8220;Backport Small Changes to Stable Releases&#8221;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-09T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve found the recent thread on distribution support very interesting.</p>
+
+<p>An I&rsquo;m especially excited by the prospects hinted at here</p>
+
+<p><a href="http://drupal.org/node/933846#comment-3545110">http://drupal.org/node/933846#comment-3545110</a></p>
+
+<blockquote>
+#42
+webchick - October 7, 2010 - 21:40
+
+For those who haven&#8217;t read it, http://buytaert.net/8-steps-for-drupal-8 is worth a read. In it, step 6 is &#8220;Backport small changes to stable releases&#8221;. Drupal 7 is the first release we&#8217;ve been able to entertain the idea, since we have a testing framework with 25K tests and a version-specific dependency system. What the boundaries are of such changes isn&#8217;t quite defined yet, because Dries and I have kept pretty busy with, you know, getting Drupal 7 out the door. :P~
+
+</blockquote>
+
+
+<p>For a long time I&rsquo;ve felt that Drupal could get a great deal more engagement from contractors, freelances and other somewhat mercenary entities (myself included) if contributions could have an impact on a smaller timescale.</p>
+
+<p>By allowing changes to core within major releases it potentially becomes possible to contribute patches that get released within months rather than years.</p>
+
+<p>On this timescale it becomes much easier to justify the time spent to a client as there is a reasonable change of it benifitting thier project.</p>
+
+<p><a href="http://drupal.org/node/200953#comment-1674372>I submitted a patch</a> that&rsquo;s actually in Drupal 7 - I may get to use in within 2 years of writing it - but that&rsquo;s several clients on.</p>
+
+<p>I think it&rsquo;s especially an opportunity to flesh out the API and add missing functions</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/06/ubuntu-10-04-bluetooth-audio/">Ubuntu 10.04 Bluetooth Audio</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-06T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It wasn&rsquo;t immediately obvious to me</p>
+
+<p>What I needed to do to get blutooth audio working was to install the blueman package</p>
+
+<p>After that configuration via GUI was pretty straightforward</p>
+
+<p>Now I have fantastic sound via my bluetooth enabled HIFI :-)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -489,114 +576,6 @@ function mymodule_update_6101(){
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/05/14/varnish-config-on-debian/">Varnish Config on Debian</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-05-14T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve just spent too long being very confused as to why varnish wasn&#8217;t working
-</p>
-
-
-<p>
-I&#8217;d forgotten that&nbsp; the Debian version doesn&#8217;t read the default.vcl config file by default!
-</p>
-
-
-<p>
-You have to edit /etc/default/varnish and specify the config type you want.
-</p>
-
-
-<p>
-I was getting the error message
-</p>
-
-
-<p><code>
-Error 503 Service Unavailable</p>
-
-<p>Error talking to backend</p>
-
-<p>Guru Meditation: XID:
-</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/05/14/install-drupal-modules-programatically/">Install Drupal Modules Programatically</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-05-14T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In order to make releases repeatable, to be able to test updates and share work will colleagues it is really useful to install new modules (and disable old ones) in update hooks.</p>
-
-<p>This way one just has to update the code, then run update.php and you have the latest version of the site.</p>
-
-<p>It also makes it easy to pull in a copy of the live database and check that the update still works (because it&rsquo;s easy you actually find yourself doing it).</p>
-
-<p>Well that&rsquo;s the logic, but it wasn&rsquo;t entirely obvious to me how to do this.</p>
-
-<p>The function module_enable() looks handy - but this doesn&rsquo;t run install hooks.</p>
-
-<p>drupal_install_modules() is actually what you need - but you also need to clear the cache after installing.</p>
-
-<p>&lt;?php</p>
-
-<p>function mymodule_update_6103(){
-    $items = array();
-    drupal_install_modules(array( &lsquo;path_redirect&rsquo;, &lsquo;tagadelic&rsquo;));
-    module_disable(array(&lsquo;oldmodule&rsquo;));
-    drupal_flush_all_caches();
-    return $items;
-}</p>
-
-<p>?></p>
-
-<p>It would be nicer still if I returned something useful in the $items array &hellip;</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/9">&larr; Older</a>
@@ -614,6 +593,14 @@ Error 503 Service Unavailable</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
@@ -623,14 +610,6 @@ Error 503 Service Unavailable</p>
     
       <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/grafana/">Grafana</a>
       </li>
     
   </ul>

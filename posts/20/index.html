@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="With any sizeable project maintaining good documentation is a challenge - it's all to easy to skimp on documentation, or to start with good &hellip;">
+  <meta name="description" content="It&rsquo;s easy to save an Excel file as CSV and read it in PHP with the fgetcsv function but this may not work so well if the file contains non- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,134 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/18/reading-a-unicode-excel-file-in-php/">Reading a Unicode Excel File in PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-05-18T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s easy to save an Excel file as CSV and read it in PHP with the <a href="http://www.php.net/fgetcsv">fgetcsv</a> function but this may not work so well if the file contains non-English characters.</p>
+
+<p>Excel uses a non-standard character encoding for csv files.</p>
+
+<p>You can save an Excel file as &lsquo;unicode&rsquo; text however there are several unicode systems - Windows uses UTF-16, and PHP uses UTF-8.</p>
+
+<p>To open the &lsquo;unicode text&rsquo; file in PHP you have to convert it, in addition you may want to be able to open UTF-8 files that may be created by other systems.</p>
+
+<!--break-->
+
+
+<p>PHP has an encoding detection function - but it can&rsquo;t detect UTF-16.</p>
+
+<p>I&rsquo;ve solved the problem with the following function which detects from several encodings, adds an appropriate filter, and returns a filehandle which reads as UTF-8.</p>
+
+<div><script src='https://gist.github.com/1238ffbd56db3b7c8d5b.js'></script>
+<noscript><pre><code>&lt;?php
+
+# http://www.practicalweb.co.uk/blog/2008/05/18/reading-a-unicode-excel-file-in-php/
+
+function fopen_utf8($filename){
+    $encoding='';
+    $handle = fopen($filename, 'r');
+    $bom = fread($handle, 2);
+//  fclose($handle);
+    rewind($handle);
+    
+
+    if($bom === chr(0xff).chr(0xfe)  || $bom === chr(0xfe).chr(0xff)){
+            // UTF16 Byte Order Mark present
+            $encoding = 'UTF-16';
+    } else {
+        $file_sample = fread($handle, 1000) + 'e'; //read first 1000 bytes
+        // + e is a workaround for mb_string bug
+        rewind($handle);
+    
+        $encoding = mb_detect_encoding($file_sample , 'UTF-8, UTF-7, ASCII, EUC-JP,SJIS, eucJP-win, SJIS-win, JIS, ISO-2022-JP');
+    }
+    if ($encoding){
+        stream_filter_append($handle, 'convert.iconv.'.$encoding.'/UTF-8');
+    }
+    return  ($handle);
+} 
+
+?&gt;</code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/18/doc-comments-and-auto-completion-in-eclipse/">Doc-comments and Auto-completion in Eclipse</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-05-18T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Using <a href="http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.pkg.html">doc-comments</a> in Eclipse really helps productivity by providing lots of tool-tip help and auto completion.
+</p>
+
+
+<p>
+A colleague recently pointed out that Eclipse can auto-complete object properties (as long as you use the @property tag). I&#8217;ve found this really helpful and have been creating objects to return pass around - and found it a vwery neat way of working.
+</p>
+
+
+<p>
+I&#8217;ve also been writing functions that may be used on the command line via <a href="http://drupal.org/project/drush">drush</a>, Drupal cron, or via pages.
+</p>
+
+
+<p>
+A pleasant side effect of this is that the MVC pattern is starting to appear much clearer within Drupal. The Controller may be cron, drush, or the menu system, this calls the Model, and triggers a theme function for the View.
+</p>
+
+
+<p>
+Thanks to <a href="http://www.nobleprog.co.uk/">Bernard at NobelProg</a>
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -638,185 +766,6 @@ This seems to be a general Drupal thing - all too often failures are silent - an
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/01/26/copyright-policies-and-contracting-in-an-open-source-world/">Copyright Policies and Contracting in an Open Source World</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-01-26T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>really interesting thread on the Drupal consultants mailing list</p>
-
-<div class="post-entry">
-<p>
-especially of note:
-</p>
-<blockquote>
-    <p>
-    <a href="http://lists.drupal.org/pipermail/consulting/2008-January/002324.html">http://lists.drupal.org/pipermail/consulting/2008-January/002324.html</a>
-    </p>
-    <p>
-    We work primarily with educational entities and non-profits; in our line<br />
-    of work the fear of competition comes up infrequently, but it still<br />
-    comes up –
-    </p>
-    <p>
-    WRT Alan’s question re posting our dev agreement — we spent a fair<br />
-    amount of time and money working through this with our lawyers — the<br />
-    resulting document is tied pretty closely to our business model and our<br />
-    work with educators and non-profits.
-    </p>
-    <p>
-    At the core, though, the section in question — and this is the section<br />
-    that has been very useful to us — makes the following distinctions —<br />
-    and IANAL so these distinctions are a layperson’s distinctions, and<br />
-    should not be confused with the writings of a person who actually knows<br />
-    anything about the topic :-) 
-    </p>
-    <p>
-    Client pre-existing IP: specialized information/knowledge that the<br />
-    client has developed<br />
-    Developer pre-existing IP: specialized information/knowledge that we<br />
-    have developed<br />
-    Project IP: work that results from Client and Developer coming together<br />
-    to solve the client’s specific needs. For us, this is often a blurry<br />
-    line, as we are frequently approached by clients to help them<br />
-    articulate, and then solve, the specific issues within their organization.<br />
-    Custom Code: Any code we write belongs to the client as work for hire<br />
-    License Back: the client agrees to grant us a perpetual, royalty free<br />
-    license, as governed by a non-compete clause (ie, we don’t copy the<br />
-    client’s business plan — for us, this isn’t generally an issue, as we<br />
-    work with non-profits and schools)<br />
-    GPL: Custom code is licensed under the GPL, and will be released back to<br />
-    the community under terms negotiated b/w Client and Developer
-    </p>
-    <p>
-    The key elements are the different types of IP, and how the code is<br />
-    owned and licensed. By clearly stating that we develop GPL code, we have<br />
-    the conversation up front, which allows us to avoid any<br />
-    misunderstandings re licensing.
-    </p>
-    <p>
-    The one exception we make is themes/graphic identity. The branding<br />
-    always remains the property of the client.<br />
-    &gt;<br />
-    &gt;&gt;<br />
-    &gt;&gt;     I was a consultant for over 4 years and never under any<br />
-    &gt;&gt;     circumstances would we be allowed to reuse a solution built for<br />
-    &gt;&gt;     one client for another client.  We were expensive, however, the<br />
-    &gt;&gt;     client kept everything always.<br />
-    &gt;<br />
-    This is possible in theory, but, IMO, more difficult in practice — once<br />
-    you know how to do something, you can’t un-know it. As a recent example,<br />
-    we worked out some publishing workflows on a community writing site we<br />
-    developed this summer. The process was unique to the client, as it met<br />
-    their specific internal needs. On a site we brought live this fall, we<br />
-    used some of the same principles to support an online grant application<br />
-    and review process. To somebody looking strictly at the technical<br />
-    solution, it would look amazingly similar, despite the complete<br />
-    differences in context. Part of the reason we have the license-back<br />
-    clause in our contract is to protect us against any misunderstanding<br />
-    here — the fact that we have experience is a good thing. Again, I think<br />
-    I’m missing something wrt the original comment.
-    </p>
-    <p>
-    Cheers,
-    </p>
-    <p>
-    Bill
-    </p>
-    <p>
-    –<br />
-    Bill Fitzgerald<br />
-    <a href="http://www.funnymonkey.com/">http://www.funnymonkey.com</a><br />
-    Tools for Teachers
-    </p>
-</blockquote>
-</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/01/17/apc-back-ups-cs-500ei-and-debian-etch/">APC Back-UPS CS 500Ei and Debian Etch</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-01-17T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Just got a new UPS and it’s working nicely :-)</p>
-
-<div class="post-entry">
-<p>
-Running on Debian Etch I had to upgrade the NUT package but this
-worked very simply by bringing in the one from Lenny (in testing)
-</p>
-<p>
-added to /etc/apt/sources.list<br />
-deb-src http://ftp.uk.debian.org/debian/ lenny main contrib non-free
-</p>
-<p>
-then ran<br />
-apt-get build-dep nut
-</p>
-<p>
-as normal user<br />
-apt-get source nut<br />
-cd to nut dir<br />
-dpkg-buildpackage -rfakeroot -uc -b
-</p>
-<p>
-then as root installed the .deb created 
-</p>
-<p>
-After that it was just a case of reading the docs and configuring.
-</p>
-<p>
-I’m using the UPS for my desktop and monitor - it’s drawing 25% load
-with a predicted battery runtime of about 45minutes (which I don’t
-quite believe)
-</p>
-</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/21">&larr; Older</a>
@@ -834,6 +783,14 @@ quite believe)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
@@ -843,14 +800,6 @@ quite believe)
     
       <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/grafana/">Grafana</a>
       </li>
     
   </ul>

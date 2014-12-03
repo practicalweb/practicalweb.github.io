@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-11-28T23:21:22+00:00</updated>
+  <updated>2014-12-03T12:12:50+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,123 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Non-root Packet Capture in Wireshark]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/12/03/non-root-packet-capture-in-wireshark/"/>
+    <updated>2014-12-03T12:04:46+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/12/03/non-root-packet-capture-in-wireshark</id>
+    <content type="html"><![CDATA[<p>There are lots of blogs about this already - but I didn&rsquo;t quite understand at first so here&rsquo;s my take &hellip;</p>
+
+<p>Wireshark is a large and somewhat vulnerable program - best not to run it as root (especially as you may be looking a suspicious traffic)</p>
+
+<p>It uses dumpcap for the actual packet capture which is the only bit that needs elevated privileges.</p>
+
+<p>Since linux kernel 2.2 we don&rsquo;t even need root for this bit - we can set file permissions to allow non root user to capture packets.</p>
+
+<p>If you don&rsquo;t want to allow just any user on your system to do this first make sure only a chosen group can even run dumpcap</p>
+
+<p>I decided to use the sudo group - but you could make a new one.</p>
+
+<pre><code class="bash">sudo chgrp sudo /usr/bin/dumpcap
+sudo chmod 750 /usr/bin/dumpcap
+</code></pre>
+
+<p>Now only members of the sudo group (who are already the users I trust) can run this program.</p>
+
+<pre><code class="bash">sudo setcap cap_net_raw,cap_net_admin=eip /usr/bin/dumpcap
+</code></pre>
+
+<p>This allows the program to gain elevated network rights without being run by root.</p>
+
+<p>Note that any chmod action seems to undo the setcap so perform the changes in this order.</p>
+
+<p>Now I can run wireshark as my regular user and have full functionality.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Specifying MTU for a VPN Connection in NetworkManager]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/"/>
+    <updated>2014-12-03T11:34:35+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager</id>
+    <content type="html"><![CDATA[<p>I need to use a VPN which was suffering packet fragmentation due to the overhead involved (actually I use a VPN to connect to a network which then has another VPN connection to a third network).</p>
+
+<p>To determine the largest MTU size which didn&rsquo;t lead to fragmentation I just ran variations on</p>
+
+<pre><code class="bash ">ping -M do -s 1327 server.example.com
+</code></pre>
+
+<p><code>-M do</code> prohibits fragmentation so the ping will fail if the packet size is too large</p>
+
+<p>I tried larger/ smaller values till I found the largest number that worked.</p>
+
+<p>Network Manager didn&rsquo;t give me a GUI to set MTU on the VPN connection (it does for ethernet)</p>
+
+<p>So I needed a script in /etc/network/if-up.d/</p>
+
+<p>I called mine like myvpn-mtu (owned by root and executable)</p>
+
+<pre><code class="bash">#! /bin/sh
+# set low MTU for my VPN otherwise I get packet fragmentation
+set -e
+
+
+if [ "$CONNECTION_ID" = myvpn ] &amp;&amp; [ "$MODE" = start ]; then
+  /sbin/ifconfig $IFACE mtu 1327
+fi
+
+
+exit 0
+</code></pre>
+
+<p>Substitute &ldquo;myvpn&rdquo; here for your connection name</p>
+
+<p>The script env has the following variables (I&rsquo;ve anonymised some variables)</p>
+
+<pre><code>ADDRFAM=NetworkManager
+CONNECTION_ID=xxxxxxxxxxxxxx
+CONNECTION_UUID=xxxxxxx-xxxxx-xxxxx-xxxx-xxxxx
+DEVICE_IFACE=wlan0
+DEVICE_IP_IFACE=wlan0
+DHCP4_BROADCAST_ADDRESS=192.168.0.255
+DHCP4_DHCP_LEASE_TIME=86400
+DHCP4_DHCP_MESSAGE_TYPE=5
+DHCP4_DHCP_REBINDING_TIME=75600
+DHCP4_DHCP_RENEWAL_TIME=43200
+DHCP4_DHCP_SERVER_IDENTIFIER=192.168.0.1
+DHCP4_DOMAIN_NAME=xxx
+DHCP4_DOMAIN_NAME_SERVERS=192.168.0.1
+DHCP4_EXPIRY=1417685250
+DHCP4_HOST_NAME=xxx
+DHCP4_IP_ADDRESS=192.168.0.209
+DHCP4_NETWORK_NUMBER=192.168.0.0
+DHCP4_ROUTERS=192.168.0.1
+DHCP4_SUBNET_MASK=255.255.255.0
+IFACE=tun0
+IP4_ADDRESS_0=192.168.0.209/24 192.168.0.1
+IP4_DOMAINS=xxx
+IP4_NAMESERVERS=192.168.0.1
+IP4_NUM_ADDRESSES=1
+IP4_NUM_ROUTES=0
+LOGICAL=tun0
+METHOD=NetworkManager
+MODE=start
+PHASE=post-up
+PWD=/
+VERBOSITY=0
+VPN_IP4_ADDRESS_0=192.168.1.48/24 x.x.x.x
+VPN_IP4_NAMESERVERS=x.x.x.x
+VPN_IP4_NUM_ADDRESSES=1
+VPN_IP4_NUM_ROUTES=28
+VPN_IP4_ROUTE_0=192.168.1.0/24 0.0.0.0 0
+VPN_IP4_ROUTE_1=192.168.2.0/24 0.0.0.0 0
+VPN_IP4_ROUTE_2=192.168.3.0/24 0.0.0.0 0
+VPN_IP4_ROUTE_3=192.168.4.0/24 0.0.0.0 0
+VPN_IP_IFACE=tun0
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Quick Steps to Secure Ubuntu Linux]]></title>
@@ -188,130 +305,6 @@ sudo grub-install --recheck --root-directory=/mnt /dev/sdZ
 
 <p>When you reboot grub should be back to normal.</p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How to Create a Custom Yum Repository on Centos 6]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2012/11/21/how-to-create-a-custom-yum-repository-on-centos-6/"/>
-    <updated>2012-11-21T00:00:00+00:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2012/11/21/how-to-create-a-custom-yum-repository-on-centos-6</id>
-    <content type="html"><![CDATA[<p>If you want to create custom rpms and install then with the usual automated dependency management you&rsquo;ll need your own yum repository. This is just the RPMS and metadata in the format of static xml files served by a webserver.</p>
-
-<h2>First you need a GPG key to sign your packages.</h2>
-
-<pre><code class="bash"># make some randomness if running headless 
-sudo rngd -r /dev/urandom 
-# start the agent
-gpg-agent --use-standard-socket --daemon
-# interactive key generation (accept the defaults for key type, provide your name and email when promted)
-gpg --gen-key
-# 
-gpg --export -a 'My Name' &gt; MY-RPM-GPG-KEY
-</code></pre>
-
-<p>You won&rsquo;t need the random generator if you do this on a desktop, but on a headless system I found I needed this. These actions will store a private key in your keyring, and a public key in the specified file.</p>
-
-<h2>Build your rpm</h2>
-
-<p>First configure rpm to use the key you just added to your key ring, checing you don&rsquo;t oveerwrite earlier configuration).</p>
-
-<pre><code class="bash">[ ! -f ~/.rpmmacros ] &amp;&amp; echo '%_signature gpg
-%_gpg_name  My Name
-' &gt; ~/.rpmmacros
-</code></pre>
-
-<p>Now build your RPM (assuming you are already setup to do this).</p>
-
-<pre><code class="bash">rpmbuild -bb --sign ~/rpmbuild/SPECS/my-project.spec
-</code></pre>
-
-<h2>Setup the Yum Repo</h2>
-
-<p>Setup apache, make the directory structure, with teh repo files. This can be the same or a different server to your build machine.</p>
-
-<pre><code class="bash">
-# make the repo base url
-sudo mkdir -p /var/www/html/myrepo
-# make it wrietable by you normal account
-sudo chown $(id -un).$(id -gn) /var/www/html/myrepo 
-# copy you rpm files
-cp *rpm /var/www/html/myrepo
-# create the metadata
-createrepo /var/www/html/myrepo
-
-# Setup an apache Alias for this directory
-echo 'Alias /myrepo/ /var/www/html/myrepo/
-' &gt; /etc/httpd/conf.d/my-yum-repo 
-
-# restart Apache to pickup the change
-service restart httpd
-</code></pre>
-
-<h2>Configure the system that will use the custom repo</h2>
-
-<p>Copy over the GPG key, and import it into the  rpm database.</p>
-
-<pre><code class="bash">sudo rpm --import MY-RPM-GPG-KEY
-</code></pre>
-
-<p>Configure yum to use the new repo.</p>
-
-<pre><code class="bash">echo '[my-repo]
-name=My Custom Packages
-baseurl=http://yum.example.com/myrepo
-&gt; /etc/yum.repos.d/my.repo 
-</code></pre>
-
-<p>Now you should be able to install your custom packages with regular yum commands. When you update your rpms just re-run the createrepo command to update the metadata.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Monitor Filesystem for Deletions]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2012/09/28/monitor-filesystem-for-deletions/"/>
-    <updated>2012-09-28T00:00:00+01:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2012/09/28/monitor-filesystem-for-deletions</id>
-    <content type="html"><![CDATA[<p>On a project I&#8217;m working on at the moment we have a problem, files are going missing.</p>
-
-
-
-
-<p>We don&#8217;t know which part of the system could be trashing these files (user uploaded images in this case) and they are on a shared filesystem so there are plenty of places to point fingers.</p>
-
-
-
-
-<p>I&#8217;ve discovered a very handy toolset <a href="https://github.com/rvoicilas/inotify-tools/wiki">inotify-tools</a> Which hooks into the linix kernel and allows you to monitor actions like file deletion.</p>
-
-
-
-
-<p>I my case all I need to do right now is monitor the files on each sytem that has access - and I&#8217;m hoping to catch which one does the delete</p>
-
-
-<p><In my build script is now the code</p></p>
-
-<p><code></p>
-
-<h1>stop monitoring for deletes through the build</h1>
-
-<p>[ -f ~/inotifywait.pid ] &amp;&amp; kill $(cat ~/inotifywait.pid)</p>
-
-<p>git pull
-./build.sh</p>
-
-<h1>if the tool is installed - monitor file delets</h1>
-
-<p>which inotifywait &amp;&amp;
-{
- nohup inotifywait -mr &ndash;timefmt &lsquo;%d/%m/%y %H:%M&rsquo; &ndash;format &lsquo;%T %w %f %e&rsquo; -e delete /var/www/sites/default/files/ &amp;> ~/build-${JOB_NAME}-$(BUILD_NUMBER)-delete.log  &amp;
- echo $! > ~/inotifywait.pid
-}</p>
-
-<p></code></p>
-
-<p>This should create a log of any user files that get deleted between builds</p>
 ]]></content>
   </entry>
   

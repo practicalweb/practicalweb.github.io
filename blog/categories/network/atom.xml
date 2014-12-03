@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Network | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/network/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2014-12-03T12:12:50+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Non-root Packet Capture in Wireshark]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/12/03/non-root-packet-capture-in-wireshark/"/>
+    <updated>2014-12-03T12:04:46+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/12/03/non-root-packet-capture-in-wireshark</id>
+    <content type="html"><![CDATA[<p>There are lots of blogs about this already - but I didn&rsquo;t quite understand at first so here&rsquo;s my take &hellip;</p>
+
+<p>Wireshark is a large and somewhat vulnerable program - best not to run it as root (especially as you may be looking a suspicious traffic)</p>
+
+<p>It uses dumpcap for the actual packet capture which is the only bit that needs elevated privileges.</p>
+
+<p>Since linux kernel 2.2 we don&rsquo;t even need root for this bit - we can set file permissions to allow non root user to capture packets.</p>
+
+<p>If you don&rsquo;t want to allow just any user on your system to do this first make sure only a chosen group can even run dumpcap</p>
+
+<p>I decided to use the sudo group - but you could make a new one.</p>
+
+<pre><code class="bash">sudo chgrp sudo /usr/bin/dumpcap
+sudo chmod 750 /usr/bin/dumpcap
+</code></pre>
+
+<p>Now only members of the sudo group (who are already the users I trust) can run this program.</p>
+
+<pre><code class="bash">sudo setcap cap_net_raw,cap_net_admin=eip /usr/bin/dumpcap
+</code></pre>
+
+<p>This allows the program to gain elevated network rights without being run by root.</p>
+
+<p>Note that any chmod action seems to undo the setcap so perform the changes in this order.</p>
+
+<p>Now I can run wireshark as my regular user and have full functionality.</p>
+]]></content>
+  </entry>
+  
+</feed>

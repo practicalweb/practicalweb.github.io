@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I&rsquo;m using varnish to cache a REST service that&rsquo;s slow enough to cause me grief in development. Out of the box it assumes you are caching &hellip;">
+  <meta name="description" content="I've just spent too long being very confused as to why varnish wasn't working I'd forgotten that&nbsp; the Debian version doesn't read the default. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,114 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/14/varnish-config-on-debian/">Varnish Config on Debian</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-05-14T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve just spent too long being very confused as to why varnish wasn&#8217;t working
+</p>
+
+
+<p>
+I&#8217;d forgotten that&nbsp; the Debian version doesn&#8217;t read the default.vcl config file by default!
+</p>
+
+
+<p>
+You have to edit /etc/default/varnish and specify the config type you want.
+</p>
+
+
+<p>
+I was getting the error message
+</p>
+
+
+<p><code>
+Error 503 Service Unavailable</p>
+
+<p>Error talking to backend</p>
+
+<p>Guru Meditation: XID:
+</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/14/install-drupal-modules-programatically/">Install Drupal Modules Programatically</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-05-14T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In order to make releases repeatable, to be able to test updates and share work will colleagues it is really useful to install new modules (and disable old ones) in update hooks.</p>
+
+<p>This way one just has to update the code, then run update.php and you have the latest version of the site.</p>
+
+<p>It also makes it easy to pull in a copy of the live database and check that the update still works (because it&rsquo;s easy you actually find yourself doing it).</p>
+
+<p>Well that&rsquo;s the logic, but it wasn&rsquo;t entirely obvious to me how to do this.</p>
+
+<p>The function module_enable() looks handy - but this doesn&rsquo;t run install hooks.</p>
+
+<p>drupal_install_modules() is actually what you need - but you also need to clear the cache after installing.</p>
+
+<p>&lt;?php</p>
+
+<p>function mymodule_update_6103(){
+    $items = array();
+    drupal_install_modules(array( &lsquo;path_redirect&rsquo;, &lsquo;tagadelic&rsquo;));
+    module_disable(array(&lsquo;oldmodule&rsquo;));
+    drupal_flush_all_caches();
+    return $items;
+}</p>
+
+<p>?></p>
+
+<p>It would be nicer still if I returned something useful in the $items array &hellip;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -970,203 +1078,6 @@ return $node;
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/23/drupal-the-missing-api/">Drupal - the Missing API</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-02-23T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I was just reading this presentation on deploying Drupal 
-</p>
-
-
-<p>
-http://www.slideshare.net/eaton/drupal-deployment-presentation
-</p>
-
-
-<p>
-and noticed 
-</p>
-
-
-<p>
-http://drupal.org/project/install_profile_api
-</p>
-
-
-<p>
-Which seems to have a collection of API functions needed at install/upgrade time that are missing from Drupal (and contrib modules)
-</p>
-
-
-<p>
-And even better this is great motivation to write more such functions myself instead of just using SQL hacks. 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/23/accessing-ckan-data-from-php/">Accessing CKAN Data From PHP</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-02-23T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been working on a couple of open data projects recently - which has been very rewarding.</p>
-
-<p>A couple of people have asked for some code so I&rsquo;ve knocked up a quick version of the sort of thing I&rsquo;ve been working on.</p>
-
-<p>This code requires PHP 5.1 for the JSON functions but doesn&rsquo;t need any extra libraries (pecl_http can give better error messages but is a bit of a pain to install).</p>
-
-<p>The Notes field in packages returns output in Markdown format - you can convert this to HTMl with a parser available at <a href="http://michelf.com/projects/php-markdown">http://michelf.com/projects/php-markdown</a></p>
-
-<p>This isn&rsquo;t production code so please test before using.</p>
-
-<p>&lt;?php</p>
-
-<p>class Ckan {
-    private  $url = &lsquo;<a href="http://www.ckan.net/">http://www.ckan.net/</a>&rsquo;;
-    private $errors = array(
-                              &lsquo;400&rsquo;  =>   &lsquo;Bad Request&rsquo;,
-                              &lsquo;403&rsquo;  =>   &lsquo;Not Authorized&rsquo;,
-                              &lsquo;404&rsquo;  =>   &lsquo;Not Found&rsquo;,
-                              &lsquo;500&rsquo;  =>   &lsquo;Internal Server Error&rsquo;,
-    );</p>
-
-<pre><code>public function __construct($url=null){
-    if ($url){
-        $this-&gt;url=$url;
-    }
-}
-
-private function transfer($url){
-
-    $ch = curl_init($this-&gt;url . $url);
-
-
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    $result = curl_exec($ch);
-    $info = curl_getinfo($ch);
-    curl_close($ch);
-    if ($info['http_code'] != 200){
-        throw new CkanException($this-&gt;error_codes["$info[http_code]"]);
-    }
-    if (!$result){
-        throw new CkanException("No Result");
-    }
-    return json_decode($result);
-}
-
-public function search($keyword){
-    $results = $this-&gt;transfer('api/search/package/?all_fields=1&amp;q=' . urlencode($keyword));
-    if (!$results-&gt;count){
-        throw new CkanException("Search Error");
-    }
-    return $results;
-}
-
-public function getPackage($package){
-    $package = $this-&gt;transfer('api/rest/package/' . urlencode($package));
-    if (!$package-&gt;name){
-        throw new CkanException("Package Load Error");
-    }
-    return $package;
-}
-
-
-public function getPackageList(){
-    $list =  $this-&gt;transfer('api/rest/package/');
-    if (!is_array($list)){
-        throw new CkanException("Package List Error");
-    }
-    return $list;
-}
-
-public function getGroup($group){
-    $group = $this-&gt;transfer('api/rest/group/' . urlencode($group) );
-    if (!$group-&gt;name){
-        throw new CkanException("Group Error");
-    }
-    return $group;
-}
-
-public function getGroupList(){
-    $groupList = $this-&gt;transfer('api/rest/group/');
-    if (!is_array($groupList)){
-        throw new CkanException("Group List Error");
-    }
-    return $groupList;
-}
-</code></pre>
-
-<p>}</p>
-
-<p>class CkanException extends Exception{}</p>
-
-<p>?></p>
-
-<p>Test with</p>
-
-<p>&lt;?php</p>
-
-<p>require_once(&ldquo;ckan.php&rdquo;);</p>
-
-<p>$ckan = new Ckan();</p>
-
-<p>$data = $ckan->getPackage(&lsquo;edmonton-data&rsquo;);</p>
-
-<p>print_r($data);</p>
-
-<p>?></p>
-
-<p>I&rsquo;m keeping this file and a Drupal module that uses it on Github at:</p>
-
-<p><a href="http://github.com/practicalweb/drupal-ckan">http://github.com/practicalweb/drupal-ckan</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/10">&larr; Older</a>
@@ -1184,6 +1095,14 @@ public function getGroupList(){
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
@@ -1193,14 +1112,6 @@ public function getGroupList(){
     
       <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/grafana/">Grafana</a>
       </li>
     
   </ul>

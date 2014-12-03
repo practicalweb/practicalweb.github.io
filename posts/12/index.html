@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Three interesting posts I've read recently http://www.contenthere.net/2009/08/fixed-bid-implementation-work-a-marriage-made-in-vegas.html Large &hellip;">
+  <meta name="description" content="I was originally excited about the embrace that Drupal seemed to have given to testing. However after spending some time with it I've concluded that &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,165 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/09/30/drupal-is-not-test-friendly/">Drupal Is Not Test Friendly</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-09-30T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I was originally excited about the embrace that Drupal seemed to have given to testing.
+</p>
+
+
+<p>
+However after spending some time with it I&#8217;ve concluded that Drupal really isn&#8217;t very test friendly.
+</p>
+
+
+<p>
+Most tests for Drupal are integration tests not unit tests.
+</p>
+
+
+<p>
+That is to say that they test a bunch of components together - not each bit separately.
+</p>
+
+
+<p>
+This is because Drupal components (modules or functions) are not well encapsulated, global variables are used, data is cached within functions,  passed via the database etc.  
+</p>
+
+
+<p>
+THis makes it much harder for the developer to create tests that validate functional increments, and means the suite of tests run very slowly.
+</p>
+
+
+<p>
+A while ago I tried to run the tests for Drupal 7 - but gave up waiting after an hour. I was very surprised to find that both database and web server were being hit hard - when I was running on the command line!
+</p>
+
+
+<p>
+Even the integration level testing isn&#8217;t all that great, it runs in an environment without JavaScript support - so the AJAX functionality can&#8217;t be tested. 
+</p>
+
+
+<p>
+Testing is better than not testing - but having gotten into testing I&#8217;ve found Drupal&#8217;s environment frustrating. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/09/04/drupal-has-no-api/">Drupal Has No API</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-09-04T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been using Drupal for a couple of years now, and know my way around it pretty well.
+</p>
+
+
+<p>
+One of my biggest frustrations though is that it doesn&#8217;t really have an API.
+</p>
+
+
+<p>
+Much of the functionality is only really available through the application, you can do things pretty easily by pointing and clicking, but try and automate part of this and you have to step through code, find form handlers, copy-paste parts of the functions and work out what parameters are required.
+</p>
+
+
+<p>
+The example I found most recently was creating a translated version of a page.
+</p>
+
+
+<p>
+My client is using a translation agency, we send them XML, they translate it and return the translated text in XML. 
+</p>
+
+
+<p>
+So I start with an English page, send off an XML version, and when I get the XML translation back I need to add a new node related to the original.
+</p>
+
+
+<p>
+But Drupal has no function &quot;translation_add()&quot; instead the functionality is embedded in &quot;translation_nodapi()&quot;.
+</p>
+
+
+<p>
+If Drupal had an API there would be a well thought out set of functions to add, delete, and update translations of a node.
+</p>
+
+
+<p>
+The name of Drupal&#8217;s documentation site http://api.drupal.org/ is misleading, this is just general documentation of Drupal functions, it isn&#8217;t an API. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -297,7 +456,7 @@ My solution which assumes you have .my.cnf set up to provide login locally is be
 
 <h1>make sure test mails never go to real users!</h1>
 
-<p>echo &ldquo;update users set mail=&lsquo;<a href="&#109;&#97;&#x69;&#108;&#116;&#111;&#58;&#109;&#x65;&#x40;&#x65;&#120;&#97;&#109;&#112;&#108;&#x65;&#46;&#99;&#x6f;&#109;">&#x6d;&#101;&#64;&#101;&#120;&#97;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#x63;&#111;&#x6d;</a>&rsquo;&rdquo; | mysql devdb
+<p>echo &ldquo;update users set mail=&lsquo;<a href="&#109;&#x61;&#105;&#108;&#x74;&#x6f;&#x3a;&#x6d;&#101;&#64;&#101;&#x78;&#x61;&#109;&#x70;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#109;&#101;&#x40;&#101;&#x78;&#x61;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#x63;&#111;&#x6d;</a>&rsquo;&rdquo; | mysql devdb
 </code></p>
 </div>
   
@@ -586,207 +745,6 @@ This old bug seems to be fixed
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/17/web-fonts-with-font-face/">Web Fonts With @font-face</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-07-17T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-When the web first started everything was in Times New Roman, black on grey with few images.
-</p>
-
-
-<p>
-Things have moved on a long way since then, but there are still very few fonts. I&#8217;ve worked on many sites that have tried to overcome this by various routes.
-</p>
-
-
-<ul>
-    <li>Creating an image of headline text in the desired font<br />
-    This can look good but offers poor accessibility and it&#8217;s hard to update</li>
-    <li><a href="http://www.mikeindustries.com/blog/sifr/">SiFR</a> - uses JavaScript and flash to add fonts<br />
-    It can work well - but performs badly if overused, and can cause problems with z-ordering on some systems</li>
-    <li><a href="http://www.w3.org/TR/css3-fonts/#the-font-face-rule">@font-face</a> Part of the CSS standard which allows you to provide font files for download.</li>
-</ul>
-
-
-<p>
-@font-face has a great deal of potential as the end users browser automatically downloads the font definition and renders whatever font you specify without any plug-ins or even JavaScript required.
-</p>
-
-
-<p>
-However, this is actually quite old technology - I tried to use it back in the days of Internet Explorer 5 and Netscape Navigator.
-</p>
-
-
-<p>
-Then as now there were competing standards for downloadable font files.
-</p>
-
-
-<p>
-At the time both browsers only offered a web specific font format which didn&#8217;t look good enough to use.
-</p>
-
-
-<p>
-However; Firefox 3.5 and Safari 4 now support regular TTF and OTF fonts and these look great.
-</p>
-
-
-<p>
-There is still the problem that most good fonts are supplied under license - which prevents you providing them for download. 
-</p>
-
-
-<p>
-But with two major browsers providing a good implementation for standard font file we can hope that it won&#8217;t be too much longer before the problem is solved. 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/07/drupal-and-tinymce/">Drupal and TinyMCE</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-07-07T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve been working on a Drupal project to build a CMS for the production and management of very specific content.
-</p>
-
-
-<p>
-The emphasis is all on the  backend system, with tight field size limits (character count including markup) and restricted input (specified tags only).
-</p>
-
-
-<p>
-Becuase of this I needed to use TinyMCE fully - restricting the  valid_elements set, and adding event handlers for paste, and keyup.
-</p>
-
-
-<p>
-I also had to do this in a moderately deeply nested form.
-</p>
-
-
-<p>
-While I tried quite hard to do this within the Drupal WYSIWYG module  http://drupal.org/node/488034 it became clear that the project developer and I had incompatible goals. He wanted all features to be available only where they work on all Rich Text Editors, I wanted to use a feature only available in one.
-</p>
-
-
-<p>
-Initially I tried just patching the module, but in the end I just couldn&#8217;t get it working with multiple tinyMCE configurations in one form. This is supposed to be possible but the documentation is limited  http://drupal.org/node/358316 http://api.drupal.org/api/function/filter_form/6 http://groups.drupal.org/node/8911
-</p>
-
-
-<p>
-Part of the problem is that WYSIWYG works by detecting input filters which requires you to use them (I didn&#8217;t want to) and using filters means you get &#8216;help text&#8217; - using multiple filters means users get to choose which one. 
-</p>
-
-
-<p>
-You can theme some of this cruft away - but then where&#8217;s the benefit   of the easy to use GUI?  
-</p>
-
-
-<p>
-So I fell back to using TinyMCE directly, found out there is a nice jquery plugin http://tinymce.moxiecode.com/examples/example_23.php
-</p>
-
-
-<p>
-And got my form up and running exactly as I wanted it in short order.
-</p>
-
-
-<p>
-All I had to do was assign a class to the fields I wanted to be rich text editable,  create my settings, and adapt an existing character counter.
-</p>
-
-
-<p>
-The settings look like
-</p>
-
-
-<p><p>
-<code></p>
-
-<p>var single = {
-    valid_elements                    : &lsquo;b,i&rsquo;,
-    theme_advanced_buttons1           : &ldquo;bold,italic,cleanup&rdquo;,
-    theme_advanced_buttons2           : &ldquo;&rdquo;,
-    theme_advanced_buttons3           : &ldquo;&rdquo;,
-    theme_advanced_statusbar_location : &ldquo;bottom&rdquo;,
-    theme_advanced_toolbar_location   : &ldquo;top&rdquo;,
-    theme                             : &ldquo;advanced&rdquo;,
-    theme_advanced_resizing           : true,
-    plugins                           : &ldquo;maxlength,safari&rdquo;,
-};
-</code>
-<p>
- TinyMCE is enabled by the lines
-</p>
-<code>
- $().ready(function() {
-        $(&lsquo;textarea.mceSingle&rsquo;).tinymce(single);
-        $(&lsquo;textarea.mceEditor&rsquo;).tinymce(welcome);
-});
-</code><p>
-No filters, no cruft in the user interface, and it was quicker to develop!
-</p>
-<p>
-&nbsp;
-</p>
-<p>
-<br />
-</p></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/13">&larr; Older</a>
@@ -804,6 +762,14 @@ No filters, no cruft in the user interface, and it was quicker to develop!
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
@@ -813,14 +779,6 @@ No filters, no cruft in the user interface, and it was quicker to develop!
     
       <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/grafana/">Grafana</a>
       </li>
     
   </ul>

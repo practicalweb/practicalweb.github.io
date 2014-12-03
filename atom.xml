@@ -4,7 +4,7 @@
   <title><![CDATA[PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2014-11-28T23:21:22+00:00</updated>
+  <updated>2014-12-03T12:12:50+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,185 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Non-root Packet Capture in Wireshark]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/12/03/non-root-packet-capture-in-wireshark/"/>
+    <updated>2014-12-03T12:04:46+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/12/03/non-root-packet-capture-in-wireshark</id>
+    <content type="html"><![CDATA[<p>There are lots of blogs about this already - but I didn&rsquo;t quite understand at first so here&rsquo;s my take &hellip;</p>
+
+<p>Wireshark is a large and somewhat vulnerable program - best not to run it as root (especially as you may be looking a suspicious traffic)</p>
+
+<p>It uses dumpcap for the actual packet capture which is the only bit that needs elevated privileges.</p>
+
+<p>Since linux kernel 2.2 we don&rsquo;t even need root for this bit - we can set file permissions to allow non root user to capture packets.</p>
+
+<p>If you don&rsquo;t want to allow just any user on your system to do this first make sure only a chosen group can even run dumpcap</p>
+
+<p>I decided to use the sudo group - but you could make a new one.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo chgrp sudo /usr/bin/dumpcap
+</span><span class='line'>sudo chmod <span class="m">750</span> /usr/bin/dumpcap
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now only members of the sudo group (who are already the users I trust) can run this program.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo setcap cap_net_raw,cap_net_admin<span class="o">=</span>eip /usr/bin/dumpcap
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This allows the program to gain elevated network rights without being run by root.</p>
+
+<p>Note that any chmod action seems to undo the setcap so perform the changes in this order.</p>
+
+<p>Now I can run wireshark as my regular user and have full functionality.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Specifying MTU for a VPN Connection in NetworkManager]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/"/>
+    <updated>2014-12-03T11:34:35+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager</id>
+    <content type="html"><![CDATA[<p>I need to use a VPN which was suffering packet fragmentation due to the overhead involved (actually I use a VPN to connect to a network which then has another VPN connection to a third network).</p>
+
+<p>To determine the largest MTU size which didn&rsquo;t lead to fragmentation I just ran variations on</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ping -M <span class="k">do</span> -s <span class="m">1327</span> server.example.com
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>-M do</code> prohibits fragmentation so the ping will fail if the packet size is too large</p>
+
+<p>I tried larger/ smaller values till I found the largest number that worked.</p>
+
+<p>Network Manager didn&rsquo;t give me a GUI to set MTU on the VPN connection (it does for ethernet)</p>
+
+<p>So I needed a script in /etc/network/if-up.d/</p>
+
+<p>I called mine like myvpn-mtu (owned by root and executable)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#! /bin/sh</span>
+</span><span class='line'><span class="c"># set low MTU for my VPN otherwise I get packet fragmentation</span>
+</span><span class='line'><span class="nb">set</span> -e
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CONNECTION_ID&quot;</span> <span class="o">=</span> myvpn <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="s2">&quot;$MODE&quot;</span> <span class="o">=</span> start <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span><span class='line'>  /sbin/ifconfig <span class="nv">$IFACE</span> mtu 1327
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nb">exit </span>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Substitute &ldquo;myvpn&rdquo; here for your connection name</p>
+
+<p>The script env has the following variables (I&rsquo;ve anonymised some variables)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">ADDRFAM</span><span class="o">=</span>NetworkManager
+</span><span class='line'><span class="nv">CONNECTION_ID</span><span class="o">=</span>xxxxxxxxxxxxxx
+</span><span class='line'><span class="nv">CONNECTION_UUID</span><span class="o">=</span>xxxxxxx-xxxxx-xxxxx-xxxx-xxxxx
+</span><span class='line'><span class="nv">DEVICE_IFACE</span><span class="o">=</span>wlan0
+</span><span class='line'><span class="nv">DEVICE_IP_IFACE</span><span class="o">=</span>wlan0
+</span><span class='line'><span class="nv">DHCP4_BROADCAST_ADDRESS</span><span class="o">=</span>192.168.0.255
+</span><span class='line'><span class="nv">DHCP4_DHCP_LEASE_TIME</span><span class="o">=</span>86400
+</span><span class='line'><span class="nv">DHCP4_DHCP_MESSAGE_TYPE</span><span class="o">=</span>5
+</span><span class='line'><span class="nv">DHCP4_DHCP_REBINDING_TIME</span><span class="o">=</span>75600
+</span><span class='line'><span class="nv">DHCP4_DHCP_RENEWAL_TIME</span><span class="o">=</span>43200
+</span><span class='line'><span class="nv">DHCP4_DHCP_SERVER_IDENTIFIER</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">DHCP4_DOMAIN_NAME</span><span class="o">=</span>xxx
+</span><span class='line'><span class="nv">DHCP4_DOMAIN_NAME_SERVERS</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">DHCP4_EXPIRY</span><span class="o">=</span>1417685250
+</span><span class='line'><span class="nv">DHCP4_HOST_NAME</span><span class="o">=</span>xxx
+</span><span class='line'><span class="nv">DHCP4_IP_ADDRESS</span><span class="o">=</span>192.168.0.209
+</span><span class='line'><span class="nv">DHCP4_NETWORK_NUMBER</span><span class="o">=</span>192.168.0.0
+</span><span class='line'><span class="nv">DHCP4_ROUTERS</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">DHCP4_SUBNET_MASK</span><span class="o">=</span>255.255.255.0
+</span><span class='line'><span class="nv">IFACE</span><span class="o">=</span>tun0
+</span><span class='line'><span class="nv">IP4_ADDRESS_0</span><span class="o">=</span>192.168.0.209/24 192.168.0.1
+</span><span class='line'><span class="nv">IP4_DOMAINS</span><span class="o">=</span>xxx
+</span><span class='line'><span class="nv">IP4_NAMESERVERS</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">IP4_NUM_ADDRESSES</span><span class="o">=</span>1
+</span><span class='line'><span class="nv">IP4_NUM_ROUTES</span><span class="o">=</span>0
+</span><span class='line'><span class="nv">LOGICAL</span><span class="o">=</span>tun0
+</span><span class='line'><span class="nv">METHOD</span><span class="o">=</span>NetworkManager
+</span><span class='line'><span class="nv">MODE</span><span class="o">=</span>start
+</span><span class='line'><span class="nv">PHASE</span><span class="o">=</span>post-up
+</span><span class='line'><span class="nv">PWD</span><span class="o">=</span>/
+</span><span class='line'><span class="nv">VERBOSITY</span><span class="o">=</span>0
+</span><span class='line'><span class="nv">VPN_IP4_ADDRESS_0</span><span class="o">=</span>192.168.1.48/24 x.x.x.x
+</span><span class='line'><span class="nv">VPN_IP4_NAMESERVERS</span><span class="o">=</span>x.x.x.x
+</span><span class='line'><span class="nv">VPN_IP4_NUM_ADDRESSES</span><span class="o">=</span>1
+</span><span class='line'><span class="nv">VPN_IP4_NUM_ROUTES</span><span class="o">=</span>28
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_0</span><span class="o">=</span>192.168.1.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_1</span><span class="o">=</span>192.168.2.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_2</span><span class="o">=</span>192.168.3.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_3</span><span class="o">=</span>192.168.4.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP_IFACE</span><span class="o">=</span>tun0
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Import Data to Graphite From Munin]]></title>
@@ -1205,98 +1384,6 @@ sqlite3 ~/.Skype/${username}/main.db \
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Blocking Git Commits From Future Merges]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2013/08/15/blocking-git-commits-from-future-merges/"/>
-    <updated>2013-08-15T00:00:00+01:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2013/08/15/blocking-git-commits-from-future-merges</id>
-    <content type="html"><![CDATA[<p>I used to use subversion and <a href="http://www.orcaware.com/svn/wiki/Svnmerge.py">svnmerge</a> a lot, and there&#8217;s just one thing I miss about it. Now svnmerge is a tool to bolt on merge tracking to svn, and gits merge tracking is vastly better in many ways. But the one thing that svnmerge allowed me to do that was cool and doesn&#8217;t have a real equivalent in git is to block commits</p>
-
-
-
-
-<p>I use release branches as well as feature branches, so for each release we support we have a barcnh, new features are developed in feature branches off this - and merged back to it when complete. The branch for release x gets merged forwards to release x+1 periodically - to ensure that any features or bugfixes make it to the latest release.</p>
-
-
-
-
-<p>Sometimes we make a commit to an older release that we don&#8217;t want to merge forwards to newer releases - typically this is a quick and dirty bugfix/workaround that is superseded by a proper fix in the next release.</p>
-
-
-
-
-<p>Svnmerge allowed you to &quot;block&quot; these commits so that they did not get merged forwards, with git you could cherry-pick around these commits - but you&#8217;d loose the ability to do regular merges.</p>
-
-
-
-
-<p><p>What you can do it git is to merge the commit - but keep the files unchanged, this looks a bit weird but works OK.<p></p>
-
-<p><code>git cherry-pick -e &ndash;strategy=ours $hash</code></p>
-
-<p><p>The strategy=ours bit means keep the code as it was in this branch. -e lets you edit the commit message to indicate it isn&rsquo;t a normal merge</p></p>
-
-<p><p>Now sometimes this doesn&rsquo;t seem to work, git complains that the commit is empty, I think this is when there is a conflict - in this case the only way I have worked around it is to do a regular cherry-pick and resolve the conflict manually - effectively undoing the commit. Then <code>commit &ndash;allow-empty</code></p>
-
-<p></p></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Github Jenkins Hook - Multiple Endpoints and API]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2013/08/07/github-jenkins-hook-multiple-endpoints-and-api/"/>
-    <updated>2013-08-07T00:00:00+01:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2013/08/07/github-jenkins-hook-multiple-endpoints-and-api</id>
-    <content type="html"><![CDATA[<p>I wanted to trigger multiple jenkins servers from a github hook.</p>
-
-<p>I found <a href="https://github.com/github/github-services/pull/604M/">this pull request</a> which led me to look at the API</p>
-
-<p>useful docs</p>
-
-<ul>
-<li><a href="http://developer.github.com/v3/repos/hooks">http://developer.github.com/v3/repos/hooks</a></li>
-<li><a href="https://gist.github.com/caspyin/2288960">https://gist.github.com/caspyin/2288960</a></li>
-</ul>
-
-
-<p>My code</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>  curl --user <span class="s2">&quot;me:mypassword&quot;</span> --request POST --data @jenkins.json  https://api.github.com/repos/myorg/myproject/hooks
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>here jenkins.json is like</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'>    <span class="p">{</span>
-</span><span class='line'>      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jenkins&quot;</span><span class="p">,</span>
-</span><span class='line'>      <span class="nt">&quot;active&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>      <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span class='line'>        <span class="s2">&quot;push&quot;</span>
-</span><span class='line'>      <span class="p">],</span>
-</span><span class='line'>      <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nt">&quot;jenkins_hook_url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://jenkins.mydomain/github-webhook/&quot;</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>What I found was that this just replaces my jenkins hook - which isn&rsquo;t what I wanted.</p>
-
-<p>But the more I looked at the service hooks the more it looked like the jenkins one just passes a standard payload to a url, which is the same as the generic webhook, so I tried adding the jenkins webhook URL as a standard webhook ( you are allowed multiples of these) and that seems to work.</p>
 ]]></content>
   </entry>
   

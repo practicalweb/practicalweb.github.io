@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I&rsquo;ve been running this blog (or some version of it) for almost 10 years now. I write to help clarify my own thoughts, or to note down technical &hellip;">
+  <meta name="description" content="Creating your own base box for vagrant is a great thing to do, you get to undestand exactly what is on that box and to choose exactly what base OS &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,148 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-28T16:08:14+00:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:08 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Creating your own base box for vagrant is a great thing to do, you get to undestand exactly what is on that box and to choose exactly what base OS you use.</p>
+
+<p>After all one of the big draws of vagrant is keeping your dev environment close to what production looks like - and for that you need to know what is in the base box.</p>
+
+<p>When I first started using vagrant I wrote a post <a href="/blog/2012/10/16/how-to-build-a-centos-6-base-box-for-vagrant/">How to build a Centos 6 base Box for vagrant</a> whcih details the manual steps needed. At the time I was busy learning puppet, vagrant and related tools - veewee was just one tool too many and a manual build seemed the best way to get my head around what a base box was.</p>
+
+<p>While the base box isn&rsquo;t something I have needed to repeat much, it is beneficial to update the base image from time to time and here veewee is brilliant. It also makes shareing the reponnsbibility for the base box within a team easy.</p>
+
+<p>Here&rsquo;s what I did</p>
+
+<ul>
+<li>fork <a href="https://github.com/jedi4ever/veewee">https://github.com/jedi4ever/veewee</a> (in my case to a private repo)</li>
+<li>check that out</li>
+<li>install veewee according to its install notes</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox tenplates <span class="p">|</span> grep -i centos
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This told me that the template I wanted was CentOS-6.5-x86_64-minimal</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox define centos65 CentOS-6.5-x86_64-minimal
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now I made some edits to customise the base box how I wanted</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vim definitions/centos65/definition.rb <span class="c"># comment out the chef line</span>
+</span><span class='line'>vim definitions/centos65/cleanup.sh <span class="c"># remove build packages like gcc</span>
+</span><span class='line'>vim definitions/centos65/vagrant.sh <span class="c"># remove insecure vagrant key and add your own public key</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Build</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox build centos65
+</span><span class='line'>veewee vbox <span class="nb">export </span>centos65
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>add to my local vagrant so I can test</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vagrant box add centos65 ./centos65.box
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now I can copy the base box to a team-accessible server</p>
+
+<p>And push my custom definition to my veewee fork so anyone from the team can build an updated box.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vim .gitignore <span class="c"># remove definitions/*</span>
+</span><span class='line'>git add .gitignore
+</span><span class='line'>git add definitions/
+</span><span class='line'>git commit -m <span class="s2">&quot;added my definition&quot;</span>
+</span><span class='line'>git push
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-22T16:31:31+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>4:31 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In this case to turn on comments in all posts for this blog</p>
+
+<p>All files that don&rsquo;t have comments at the start of a line get &ldquo;comments: true&rdquo; inserted on the 5th line</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">for</span> f in * <span class="p">;</span> <span class="k">do</span> grep -q <span class="s2">&quot;^comments&quot;</span> <span class="nv">$f</span> <span class="o">||</span> sed -i <span class="s1">&#39;5 i\</span>
+</span><span class='line'><span class="s1">comments: true&#39;</span> <span class="nv">$f</span> <span class="p">;</span> <span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Maybe Octopress has a way to globally enable comments - but I didn&rsquo;t find it and this was quick</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -698,138 +840,6 @@ sqlite3 ~/.Skype/${username}/main.db \
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/15/blocking-git-commits-from-future-merges/">Blocking Git Commits From Future Merges</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-08-15T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I used to use subversion and <a href="http://www.orcaware.com/svn/wiki/Svnmerge.py">svnmerge</a> a lot, and there&#8217;s just one thing I miss about it. Now svnmerge is a tool to bolt on merge tracking to svn, and gits merge tracking is vastly better in many ways. But the one thing that svnmerge allowed me to do that was cool and doesn&#8217;t have a real equivalent in git is to block commits</p>
-
-
-
-
-<p>I use release branches as well as feature branches, so for each release we support we have a barcnh, new features are developed in feature branches off this - and merged back to it when complete. The branch for release x gets merged forwards to release x+1 periodically - to ensure that any features or bugfixes make it to the latest release.</p>
-
-
-
-
-<p>Sometimes we make a commit to an older release that we don&#8217;t want to merge forwards to newer releases - typically this is a quick and dirty bugfix/workaround that is superseded by a proper fix in the next release.</p>
-
-
-
-
-<p>Svnmerge allowed you to &quot;block&quot; these commits so that they did not get merged forwards, with git you could cherry-pick around these commits - but you&#8217;d loose the ability to do regular merges.</p>
-
-
-
-
-<p><p>What you can do it git is to merge the commit - but keep the files unchanged, this looks a bit weird but works OK.<p></p>
-
-<p><code>git cherry-pick -e &ndash;strategy=ours $hash</code></p>
-
-<p><p>The strategy=ours bit means keep the code as it was in this branch. -e lets you edit the commit message to indicate it isn&rsquo;t a normal merge</p></p>
-
-<p><p>Now sometimes this doesn&rsquo;t seem to work, git complains that the commit is empty, I think this is when there is a conflict - in this case the only way I have worked around it is to do a regular cherry-pick and resolve the conflict manually - effectively undoing the commit. Then <code>commit &ndash;allow-empty</code></p>
-
-<p></p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/07/github-jenkins-hook-multiple-endpoints-and-api/">Github Jenkins Hook - Multiple Endpoints and API</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-08-07T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I wanted to trigger multiple jenkins servers from a github hook.</p>
-
-<p>I found <a href="https://github.com/github/github-services/pull/604M/">this pull request</a> which led me to look at the API</p>
-
-<p>useful docs</p>
-
-<ul>
-<li><a href="http://developer.github.com/v3/repos/hooks">http://developer.github.com/v3/repos/hooks</a></li>
-<li><a href="https://gist.github.com/caspyin/2288960">https://gist.github.com/caspyin/2288960</a></li>
-</ul>
-
-
-<p>My code</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>  curl --user <span class="s2">&quot;me:mypassword&quot;</span> --request POST --data @jenkins.json  https://api.github.com/repos/myorg/myproject/hooks
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>here jenkins.json is like</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'>    <span class="p">{</span>
-</span><span class='line'>      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jenkins&quot;</span><span class="p">,</span>
-</span><span class='line'>      <span class="nt">&quot;active&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>      <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span class='line'>        <span class="s2">&quot;push&quot;</span>
-</span><span class='line'>      <span class="p">],</span>
-</span><span class='line'>      <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nt">&quot;jenkins_hook_url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://jenkins.mydomain/github-webhook/&quot;</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>What I found was that this just replaces my jenkins hook - which isn&rsquo;t what I wanted.</p>
-
-<p>But the more I looked at the service hooks the more it looked like the jenkins one just passes a standard payload to a url, which is the same as the generic webhook, so I tried adding the jenkins webhook URL as a standard webhook ( you are allowed multiples of these) and that seems to work.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/3">&larr; Older</a>
@@ -847,6 +857,14 @@ sqlite3 ~/.Skype/${username}/main.db \
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
@@ -856,14 +874,6 @@ sqlite3 ~/.Skype/${username}/main.db \
     
       <li class="post">
         <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/grafana/">Grafana</a>
       </li>
     
   </ul>
