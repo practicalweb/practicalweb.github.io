@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="It&rsquo;s easy to save an Excel file as CSV and read it in PHP with the fgetcsv function but this may not work so well if the file contains non- &hellip;">
+  <meta name="description" content="This has just taken me a suprisingly long time to work out ... I needed to output a file with the follwing as a marker in various places. ♦ U+2666 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,227 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/23/how-to-enter-a-multibyte-unicode-string-in-php/">How to Enter a Multibyte Unicode String in PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-05-23T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+This has just taken me a suprisingly long time to work out &#8230;
+</p>
+
+
+<p>
+I needed to output a file with the follwing as a marker in various places.
+</p>
+
+
+<blockquote>
+    ♦ U+2666 BLACK DIAMOND SUIT<br />
+    <br />
+    General Character Properties<br />
+    <br />
+    Unicode category: Symbol, Other<br />
+    <br />
+    Various Useful Representations<br />
+    <br />
+    UTF-8: 0xE2 0x99 0xA6<br />
+    UTF-16: 0x2666<br />
+    <br />
+    C octal escaped UTF-8: \342\231\246<br />
+    XML decimal entity: &amp;#9830;
+</blockquote>
+
+
+<p>
+OK so I know the hex code I think I&#8217;ll just use <a href="http://uk.php.net/chr">chr()</a> but no&#8230; this only works for ASCII&#8230;
+</p>
+
+
+
+
+<p>&#8230;and the mbstring functions are great for working with multi-byte strings but don&#8217;t help enter them</p>
+
+
+
+
+<p>
+It turns out that you can either copy a literal ♦ into your source code - or use the <a href="http://uk.php.net/pack">pack()</a> function 
+</p>
+
+
+<p>&lt;?php
+header(&lsquo;Content-Type: text/plain;charset=utf-8&rsquo;);
+echo &ldquo;♦\n&rdquo;;</p>
+
+<p>echo pack(&ldquo;ccc&rdquo;, 0xE2, 0x99, 0xA6) .&ldquo;\n&rdquo;;</p>
+
+<p>?></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/18/translating-drupal-websites/">Translating Drupal Websites</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-05-18T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve worked on a few internationalised sites in the past and it always raises challenges, Drupal makes some things easy - this post provides some simple tips for planning your translation process.
+</p>
+
+
+<p>
+This advice is aimed at sizeable sites with formal release processes.
+</p>
+
+
+
+
+<!--break-->
+
+
+<h2>General tips for any website translation project</h2>
+
+
+<dl>
+<dt>Plan</dt>
+<dd>
+<p>
+This is the key for any translation project, talk to all the people involved, make sure you know all the stages, and that everyone is comfortable that they can play their part.
+</p>
+</dd>
+<dt>Check your design</dt>
+<dd>
+<p>
+A common problem with CMS driven websites is that the design if often produced by a designer more familiar with print layout (fixed amounts of content).
+</p>
+<p>
+Translation makes this even more challenging, you have to really check that your design can cope with varying amount of content: compared to English: German words are long, Norwegian words very long - and Korean characters may need a larger font to be legible.
+</p>
+</dd>
+<dt>Introduce standards early</dt>
+<dd>
+<p>
+Make sure the coding team are all doing things the same way - whatever the specifics for your project!
+</p>
+</dd> 
+<dt>Translate late</dt>
+<dd>
+<p>
+Wait as long as possible before starting on translation to ensure all phrases are finalised. It&#8217;s amazing how late in a project you can find whole extra pages that need writing - error pages especially; but all sorts of pieces of text get revised once you start testing.
+</p>
+<p>
+Ideally I&#8217;d translate after testing is complete - and then test the translations separately.
+</p>
+</dd>
+</dl>
+
+
+<h2>Drupal Specific translation tips</h2>
+
+
+<p></p>
+
+<p>
+Drupal provides the &#8216;t&#8217; function ( http://api.drupal.org/api/function/t/5 ) which does a lot of work for you.
+</p>
+
+
+<p>
+Generally, in Drupal you write code using literal strings that you want to appear as output but &#8216;wrap&#8217; them in the t function. This makes for readable code which hooks into the &#8216;translate strings&#8217; interface that Drupal provides.
+</p>
+
+
+<p>
+When using the t function:
+</p>
+
+
+<dl>
+<dt>
+<br />
+</dt><dt>
+<p>
+Don&#8217;t include leading or trailing whitespace in your strings - it&#8217;s really easy to miss and this mess up your layout (or if working with exported translation files to miss whitespace differences in the &#8216;original&#8217; language and find that your translations don&#8217;t appear).
+</p>
+</dt>
+<dt>Consider using placeholder text</dt>
+<dd>
+<p>
+(eg &#8216;ENTER_NAME&#8217; instead of &#8216;Enter name&#8217;) as your standard language.<br />
+This may make for a slightly harder early proofing process but would make it easy to see which strings are translated, avoid problems with case sensitivity.
+</p>
+</dd>
+<dt>Don&#8217;t display the default text in any language</dt>
+<dd>
+<p>
+If you&#8217;re running more than one language anyway it pays to &#8216;translate&#8217; English as well: this way you can easily override Drupal defaults.
+</p>
+</dd><dt>Don&#8217;t correct the spelling in your code</dt>
+<dd>Following on from the point above - just update your translations which are in the database.<br />
+This avoids updating your (thoroughly tested) code just to correct a typo.
+<p>
+&nbsp;
+</p>
+</dd>
+<dt>You can only translate a phase once.</dt>
+<dd>
+<p>
+You can&#8217;t have an English word translated one way in one place and another way in another place - but if you use placeholder text you could use ENTER and USER_LOGIN_PAGE_ENTER
+- translate both to &#8216;Enter&#8217; for the English locale and you&#8217;re still free to differentiate in other languages.
+</p>
+</dd>
+</dl>
+
+
+<p>
+Finally a quick note about the localiser module (http://drupal.org/project/localizer )
+- this creates new nodes to hold translations - don&#8217;t forget to allow for this when planning your database schema. If your database constraints prevent duplication of some content you may end up with a broken schema.
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -648,124 +869,6 @@ This is probably a more specialist solution - but I&#8217;ve recently been using
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/02/14/firefox-3-firebug-eclipse/">Firefox 3 + Firebug + Eclipse</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-02-14T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class="post-entry">
-<p>
-I’ve just upgraded to firefox 3 beta and it looks pretty cool
-</p>
-<p>
-I got my plugins working by following these steps
-</p>
-<ol>
-    <li>Open about:config in the address bar.</li>
-    <li>Right click on the list and create a boolean: extensions.checkCompatibility</li>
-    <li>Set its value to false.</li>
-    <li>Restart browser.</li>
-</ol>
-<p>
-Firebug works in FF3 even withgout this step if you get the latest beta from here<br />
-<a href="http://fireclipse.xucia.com/">fireclipse.xucia.com</a>
-</p>
-<p>
-The really exiting thing is the eclipse plugin<br />
-<a href="http://www.uncertainty.org.uk/wordpress/wp-content/uploads/2008/02/fireclipsepositionseditor.jpg" title="Eclipse Console With Editor Positioned by Fireclipse"><img src="http://www.uncertainty.org.uk/wordpress/wp-content/uploads/2008/02/fireclipsepositionseditor.thumbnail.jpg" alt="Eclipse Console With Editor Positioned by Fireclipse" /></a>
-</p>
-<p>
-<a href="http://fireclipse.svn.sourceforge.net/viewvc/*checkout*/fireclipse/trunk/FireclipseDocumentation/screenshots.htm">More screenshots</a>
-</p>
-</div>
-
-
-<!-- END POST-ENTRY  -->
-
-
-<!-- <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
-xmlns:dc="http://purl.org/dc/elements/1.1/"
-xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
-<rdf:Description rdf:about="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/"
-dc:identifier="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/"
-dc:title="firefox 3 + firebug + eclipse"
-trackback:ping="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/trackback/" />
-</rdf:RDF> &#8211;>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/02/06/arggghhh-silent-failures/">ARGGGHHH - Silent Failures!</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-02-06T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class="post-entry">
-<p>
-I’ve just spent ages trying to find out why I couldn’t add some default views to drupal
-</p>
-<p>
-I’d set up my views, exported them added them to a module in a hook_views_default_views() function…
-</p>
-<p>
-and nothing happened.
-</p>
-<p>
-First I though this was caching - but much cache clearing and debugging later…
-</p>
-<p>
-I realised that if the view requires categories that don’t exist -
-it just gets silently dropped - no error - no warning it just doesn’t
-work!!!
-</p>
-<p>
-This seems to be a general Drupal thing - all too often failures are silent - and very hard to track down.
-</p>
-</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/21">&larr; Older</a>
@@ -783,6 +886,14 @@ This seems to be a general Drupal thing - all too often failures are silent - an
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
@@ -792,14 +903,6 @@ This seems to be a general Drupal thing - all too often failures are silent - an
     
       <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
   </ul>
@@ -834,7 +937,7 @@ This seems to be a general Drupal thing - all too often failures are silent - an
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 

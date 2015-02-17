@@ -9,8 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="$new_branch=$1 # passed as param current_branch=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
-current_branch=${current_branch##refs/heads/} &hellip;&#8221;>
+  <meta name="description" content="This worked for me today - saving it here so I can find it again http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/ cd &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,116 @@ current_branch=${current_branch##refs/heads/} &hellip;&#8221;>
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/11/eclipse-hangs/">Eclipse Hangs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-11T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This worked for me today - saving it here so I can find it again</p>
+
+
+
+
+<p><a href="http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/">http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/</a></p>
+
+
+
+
+<pre>
+cd .metadata/.plugins
+mv org.eclipse.core.resources org.eclipse.core.resources.bak
+Start eclipse. (It should show an error message or an empty workspace because no project is found.)
+Close all open editors tabs.
+Exit eclipse.
+rm -rf org.eclipse.core.resources (Delete the newly created directory.)
+mv org.eclipse.core.resources.bak/ org.eclipse.core.resources (Restore the original directory.)
+Start eclipse and start working. :-)
+</pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/12/reinstall-grub-after-windows-breaks-it/">Reinstall Grub After Windows Breaks It</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-12T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One of those things that happens from time to time on a dual boot system&#8230;</p>
+
+
+
+
+<p>Windows breaks grub, usually if I&#8217;ve reinstalled windows, this can lead to a unbootable system.</p>
+
+
+
+
+<p>Boot from a Ubuntu (or other distro) live disk or USB stick.</p>
+
+
+
+
+<p>Figure out which your disks and partitions are.</p>
+
+
+<p><code></p>
+
+<pre><code>sudo mount /dev/sdXY /mnt
+</code></pre>
+
+<h1>if there is a boot partition</h1>
+
+<pre><code>sudo mount /dev/sdUV /mnt/boot
+sudo grub-install --recheck --root-directory=/mnt /dev/sdZ 
+</code></pre>
+
+<p></code></p>
+
+<p>When you reboot grub should be back to normal.</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1055,256 +1164,6 @@ On your local dev machine</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/28/monitor-filesystem-for-deletions/">Monitor Filesystem for Deletions</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-09-28T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>On a project I&#8217;m working on at the moment we have a problem, files are going missing.</p>
-
-
-
-
-<p>We don&#8217;t know which part of the system could be trashing these files (user uploaded images in this case) and they are on a shared filesystem so there are plenty of places to point fingers.</p>
-
-
-
-
-<p>I&#8217;ve discovered a very handy toolset <a href="https://github.com/rvoicilas/inotify-tools/wiki">inotify-tools</a> Which hooks into the linix kernel and allows you to monitor actions like file deletion.</p>
-
-
-
-
-<p>I my case all I need to do right now is monitor the files on each sytem that has access - and I&#8217;m hoping to catch which one does the delete</p>
-
-
-<p><In my build script is now the code</p></p>
-
-<p><code></p>
-
-<h1>stop monitoring for deletes through the build</h1>
-
-<p>[ -f ~/inotifywait.pid ] &amp;&amp; kill $(cat ~/inotifywait.pid)</p>
-
-<p>git pull
-./build.sh</p>
-
-<h1>if the tool is installed - monitor file delets</h1>
-
-<p>which inotifywait &amp;&amp;
-{
- nohup inotifywait -mr &ndash;timefmt &lsquo;%d/%m/%y %H:%M&rsquo; &ndash;format &lsquo;%T %w %f %e&rsquo; -e delete /var/www/sites/default/files/ &amp;> ~/build-${JOB_NAME}-$(BUILD_NUMBER)-delete.log  &amp;
- echo $! > ~/inotifywait.pid
-}</p>
-
-<p></code></p>
-
-<p>This should create a log of any user files that get deleted between builds</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/28/jenkins-build-script-for-drupal-multistep-with-changelogs/">Jenkins Build Script for Drupal - Multistep With Changelogs</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-09-28T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><p>My build script has been getting more complex lately and I&rsquo;m quite pleased with it.<p></p>
-
-<p><p>We tend to have several versions of code on the go,
-version x is live, x+1 is in UAT, and x+2 is in development. With all these versions around it&rsquo;s important to keep track of changelogs, and to upgrade correctly x to x+1, and then x+1 to x+2 as we have found that going direct from x to x+2 can fail to uncover some bugs. Specifically this happens if a drupal update hook gets edited after it has been released to the client, but before it has run on live. Our builds always start from a copy of the live site.</p></p>
-
-<p><p>I have also posted a <a href="/blog/12/07/12/check-drupal-update-hook-changes">script to review these update hooks</a> but this two step upgrade fits more easily into a continuous integration setup.</p></p>
-
-<p><p>Each release has it&rsquo;s own branch, any hotfixes to branch x get merged forwards to x+1</p></p>
-
-<p><p>This code is in jenkins - and is run remotely using the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Publish+Over+SSH+Plugin">publish over ssh plugin</a></p></p>
-
-<p><p>The jenkins job has two parameters, the target branch and the intermediate branch (where the HEAD of the intermediate branch is the code in UAT or x+1, and head of the target branch is the latest dev code - x +2</p></p>
-
-<p><p>While this might sound complex, I find it easy to use in practice, partly because the complexity is there   anyway, even if you just code direct in master all the time, it&rsquo;s just that this way you can see it all, and see what is going on.</p></p>
-
-<p><code></p>
-
-<p>cd /var/www/</p>
-
-<h1>there should be any changes on the server - but stash them just in case</h1>
-
-<p>git stash</p>
-
-<h1>get the latest code from upstream - but don&rsquo;t change our version yet</h1>
-
-<p>git fetch</p>
-
-<h1>check what branch we are on - in case this build also changes the test server to a new release</h1>
-
-<p>current_branch=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
-current_branch=${current_branch##refs/heads/}</p>
-
-<h1>get the commit we are on and the one we will be on at the end</h1>
-
-<p>current_id=$(git rev-parse &ndash;short origin/develop)
-new_id=$(git rev-parse &ndash;short origin/branch)</p>
-
-<h1>email a nice log to myself (TODO - pull this back into jenkins)</h1>
-
-<p>git log &ndash;oneline &ndash;graph ${current_branch}..origin/$branch | mail -s &ldquo;updating $(hostname) from $current_branch $current_id to $branch $new_id&rdquo;   <a href="&#109;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#109;&#101;&#64;&#x65;&#x78;&#x61;&#x6d;&#x70;&#108;&#x65;&#x2e;&#x63;&#x6f;&#x6d;">&#x6d;&#x65;&#x40;&#x65;&#x78;&#97;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
-
-<h1>update the code to the latest on the dev branch</h1>
-
-<p>git checkout $branch
-git merge origin/branch</p>
-
-<h1>now build</h1>
-
-<p>./build.sh ${intermediate}</p>
-
-<p></code></p>
-
-<p><p>The build script itself is used on developer machines as well as on the test server.<p></p>
-
-<p><p>We use cronjobs to ensure we always have the latest backup from live available</p></p>
-
-<p><code></p>
-
-<h1>!/bin/bash -ex</h1>
-
-<p>export COLUMNS=80
-cd $(dirname $0)/www</p>
-
-<h1>drop and reload the database</h1>
-
-<p>drush -y sql-drop
-type -P zcat &amp;>/dev/null &amp;&amp; {
-  # if we have zcat leave db dump compressed
-  zcat ../database_backups/www-latest.sql.gz | drush sqlc
-} || {
-  # otherwise unzip
-  gunzip ../database_backups/www-latest.sql.gz
-  drush sqlc &lt; ../database_backups/www-latest.sql</p>
-
-<p>}</p>
-
-<h1>get rid of production watchdog messages - so we can see any new ones easily</h1>
-
-<p>drush watchdog-delete all -y</p>
-
-<h1>put site offline</h1>
-
-<p>drush -y vset maintenance_mode 1</p>
-
-<h1>delete user files and replace with fresh ones from live - checking user permissions</h1>
-
-<h1>NB I use umask and groups to ensure the files remain writable by apache and CLI</h1>
-
-<p>if [ -d ../files_from_live/www ]
-  then
-   rm -Rf sites/default/files</p>
-
-<p>   cp -R ../files_from_live/www/sites/default/files sites/default
-   # cater for debian, ubuntu or mac
-   groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
-   groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;
-   groups | grep <em>www > /dev/null &amp;&amp; find sites/default/files/ ! -group </em>www -exec chgrp _www {} \;
-fi</p>
-
-<p>   # put code version info online so we can easily check what is in the test site
-echo &ldquo;$(git describe)&rdquo; > CODE-VERSION.TXT
-echo &ldquo;$(git log &ndash;oneline -n 1 | sed &rsquo;s/ .*//&lsquo;)&rdquo; > CODE-HASH.TXT</p>
-
-<h1>if this script is passed a intermediate version, check that out - upgrade and then checkout back to where we were</h1>
-
-<p>if ! [ -z &ldquo;$1&rdquo; ]<br/>
-  then
-  branch_name=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
-  branch_name=${branch_name##refs/heads/}
-  git checkout $1
-  drush -y updb
-  #
-  git checkout $branch_name
-fi</p>
-
-<h1>take site fully offline</h1>
-
-<p>mv index.php bak-index.php
-drush -y updb</p>
-
-<h1>if the current user is a member of the www-data group we can make the files owned by this group</h1>
-
-<h1>as long as apache has umask 002 files should now be writeable by us and apache</h1>
-
-<p>groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
-groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;
-groups | grep <em>www > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp </em>www {} \;</p>
-
-<p>drush cc all</p>
-
-<h1>any tasks that have to be done at the end of each deploy go in this drush hook</h1>
-
-<p>drush helper-post-deploy</p>
-
-<h1>on dev sites rewrite any user emails so we can&rsquo;t spam  customers by mistake</h1>
-
-<p>drush helper-rewrite-emails</p>
-
-<h1>set the admin password to one the devs know</h1>
-
-<p>drush upwd admin &ndash;password=secret</p>
-
-<h1>put the site online again</h1>
-
-<p>drush -y vset maintenance_mode 0
-mv bak-index.php index.php
-drush cc all</p>
-
-<h1>final permission reset just in case the last commands changed anything</h1>
-
-<p>find sites/default/files/ -user $USER -type d -exec chmod 775 {} \;
-find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
-
-<p></code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/5">&larr; Older</a>
@@ -1322,6 +1181,14 @@ find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
@@ -1331,14 +1198,6 @@ find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
     
       <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
   </ul>
@@ -1373,7 +1232,7 @@ find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I had fun this weekend at the PHP London Test Fest, it was a great opportunity to learn something new and meet some great programmers. The tests our &hellip;">
+  <meta name="description" content="I've just been checking out the latest development version of Drupal 7 to see what this latest release will offer. The official notes for the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,179 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/06/06/first-look-at-drupal-7/">First Look at Drupal 7</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-06-06T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve just been checking out the latest development version of Drupal 7 to see what this latest release will offer.
+</p>
+
+
+<p>
+The official notes for the release are here:&nbsp; <a href="http://drupal.org/node/156281">http://drupal.org/node/156281</a> 
+</p>
+
+
+<p>
+It seems like the main user visible changes are improvements to the user interface for creating new pages.
+</p>
+
+
+<p>
+I&#8217;ve created a screencast of Drupal 7 in action&nbsp;</p>
+
+
+<p> <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://active.macromedia.com/flash5/cabs/swflash.cab#version=5,0,0,0" height="567" width="785">
+<param name="movie" value="/drupal-7-edit-page.swf">
+<param name="play" value="true">
+<param name="loop" value="false">
+<param name="quality" value="low">
+<embed src="http://www.practicalweb.co.uk/drupal-7-edit-page.swf" mce_src="drupal-7-edit-page.swf" quality="low" loop="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" height="567" width="785"></p>
+
+<p></object></p>
+
+<p>
+Drupal 7 doesn&#8217;t look radically different, better yes - but still basically the same thing. While I think this is in many ways a good thing I don&#8217;t quite see how this amount of change justifies the Drupal policy of no backward compatibility.
+</p>
+
+
+<p>
+From a development point of view each version of Drupal is a big step forward and certainly I would want to start any new project on the latest version. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/05/25/module-to-make-the-title-of-node-add-pages-editable-in-drupal/">Module to Make the Title of Node/add Pages Editable in Drupal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-05-25T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This module makes it possible to customise the title of the pages which add nodes to Drupal site.</p>
+
+<p>By default these pages have the title &ldquo;Create a $node_type&rdquo;</p>
+
+<p>This module was paid for by <a href="http://www.consultanddesign.com/">http://www.consultanddesign.com/</a> who have asked for it to be contributed back to the community. I&rsquo;m in the process of applying for a CVS account to do that properly, in the meantime here&rsquo;s the code.</p>
+
+<p>&lt;?php</p>
+
+<p>/<em>*
+ * Implementation of hook_form_alter
+ *
+ * This contains two cases.
+ *
+ * For the form that edits node types it adds a field to record an additional title.
+ *
+ * The form used to add a node uses this title if it is available.
+ *
+ * @param Array $form
+ * @param Array $form_state
+ * @param String $form_id
+ </em>/
+function node_add_title_form_alter(&amp;$form, &amp;$form_state, $form_id) {
+    global $user;</p>
+
+<pre><code>if ($form_id == 'node_type_form') {
+    $form['identity']['add_title'] = array(
+    '#title' =&gt; t('Title for Add Page'),
+    '#description' =&gt; t('If populated this field will be used instead of the "Create Blah" default title when adding a new node of this type'),
+    '#type' =&gt; 'textfield',
+    '#weight' =&gt; 0,
+    '#required' =&gt; false,
+    '#default_value' =&gt; variable_get("node_add_title_". $form['#node_type']-&gt;type, ''),
+    );
+//    print_r($form);
+    $form['#submit'][] = 'node_add_title_save';
+    //print_r($form);
+}
+ else if (preg_match('/([a-z0-9_]+)_node_form$/', $form_id, $matches)) {
+    $new_title = variable_get('node_add_title_'.  $matches[1], '');
+    if ($new_title) {
+        drupal_set_title(t($new_title));
+        // add a validate callback - just as a place to set title on validation
+        $form['#validate'][] = 'node_add_title_set_title';
+    }
+}
+</code></pre>
+
+<p>}</p>
+
+<p>/<em>*
+ * Form submit handler.
+ *
+ * This captures the value of the additional title and saves it as a Drupal variable.
+ *
+ * @param Array $form
+ * @param Array $form_state
+ </em>/
+function node_add_title_save(&amp;$form, &amp;$form_state) {
+    variable_set(&ldquo;node_add_title_&rdquo;. $form_state[&lsquo;values&rsquo;][&lsquo;type&rsquo;], $form_state[&lsquo;values&rsquo;][&lsquo;add_title&rsquo;]);</p>
+
+<p>}</p>
+
+<p>/<em>*
+ * Form validation handler.
+ *
+ * Override the default title on validation if we have one.
+ *
+ * @param array $form
+ * @param array $form_state
+ </em>/
+function node_add_title_set_title(&amp;$form, &amp;$form_state) {
+    $new_title = variable_get(&lsquo;node_add_title_&rsquo;.  $form[&lsquo;type&rsquo;][&lsquo;#value&rsquo;], &lsquo;&rsquo;);
+        if ($new_title) {
+            drupal_set_title(t($new_title));
+        }
+}</p>
+
+<p>?></p>
+
+<p>see also <a href="http://drupal.org/node/342750">http://drupal.org/node/342750</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -718,108 +891,6 @@ But I&#8217;ve persevered because CruiseControl comes with a wealth of plugins i
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/04/accessible-rich-internet-applications-wai-aria/">Accessible Rich Internet Applications (WAI-ARIA)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-04-04T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve just been reading some good stuff on developing accessible web applications that still benefit from rich interactivity.
-</p>
-
-
-<ul>
-    <li>http://www.w3.org/TR/wai-aria/</li>
-    <li>http://dev.opera.com/articles/view/introduction-to-wai-aria/</li>
-    <li>http://www.iheni.com/screen-reader-testing/</li>
-    <li>http://wiki.codetalks.org/wiki/index.php/Main_Page</li>
-</ul>
-
-
-<p>
-I&#8217;ve been keen on building accessible websites for a long time, and I find everyone benefits from this - well developed accessible sites are just easier for everyone to use.
-</p>
-
-
-<p>
-What&#8217;s great is that it can be as simple as just clearly defining the navigation areas of the site, or as complex as adding a semantic layer on top of a full application. 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/02/version-control-with-git/">Version Control With Git</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-04-02T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been intrigued by git for a while, but as a long time user of svn I&rsquo;m kinda cautious about moving on.</p>
-
-<p>So today I had some time and used it to read up on the pros and cons, as well as try things out a bit.</p>
-
-<p>It seems to me that git is clearly the better system; but that svn has the advantage of maturity.</p>
-
-<p>Git in itself seems to have grown up, it&rsquo;s just that the supporting infrastructure and developer experience is still limited.</p>
-
-<p>But - where I think git has a huge advantage is they way that you an import projects from cvs or svn - keep the history and crucially to commit your changes back.</p>
-
-<p>In the work I do with Drupal I&rsquo;ve found having my repository so separate from the central project to be frustrating.</p>
-
-<p>What I hadn&rsquo;t realised before today is that git gives me the benefits of having a distributed version control system - without the central project (in this case Drupal) needing to change anything.</p>
-
-<p>Linus has again created a wonderfully disruptive technology that puts more power in the hands of developers.</p>
-
-<p>I cloned my git repository from git://github.com/mikl/drupal.git</p>
-
-<p>It was so fast I thought it hadn&rsquo;t worked!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/15">&larr; Older</a>
@@ -837,6 +908,14 @@ What&#8217;s great is that it can be as simple as just clearly defining the navi
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
@@ -846,14 +925,6 @@ What&#8217;s great is that it can be as simple as just clearly defining the navi
     
       <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
   </ul>
@@ -888,7 +959,7 @@ What&#8217;s great is that it can be as simple as just clearly defining the navi
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 

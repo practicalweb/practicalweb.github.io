@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I've just spent too long being very confused as to why varnish wasn't working I'd forgotten that&nbsp; the Debian version doesn't read the default. &hellip;">
+  <meta name="description" content="I've been looking into git for a while, the core toolset has been mature for ages but it just didn't seem to have the wider support I wanted. Now I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/10/is-git-now-a-mature-toolset/">Is Git Now a Mature Toolset?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-06-10T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been looking into git for a while, the core toolset has been mature for ages but it just didn&#8217;t seem to have the wider support I wanted.
+</p>
+
+
+<p>
+Now I look again and the egit plugin for eclipse has improved massively with full eclipse integration http://wiki.eclipse.org/EGit/User_Guide
+</p>
+
+
+<p>
+There is a git plugin for trac http://trac-hacks.org/wiki/GitPlugin
+</p>
+
+
+<p>
+It looks like it&#8217;s time for me to dive into git properly :-) 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/19/returning-info-from-drupal-updates/">Returning Info From Drupal Updates</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-05-19T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Drupal update hooks can return info about queries run - and this is well documented.</p>
+
+<p>If you want to return other informative messages about updates - just use the same format as returned by <a href="http://api.drupal.org/api/function/update_sql/6">http://api.drupal.org/api/function/update_sql/6</a></p>
+
+<p>&lt;?php
+array(&lsquo;success&rsquo; => $result !== FALSE, &lsquo;query&rsquo; => check_plain($sql));</p>
+
+<p>?></p>
+
+<p>So you might have an update hook that looks like.</p>
+
+<p>&lt;?php
+/<em>*
+*  Drush picks up notes from here
+*  Will update myvar to new val because&hellip;
+</em>/
+function mymodule_update_6101(){
+   $items = array();
+   $myval = &ldquo;foo&rdquo;:
+   variable_set(&lsquo;myvar&rsquo;, $myval&#8217;);
+   $items[] = array(&lsquo;success&rsquo; => TRUE, &lsquo;query&rsquo; = &ldquo;updated variable myvar to $myval because&hellip;&rdquo;);
+   return $items;
+}</p>
+
+<p>?></p>
+
+<p>This way all changes can be logged to the update page.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -739,345 +841,6 @@ ERROR 1062 (23000): Duplicate entry &lsquo;0&rsquo; for key 1</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/03/15/easy-drupal-upgrades-using-subversion/">Easy Drupal Upgrades Using Subversion</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-03-15T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&#8217;ve long been puzzled by the <a href="http://drupal.org/upgrade/downloading-drupal-gui">official advice on upgrading Drupal</a></p>
-
-
-<p></p>
-
-<p>It basically says you should delete everything, unpack a new Drupal version, and replace your customisations.</p>
-
-
-
-
-<p>I like to use version control to manage my site.</p>
-
-
-
-
-<p>My current project uses the pressflow fork of Drupal, I downloaded the current and new versions of this, added them to my repository and then upgrading my working copy is as easy as</p>
-
-
-<p><code>
-svn merge &ndash;ignore-ancestry <a href="https://example.com/svn/vendor/pressflow-6.15.73">https://example.com/svn/vendor/pressflow-6.15.73</a> <a href="https://example.com/svn/vendor/pressflow-6.16.77">https://example.com/svn/vendor/pressflow-6.16.77</a> ./
-</code></p>
-
-<p>This merges in all the changes (including file/directory additions/deletes).</p>
-
-
-
-
-<p>Then I play around with the newly upgraded site, have a look at the code that changed, check all is OK and when I&#8217;m happy - commit the changes.</p>
-
-
-
-
-<p>If I later find a bug that might be related to an upgrade I&#8217;ve got the changes ready via the usual tools (annotate, log, diff).</p>
-
-
-
-
-<p>Even better - this retains any changes I&#8217;ve made to core without any need to keep a list of patches. If the core update contains a fix I&#8217;ve applied locally then I&#8217;ll get a conflict which I can resolve.</p>
-
-
-<p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/24/drupal-module-for-ckan-integration/">Drupal Module for CKAN Integration</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-02-24T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Here&rsquo;s a basic Drupal Module that pulls CKAN data into Drupal.</p>
-
-<p>It provides a simple search interface - when the user views a CKAN package for the first time a corresponding node is created.</p>
-
-<p>When this node is then viewed Drupal loads the package details - I&rsquo;m only displaying notes and title here as I&rsquo;ve run out of time tonight - but the rest of the data is there.</p>
-
-<p>You can then have user comments, voting, etc on these pages.</p>
-
-<p>This is fairly quickly put together code and it&rsquo;s incomplete - but it should be enough to get people started - if there&rsquo;s interest I&rsquo;ll carry on with this so please add comments.</p>
-
-<p>I&rsquo;ve created a github repository for it and I&rsquo;ll start using the issue tracker there.</p>
-
-<p><a href="http://github.com/practicalweb/drupal-ckan">http://github.com/practicalweb/drupal-ckan</a></p>
-
-<p>&lt;?php</p>
-
-<p>/<em>*
- * @file
- * A Module to Integrate CKAN and Drupal.
- *
- * This works by
- *
- *   1. providing a serach and listing interface to CKAN with links to this Drupal site
- *   2. using a wildcard menu handler to match these links in the first instance
- *   3. this loads the packages and creates matching nodes (storing the ckan name)
- *   4. the node has a url alias which overrides the wildcard match
- * <br/>
- *   Now we have Drupal nodes which can have user commments associated with them, fivestar votes etc&hellip;
- *
- * @author Sean Burlington www.practicalweb.co.uk
- * @copyright PracticalWeb Ltd
- * @license <a href="http://opensource.org/licenses/gpl-license.php">http://opensource.org/licenses/gpl-license.php</a> GNU Public License
- *
- </em>/</p>
-
-<p>function ckan_menu(){
-    $items = array();</p>
-
-<pre><code>// link to the search form page
-$items['ckan_search'] = array(
-'title'           =&gt; t('Search CKAN'),
-'page callback'   =&gt; 'drupal_get_form',
-'page arguments'  =&gt; array('ckan_search_form'),
-'access callback' =&gt; TRUE,
-);
-
-$items['ckan/search/%'] = array(
-'page callback'     =&gt; 'ckan_search_results_page',
-'page arguments'    =&gt; array(2),
-'access arguments'  =&gt; array('access content'),
-'type'              =&gt; MENU_CALLBACK,
-);
-
-$items['ckan/data/%'] = array(
-'page callback'   =&gt; 'ckan_new',
-'page arguments'  =&gt; array(2),
-'access arguments' =&gt; array('access content'),
-'type'            =&gt; MENU_CALLBACK,
-);
-
-
-return $items;
-</code></pre>
-
-<p>}</p>
-
-<p>/<em>*
- * Gets the ckan Object
- * Initialises it in one central place reusing it if needed.
- *<br/>
- * @return Ckan $ckan
- </em>/
-function ckan_ckan(){
-    static $ckan=null;
-    if (!$ckan){
-        require_once(dirname(<strong>FILE</strong>) . &lsquo;/ckan.php&rsquo;);
-        $ckan=new Ckan(variable_get(&lsquo;ckan_site&rsquo;, &lsquo;<a href="http://www.ckan.net/">http://www.ckan.net/</a>&rsquo;));
-    }
-    return $ckan;
-}</p>
-
-<p>/<em>*
- * Implements hook_form
- *
- * @param Array $form_state
- * @return Array $form
- </em>/
-function ckan_search_form(&amp;$form_state){</p>
-
-<pre><code>$form = array();
-$form['q'] = array(
-               '#type'          =&gt; 'textfield',
-               '#default_value' =&gt; '',
-);
-$form['submit'] = array(
-               '#type'          =&gt; 'submit',
-               '#value'         =&gt; t('Search CKAN'),
-);
-
-return $form;
-</code></pre>
-
-<p>}</p>
-
-<p>function ckan_search_form_submit($form, &amp;$form_state) {
-      // The search form relies on control of the redirect destination for its
-  // functionality, so we override any static destination set in the request,
-  // for example by drupal_access_denied() or drupal_not_found()
-  // (see <a href="http://drupal.org/node/292565">http://drupal.org/node/292565</a>).
-  if (isset($<em>REQUEST[&lsquo;destination&rsquo;])) {
-    unset($</em>REQUEST[&lsquo;destination&rsquo;]);
-  }
-  if (isset($<em>REQUEST[&lsquo;edit&rsquo;][&lsquo;destination&rsquo;])) {
-    unset($</em>REQUEST[&lsquo;edit&rsquo;][&lsquo;destination&rsquo;]);
-  }</p>
-
-<p>  $form_state[&lsquo;redirect&rsquo;] = &lsquo;ckan/search/&rsquo;. trim($form_state[&lsquo;values&rsquo;][&lsquo;q&rsquo;]);</p>
-
-<p>}</p>
-
-<p>function ckan_search_results_page($search){
-//  return $search;
-    try {
-     $ckan = ckan_ckan();</p>
-
-<pre><code> $results = $ckan-&gt;search(check_plain($search));
-} catch (Exception $e){
-    return $e-&gt;getMessage();
-}
-return theme('ckan_search_results', $results);
-</code></pre>
-
-<p>}</p>
-
-<p>/<em>*
- * Create the node the first time this package is seen.
- *
- * This creates a specific URL which override the wildcard one subsequently
- *
- * @param String $ckan_name
- </em>/
-function ckan_new($ckan_name){</p>
-
-<pre><code>$ckan = ckan_ckan();
-try {
-    $ckan_data = $ckan-&gt;getPackage($ckan_name);
-} catch (CkanException $e){
-    drupal_set_message($e-&gt;getMessage(), 'error');
-    drupal_set_title("Error");
-    return "Error" ;
-}
-$node = ckan_create_node($ckan_data);
-drupal_goto('node/'. $node-&gt;nid);
-</code></pre>
-
-<p>}</p>
-
-<p>function ckan_create_node($ckan_data){
-    $node = array(
-              &lsquo;title&rsquo;   => $ckan_data->title,
-              &lsquo;uid&rsquo;     => 1,
-              &lsquo;body&rsquo;    => $ckan_data->name,
-              &lsquo;promote&rsquo; => 1,
-              &lsquo;path&rsquo;    => &lsquo;ckan/data/&rsquo; . $ckan_data->name,
-              &lsquo;type&rsquo;    => &lsquo;ckan&rsquo;,
-              &lsquo;comment&rsquo; => 2,</p>
-
-<pre><code>);
-
-if ($node = node_submit($node)) {
-    node_save($node);
-} else {
-    drupal_set_message("Failed to create node for package.");
-}
-return $node;
-</code></pre>
-
-<p>}</p>
-
-<p>function ckan_node_info() {</p>
-
-<pre><code>return array(
-'ckan' =&gt; array(
-  'name'           =&gt; t('CKAN Package'),
-  'module'         =&gt; 'ckan',
-  'description'    =&gt; t('A package of Open Data.'),
-  'has_title'      =&gt; TRUE,
-  'title_label'    =&gt; t('Title'),
-  'has_body'       =&gt; TRUE,
-  'body_label'     =&gt; t('Package Description'),
-  'min_word_count' =&gt; 0,
-  'locked'         =&gt; TRUE
-)
-);
-</code></pre>
-
-<p>}</p>
-
-<p>function ckan_load($node){
-    $ckan = ckan_ckan();
-    try {
-        $node->ckan = $ckan->getPackage($node->body);
-    } catch(Exception $e){
-        drupal_set_message($e->getMessage(), &lsquo;error&rsquo;);
-    }
-//  print_r($node->ckan);
-    return $node;
-}</p>
-
-<p>function ckan_view($node, $teaser = FALSE, $page = FALSE) {</p>
-
-<p>  $node = node_prepare($node, $teaser);
-  $node->content[&lsquo;title&rsquo;][&lsquo;#value&rsquo;]  = check_plain($node->ckan->title);
-  $node->content[&lsquo;body&rsquo;][&lsquo;#value&rsquo;] = nl2br(check_plain($node->ckan->notes));</p>
-
-<p>  return $node;
-}</p>
-
-<p>function ckan_theme() {
-    return array(
-    &lsquo;ckan_search_results&rsquo; => array(&lsquo;arguments&rsquo; => array(&lsquo;results&rsquo;)),
-    );
-}</p>
-
-<p>function theme_ckan_search_results($results) {
-    $content = &lsquo;&rsquo;;
-    $content .= &ldquo;<p>&rdquo; . $results->count . &ldquo; Results found</p>&rdquo;;
-    foreach ($results->results as $package){
-        $content .= &lsquo;<h2>&rsquo; . l($package->title, &lsquo;ckan/data/&rsquo; . urlencode(check_plain($package->name))) . &lsquo;</h2>&rsquo;;
-        $content .= &lsquo;<p>&rsquo; . nl2br(check_plain($package->notes)) . &lsquo;</p>&rsquo;;
-        $content .= &lsquo;<p>&rsquo;;
-        foreach ($package->groups as $i => $group){
-            $content .= &lsquo;<b>&rsquo; . check_plain($group) . &lsquo;</b> &rsquo;;
-        }
-        $content .= &lsquo;</p>&rsquo;;
-    }
-    return $content;</p>
-
-<p>}
-?></p>
-
-<p>see also <a href="/blog/10/02/23/accessing-ckan-data-php">Accessing CKAN data from PHP</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/10">&larr; Older</a>
@@ -1095,6 +858,14 @@ return $node;
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
@@ -1104,14 +875,6 @@ return $node;
     
       <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
   </ul>
@@ -1146,7 +909,7 @@ return $node;
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 

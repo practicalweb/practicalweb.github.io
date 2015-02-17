@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Log | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/log/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2015-02-16T20:03:53+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ELK Gotchas]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2015/01/16/elk-gotchas/"/>
+    <updated>2015-01-16T19:49:03+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2015/01/16/elk-gotchas</id>
+    <content type="html"><![CDATA[<p>Syslog import takes curent year - and I can&rsquo;t seem to set that (it&rsquo;s early january I&rsquo;m working on logs that include the end of December)</p>
+
+<p>Even adding a year to the log data in sed didn&rsquo;t seem to help</p>
+
+<p>Selecting time periods via histogram I had inadvertantly setup conflicting time periods or times outside of my data - if &ldquo;filtering&rdquo; is collapsed it&rsquo;s very easy for the dashboard to have a filter that leaves no data shown and as a beginner not realise it</p>
+
+<p>Histogram panel view - exposes an \interval\ setting that was wrong in my case (set to an interval of a year which wasn&rsquo;t useful for a few days worth of data)</p>
+]]></content>
+  </entry>
+  
+</feed>

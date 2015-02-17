@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="There are lots of blogs about this already - but I didn&rsquo;t quite understand at first so here&rsquo;s my take &hellip; Wireshark is a large and &hellip;">
+  <meta name="description" content="The branching strategy I&rsquo;ve found most effective and flexible is to use one branch per release version that is used for integration and feature &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,138 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-16T16:53:30+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:53 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The branching strategy I&rsquo;ve found most effective and flexible is to use one branch per release version that is used for integration and feature branches off these for everything else.</p>
+
+<p>It&rsquo;s hard to visualise and I&rsquo;ve tried drawing graphs but once I build in enough features to make the graph meaningful it is no longer easy to interpret.</p>
+
+<p>At the end of the day there is a degree of complexity in a branching process suited to large teams and large projects - but it does come down to a few basic principles.</p>
+
+<p>If you follow these principles you can maintain maximum release readiness, minimise conflicts, maximise flexibility, minimise bugs.</p>
+
+<p>At the end of the day the goal is to try and make life easier for both the development team and the business team while delivering as much functionality as possible.</p>
+
+<h2>1 Each release has an Integration branch</h2>
+
+<p>When we start work on a new version the first thing we do is create a new integration branch based on the latest version of the previous release&rsquo;s integration branch.</p>
+
+<p>Releases are made from tags on this branch, no code gets merged to the integration branch until it has passed initial testing.</p>
+
+<p>In theory the integration branch is always release ready - in real life we find some bugs later than we&rsquo;d like, also sometimes we integrate early when we know a release is still a way off.</p>
+
+<h2>2 Every feature or bugfix has a branch</h2>
+
+<p>Developers (almost) never work directly on the integration branch but create a branch for very change from the earliest integration branch this change might be merged back into.</p>
+
+<h2>3 Merge forwards</h2>
+
+<p>Newer integration branches are forks of older integration branches so merging changes made to version x into version x+1 (or x+2 etc) will usually be trivial.</p>
+
+<p>Feature branches are forks of integration branches - again this makes merging the integration code to the feature usually trivial.</p>
+
+<p>I say the merge is usually trivial - occasionally two changes will have a conflict - for example if two developers have edited the same line in different ways. But by maintaining a branch hierarchy and merging frequently these conflicts are amazingly rare. Even when they do happen they will involve recently edited code which makes understanding the conflict much easier.</p>
+
+<p>The thing that git is really really good at is merging two branches with a shared history.</p>
+
+<p>If you do find you make a fix from a later integration branch (maybe you make a bugfix which you only later realise affects older releases too) then you may need to cherry pick commits back to an older branch - but this should be the exception.</p>
+
+<h2>4 Work in the oldest branch you can</h2>
+
+<p>If you don&rsquo;t know for sure which release a feature will be in start it from the oldest one it might be in - since integration branches share heritage you can</p>
+
+<p>You can always merge a feature branch to a later integration branch (since the later integration branch contains the older one). But the reverse is tricky and you would need to cherry pick.</p>
+
+<h2>5 Always merge the Integration branch to the feature branch before merging a feature</h2>
+
+<p>Before merging a feature to the integration branch we first make sure that the feature branch has all the latest code for that release, then we test it.</p>
+
+<p>This avoids the risk that our code works OK in isolation but conflicts in some way with another feature that was merged to integration after we started work.</p>
+
+<p>It means that we will deal with any conflicts in the feature branch and that merging to integration will always be a simple fast forward merge with no conflicts.</p>
+
+<h2>6 Never commit what you can build</h2>
+
+<p>Don&rsquo;t put binary files or things like minified css/js in git, also don&rsquo;t commit version numbers. These sorts of files tend to change in multiple branches at once and are very prone to generating conflicts.</p>
+
+<p>The better solution is to have a build script that pulls in any binaries needed from a separate store, builds minified  versions of files, does any compilation etc.</p>
+
+<p>The build script could take the release number as a parameter or read it from a git tag and insert the version number into whatever file is needed.</p>
+
+<h3>Side note on rebasing/squashing commits on feature branches</h3>
+
+<p>Take a look at google <a href="https://www.google.co.uk/webhp?q=git+to+squash+or+not+to+squash">https://www.google.co.uk/webhp?q=git+to+squash+or+not+to+squash</a></p>
+
+<p>There are a lot of opinions out there on whether or not to squash commits before merging a feature branch</p>
+
+<p>Personally I prefer when people don&rsquo;t because I find that when they do the commit messages are quite terse &ldquo;added feature foo&rdquo;</p>
+
+<p>I prefer to see the individual commits, and which lines were written at 5:30 on a Friday night when maybe someone was in a hurry to get home.</p>
+
+<p>But if people do rebase then doing this on their feature branch just before merging to integration is a good time to do it.</p>
+
+<p>Never rebase on integration.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-16T19:49:03+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:49 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Syslog import takes curent year - and I can&rsquo;t seem to set that (it&rsquo;s early january I&rsquo;m working on logs that include the end of December)</p>
+
+<p>Even adding a year to the log data in sed didn&rsquo;t seem to help</p>
+
+<p>Selecting time periods via histogram I had inadvertantly setup conflicting time periods or times outside of my data - if &ldquo;filtering&rdquo; is collapsed it&rsquo;s very easy for the dashboard to have a filter that leaves no data shown and as a beginner not realise it</p>
+
+<p>Histogram panel view - exposes an \interval\ setting that was wrong in my case (set to an interval of a year which wasn&rsquo;t useful for a few days worth of data)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1004,92 +1136,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/31/drupageddon/">Drupageddon</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-10-31T18:30:52+00:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>6:30 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Drupal has been in the new today for all the wrong reasons</p>
-
-<p><a href="http://www.bbc.co.uk/news/technology-29846539">Millions of websites hit by Drupal hack attack</a></p>
-
-<p><a href="http://arstechnica.com/security/2014/10/drupal-sites-had-hours-to-patch-before-attacks-started/">Drupal sites had “hours” to patch before attacks started</a></p>
-
-<p><a href="http://www.pcworld.com/article/2841372/drupal-if-you-werent-quick-to-patch-assume-your-site-was-hacked.html">Drupal users: Assume your site was hacked if you didn&rsquo;t apply Oct. 15 patch immediately</a></p>
-
-<p><a href="http://www.forbes.com/sites/thomasbrewster/2014/10/30/did-drupal-drop-the-ball-users-who-didnt-update-within-7-hours-should-assume-theyve-been-hacked/">Did Drupal Drop The Ball? Users Who Didn&rsquo;t Update Within 7 Hours &lsquo;Should Assume They&rsquo;ve Been Hacked&rsquo;</a></p>
-
-<p>The biggest headache for me was the Public Service Announcement <a href="https://www.drupal.org/PSA-2014-003">https://www.drupal.org/PSA-2014-003</a> which is clearly written to alarm users into updating.</p>
-
-<p>We did update our clients site - within 24 hours which at the time seemed pretty good considering the timezones and chaneg control processes involved.</p>
-
-<p>Fortunately we also reload our entire database and other content on each deploy - so even though we took longer than 7 hours to update we consider we are pretty safe (never say 100%) and beyond that we have a lot of other security in place.</p>
-
-<p>However I find myself wondering what else we could have done.</p>
-
-<p>I wish we had a member on the drupal security team - that seems to have helped some people.</p>
-
-<p>I see now there were a couple of (low key) advance notices <a href="https://groups.drupal.org/node/445893">https://groups.drupal.org/node/445893</a> <a href="https://twitter.com/drupalsecurity/status/522128826101669888">https://twitter.com/drupalsecurity/status/522128826101669888</a></p>
-
-<p>I will try to pay better attention to those in the future, but we may also have to enhance our out of hours work, the security annoucment came in at the end of the day - perhaps we will ahve to work overnight another time to review, test, and help the client upgrade.</p>
-
-<p>Hopefully good will come from the thread at <a href="https://groups.drupal.org/node/447468">Follow up Drupageddon responsibly</a></p>
-
-<p>Drupal will need to learn and grow from this.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-10-31T17:55:14+00:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>5:55 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Since I&rsquo;ve moved to a static site I&rsquo;m saving myself some hosting fees and moved to <a href="https://help.github.com/categories/github-pages-basics/">Github Pages</a></p>
-
-<p>It&rsquo;s free and fast, saves me from managing a server.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1105,6 +1151,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
@@ -1114,14 +1168,6 @@
     
       <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
   </ul>
@@ -1156,7 +1202,7 @@
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 

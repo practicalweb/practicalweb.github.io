@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="really interesting thread on the Drupal consultants mailing list especially of note: http://lists.drupal.org/pipermail/consulting/2008-January/002324 &hellip;">
+  <meta name="description" content="I’ve just upgraded to firefox 3 beta and it looks pretty cool I got my plugins working by following these steps Open about:config in the address bar &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,124 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/02/14/firefox-3-firebug-eclipse/">Firefox 3 + Firebug + Eclipse</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-02-14T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="post-entry">
+<p>
+I’ve just upgraded to firefox 3 beta and it looks pretty cool
+</p>
+<p>
+I got my plugins working by following these steps
+</p>
+<ol>
+    <li>Open about:config in the address bar.</li>
+    <li>Right click on the list and create a boolean: extensions.checkCompatibility</li>
+    <li>Set its value to false.</li>
+    <li>Restart browser.</li>
+</ol>
+<p>
+Firebug works in FF3 even withgout this step if you get the latest beta from here<br />
+<a href="http://fireclipse.xucia.com/">fireclipse.xucia.com</a>
+</p>
+<p>
+The really exiting thing is the eclipse plugin<br />
+<a href="http://www.uncertainty.org.uk/wordpress/wp-content/uploads/2008/02/fireclipsepositionseditor.jpg" title="Eclipse Console With Editor Positioned by Fireclipse"><img src="http://www.uncertainty.org.uk/wordpress/wp-content/uploads/2008/02/fireclipsepositionseditor.thumbnail.jpg" alt="Eclipse Console With Editor Positioned by Fireclipse" /></a>
+</p>
+<p>
+<a href="http://fireclipse.svn.sourceforge.net/viewvc/*checkout*/fireclipse/trunk/FireclipseDocumentation/screenshots.htm">More screenshots</a>
+</p>
+</div>
+
+
+<!-- END POST-ENTRY  -->
+
+
+<!-- <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description rdf:about="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/"
+dc:identifier="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/"
+dc:title="firefox 3 + firebug + eclipse"
+trackback:ping="http://www.uncertainty.org.uk/wordpress/2008/02/14/techie/firefox-3-firebug-eclipse/trackback/" />
+</rdf:RDF> &#8211;>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/02/06/arggghhh-silent-failures/">ARGGGHHH - Silent Failures!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-02-06T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="post-entry">
+<p>
+I’ve just spent ages trying to find out why I couldn’t add some default views to drupal
+</p>
+<p>
+I’d set up my views, exported them added them to a module in a hook_views_default_views() function…
+</p>
+<p>
+and nothing happened.
+</p>
+<p>
+First I though this was caching - but much cache clearing and debugging later…
+</p>
+<p>
+I realised that if the view requires categories that don’t exist -
+it just gets silently dropped - no error - no warning it just doesn’t
+work!!!
+</p>
+<p>
+This seems to be a general Drupal thing - all too often failures are silent - and very hard to track down.
+</p>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -784,161 +902,6 @@ mdadm &#8211;manage &#8211;add /dev/md1 /dev/hdc2
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2005/08/09/full-text-searching-on-postgresql-with-tsearch2/">Full Text Searching on PostgreSQL With Tsearch2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2005-08-09T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2005</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I’ve just been experimenting with text searches: <a href="http://www.sai.msu.su/%7Emegera/postgres/gist/tsearch/V2/docs/tsearch-V2-intro.html"><a href="http://www.sai.msu.su/~megera/postgres/gist/tsearch/V2/docs/tsearch-V2-intro.html">http://www.sai.msu.su/~megera/postgres/gist/tsearch/V2/docs/tsearch-V2-intro.html</a></a></p>
-
-<div class="post-entry">
-<p>
-It’s worth noting that most of the commands in the above tutorial
-assume you are running as the database superuser, this is required to
-run the setup script but then you can grant permission for an ordinary
-user for the search tables (in the public schema names starting pg_ts_)
-</p>
-<p>
-The search will only match words that start with the search term,
-but is very fast and can search over several columns by maintaining a
-combined index.
-</p>
-</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2005/08/07/importing-legacy-data-for-use-as-an-ldap-addressbook/">Importing Legacy Data for Use as an LDAP Addressbook</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2005-08-07T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2005</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This
-is something I played around with ages ago and didn’t make notes on -
-now I’m doing a little more work pulling together what I learned then
-along with some new stuff.</p>
-
-<div class="post-entry">
-<p>
-In /etc/ldap/slapd.conf
-</p>
-<p>
-Pull in some standard schemas
-</p>
-<pre>
-include         /etc/ldap/schema/core.schema
-include         /etc/ldap/schema/cosine.schema
-include         /etc/ldap/schema/nis.schema
-include         /etc/ldap/schema/inetorgperson.schema
-include         /etc/ldap/schema/mozillaOrgPerson_V0.6.1.schema
-</pre>
-<p>
-define what are effectively the names of your database, the admin username and the admin password, <br />
-I’ve used my domain name as the database name as this more or less
-guarantees the name is globally unique which can be useful, it’s also
-easy to remember<br />
-The password is generated with  /usr/bin/ldappasswd (part of the ldap-utils package)
-</p>
-<pre>
-# Define the root suffix you serve.
-suffix          &quot;dc=uncertainty,dc=org,dc=uk&quot;
-# Define a root DN for superuser privileges.
-rootdn                &quot;cn=Manager,dc=uncertainty,dc=org,dc=uk&quot;
-# Define the password used with rootdn.
-rootpw    ***********
-</pre>
-<p>
-Define read permissions as required for other users, set loglevel to
-256 if you want to view queries being sent to the server for debugging
-</p>
-<p>
-Next create an ldif file that defines your first ?container? followed by any entries
-</p>
-<pre>
-# Organization for Example Corporation
-dn: dc=uncertainty,dc=org,dc=uk
-objectClass: dcObject
-objectClass: organization
-dc: uncertainty
-o: Example Corporation
-description: The Example Corporation
-dn: cn=someone,dc=uncertainty,dc=org,dc=uk
-cn: someone
-sn: someone
-postalCode: AB12 XQ7
-homePostalAddress: a place somewhere
-mail: fake@test.bla
-objectclass: inetOrgPerson
-</pre>
-<p>
-This can be entered with the command
-</p>
-<pre>
-ldapadd -x -D &quot;cn=Manager,dc=uncertainty,dc=org,dc=uk&quot; -W -f  test.ldif
-</pre>
-<p>
-which will prompt for the password created earlier
-</p>
-<p>
-ldapmodify can be used to add (-a) or  update (default) use option -c to keep going even if errors are encountered
-</p>
-<p>
-Configure your client to use Base DN as specified earlier - in my case dc=uncertainty,dc=org,dc=uk
-</p>
-<h2>Useful links</h2>
-<p>
-<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=116692">Bug 116692<br />
-Define official Mozilla LDAP schema extension</a><br />
-<a href="http://www.yolinux.com/TUTORIALS/LinuxTutorialLDAP-GILSchemaExtension.html">YoLinux: OpenLDAP 2.x Schema Extension to support MS/Outlook, Netscape 4.5+</a>
-</p>
-<p>
-<a href="http://www.openldap.org/faq/data/cache/294.html">OpenLDAP Faq-O-Matic : MS Outlook: How Do LDAP Attributes Map to Address Book Fields?</a>
-</p>
-</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/22">&larr; Older</a>
@@ -956,6 +919,14 @@ Define official Mozilla LDAP schema extension</a><br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
@@ -965,14 +936,6 @@ Define official Mozilla LDAP schema extension</a><br />
     
       <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
   </ul>
@@ -1007,7 +970,7 @@ Define official Mozilla LDAP schema extension</a><br />
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Creating your own base box for vagrant is a great thing to do, you get to undestand exactly what is on that box and to choose exactly what base OS &hellip;">
+  <meta name="description" content="Drupal has been in the new today for all the wrong reasons Millions of websites hit by Drupal hack attack Drupal sites had “hours” to patch before &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,92 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/31/drupageddon/">Drupageddon</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-31T18:30:52+00:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>6:30 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Drupal has been in the new today for all the wrong reasons</p>
+
+<p><a href="http://www.bbc.co.uk/news/technology-29846539">Millions of websites hit by Drupal hack attack</a></p>
+
+<p><a href="http://arstechnica.com/security/2014/10/drupal-sites-had-hours-to-patch-before-attacks-started/">Drupal sites had “hours” to patch before attacks started</a></p>
+
+<p><a href="http://www.pcworld.com/article/2841372/drupal-if-you-werent-quick-to-patch-assume-your-site-was-hacked.html">Drupal users: Assume your site was hacked if you didn&rsquo;t apply Oct. 15 patch immediately</a></p>
+
+<p><a href="http://www.forbes.com/sites/thomasbrewster/2014/10/30/did-drupal-drop-the-ball-users-who-didnt-update-within-7-hours-should-assume-theyve-been-hacked/">Did Drupal Drop The Ball? Users Who Didn&rsquo;t Update Within 7 Hours &lsquo;Should Assume They&rsquo;ve Been Hacked&rsquo;</a></p>
+
+<p>The biggest headache for me was the Public Service Announcement <a href="https://www.drupal.org/PSA-2014-003">https://www.drupal.org/PSA-2014-003</a> which is clearly written to alarm users into updating.</p>
+
+<p>We did update our clients site - within 24 hours which at the time seemed pretty good considering the timezones and chaneg control processes involved.</p>
+
+<p>Fortunately we also reload our entire database and other content on each deploy - so even though we took longer than 7 hours to update we consider we are pretty safe (never say 100%) and beyond that we have a lot of other security in place.</p>
+
+<p>However I find myself wondering what else we could have done.</p>
+
+<p>I wish we had a member on the drupal security team - that seems to have helped some people.</p>
+
+<p>I see now there were a couple of (low key) advance notices <a href="https://groups.drupal.org/node/445893">https://groups.drupal.org/node/445893</a> <a href="https://twitter.com/drupalsecurity/status/522128826101669888">https://twitter.com/drupalsecurity/status/522128826101669888</a></p>
+
+<p>I will try to pay better attention to those in the future, but we may also have to enhance our out of hours work, the security annoucment came in at the end of the day - perhaps we will ahve to work overnight another time to review, test, and help the client upgrade.</p>
+
+<p>Hopefully good will come from the thread at <a href="https://groups.drupal.org/node/447468">Follow up Drupageddon responsibly</a></p>
+
+<p>Drupal will need to learn and grow from this.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/31/now-hosted-on-github-pages/">Now Hosted on Github Pages</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-31T17:55:14+00:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>5:55 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Since I&rsquo;ve moved to a static site I&rsquo;m saving myself some hosting fees and moved to <a href="https://help.github.com/categories/github-pages-basics/">Github Pages</a></p>
+
+<p>It&rsquo;s free and fast, saves me from managing a server.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -624,222 +710,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/15/using-varnish-to-cache-authenticated-drupal-pages/">Using Varnish to Cache Authenticated Drupal Pages</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-10-15T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have a site which requires users to be logged in, but the pages are not customised. I was playing with a way to cache the content in varnish while still doing an access check. This method uses an access check pages (test.php below) which then uses ESI to load the real, cacheable content.</p>
-
-<p>I&rsquo;ve tried it in a dev env, I&rsquo;m not yet sure if we&rsquo;ll use this in production.</p>
-
-<p>Varnish config</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="n">probe</span> <span class="n">checkslash</span> <span class="p">{</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">url</span> <span class="o">=</span> <span class="s">&quot;/robots.txt&quot;</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">interval</span> <span class="o">=</span> <span class="mi">500</span><span class="n">s</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">10</span><span class="n">s</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">include</span> <span class="s">&quot;backends.vcl&quot;</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">/** generic config from here down */</span>
-</span><span class='line'><span class="n">sub</span> <span class="n">vcl_recv</span><span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="cm">/* if the drupals are down, this is how long we cache for */</span>
-</span><span class='line'>  <span class="n">set</span> <span class="n">req</span><span class="p">.</span><span class="n">grace</span> <span class="o">=</span> <span class="mi">6</span><span class="n">h</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="cm">/* Make sure we direct 443 traffic to the secure drupal */</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">server</span><span class="p">.</span><span class="n">port</span> <span class="o">==</span> <span class="mi">443</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">set</span> <span class="n">req</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">drpau_ssl_director</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>    <span class="cm">/* port 80 traffic goes to the correct LB */</span>
-</span><span class='line'>    <span class="n">set</span> <span class="n">req</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">drpau_director</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="cp"># just pass through non-page files, and the login page</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="n">url</span> <span class="o">~</span> <span class="s">&quot;(?i)\.(pdf|asc|dat|txt|doc|xls|ppt|tgz|csv|png|gif|jpeg|jpg|ico|swf|css|js|htc|ejs)(\?.*)?$&quot;</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="n">url</span> <span class="o">~</span> <span class="s">&quot;(?i)(sites/default/files)|(js/)|(/login)&quot;</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="n">esi_level</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="cp"># pass regular pages to a spoecial url</span>
-</span><span class='line'>    <span class="n">set</span> <span class="n">req</span><span class="p">.</span><span class="n">url</span> <span class="o">=</span> <span class="s">&quot;/esi&quot;</span> <span class="o">+</span> <span class="n">req</span><span class="p">.</span><span class="n">url</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">return</span> <span class="p">(</span><span class="n">lookup</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="n">sub</span> <span class="n">vcl_fetch</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="n">url</span> <span class="o">~</span> <span class="s">&quot;/esi/&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">req</span><span class="p">.</span><span class="n">esi_level</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">set</span> <span class="n">beresp</span><span class="p">.</span><span class="n">do_esi</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="cm">/* Do ESI processing               */</span>
-</span><span class='line'>   <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then in apache I redirect all requests for pages that come via the esi prefix</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ApacheConf'><span class='line'><span class="nb">RewriteRule</span> ^esi/(.*)$ test.php [L]
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and test php is</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nb">define</span><span class="p">(</span><span class="s1">&#39;DRUPAL_ROOT&#39;</span><span class="p">,</span> <span class="nb">getcwd</span><span class="p">());</span>
-</span><span class='line'><span class="c1">// We prepare only a minimal bootstrap.</span>
-</span><span class='line'><span class="k">require_once</span> <span class="nx">DRUPAL_ROOT</span> <span class="o">.</span> <span class="s1">&#39;/includes/bootstrap.inc&#39;</span><span class="p">;</span>
-</span><span class='line'><span class="nx">drupal_bootstrap</span><span class="p">(</span><span class="nx">DRUPAL_BOOTSTRAP_SESSION</span><span class="p">);</span>
-</span><span class='line'><span class="k">global</span> <span class="nv">$user</span><span class="p">;</span>
-</span><span class='line'><span class="nv">$roles</span> <span class="o">=</span> <span class="nx">user_roles</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nb">in_array</span><span class="p">(</span><span class="s1">&#39;anonymous user&#39;</span><span class="p">,</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">roles</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nv">$uri</span> <span class="o">=</span> <span class="nb">preg_replace</span><span class="p">(</span><span class="s1">&#39;#^/esi#&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="nx">REQUEST_URI</span><span class="p">]);</span>
-</span><span class='line'>  <span class="k">echo</span> <span class="s2">&quot;&lt;esi:include src=</span><span class="se">\&quot;</span><span class="s2">http://</span><span class="si">$_SERVER[SERVER_NAME]$uri\</span><span class="s2">&quot;</span><span class="o">/&gt;</span><span class="s2">&quot;;</span>
-</span><span class='line'><span class="s2">} else {</span>
-</span><span class='line'><span class="s2">     header(&quot;</span><span class="nx">Location</span><span class="o">:</span> <span class="nx">https</span><span class="o">://</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="nx">SERVER_NAME</span><span class="p">]</span><span class="o">/</span><span class="nx">login</span><span class="s2">&quot;);</span>
-</span><span class='line'><span class="s2">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/14/search-skype-history-across-chats/">Search Skype History Across Chats</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-10-14T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I find a lot of clients use skype</p>
-
-<p>For me the biggest frustration is the limited search</p>
-
-<p>But it turns out the data is stored using sqlite - and so you can search using sql directly on the sqlite db files.</p>
-
-<div><script src='https://gist.github.com/740d136e58d8b87d057f.js'></script>
-<noscript><pre><code>#!/bin/bash
-
-export username=skype.name
-sqlite3 -column ~/.Skype/$username/main.db \
-&quot;SELECT displayname, from_dispname, datetime(Messages.timestamp, 'unixepoch') as date, body_xml 
-             FROM Messages, Conversations 
-             WHERE Conversations.id=Messages.convo_id and body_xml like '%$searchterm%' 
-             ORDER BY Messages.timestamp;&quot;
-
-</code></pre></noscript></div>
-
-
-<p>or for all your chats from a given day</p>
-
-<div><script src='https://gist.github.com/85e282537f6f2f631414.js'></script>
-<noscript><pre><code>export username=skype.name
-export thedate=$(date +%Y-%m-%d)
-sqlite3 ~/.Skype/${username}/main.db \
-&quot;SELECT displayname, datetime(Messages.timestamp, 'unixepoch') as date, body_xml 
-           FROM Messages, Conversations 
-           WHERE Conversations.id=Messages.convo_id and date(Messages.timestamp, 'unixepoch') == '${thedate}' and author='${username}' 
-           ORDER BY Messages.timestamp;&quot;</code></pre></noscript></div>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/3">&larr; Older</a>
@@ -857,6 +727,14 @@ sqlite3 ~/.Skype/${username}/main.db \
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
@@ -866,14 +744,6 @@ sqlite3 ~/.Skype/${username}/main.db \
     
       <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
   </ul>
@@ -908,7 +778,7 @@ sqlite3 ~/.Skype/${username}/main.db \
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 

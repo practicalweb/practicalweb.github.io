@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="For the last few months I've been working on a project that is part website and part data processing. In theory the website is the bulk of the &hellip;">
+  <meta name="description" content="One of the great things about Debian/Ubuntu is the consistency with which system documentation is placed in /usr/share/doc/ Assuming you have a web &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,166 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/10/18/how-to-read-compressed-apache-docs/">How to Read Compressed Apache Docs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-10-18T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+One of the great things about Debian/Ubuntu is the consistency with which system documentation is placed in /usr/share/doc/
+</p>
+
+
+<p>
+Assuming you have a web server installed this documentation is then available at http://localhost/doc/
+</p>
+
+
+<p>
+But to keep filesize down - many files are compressed and have to be decompressed before you can read them.
+</p>
+
+
+<p>
+The browser can actually do that compression on the fly - if it receives the right headers - what it needs to be told is that the content is compressed plain text. 
+</p>
+
+
+<p>
+To achieve this add the following lines to your default apache config for the docs directory (there should already be a docs section)
+</p>
+
+
+<p>
+&lt;Directory &quot;/usr/share/doc/&quot;&gt;<br />
+AddEncoding x-gzip gz tgz<br />
+AddType text/plain .gz<br />
+&lt;/Direcory&gt;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/10/16/svnversion/">Svnversion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-10-16T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I just discovered a nifty little utility
+</p>
+
+
+<p>
+Often working copies are only partially updated, this command gives a very quick command-line summary of the state of the working copy.
+</p>
+
+
+<p>
+It&#8217;s not as rich an output as kdesvn which will colour code all the updateable files, but its a standard part of svn so should always be available. 
+</p>
+
+
+
+
+<h2>Name</h2>
+
+
+<p>
+svnversion — Summarize the local revision(s) of a working                    copy.
+</p>
+
+
+<div class="refsect1">
+<h2>Synopsis</h2>
+<pre class="programlisting">
+svnversion [OPTIONS] WC_PATH [TRAIL_URL]
+</pre>
+</div>
+
+
+<div class="refsect1">
+<h2>Description</h2>
+<p>
+<span><strong class="command">svnversion</strong></span> is a program for
+summarizing the revision mixture of a working copy.  The
+resultant revision number, or revision range, is written to
+standard output.
+</p>
+<p>
+TRAIL_URL, if present, is the trailing portion of the
+URL used to determine if WC_PATH itself is switched
+(detection of switches within WC_PATH does not rely on
+TRAIL_URL).
+</p>
+</div>
+
+
+<p><strong>Examples</strong><br /></p>
+
+<div class="refsect1">
+<p>
+If the working copy is all at the same revision (for
+example, immediately after an update), then that revision is
+printed out:
+</p>
+<pre class="screen">
+$ svnversion .
+4168
+</pre>
+<p>
+For a mixed-revision working copy, the range of
+revisions present is printed:
+</p>
+<pre class="screen">
+$ svnversion .
+4123:4168
+</pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -742,179 +902,6 @@ The above argument doesn&#8217;t even touch on the benefits of encapsulation, co
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/07/18/time-to-upgrade-to-drupal-6/">Time to Upgrade to Drupal 6?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-07-18T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Drupal 6 has been out for a while now, Drupal 7 is in the works, and yet most sites still seem to be using Drupal 5. Is it time to upgrade yet?
-</p>
-
-
-<p>
-If it was just the core features the answer would be simple, Drupal 6 is better and is fully stable.
-</p>
-
-
-<p>
-The problem is that many (maybe most) of the features of a Drupal website are powered by contributed modules, and modules written for Drupal 5 don&#8217;t work with Drupal 6.
-</p>
-
-
-<p>
-This site uses 17 contributed modules; of these 9 have a clear upgrade path, 4 have new versions that are not yet stable, and 4 have no upgrade path.
-</p>
-
-
-<p>
-I could write upgrades for the 4 problem modules (but I don&#8217;t really have time). I could decide I don&#8217;t need those features.
-</p>
-
-
-<p>
-But Drupal 5 is still the only option if you want e-commerce, CiviCRM, and a whole host of other features.
-</p>
-
-
-<p>
-I won&#8217;t be upgrading for now - for me Drupal 5 still provides the most flexibility. 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/07/16/dual-head-display-dell-inspiron-1525-ubuntu/">Dual Head Display Dell Inspiron 1525 Ubuntu</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-07-16T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One of the few things that Linux hasn&#8217;t done well is allowing the user to add or change monitors.</p>
-
-
-<p><img src="/sites/default/files/dual-head.png" alt="dual head screenshot"/></p>
-
-
-<p>It looks like this is changing with the new utility xrandr.</p>
-
-
-<p>I haven&#8217;t fine tuned this yet (or even tested it much) but I do have a dual head display - with the virtual screen spanning two displays.</p>
-
-
-<p>I&#8217;ll come back and document this properly - but for now here&#8217;s what I did.</p>
-
-
-<!--break-->
-
-
-<p>First I created this xorg.conf file.</p>
-
-
-<p><code>
-Section &ldquo;ServerLayout&rdquo;
-        Identifier     &ldquo;dual head configuration&rdquo;
-        Screen      0  &ldquo;Screen0&rdquo; 0 0
-        InputDevice    &ldquo;Keyboard0&rdquo; &ldquo;CoreKeyboard&rdquo;
-EndSection</p>
-
-<p>Section &ldquo;InputDevice&rdquo;
-        Identifier  &ldquo;Keyboard0&rdquo;
-        Driver      &ldquo;kbd&rdquo;
-        Option      &ldquo;XkbModel&rdquo; &ldquo;pc105&rdquo;
-        Option      &ldquo;XkbLayout&rdquo; &ldquo;gb&rdquo;
-EndSection</p>
-
-<p>Section &ldquo;Device&rdquo;
-        Identifier  &ldquo;Videocard0&rdquo;
-        Driver      &ldquo;intel&rdquo;
-        Option      &ldquo;monitor-VGA&rdquo; &ldquo;vga&rdquo;
-        Option      &ldquo;monitor-LVDS&rdquo; &ldquo;lvds&rdquo;
-EndSection</p>
-
-<p>Section &ldquo;Monitor&rdquo;
-        Identifier &ldquo;lvds&rdquo;
-        Option &ldquo;Position&rdquo; &ldquo;2560 0&rdquo;
-EndSection</p>
-
-<p>Section &ldquo;Monitor&rdquo;
-        Identifier &ldquo;vga&rdquo;
-        Option &ldquo;RightOf&rdquo; &ldquo;lvds&rdquo;
-EndSection</p>
-
-<p>Section &ldquo;Screen&rdquo;
-        Identifier &ldquo;Screen0&rdquo;
-        Device     &ldquo;Videocard0&rdquo;
-        DefaultDepth     16
-        SubSection &ldquo;Display&rdquo;
-           Viewport   0 0
-           Depth     16
-           Modes        &ldquo;2560x1600&rdquo;
-           Virtual      5120 1600
-        EndSubSection
-EndSection
-</code><p>Then I restarted my X-windows session and at the console (as a normal user) I ran:</p>
-<code>
-xrandr &ndash;output LVDS &ndash;mode 1440x900
-xrandr &ndash;output LVDS &ndash;left-of VGA
-</code><p>And now it works :-)</p><h2>References</h2></p>
-
-<ul>
-<li><a href="http://udrepper.livejournal.com/20187.html" mce_href="http://udrepper.livejournal.com/20187.html">udrepper.livejournal.com/20187.html</a></li>
-<li><a href="http://www.intellinuxgraphics.org/dualhead.html" mce_href="http://www.intellinuxgraphics.org/dualhead.html">www.intellinuxgraphics.org/dualhead.html</a></li>
-<li><a href="http://wiki.debian.org/XStrikeForce/HowToRandR12">wiki.debian.org/XStrikeForce/HowToRandR12<a/></li>
-
-</ul>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/18">&larr; Older</a>
@@ -932,6 +919,14 @@ xrandr &ndash;output LVDS &ndash;left-of VGA
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
@@ -941,14 +936,6 @@ xrandr &ndash;output LVDS &ndash;left-of VGA
     
       <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
   </ul>
@@ -983,7 +970,7 @@ xrandr &ndash;output LVDS &ndash;left-of VGA
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 

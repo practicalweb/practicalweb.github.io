@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I&rsquo;ve found the recent thread on distribution support very interesting. An I&rsquo;m especially excited by the prospects hinted at here http:// &hellip;">
+  <meta name="description" content="It&rsquo;s been a while since I&rsquo;ve worked on a project which is providing as well as consuming web services. In this case I need to debug &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,105 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/14/debugging-soap-with-xdebug-and-eclipse/">Debugging SOAP With Xdebug and Eclipse</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-14T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s been a while since I&rsquo;ve worked on a project which is providing as well as consuming web services.</p>
+
+<p>In this case I need to debug incoming requests that are not initiated from with the browser (I&rsquo;m using <a href="http://www.soapui.org/">soapui</a> as a test tool).</p>
+
+<p>In order to allow Eclipse to pick up xdebug responses triggered by requests from soapui I just needed to</p>
+
+<ul>
+<li>start a debuging session within eclipse as normal</li>
+<li>ensure that the query string ?XDEBUG_SESSION_START=ECLIPSE_DBGP is appended to all requests by editing the WSDL file so that the address looks like
+<code>
+<soap:address location="http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP"/>
+</code>
+</li>
+
+<li>make requests via soapui</li>
+</ul>
+
+
+<p>Now eclipse is picking up the soap requests and I can step through as normal (some tools apply a timeout which can be a nuisance while debugging - I haven&rsquo;t been using soapui long enough yet to see if that&rsquo;s the case here)</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/09/drupal-upgrades-and-patches/">Drupal Upgrades and Patches</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-09T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Reading <a href="http://www.drupaler.co.uk/users/gregharvey">Greg</a>&rsquo;s <a href="http://www.drupaler.co.uk/blog/security-releases-dont-work/504">post on security upgrades</a> and a few mentions of patches in the following discussion got me thinking about upgrade methods.</p>
+
+<p>The standard Drupal method is to delete existing files and unpack a tarball to replace the old version - I find this method unappealing because: I keep my code in subversion so don&rsquo;t want to delete the .svn subdirectories, and sometimes I have patches applied that I don&rsquo;t want to loose.</p>
+
+<p>Drush provides a significant step up for managing updates, it&rsquo;s really easy to use and replaces just files not the directory structure so it plays well with subversion.</p>
+
+<p>So I had a look around for methods to upgrade Drupal via patches (I really don&rsquo;t understand why this isn&rsquo;t the default) and I found</p>
+
+<p>A whole lot of ready made patches
+<a href="http://fuerstnet.de/en/drupal-upgrade-easier">http://fuerstnet.de/en/drupal-upgrade-easier</a></p>
+
+<p>A handbook page about patch upgrades
+<a href="http://drupal.org/node/359234">http://drupal.org/node/359234</a></p>
+
+<p>And a script to generate patch files
+<a href="http://2bits.com/articles/upgrading-drupal-5-2-installations-to-5-3-security-releases-using-a-single-patch.html">http://2bits.com/articles/upgrading-drupal-5-2-installations-to-5-3-security-releases-using-a-single-patch.html</a></p>
+
+<p>Which is really cool - but all aimed at core - so I&rsquo;ve created a modified version which also works for modules (attached)</p>
+
+<p>The main advantage of this method is that when patches have been applied to a live site but these patches haven&rsquo;t been accepted upstream - then it is still easy to upgrade to new releases - and should the patch later be accepted upstream the new release will generate a patch conflict alerting you to the relevant changes - and allowing you to choose how to proceed.</p>
+
+<p>I don&rsquo;t recommend this technique for newbies, for most people drush updates are the way to go.</p>
+
+<p>But if you find yourself maintaining patches on core or contrib modules that aren&rsquo;t moving through the issue queue - then maybe this may be helpful.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -474,108 +573,6 @@ content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytyp
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/06/10/is-git-now-a-mature-toolset/">Is Git Now a Mature Toolset?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-06-10T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve been looking into git for a while, the core toolset has been mature for ages but it just didn&#8217;t seem to have the wider support I wanted.
-</p>
-
-
-<p>
-Now I look again and the egit plugin for eclipse has improved massively with full eclipse integration http://wiki.eclipse.org/EGit/User_Guide
-</p>
-
-
-<p>
-There is a git plugin for trac http://trac-hacks.org/wiki/GitPlugin
-</p>
-
-
-<p>
-It looks like it&#8217;s time for me to dive into git properly :-) 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/05/19/returning-info-from-drupal-updates/">Returning Info From Drupal Updates</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-05-19T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Drupal update hooks can return info about queries run - and this is well documented.</p>
-
-<p>If you want to return other informative messages about updates - just use the same format as returned by <a href="http://api.drupal.org/api/function/update_sql/6">http://api.drupal.org/api/function/update_sql/6</a></p>
-
-<p>&lt;?php
-array(&lsquo;success&rsquo; => $result !== FALSE, &lsquo;query&rsquo; => check_plain($sql));</p>
-
-<p>?></p>
-
-<p>So you might have an update hook that looks like.</p>
-
-<p>&lt;?php
-/<em>*
-*  Drush picks up notes from here
-*  Will update myvar to new val because&hellip;
-</em>/
-function mymodule_update_6101(){
-   $items = array();
-   $myval = &ldquo;foo&rdquo;:
-   variable_set(&lsquo;myvar&rsquo;, $myval&#8217;);
-   $items[] = array(&lsquo;success&rsquo; => TRUE, &lsquo;query&rsquo; = &ldquo;updated variable myvar to $myval because&hellip;&rdquo;);
-   return $items;
-}</p>
-
-<p>?></p>
-
-<p>This way all changes can be logged to the update page.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/9">&larr; Older</a>
@@ -593,6 +590,14 @@ function mymodule_update_6101(){
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
@@ -602,14 +607,6 @@ function mymodule_update_6101(){
     
       <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
   </ul>
@@ -644,7 +641,7 @@ function mymodule_update_6101(){
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I usually manage website deployment with bash scripts that run remote commands on the servers In order that I can see what is going on and debug any &hellip;">
+  <meta name="description" content="I've been working on a project for a while on my main dev machine, but needed to run it on my laptop too. Usually copying a sitre across is quick &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,116 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/25/cant-login-to-drupal-404/">Can&#8217;t Login to Drupal (404)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-25T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been working on a project for a while on my main dev machine, but needed to run it on my laptop too.
+</p>
+
+
+<p>
+Usually copying a sitre across is quick but this time I re-installed the OS too, everything wnet OK except for some reason I couldn&#8217;t log in to my drupal site.
+</p>
+
+
+<p>
+Eventually I noticed that while the site appeared to be working, every page was being served with a 404 header.
+</p>
+
+
+<p>
+What happpend is that I hadn&#8217;t enabled mod_rewrite
+</p>
+
+
+<p>
+The .htaccess had been configured to serve drupal 404 pages, but in this case Drupal (once started as a 404 handler) correctly processed the URL - but presumably without the form data.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/04/jmeter-cookies-and-redirects/">jMeter Cookies and Redirects</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-04T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This just took me a while to figure out</p>
+
+<p>I have a jmeter test plan which POSTs to a url, resulting in cookies being set and a redirect</p>
+
+<p>I was not seeing the cookies retained.</p>
+
+<p>The solution was to</p>
+
+<p>enable &ldquo;Follow redirects&rdquo; and disable &ldquo;Auto redirect&rdquo; on the HTTP request sampler.</p>
+
+<p>Tree view now shows the POST and subsequent GET separately - and the cookies are retained (I am using an HTTP cookie manager)</p>
+
+<p>Another solution if you know what the redirect will be is to disable both redirects and add another sampler for the subsequent GET</p>
+
+<p>This has the benefit that each step can be monitored seperately</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -547,115 +657,6 @@ svn propdel -R svn:mergeinfo ./*
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/07/13/henri-bergius-secret-agenda-for-php-content-management-systems/">Henri Bergius&#8217; Secret Agenda for PHP Content Management Systems</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-07-13T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I read this post the other day and found it really inspiring - so many things to do and learn&hellip;</p>
-
-<p><a href="http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/">http://bergie.iki.fi/blog/my_secret_agenda_for_php_content_management_systems/</a></p>
-
-<p>Links within that blog that I found especially interesting</p>
-
-<p><a href="https://github.com/indeyets/appserver-in-php">https://github.com/indeyets/appserver-in-php</a></p>
-
-<p><a href="http://documentcloud.github.com/backbone/">http://documentcloud.github.com/backbone/</a></p>
-
-<p><a href="https://github.com/bergie/VIE">https://github.com/bergie/VIE</a></p>
-
-<p><a href="http://phpcr.github.com/">http://phpcr.github.com/</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/06/28/selenium-test-for-computedstyle/">Selenium Test for computedStyle</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-06-28T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I wanted to write some automated tests for CSS changes and bugs, these type of issues are quite prone to regression so re-running the tests has a large benefit.</p>
-
-<p>It is possible to add new assertions to selenium via the user-extensions.js file</p>
-
-<p>The following adds a test for computed style, this only works in firefox as far as I know - but some automation is better than none</p>
-
-<p><code>
-//only works in firefox
-Selenium.prototype.assertStyle = function(locator, text) {
-    var params = text.split(&lsquo;=&rsquo;, 2);</p>
-
-<pre><code>var propertyName = params[0];
-var expectedValue = params[1];
-
-var element = this.page().findElement(locator);
-var actualValue = this.browserbot.getCurrentWindow().getComputedStyle(element, null).getPropertyValue(propertyName);
-Assert.matches(expectedValue, actualValue);
-</code></pre>
-
-<p>};</p>
-
-<p></code></p>
-
-<p>Now I can add a selenium test like
-<code></p>
-
-<table>
-<tr>
-    <td>assertStyle</td>
-    <td>//td[@class='lender'][1]</td>
-    <td>text-align=center</td>
-</tr>
-
-</table>
-
-
-<p></code>
-Selenium only lets me pass two parameters and really I want three (locator, css property, expected value). So I&rsquo;ve hacked this and put two parameters into one - which is a bit smelly but for now gets the job done - comments on better methods very welcome.</p>
-
-<p>I need to at least check that the &lsquo;text&rsquo; parameter is validated properly - but I figured I&rsquo;d blog now and update later as I&rsquo;ve a deadline to meet today.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/7">&larr; Older</a>
@@ -673,6 +674,14 @@ Selenium only lets me pass two parameters and really I want three (locator, css 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
@@ -682,14 +691,6 @@ Selenium only lets me pass two parameters and really I want three (locator, css 
     
       <li class="post">
         <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a>
       </li>
     
   </ul>
@@ -724,7 +725,7 @@ Selenium only lets me pass two parameters and really I want three (locator, css 
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2014 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 
