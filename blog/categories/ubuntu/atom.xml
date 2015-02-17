@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ubuntu | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/ubuntu/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-02-16T20:03:53+00:00</updated>
+  <updated>2015-02-17T18:53:47+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu Disk Encryption Password]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2015/02/17/ubuntu-disk-encryption-password/"/>
+    <updated>2015-02-17T18:50:37+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2015/02/17/ubuntu-disk-encryption-password</id>
+    <content type="html"><![CDATA[<p>To reset the password on an encrypted disk in Ubuntu use the disks tool</p>
+
+<p>The cogs icon for the partition has a change password option</p>
+
+<p><img src="/images/posts/ubuntu-disk-envryption-password.png" alt="screenshot" /></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Specifying MTU for a VPN Connection in NetworkManager]]></title>
@@ -219,53 +232,6 @@ I was impressed by the USB installers live mode allowing me to run Linux on the 
 I wasn&#8217;t impressed with Windows though - very slow to get up and running (an hour of installs, updates and reboots - on a pre-installed system?!)  Constant alerts from the security software - and no useful software installed on the base system.
 </p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Moving an Svn Repository to Integrate With Trac]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2010/02/02/moving-an-svn-repository-to-integrate-with-trac/"/>
-    <updated>2010-02-02T00:00:00+00:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2010/02/02/moving-an-svn-repository-to-integrate-with-trac</id>
-    <content type="html"><![CDATA[<p>I just started on a project that was using trac and subversion but they weren&#8217;t integrated. I love the cross referncing trac provides. It can really help explain changesets and show how an issue was resolved.</p>
-
-
-
-
-<p>The steps to add subversion to trac are</p>
-
-
-
-
-<ul>
-<li>Stop people using the old repository</li>
-<li>copy the repository files from one server to the other<br />I used tar and scp</li>
-<li>edit trac.ini to add the location of the respository <br/>
-Trac and svn must be on the same server</li>
-<li>run trac-admin resync <br/>
-This imports all the svn history.</li>
-</ul>
-
-
-
-
-<p><p>I enabled access to subversion via apache SSL while I could get access via the browser checking out code with different tools gave the follwoing errors</p>
-
-<p><code>
-svn: OPTIONS of &lsquo;<a href="https://195.99.1.93/svn">https://195.99.1.93/svn</a>&rsquo;: 200 OK</p>
-
-<p>svn: PROPFIND of &lsquo;/svn&rsquo;: 405 Method Not Allowed</p>
-
-<p>svn: Server sent unexpected return value (405 Method Not Allowed) in response to PROPFIND request for &lsquo;/svn&rsquo;
-</code></p>
-
-<p><p>Thanks to <a href="http://techpulp.com/2009/01/webdav-405-method-not-allowed-in-porpfind/">techpulp.com/2009/01/webdav-405-method-not-allowed-in-porpfind/</a> I found out that my problem was an extraneous trailing slash in my apache config!</p></p>
-
-<p><p>I then ran svn relocate (right click on the repository using eclipse in the subversion perspective).</p></p>
-
-<p><p>I moved Trac to SSL for good measure - changing the location on the task repository in eclipse was straightforward.</p></p>
-
-<p><p>And as a finishing touch I customised Trac by adding a project logo - it goes in trac/htdocs/mylogo.png and is referenced in trac.ini as site/mylogo.png - I&rsquo;ve failed this step before but actuallt read the docs this tim.</p></p>
 ]]></content>
   </entry>
   

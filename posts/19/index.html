@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="To set up squid to allow password authenticated access add the following to your squid.conf file. auth_param basic program /usr/lib/squid3/ncsa_auth &hellip;">
+  <meta name="description" content="If you try to access a subversion repository over http while using a 3G connection from three.co.uk you may receive an error message like. svn: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/06/08/subversion-three-co-uk-proxy-trouble/">Subversion + three.co.uk = Proxy Trouble</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-06-08T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you try to access a subversion repository over http while using a 3G connection from three.co.uk you may receive an error message like.</p>
+
+<blockquote>
+svn: PROPFIND request failed on &#8216;/repos&#8217;
+svn: Processing PROPFIND request response failed: Premature end of file. (/repos) 
+</blockquote>
+
+
+<p>This is because three.co.uk uses a <a href="http://en.wikipedia.org/wiki/Proxy_server#Intercepting_proxy_server">proxy</a> to interecept web traffic on their network.</p>
+
+<p>This proxy does not understand all the <a href="http://subversion.tigris.org/faq.html#proxy">commands that are used by subversion</a>.</p>
+
+<p>It is perfectly possible to access subversion repositories through a proxy - just not through the one at three.co.uk.</p>
+
+<p>Three only filter traffic on port 80 - the standard web port. Well, at least as far as I can tell that&rsquo;s all they do.</p>
+
+<p>So if you can set up subversion to access a different proxy - one that does play nice - then you can access your repository over your 3G connection.</p>
+
+<p>Under Linux the subversion proxy settings are in the file:</p>
+
+<p><code>
+~/.subversion/servers
+</code></p>
+
+<p>Just add settings as below:</p>
+
+<p><code>
+[global]
+http-proxy-host = www.exaple.com
+http-proxy-port = 3128
+http-proxy-username = nobody
+http-proxy-password = secret
+</code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -692,198 +753,6 @@ I&#8217;ll post more when I&#8217;ve written some actual documentation.
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/05/25/mobile-internet-and-ubuntu/">Mobile Internet and Ubuntu</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-05-25T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I just got a new gadget - a mobile internet modem.
-</p>
-
-
-<p>
-As ever the manufactures provide little support for us Linux users - but setup was pretty easy anyway.
-</p>
-
-
-<p>
-I plugged it in and it was detected OK with full driver support.
-</p>
-
-
-<p>
-Once installed it appears as any other modem would.
-</p>
-
-
-<p>
-The only snag was that the Windows installer sets up it&#8217;s own modem setup and doesn&#8217;t give many clues what the configuration is!
-</p>
-
-
-<p>
-A bit of googling later and I have a configuration file.
-</p>
-
-
-<pre>
-[Dialer defaults]
-Modem = /dev/ttyUSB1
-[Dialer three]
-Init2 = ATZ
-Init3 = ATQ0 V1 E1 S0=0 &amp;C1 &amp;D2 +FCLASS=0
-Stupid Mode = 1
-Modem Type = Analog Modem
-ISDN = 0
-Phone = *99\#
-Modem = /dev/ttyUSB0
-username = username
-Password = password
-Dial Command = ATDT
-Baud =466600
-Init4 = AT+CGDCONT=1,&quot;IP&quot;,&quot;three.co.uk&quot;
-</pre>
-
-
-<p>
-see also http://ubuntuforums.org/showthread.php?t=633981 
-</p>
-
-
-<p>
-Now, I have to confess I don&#8217;t know what every line above does &#8230;
-</p>
-
-
-<p>
-I&#8217;m using wvdial to make the connection and this insists on a username/password - but three don&#8217;t use one so just enter any value. The above is literally what I used.
-</p>
-
-
-<p>
-The phone number is &#8216;*99#&#8217; (# is a comment in wvdial.con so has to be escaped)
-</p>
-
-
-<p>
-The <a href="http://www.three.co.uk/threefiles/macdrivers/ConfigGuideUSBModemMac.pdf">Mac guide</a> was helpful - giving me the hint that three.co.uk was required in the init stages.
-</p>
-
-
-<p>
-The Baud rate I took from a web post somewhere - I&#8217;ve tried tweaking it but the results are variable.  
-</p>
-
-
-<p>
-Details for various services available from: 
-</p>
-
-
-<p>
-<a href="http://www.knowyourmobile.com/info/1310/uk_mobile_operators_internet_and_email_settings.html">www.knowyourmobile.com/info/1310/uk_mobile_operators_internet_and_email_settings.html</a> 
-</p>
-
-
-<h2>Service Details</h2>
-
-
-<p>
-The connections is <a href="http://en.wikipedia.org/wiki/Network_address_translation">NAT&#8217;ed</a> so wouldn&#8217;t be suitable for hosting services or running some games.
-</p>
-
-
-<p>
-The service is filtered but not heavily - I can access ports for SSH, IMAPS, FTP.
-</p>
-
-
-<p>
-All outgoing email (traffic to port 25) gets intercepted by three&#8217;s email servers, this could be useful but could cause problems if you think you are connecting to a specific mail server.
-</p>
-
-
-<p>
-Three also provide an SMTP sever you can configure explicitly at smtp.three.co.uk 
-</p>
-
-
-<p>
-I don&#8217;t see any signs of a transparent HTTP proxy.
-</p>
-
-
-<h2>Conclusion </h2>
-
-
-<p>
-I&#8217;m happy :-)
-</p>
-
-
-<p>
-Connection speed reports at 1134Kbs up / 52 Kbs down - it&#8217;s noticably slower than my ADSL line but quite usable. 
-</p>
-
-
-<p>
-I got this device primarily as a backup connection so that I can carry on working without interruption even if there is a local network problem. I also expect to be able to do the odd extra bit of work on the train or while away at weekends.
-</p>
-
-
-<p>
-At £15 per month it won&#8217;t take a great deal of extra billable work before I&#8217;m making a profit! 
-</p>
-
-
-<h2>
-It didn&#8217;t work on Windows 
-</h2>
-
-
-<p>
-<img src="/sites/default/files/u1/doesnt-work-in-windows.gif" title="windows error message" width="348" height="147" />
-</p>
-
-
-<p>
-I was dissapointed with the lack of Linux instructions for this device - but interestingly for me as a Linux advocate: installing the device didn&#8217;t work at all under windows!
-</p>
-
-
-<p>
-Not only did instalation require a couple of reboots and install extra software on my machine - but then it wouldn&#8217;t connect. 
-</p>
-
-
-<p>
-One more reason to love Linux <img src="/sites/default/modules/tinymce/tinymce/jscripts/tiny_mce/plugins/emotions/images/smiley-cool.gif" alt="Cool" title="Cool" />
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/20">&larr; Older</a>
@@ -901,6 +770,10 @@ One more reason to love Linux <img src="/sites/default/modules/tinymce/tinymce/j
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
@@ -914,10 +787,6 @@ One more reason to love Linux <img src="/sites/default/modules/tinymce/tinymce/j
     
       <li class="post">
         <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
   </ul>

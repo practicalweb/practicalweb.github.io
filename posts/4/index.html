@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="This worked for me today - saving it here so I can find it again http://off-topic.biz/en/eclipse-hangs-at-startup-showing-only-the-splash-screen/ cd &hellip;">
+  <meta name="description" content="This has been annoying to work out. The puppet apache module will by default create the document root for a virtualhost if it is not already defined &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/11/puppet-apache-virtualhost-docroot-provided-by-rpm/">Puppet - Apache Virtualhost Docroot Provided by Rpm</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-11T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This has been annoying to work out.</p>
+
+
+
+
+<p>The <a href="https://forge.puppetlabs.com/puppetlabs/apache">puppet apache module</a> will by default create the document root for a virtualhost if it is not already defined. But since I wanted the documentroot to be managed by a custom   RPM I don&#8217;t have a reference to the actual directory in puppet.</p>
+
+
+
+
+<p>It seems the thing to do is to create file named after the document root - but with an alternate path property. This way puppet/apache knows not to create the documentroot, and the one I make in puppet doesn&#8217;t then get in the way of the RPM one.</p>
+
+
+<p><code></p>
+
+<p>  apache::vhost { &lsquo;www.vagrant&rsquo;:
+    priority        => &lsquo;10&rsquo;,
+    port            => &lsquo;80&rsquo;,
+    docroot         => &ldquo;/var/www/html/foo&rdquo;,
+    docroot_owner   => &lsquo;root&rsquo;,
+    docroot_group   => &lsquo;root&rsquo;,
+    override        => &lsquo;All&rsquo;,
+    require         => Package[&lsquo;foo&rsquo;],
+  }</p>
+
+<p>  file {&lsquo;/var/www/html/foo&rsquo;:
+      path => &ldquo;/usr/share/doc/foo&rdquo;,
+      content => &ldquo;Puppet needs a file with an object name of teh docroot defined, this is that dummy file, the real docroot is defined in an rpm\n &rdquo;,
+      owner => root,
+  }</p>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -750,420 +810,6 @@ sudo semanage port -a -t memcache_port_t -p tcp 11311
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/16/how-to-build-a-centos-6-base-box-for-vagrant/">How to Build a Centos 6 Base Box for Vagrant</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-10-16T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><hr />
-
-<p>Update : <a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating new Vagrant base boxes with Veewee</a></p>
-
-<p>I originally went down a manual route as I wanted to understand the process, and since I&rsquo;m familiar with manual installs this was the easiest path for me at the time.</p>
-
-<p>You&rsquo;re probably better off using <a href="https://github.com/jedi4ever/veewee">veewee</a> or <a href="http://www.packer.io/">packer</a></p>
-
-<hr />
-
-<p>I&rsquo;ve been playing with <a href="http://vagrantup.com/">vagrant</a> a bit lately but of course the first thing I wanted was something they say is for advanced users only, creating my own base box.</p>
-
-<p>I&rsquo;m not sure why this is given such a stark warning, it is perhaps a little long, but it wasn&rsquo;t too difficult, and given that I want to match a client install as closely as possible I want centos 6.2 (client has RHEL6.2)</p>
-
-<p>There is a list of <a href="http://www.vagrantbox.es/">pre-built boxes</a> but I personally don&rsquo;t know how trustworthy those urls are.</p>
-
-<p>So here is what I did (as well as I can reconstruct from notes) with a few comments.</p>
-
-<p>I&rsquo;ve tried to keep this quite detailed so that it should achievable even if you don&rsquo;t regularly install new OS&rsquo;s</p>
-
-<h2>On your local dev machine</h2>
-
-<p>I&rsquo;m running Ubuntu 12.04.1 LTS locally</p>
-
-<p>I have installed</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>i A virtualbox                                                                                                                      - x86 virtualization solution - base binaries                                                                                              
-</span><span class='line'>i A virtualbox-dkms                                                                                                                 - x86 virtualization solution - kernel module sources for dkms                                                                             
-</span><span class='line'>i A virtualbox-fuse                                                                                                                 - x86 virtualization solution - virtual filesystem                                                                                         
-</span><span class='line'>i   virtualbox-guest-additions-iso                                                                                                  - guest additions iso image for VirtualBox                                                                                                 
-</span><span class='line'>i   virtualbox-ose-dkms                                                                                                             - transitional package for virtualbox-dkms                                                                                                 
-</span><span class='line'>i   virtualbox-ose-fuse                                                                                                             - transitional package for virtualbox-fuse                                                                                                 
-</span><span class='line'>i   virtualbox-ose-qt                                                                                                               - transitional package for virtualbox-qt                                                                                                   
-</span><span class='line'>i A virtualbox-qt                                                                                                                   - x86 virtualization solution - Qt based user interface  
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>i   vagrant                                                                                                                         - Tool for building and distributing virtualized development environments                                                                  </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://mirrors.ukfast.co.uk/sites/ftp.centos.org/6.3/isos/i386/CentOS-6.3-i386-minimal.iso</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>In Virtualbox GUI</h2>
-
-<p><img src="/sites/default/files/step-1.jpeg" title="[step 1]" ></p>
-
-<p>Create a new VM</p>
-
-<p><img src="/sites/default/files/step-2.jpeg" title="[step 2]" ></p>
-
-<p>Set OS to Linux and version to Red Hat</p>
-
-<p>Call it &ldquo;vagrant-centos62&rdquo; (ie vagrant-${osname}</p>
-
-<p><img src="/sites/default/files/step-3.jpeg" title="[step 3]" ></p>
-
-<p>Set memory to 512Mb (this is just a default and can be altered later)</p>
-
-<p><img src="/sites/default/files/step-4.jpeg" title="[step 4]" ></p>
-
-<p>Create a new virtual hard disk</p>
-
-<p><img src="/sites/default/files/step-5.jpeg" title="[step 5]" ></p>
-
-<p>Use the default virtualbox format</p>
-
-<p><img src="/sites/default/files/step-6.jpeg" title="[step 6]" ></p>
-
-<p>Choose dynamically sized (This means the VM will see a large disk - but the space won&rsquo;t be used on your real hard disk - unless the virtual one has actual data on it)</p>
-
-<p><img src="/sites/default/files/step-7.jpeg" title="[step 7]" ></p>
-
-<p>Make it 32Gb in size (which should be big enough for most tasks)</p>
-
-<p><img src="/sites/default/files/step-8.jpeg" title="[step 8]" ></p>
-
-<p>Click create</p>
-
-<h3>Virtualbox settings for this new VM</h3>
-
-<p><img src="/sites/default/files/step-9.jpeg" title="[step 9]" ></p>
-
-<p>Disable audio support (not normally needed for a development VM)</p>
-
-<p><img src="/sites/default/files/step-10.jpeg" title="[step 10]" ></p>
-
-<p>Same for USB</p>
-
-<p><img src="/sites/default/files/step-11.jpeg" title="[step 11]" ></p>
-
-<p>In Storage settings choose a virtual CD - and broswe to the iso you downloaded earlier.</p>
-
-<p>Start the new VM</p>
-
-<h2>In the Install process</h2>
-
-<p>NB I don&rsquo;t show every single step here, as I got bored with all the confirmation screens. Hopefully the ones I mised are obvious enough.</p>
-
-<p><img src="/sites/default/files/step-13.jpeg" title="[step 13]" ></p>
-
-<p>Select to install a new OS</p>
-
-<p><img src="/sites/default/files/step-14.jpeg" title="[step 14]" ></p>
-
-<p>Re-initialize the hard drive (this is just the one on the VM that has never been used)</p>
-
-<p><img src="/sites/default/files/step-15.jpeg" title="[step 15]" ></p>
-
-<p>Set the root password to &ldquo;vagrant&rdquo; (and remember it for later)</p>
-
-<p><img src="/sites/default/files/step-16.jpeg" title="[step 16]" ></p>
-
-<p>Accept defaults for partitioning the disk, &ldquo;replace linux system&rdquo;</p>
-
-<p><img src="/sites/default/files/step-17.jpeg" title="[step 17]" ></p>
-
-<p>Write changes to disk</p>
-
-<p><img src="/sites/default/files/step-18.jpeg" title="[step 18]" ></p>
-
-<p>Reboot the VM</p>
-
-<h2>In the VM</h2>
-
-<p>So now thew new VM is up and running, we just need to prepare it for vagrant</p>
-
-<p>Oddly centOS/RHEL network interfaces are not enabled by default, we need to change this.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /etc/sysconfig/network-scripts/ifcfg-eth0
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>set ONBOOT=&ldquo;yes&#8217; and BOOTPROTO=dhcp</p>
-
-<p>Start the network
-<code>ifup eth0</code></p>
-
-<p>Install some packages we need to get Virtualbox additions to work (do this before rebooting). ALso it is important to update - to ensure the kernel in use matches the kernel-devel package</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum update
-</span><span class='line'>yum install gcc make kernel-devel kernel-headers perl
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now shut down the VM a moment, and <b>in your local system</b> run</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>VBoxManage modifyvm <span class="s2">&quot;vagrant-centos62&quot;</span> --natpf1 <span class="s2">&quot;guestssh,tcp,,2222,,22&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This will open an ssh port on localhost to the new VM (NB this can also be done via the GUI in advanced options on the network config).</p>
-
-<p>Now start the VM again, and once booted, in the VM window menu, click &ldquo;Devices&rdquo; and &ldquo;Install guest additions&rdquo;</p>
-
-<p>back in your local system again run
-<code>ssh -p2222 root@localhost</code></p>
-
-<p>Great so now we have root on the new machine, in your normal terminal and it should be possible to copy-paste the following commands</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mount /dev/cdrom /mnt/
-</span><span class='line'>sh /mnt/VBoxLinuxAdditions.run
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>errors related to KERN_DIR mean you don&rsquo;t have a matching running kernel and kerne-devel versions - check the update, install reboot steps above</p>
-
-<p>Errors building openGL and windows drivers are expected (there is no windows system) these error messages don&rsquo;t mean the process failed.</p>
-
-<p>Test that the additions are installed, the following command should run and print out some system facts</p>
-
-<p><code>VBoxControl  guestproperty enumerate</code></p>
-
-<p>Create vagrant user, group vagrant, password vagrant.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>groupadd admin
-</span><span class='line'>useradd -G admin -p <span class="k">$(</span>openssl passwd -1 vagrant<span class="k">)</span> vagrant
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Install and configure sudo for vagrant user to have passwordless sudo powers</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum -y install sudo
-</span><span class='line'>
-</span><span class='line'><span class="nb">echo</span> <span class="s1">&#39;</span>
-</span><span class='line'><span class="s1">Defaults    env_keep += SSH_AUTH_SOCK </span>
-</span><span class='line'><span class="s1">%admin ALL=NOPASSWD: ALL</span>
-</span><span class='line'><span class="s1">Defaults:vagrant !requiretty</span>
-</span><span class='line'><span class="s1">&#39;</span> <span class="p">&amp;</span>gt<span class="p">;</span> /etc/sudoers.d/vagrant
-</span><span class='line'>
-</span><span class='line'>chmod <span class="m">0440</span> /etc/sudoers.d/vagrant
-</span><span class='line'>
-</span><span class='line'><span class="c"># the above for copy-paste convenience NEVER do this on a remote machine - use visudo instead</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ssh with sudo commands should work, only asking a password for login (not again for sudo) from you local system try</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ssh -p2222 vagrant@localhost <span class="s2">&quot;sudo ls /&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Add vagrant&rsquo;s public key so vagrant user can ssh without password.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo -u vagrant mkdir /home/vagrant/.ssh
-</span><span class='line'>sudo -u vagrant curl -k https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub &gt; /home/vagrant/.ssh/authorized_keys
-</span><span class='line'>chmod <span class="m">0755</span> /home/vagrant/.ssh
-</span><span class='line'>chmod <span class="m">0644</span> /home/vagrant/.ssh/authorized_keys
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>These keys are reccomended for publically distributable base boxes, the keys are included in the vargant programs and so login &lsquo;just works&rsquo; for anyone using vagrant. However this is not secure and these keys should only be allowed if your vagrant systems will be secured by a private network. If the boxes will be public use secure keys and and then specify the private key you created by setting config.ssh.private_key_path.</p>
-
-<p>Install the Puppet Repository</p>
-
-<p>According to the [official documentation}(<a href="http://vagrantup.com/v1/docs/base_boxes.html">http://vagrantup.com/v1/docs/base_boxes.html</a>)</p>
-
-<blockquote><p>Chef and Puppet for provisioning support<br/>&#8230; are absolutely required of a base box in order to work properly with Vagrant.</p></blockquote>
-
-
-<p>However this appears to me to be talking about a requirment for base boxes to be publically distributed, if you are building a base box for your own team I can&rsquo;t see why you would need either puppet or chef unless you will actually use them, but I may be wrong on this. The following instrcutions detail how to install both (on centos)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> <span class="s1">&#39;[puppetlabs]</span>
-</span><span class='line'><span class="s1">name=Puppet Labs Packages</span>
-</span><span class='line'><span class="s1">baseurl=http://yum.puppetlabs.com/el/$releasever/products/$basearch/</span>
-</span><span class='line'><span class="s1">enabled=1</span>
-</span><span class='line'><span class="s1">gpgcheck=1</span>
-</span><span class='line'><span class="s1">gpgkey=http://yum.puppetlabs.com/RPM-GPG-KEY-puppetlabs</span>
-</span><span class='line'><span class="s1">&#39;</span> &gt;  /etc/yum.repos.d/puppet.repo
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Install the EPEL x86_64 YUM Repository</span>
-</span><span class='line'>
-</span><span class='line'>rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-7.noarch.rpm
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Install the Puppet Master packages (I&#39;m not 100% sure if this is striclty required if you don&#39;t use the puppet master provisioner)</span>
-</span><span class='line'>
-</span><span class='line'>yum -y install puppet-server
-</span><span class='line'>
-</span><span class='line'><span class="c">#Install the Puppet Client packages</span>
-</span><span class='line'>
-</span><span class='line'>yum -y install puppet
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you want to use chef</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rpm -Uvh http://rbel.frameos.org/rbel6
-</span><span class='line'>
-</span><span class='line'><span class="c"># Install Ruby and other development tools:</span>
-</span><span class='line'>yum install ruby ruby-devel ruby-ri ruby-rdoc ruby-shadow gcc gcc-c++ automake autoconf make curl dmidecode
-</span><span class='line'>
-</span><span class='line'><span class="c"># On RHEL 6 you will need to add the &quot;RHEL Server Optional&quot; channel subscription for this command to succeed without missing dependencies.</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">#We prefer to install RubyGems from source rather than use the OS-provided version (if any), as it is cross platform, so we know what to expect.</span>
-</span><span class='line'>Install RubyGems
-</span><span class='line'><span class="nb">cd</span> /tmp
-</span><span class='line'>curl -O http://production.cf.rubygems.org/rubygems/rubygems-1.8.10.tgz
-</span><span class='line'>tar zxf rubygems-1.8.10.tgz
-</span><span class='line'><span class="nb">cd </span>rubygems-1.8.10
-</span><span class='line'>ruby setup.rb --no-format-executable
-</span><span class='line'>
-</span><span class='line'><span class="c"># Install Chef Gem</span>
-</span><span class='line'>
-</span><span class='line'>gem install chef --no-ri --no-rdoc
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Clean up (freeing up space to make the final box smaller)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum remove gcc make kernel-devel kernel-headers perl
-</span><span class='line'>yum clean all
-</span><span class='line'><span class="c"># TODO add more cleanup steps eg ruby tarballs, kernel-devel probably isn&#39;t needed after vbox additions is built etc</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Finally shut down the VM, package the box and add it to your vagrant boxes.
-On your local dev machine</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>vagrant package --output centos62.box --base vagrant-centos62
-</span><span class='line'>vagrant box add centos62 centos62.box
-</span><span class='line'>vagrant box list <span class="c"># this should show the new box</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now you can quickly create a Vagrant VM</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir vagrant_test
-</span><span class='line'><span class="nb">cd </span>vagrant_test
-</span><span class='line'>vagrant init centos62
-</span><span class='line'>vagrant up
-</span><span class='line'><span class="c"># wait while it boots</span>
-</span><span class='line'>vagrant ssh
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/5">&larr; Older</a>
@@ -1181,6 +827,10 @@ On your local dev machine</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
@@ -1194,10 +844,6 @@ On your local dev machine</p>
     
       <li class="post">
         <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
   </ul>

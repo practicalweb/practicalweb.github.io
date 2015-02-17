@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="There are many great services online that can help build fantastic websites at little cost. In particular Google maps and you tube offer facilities &hellip;">
+  <meta name="description" content="For most of 2008 I've been working on a large Drupal installation (around 10 developers,  something like 100 custom modules, 17 languages, split &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,115 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/15/updating-drupal/">Updating Drupal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-12-15T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+For most of 2008 I&#8217;ve been working on a large Drupal installation (around 10 developers,  something like 100 custom modules, 17 languages, split over 2 sites).
+</p>
+
+
+<p>
+This all adds up to a lot of updates, and schema changes.
+</p>
+
+
+<p>
+Drupal&#8217;s hook_install, and hook_update_N functions are pretty good, but not perfect at bringing order to this chaos.
+</p>
+
+
+<p>
+These functions provide a basic way for developers to provide database installation and update functions, it&#8217;s great that these can combine full code functionality (eg for data migration) synchronised with schema changes. 
+</p>
+
+
+<p>
+As we have  something like 10 Drupal installs fro various, stage, test and UAT purposes, plus 2 per developer - having these updates scripted is essential. 
+</p>
+
+
+<p>
+But all too frequently we have issues 
+</p>
+
+
+<ul>
+    <li>Loading a MySQL backup on top of an existing database leaves newly created  tables in place even though they don&#8217;t exist in the backup (solution - always drop and recreate the database before loading a backup).</li>
+    <li>A developer changes an update hook - assuming incorrectly that it hasn&#8217;t been run yet.</li>
+    <li>An update hook misses some functionality that the developer added to their own database - but forgot to put in the hook.</li>
+</ul>
+
+
+<p>
+Another problem is that the update interface gives no warning of the changes about to be enacted - you get a list of SQL command run afterwards. 
+</p>
+
+
+<p>
+In short I&#8217;ve found that this update system is targeted more at distribution of open source code to the public, and doesn&#8217;t work so smoothly for rapid development amongst a largish team. 
+</p>
+
+
+<p>
+We&#8217;re still on Drupal 5 and are not likely to upgrade - the benefits just aren&#8217;t worth the costs for such a large codebase.
+</p>
+
+
+<p>
+I&#8217;m curious though about Drupal 6&#8217;s schema API, it seems like it ought to be possible to use this to run an update that doesn&#8217;t just make changes based on version numbers. It could actually examine the existing schema, compare this to the required one - report changes it suggests and run them after they are approved.
+</p>
+
+
+<p>
+It could also be used in development to verify that the developers altered schema is properly recorded in the code. 
+</p>
+
+
+<p>
+I expect that level of functionality may be some way off though. 
+</p>
+
+
+<p>
+http://drupal.org/project/schema
+</p>
+
+
+<p>
+http://drupal.org/node/146843 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -728,75 +837,6 @@ Phew - I have a working Eclipse for PHP development on Ubuntu 8.10
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/11/01/ubuntu-8-10/">Ubuntu 8.10</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-11-01T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Having just upgraded to Ubuntu 8.10 my key observation is that it&#8217;s important to read the release notes first.
-</p>
-
-
-<p>
-http://www.ubuntu.com/getubuntu/releasenotes/810
-</p>
-
-
-<p>
-There are a few bugs which have affected me
-</p>
-
-
-<ul>
-    <li>there is no bluetooth support in KDE</li>
-    <li>my wifi card only works in the US<br />
-    (there&#8217;s a workaround and I&#8217;m back online)</li>
-    <li> Dual head display with xrandr is causing problems<br />
-    (my screen flashes and KDE is putting widgets in parts of the screen I can&#8217;t see)</li>
-    <li>Subversion has moved to version 1.5 and getting Eclipse to use a compatible svn library is proving tricky</li>
-</ul>
-
-
-<p>
-On the plus side KDE 4.1 is looking very pretty, and the move to subversion 1.5 will be very useful in the long run.
-</p>
-
-
-<p>
-I had hoped to get my 3G connection working as a previous update seems to have broken it - but so far still no joy. 
-</p>
-
-
-<p>
-update:<br />
-There&#8217;s a solution for the Kubuntu Intrepid Dual Monitor Blinking<br />
-issue here: http://blog.nixternal.com/2008.10.22/kubuntu-intrepid-dual-monitor-blinking/ 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/17">&larr; Older</a>
@@ -814,6 +854,10 @@ issue here: http://blog.nixternal.com/2008.10.22/kubuntu-intrepid-dual-monitor-b
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
@@ -827,10 +871,6 @@ issue here: http://blog.nixternal.com/2008.10.22/kubuntu-intrepid-dual-monitor-b
     
       <li class="post">
         <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
   </ul>

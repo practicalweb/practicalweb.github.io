@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I read this post the other day and found it really inspiring - so many things to do and learn&hellip; http://bergie.iki.fi/blog/ &hellip;">
+  <meta name="description" content="The main svn server I&rsquo;m working on has finally upgraded to svn 1.5 - so easier merging is now possible - hooray. But we&rsquo;ve been seeing &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/13/svn-merges-and-excess-merginfo-properties/">Svn Merges and Excess Merginfo Properties</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-07-13T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The main svn server I&rsquo;m working on has finally upgraded to svn 1.5 - so easier merging is now possible - hooray.</p>
+
+<p>But we&rsquo;ve been seeing merges that should only affect one file resulting in property changes on lots of files/directories. This isn&rsquo;t especially harmful - but it is annoying and makes reviewing the merge harder because of the extra noise.</p>
+
+<p>It turns out that this extra mergeinfo is likely because of earlier merges on subtrees <a href="http://blogs.collab.net/subversion/2009/11/where-did-that-mergeinfo-come-from/">http://blogs.collab.net/subversion/2009/11/where-did-that-mergeinfo-come-from/</a></p>
+
+<p>It is possible to remove the subtree mergeinfo via this command run from the root of the branch</p>
+
+<p><code>
+svn propdel -R svn:mergeinfo ./*
+</code></p>
+
+<p><a href="http://stackoverflow.com/questions/767418/remove-unnecessary-svnmergeinfo-properties">http://stackoverflow.com/questions/767418/remove-unnecessary-svnmergeinfo-properties</a></p>
+
+<p>Which should get rid of the problem - I&rsquo;m just not 100% sure if it throws away important data.</p>
+
+<p>For now I think I&rsquo;ll live with the nuisance - and come back to this if it becomes too annoying or if I gain greater insight into the issue.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -967,63 +1012,6 @@ node_type_delete(&lsquo;mytype&rsquo;);
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/04/08/replacing-exported-views-with-views-in-features/">Replacing Exported Views With Views in Features</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-04-08T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>We had an old Drupal module which contained exported views, most of our sites uses features to manage view - so when they needed updating we wanted to use features.</p>
-
-<p>So we deleted the old module and added a new one with the required views.</p>
-
-<p>And the views were blank.</p>
-
-<p>In order to have this work smoothly on deployment I reinstated the old module and then</p>
-
-<p>Added an uninstall hook that deleted the modules like
-&lt;?php
-function my_views_uninstall() {
-    $views = array(&lsquo;all_related_content&rsquo;,
-                   &lsquo;customised_search_results&rsquo;,
-                   &lsquo;footer_links&rsquo;,);</p>
-
-<pre><code>foreach ($views as $view_name) {
-    $view = views_get_view($view_name);
-    $view-&gt;delete();
-    views_object_cache_clear('view', $form_state['view']-&gt;name);
-}
-</code></pre>
-
-<p>}</p>
-
-<p>?></p>
-
-<p>After this module is uninstalled, the new feature module installs and works as expected.</p>
-
-<p>But it is important that these events happen in the correct sequence.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/8">&larr; Older</a>
@@ -1041,6 +1029,10 @@ function my_views_uninstall() {
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
@@ -1054,10 +1046,6 @@ function my_views_uninstall() {
     
       <li class="post">
         <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="It&rsquo;s been a while since I&rsquo;ve worked on a project which is providing as well as consuming web services. In this case I need to debug &hellip;">
+  <meta name="description" content="We had an old Drupal module which contained exported views, most of our sites uses features to manage view - so when they needed updating we wanted &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/04/08/replacing-exported-views-with-views-in-features/">Replacing Exported Views With Views in Features</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-04-08T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We had an old Drupal module which contained exported views, most of our sites uses features to manage view - so when they needed updating we wanted to use features.</p>
+
+<p>So we deleted the old module and added a new one with the required views.</p>
+
+<p>And the views were blank.</p>
+
+<p>In order to have this work smoothly on deployment I reinstated the old module and then</p>
+
+<p>Added an uninstall hook that deleted the modules like
+&lt;?php
+function my_views_uninstall() {
+    $views = array(&lsquo;all_related_content&rsquo;,
+                   &lsquo;customised_search_results&rsquo;,
+                   &lsquo;footer_links&rsquo;,);</p>
+
+<pre><code>foreach ($views as $view_name) {
+    $view = views_get_view($view_name);
+    $view-&gt;delete();
+    views_object_cache_clear('view', $form_state['view']-&gt;name);
+}
+</code></pre>
+
+<p>}</p>
+
+<p>?></p>
+
+<p>After this module is uninstalled, the new feature module installs and works as expected.</p>
+
+<p>But it is important that these events happen in the correct sequence.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -517,62 +574,6 @@ content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytyp
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/06/25/debugging-drush-updb/">Debugging Drush Updb</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-06-25T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>If you&rsquo;ve ever tried to debug your update hooks via drush you may (like me) have been puzzled as to why your breakpoints don&rsquo;t seem to work.</p>
-
-<p>It seems that proc_open() is used to avoid memory issues <a href="http://drupal.org/node/687724">http://drupal.org/node/687724</a> (effectively resetting all the Drupal static variables??) and this separate process isn&rsquo;t available to the debugger.</p>
-
-<p>After stepping though the drush update process I found where this happens and have a bypass that is basically functional (drush reporting seems broken - but I can step through my code).</p>
-
-<p>This patch is the change I&rsquo;ve made.</p>
-
-<p>I bypass the patch process and go direct to the update.</p>
-
-<p><code></p>
-
-<p>&mdash; commands/core/drupal/update_6.inc   (revision 547)
-+++ commands/core/drupal/update_6.inc   (working copy)
-@@ -424,10 +424,7 @@
-       &lsquo;error_message&rsquo; => &lsquo;An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.&rsquo;,
-       &lsquo;finished&rsquo; => &lsquo;update_finished&rsquo;,
-     );
--    batch_set($batch);
--    $batch =&amp; batch_get();
--    $batch[&lsquo;progressive&rsquo;] = FALSE;
--    drush_backend_batch_process(&lsquo;updatedb-batch-process&rsquo;);
-+    _update_do_one($module, $version, $batch);
-   }
-   else {
-     drush_log(dt(&ldquo;No database updates required&rdquo;), &lsquo;success&rsquo;);</p>
-
-<p></code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/9">&larr; Older</a>
@@ -590,6 +591,10 @@ content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytyp
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
@@ -603,10 +608,6 @@ content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytyp
     
       <li class="post">
         <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
   </ul>

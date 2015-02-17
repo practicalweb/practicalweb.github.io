@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="The branching strategy I&rsquo;ve found most effective and flexible is to use one branch per release version that is used for integration and feature &hellip;">
+  <meta name="description" content="To reset the password on an encrypted disk in Ubuntu use the disks tool The cogs icon for the partition has a change password option ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,39 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-17T18:50:37+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:50 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To reset the password on an encrypted disk in Ubuntu use the disks tool</p>
+
+<p>The cogs icon for the partition has a change password option</p>
+
+<p><img src="/images/posts/ubuntu-disk-envryption-password.png" alt="screenshot" /></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1018,124 +1051,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/13/quick-steps-to-secure-ubuntu-linux/">Quick Steps to Secure Ubuntu Linux</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-13T14:41:12+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>2:41 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Recently I&rsquo;ve been reviewing security and realised I&rsquo;ve been relying too much on my routers firewall - which isn&rsquo;t even present if I work on an open wifi connection somewhere.</p>
-
-<p>Steps so far</p>
-
-<p>Reinstalled Ubuntu with full disk encryption, apart from the need to back and restore data this was a painless process. I don&rsquo;t see a noticeable performance impact (though I have a fast system with SSD) the biggest drawback I can see is that if I mess around with a custom kernel and break the boot sequence - I don&rsquo;t know if I can boot from a live CD to fix it.</p>
-
-<p>Setup a restrictive local firewall</p>
-
-<p>as root</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-</span><span class='line'>iptables -I INPUT <span class="m">1</span> -i lo -j ACCEPT
-</span><span class='line'>iptables -P INPUT DROP
-</span><span class='line'>iptables -S
-</span><span class='line'>apt-get install iptables-persistent
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>edit /etc/postfix/main.cf</p>
-
-<p>set</p>
-
-<p>inet_interfaces = 127.0.0.1</p>
-
-<p>and <code>/etc/init.d/postfix restart</code></p>
-
-<p>I will review open ports each time I configure a new service and ensure I don&rsquo;t have services I only need local accessible externally.</p>
-
-<p>By both configuring firewall <strong>and</strong> limiting services I am applying the principle of defence in depth and even if there is a weakness (or I make a mistake) in one place I will still be protected.</p>
-
-<p>Where I do need to share services between systems on my home/office network I have realised my old router is not sophisticated enough and am purchasing one that can separate secure and insecure networks.</p>
-
-<p>All systems are now being configured for automatic updates, since I want patches as soon as possible, small frequent updates are easier to debug than problems with large updates, and generally I only delay updating out of inertia rather than any deliberate action. This way I don&rsquo;t even have to think about it.</p>
-
-<p>from  <a href="http://www.richud.com/wiki/Ubuntu_Enable_Automatic_Updates_Unattended_Upgrades">http://www.richud.com/wiki/Ubuntu_Enable_Automatic_Updates_Unattended_Upgrades</a></p>
-
-<p>my config files are now</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cat /etc/apt/apt.conf.d/50unattended-upgrades  <span class="p">|</span> grep -v ^//
-</span><span class='line'>Unattended-Upgrade::Allowed-Origins <span class="o">{</span>
-</span><span class='line'>  <span class="s2">&quot;${distro_id}:${distro_codename}-security&quot;</span><span class="p">;</span>
-</span><span class='line'>  <span class="s2">&quot;${distro_id}:${distro_codename}-updates&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="o">}</span><span class="p">;</span>
-</span><span class='line'>Unattended-Upgrade::Package-Blacklist <span class="o">{</span>
-</span><span class='line'><span class="o">}</span><span class="p">;</span>
-</span><span class='line'>Unattended-Upgrade::MinimalSteps <span class="s2">&quot;true&quot;</span><span class="p">;</span>
-</span><span class='line'>Unattended-Upgrade::Mail <span class="s2">&quot;root&quot;</span><span class="p">;</span>
-</span><span class='line'>Unattended-Upgrade::Remove-Unused-Dependencies <span class="s2">&quot;false&quot;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cat /etc/apt/apt.conf.d/10periodic  <span class="p">|</span> grep -v ^//
-</span><span class='line'>APT::Periodic::Update-Package-Lists <span class="s2">&quot;1&quot;</span><span class="p">;</span>
-</span><span class='line'>APT::Periodic::Download-Upgradeable-Packages <span class="s2">&quot;1&quot;</span><span class="p">;</span>
-</span><span class='line'>APT::Periodic::AutocleanInterval <span class="s2">&quot;7&quot;</span><span class="p">;</span>
-</span><span class='line'>APT::Periodic::Unattended-Upgrade <span class="s2">&quot;1&quot;</span><span class="p">;</span>
-</span><span class='line'>APT::Periodic::Verbose <span class="s2">&quot;2&quot;</span><span class="p">;</span>
-</span><span class='line'>APT::Periodic::RandomSleep <span class="s2">&quot;1&quot;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Also set /root/.forward to ensure I get root mail</p>
-
-<p>I have also realised I rely too much on browser stored passwords, and while this is useful for low-security logins I will not be using it for any important site.</p>
-
-<p>Funnily I&rsquo;ve also found I needed to revisit my backup policy and actually delete more stuff <strong>not</strong> backing up code and documents which are business confidential and are already backed up centrally. In this case I realised my own backups were just causing a data management problem just increasing the risk that the data gets accidentally disclosed.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1151,6 +1066,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
@@ -1164,10 +1083,6 @@
     
       <li class="post">
         <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
   </ul>

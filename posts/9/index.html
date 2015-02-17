@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I've been looking into git for a while, the core toolset has been mature for ages but it just didn't seem to have the wider support I wanted. Now I &hellip;">
+  <meta name="description" content="If you&rsquo;ve ever tried to debug your update hooks via drush you may (like me) have been puzzled as to why your breakpoints don&rsquo;t seem to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/25/debugging-drush-updb/">Debugging Drush Updb</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-06-25T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you&rsquo;ve ever tried to debug your update hooks via drush you may (like me) have been puzzled as to why your breakpoints don&rsquo;t seem to work.</p>
+
+<p>It seems that proc_open() is used to avoid memory issues <a href="http://drupal.org/node/687724">http://drupal.org/node/687724</a> (effectively resetting all the Drupal static variables??) and this separate process isn&rsquo;t available to the debugger.</p>
+
+<p>After stepping though the drush update process I found where this happens and have a bypass that is basically functional (drush reporting seems broken - but I can step through my code).</p>
+
+<p>This patch is the change I&rsquo;ve made.</p>
+
+<p>I bypass the patch process and go direct to the update.</p>
+
+<p><code></p>
+
+<p>&mdash; commands/core/drupal/update_6.inc   (revision 547)
++++ commands/core/drupal/update_6.inc   (working copy)
+@@ -424,10 +424,7 @@
+       &lsquo;error_message&rsquo; => &lsquo;An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.&rsquo;,
+       &lsquo;finished&rsquo; => &lsquo;update_finished&rsquo;,
+     );
+-    batch_set($batch);
+-    $batch =&amp; batch_get();
+-    $batch[&lsquo;progressive&rsquo;] = FALSE;
+-    drush_backend_batch_process(&lsquo;updatedb-batch-process&rsquo;);
++    _update_do_one($module, $version, $batch);
+   }
+   else {
+     drush_log(dt(&ldquo;No database updates required&rdquo;), &lsquo;success&rsquo;);</p>
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -769,78 +825,6 @@ function userresethook_submit($form, &amp;$form_state){
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/03/24/mysql-auto_increment-updates/">MySQL AUTO_INCREMENT Updates</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-03-24T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I just found out the painful way that if you manually update a column which is normally calculated automatically as an auto_increment it seems to work at first ..</p>
-
-<p>but MySQL doesn&rsquo;t update the auto_increment value for the table - so subsequent inserts can fail.</p>
-
-<p>The solution seems to be to delete and re-insert the row.</p>
-
-<p><a href="http://bugs.mysql.com/bug.php?id=12434">http://bugs.mysql.com/bug.php?id=12434</a></p>
-
-<p>Test code:
-<code>
-mysql> create table test (id int(10) unsigned NOT NULL, col1 varchar(255), PRIMARY KEY (id));
-Query OK, 0 rows affected (0.00 sec)</p>
-
-<p>mysql> insert into test (col1) VALUES (&lsquo;test1&rsquo;);
-Query OK, 1 row affected, 1 warning (0.00 sec)</p>
-
-<p>mysql> select * from test;
-+&mdash;-+&mdash;&mdash;-+
-| id | col1  |
-+&mdash;-+&mdash;&mdash;-+
-|  0 | test1 |
-+&mdash;-+&mdash;&mdash;-+
-1 row in set (0.00 sec)</p>
-
-<p>mysql> update test set id= 1  where id=0;
-Query OK, 1 row affected (0.00 sec)
-Rows matched: 1  Changed: 1  Warnings: 0</p>
-
-<p>mysql> insert into test (col1) VALUES (&lsquo;test2&rsquo;);
-Query OK, 1 row affected, 1 warning (0.00 sec)</p>
-
-<p>mysql> select * from test;
-+&mdash;-+&mdash;&mdash;-+
-| id | col1  |
-+&mdash;-+&mdash;&mdash;-+
-|  1 | test1 |
-|  0 | test2 |
-+&mdash;-+&mdash;&mdash;-+
-2 rows in set (0.00 sec)</p>
-
-<p>mysql> insert into test (col1) VALUES (&lsquo;test3&rsquo;);
-ERROR 1062 (23000): Duplicate entry &lsquo;0&rsquo; for key 1</p>
-
-<p></code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/10">&larr; Older</a>
@@ -858,6 +842,10 @@ ERROR 1062 (23000): Duplicate entry &lsquo;0&rsquo; for key 1</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
@@ -871,10 +859,6 @@ ERROR 1062 (23000): Duplicate entry &lsquo;0&rsquo; for key 1</p>
     
       <li class="post">
         <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
   </ul>

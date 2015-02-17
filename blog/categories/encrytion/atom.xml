@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Encrytion | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/encrytion/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2015-02-17T18:53:47+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu Disk Encryption Password]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2015/02/17/ubuntu-disk-encryption-password/"/>
+    <updated>2015-02-17T18:50:37+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2015/02/17/ubuntu-disk-encryption-password</id>
+    <content type="html"><![CDATA[<p>To reset the password on an encrypted disk in Ubuntu use the disks tool</p>
+
+<p>The cogs icon for the partition has a change password option</p>
+
+<p><img src="/images/posts/ubuntu-disk-envryption-password.png" alt="screenshot" /></p>
+]]></content>
+  </entry>
+  
+</feed>

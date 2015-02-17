@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="There is a bug in Ubunty Jaunty which cause Trac to have errors.  Attachments do not work, the admin interface for milestones doesn't work properly &hellip;">
+  <meta name="description" content="I just started on a project that was using trac and subversion but they weren't integrated. I love the cross referncing trac provides. It can really &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/02/moving-an-svn-repository-to-integrate-with-trac/">Moving an Svn Repository to Integrate With Trac</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-02T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I just started on a project that was using trac and subversion but they weren&#8217;t integrated. I love the cross referncing trac provides. It can really help explain changesets and show how an issue was resolved.</p>
+
+
+
+
+<p>The steps to add subversion to trac are</p>
+
+
+
+
+<ul>
+<li>Stop people using the old repository</li>
+<li>copy the repository files from one server to the other<br />I used tar and scp</li>
+<li>edit trac.ini to add the location of the respository <br/>
+Trac and svn must be on the same server</li>
+<li>run trac-admin resync <br/>
+This imports all the svn history.</li>
+</ul>
+
+
+
+
+<p><p>I enabled access to subversion via apache SSL while I could get access via the browser checking out code with different tools gave the follwoing errors</p>
+
+<p><code>
+svn: OPTIONS of &lsquo;<a href="https://195.99.1.93/svn">https://195.99.1.93/svn</a>&rsquo;: 200 OK</p>
+
+<p>svn: PROPFIND of &lsquo;/svn&rsquo;: 405 Method Not Allowed</p>
+
+<p>svn: Server sent unexpected return value (405 Method Not Allowed) in response to PROPFIND request for &lsquo;/svn&rsquo;
+</code></p>
+
+<p><p>Thanks to <a href="http://techpulp.com/2009/01/webdav-405-method-not-allowed-in-porpfind/">techpulp.com/2009/01/webdav-405-method-not-allowed-in-porpfind/</a> I found out that my problem was an extraneous trailing slash in my apache config!</p></p>
+
+<p><p>I then ran svn relocate (right click on the repository using eclipse in the subversion perspective).</p></p>
+
+<p><p>I moved Trac to SSL for good measure - changing the location on the task repository in eclipse was straightforward.</p></p>
+
+<p><p>And as a finishing touch I customised Trac by adding a project logo - it goes in trac/htdocs/mylogo.png and is referenced in trac.ini as site/mylogo.png - I&rsquo;ve failed this step before but actuallt read the docs this tim.</p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -747,69 +814,6 @@ seems like there is a <a href="http://www.disambiguity.com/designing-for-the-wro
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/11/04/safari-books-bad-redesign/">Safari Books - Bad Redesign</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-11-04T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve had an account with O&#8217;Reilly&#8217;s <a href="http://my.safaribooksonline.com/">Safari books</a> on and off for years
-</p>
-
-
-<p>
-I&#8217;ve cancelled it before beacuase of design issues that rendered it unworkable for me.
-</p>
-
-
-<p>
-This time they have &quot;upgraded&quot; the site from an AJAX based layout which allowed me to choose between &quot;print fidelity&quot; and &quot;HTML view&quot;.
-</p>
-
-
-<p>
-The new layout uses Flash to render the pages as they look in print in a scrollable window.
-</p>
-
-
-<p>
-I hate this because
-</p>
-
-
-<ul>
-    <li>I work on a widescreen laptop with development toolbars and tabs in my browser - this layout of a tall thin view just doesn&#8217;t fit on my screen.</li>
-    <li>I can&#8217;t scroll the Safari menu and banner offscreen </li>
-    <li>Most of the time I don&#8217;t care too much about formatting I just want to read it and HTML is easier to read</li>
-    <li>The scrolling doesn&#8217;t respond to my mousewheel</li>
-    <li>I like to get a nice big page of text onscreen and the use the browsers search to quickly home in on the bit I want to read. </li>
-</ul>
-
-
-<p>Oh well - back to books for now and another incentive to try and get the perfect ereader&hellip;</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/12">&larr; Older</a>
@@ -827,6 +831,10 @@ I hate this because
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
@@ -840,10 +848,6 @@ I hate this because
     
       <li class="post">
         <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
   </ul>

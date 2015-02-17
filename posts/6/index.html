@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I've been working on a project for a while on my main dev machine, but needed to run it on my laptop too. Usually copying a sitre across is quick &hellip;">
+  <meta name="description" content="I had a centos VM that I hadn't used in a while, I think I cloned it from another version. When I came to use it again I had no network andtrying to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,139 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/02/device-eth0-does-not-seem-to-be-present-delaying-initialization/">Device Eth0 Does Not Seem to Be Present, Delaying Initialization.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-05-02T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I had a centos VM that I hadn&#8217;t used in a while, I think I cloned it from another version.
+</p>
+
+
+<p>
+When I came to use it again I had no network andtrying to start the network I got the error message in the title.
+</p>
+
+
+<p>
+There seem to be a few issues
+</p>
+
+
+<p>
+Firstly netowrking isn&#8217;t endabled by default 
+</p>
+
+
+<p>
+<a href="http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90">http://wiki.centos.org/FAQ/CentOS6#head-b67e85d98f0e9f1b599358105c551632c6ff7c90</a> 
+</p>
+
+
+<p>
+Secondly the cloned image appears to get a different mac address for the network card, but theconfig doesn&#8217;t auto detect this
+</p>
+
+
+<p>
+Thirdly the new machine seemed to have eth1 instead of eth0
+</p>
+
+
+<p>
+and finally I needed to enable dhcp
+</p>
+
+
+<p>
+What this meant was copying the new mac address from the virtualbox network settings tab (inserting a colon every second charecter  to match the format required)
+</p>
+
+
+<p>
+I placed this in both 
+</p>
+
+
+<p>
+/etc/udev/rules.d/70-persistant-net.rules
+</p>
+
+
+<p>
+and  
+</p>
+
+
+<p>
+/etc/sysconfig/network-scripts/ifcfg-eth0
+</p>
+
+
+<p>
+Where I also set 
+</p>
+
+
+<p>
+ONBOOT=&quot;yes&quot;  <br />
+BOOTPROTO=&quot;dhcp&quot;
+</p>
+
+
+<p>
+Finally /etc/init.d/networking restart got my network up 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -612,51 +745,6 @@ UUID=317f7912-9956-41f1-9855-7bee69c950b3 /               ext4    errors=remount
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/07/13/svn-merges-and-excess-merginfo-properties/">Svn Merges and Excess Merginfo Properties</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-07-13T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The main svn server I&rsquo;m working on has finally upgraded to svn 1.5 - so easier merging is now possible - hooray.</p>
-
-<p>But we&rsquo;ve been seeing merges that should only affect one file resulting in property changes on lots of files/directories. This isn&rsquo;t especially harmful - but it is annoying and makes reviewing the merge harder because of the extra noise.</p>
-
-<p>It turns out that this extra mergeinfo is likely because of earlier merges on subtrees <a href="http://blogs.collab.net/subversion/2009/11/where-did-that-mergeinfo-come-from/">http://blogs.collab.net/subversion/2009/11/where-did-that-mergeinfo-come-from/</a></p>
-
-<p>It is possible to remove the subtree mergeinfo via this command run from the root of the branch</p>
-
-<p><code>
-svn propdel -R svn:mergeinfo ./*
-</code></p>
-
-<p><a href="http://stackoverflow.com/questions/767418/remove-unnecessary-svnmergeinfo-properties">http://stackoverflow.com/questions/767418/remove-unnecessary-svnmergeinfo-properties</a></p>
-
-<p>Which should get rid of the problem - I&rsquo;m just not 100% sure if it throws away important data.</p>
-
-<p>For now I think I&rsquo;ll live with the nuisance - and come back to this if it becomes too annoying or if I gain greater insight into the issue.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/7">&larr; Older</a>
@@ -674,6 +762,10 @@ svn propdel -R svn:mergeinfo ./*
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
@@ -687,10 +779,6 @@ svn propdel -R svn:mergeinfo ./*
     
       <li class="post">
         <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
   </ul>

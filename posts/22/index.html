@@ -9,7 +9,9 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I’ve just been experimenting with text searches: http://www.sai.msu.su/~megera/postgres/gist/tsearch/V2/docs/tsearch-V2-intro.html It’s worth noting &hellip;">
+  <meta name="description" content="I’ve
+had too many hard disk failures over the years and decided to use RAID
+to ensure that all my photos, email and work are always copied to two &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +79,71 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/11/12/raid-protecting-my-data/">RAID - Protecting My Data</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2007-11-12T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2007</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I’ve
+had too many hard disk failures over the years and decided to use RAID
+to ensure that all my photos, email and work are always copied to two
+disks so that if any one of them fails I don’t lose anything. 
+</p>
+
+
+<p>
+Recently I was upgrading my system and accidentally unplugged one of
+these disks - I didn’t even notice until I got an automatic email
+warning me that one of the disks wasn’t working! 
+</p>
+
+
+<p>
+Plugging it back in and getting it working was pretty easy!
+</p>
+
+
+<p>
+note to future self - the commands were 
+</p>
+
+
+<p>
+show what is happening<br />
+mdadm &#8211;query &#8211;detail /dev/md1 
+</p>
+
+
+<p>
+add drives back into array<br />
+mdadm &#8211;manage &#8211;add /dev/md0 /dev/hdc1<br />
+mdadm &#8211;manage &#8211;add /dev/md1 /dev/hdc2
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -864,6 +931,10 @@ see also<br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
@@ -877,10 +948,6 @@ see also<br />
     
       <li class="post">
         <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a>
       </li>
     
   </ul>

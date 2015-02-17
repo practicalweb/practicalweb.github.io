@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-02-16T20:03:53+00:00</updated>
+  <updated>2015-02-17T18:53:47+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu Disk Encryption Password]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2015/02/17/ubuntu-disk-encryption-password/"/>
+    <updated>2015-02-17T18:50:37+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2015/02/17/ubuntu-disk-encryption-password</id>
+    <content type="html"><![CDATA[<p>To reset the password on an encrypted disk in Ubuntu use the disks tool</p>
+
+<p>The cogs icon for the partition has a change password option</p>
+
+<p><img src="/images/posts/ubuntu-disk-envryption-password.png" alt="screenshot" /></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Non-root Packet Capture in Wireshark]]></title>
@@ -264,47 +277,6 @@ service dnsmasq restart
 <pre><code>nameserver 127.0.0.1
 nameserver 192.168.0.1
 </code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Reinstall Grub After Windows Breaks It]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2013/02/12/reinstall-grub-after-windows-breaks-it/"/>
-    <updated>2013-02-12T00:00:00+00:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2013/02/12/reinstall-grub-after-windows-breaks-it</id>
-    <content type="html"><![CDATA[<p>One of those things that happens from time to time on a dual boot system&#8230;</p>
-
-
-
-
-<p>Windows breaks grub, usually if I&#8217;ve reinstalled windows, this can lead to a unbootable system.</p>
-
-
-
-
-<p>Boot from a Ubuntu (or other distro) live disk or USB stick.</p>
-
-
-
-
-<p>Figure out which your disks and partitions are.</p>
-
-
-<p><code></p>
-
-<pre><code>sudo mount /dev/sdXY /mnt
-</code></pre>
-
-<h1>if there is a boot partition</h1>
-
-<pre><code>sudo mount /dev/sdUV /mnt/boot
-sudo grub-install --recheck --root-directory=/mnt /dev/sdZ 
-</code></pre>
-
-<p></code></p>
-
-<p>When you reboot grub should be back to normal.</p>
-
 ]]></content>
   </entry>
   
