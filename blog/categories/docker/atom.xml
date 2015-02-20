@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Docker | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/docker/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-02-20T16:13:44+00:00</updated>
+  <updated>2015-02-20T16:16:20+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -81,12 +81,16 @@ ansible all -m ping
 
 <p>Those last steps are a slight variation on the official docs as I didn&rsquo;t want to use ssh locally - preferring the local connection which doesn&rsquo;t need passwords or keys to work, I&rsquo;ll come to that later.</p>
 
-<p>I created a Dockerfile which builds me a base image that just has
- * sshd running
- * the ssh port exposed
- * ansible user added
- * passwordless sudo for ansible user
- * an authorised key for ansible user</p>
+<p>I created a Dockerfile which builds me a base image that just has</p>
+
+<ul>
+<li>sshd running</li>
+<li>the ssh port exposed</li>
+<li>ansible user added</li>
+<li>passwordless sudo for ansible user</li>
+<li>an authorised key for ansible user</li>
+</ul>
+
 
 <p>The file is</p>
 
