@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ansible | PracticalWeb Ltd]]></title>
+  <link href="http://www.practicalweb.co.uk/blog/categories/ansible/atom.xml" rel="self"/>
+  <link href="http://www.practicalweb.co.uk/"/>
+  <updated>2015-02-20T16:06:49+00:00</updated>
+  <id>http://www.practicalweb.co.uk/</id>
+  <author>
+    <name><![CDATA[Sean Burlington]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[First Steps With Ansible and Docker]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2015/02/18/first-steps-with-ansible-and-docker/"/>
+    <updated>2015-02-18T14:04:59+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2015/02/18/first-steps-with-ansible-and-docker</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been using puppet and vagrant for a while, due to client choices we&rsquo;re switching to ansible which I&rsquo;m less familiar with - and Docker has been on my to learn list for a while.</p>
+
+<p>I love vagrant - being able to bring up a VM locally that matches the production servers to a good degree is just brilliant, and being able to repeat deploys is invaluable in testing process.</p>
+
+<p>The limitation with VMs is that each one takes a lot of resources, and is slow to build.</p>
+
+<p>Linux containers are <em>much</em> lighter weight - being faster to create and using much less system resource to run, I&rsquo;m hoping to be able to run more servers at once inside my laptop.</p>
+
+<p>There is a nice quick demo of docker <a href="https://www.docker.com/tryit/">https://www.docker.com/tryit/</a></p>
+
+<p>On Ubuntu I installed the latest version via ppa following the notes from <a href="https://docs.docker.com/installation/ubuntulinux/">https://docs.docker.com/installation/ubuntulinux/</a></p>
+
+<pre><code class="bash "># add the Docker repository key to your local keychain.
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+# Add the Docker repository to your apt sources list, update and install the lxc-docker package.
+# You may receive a warning that the package isn't trusted. Answer yes to continue installation.
+
+sudo sh -c "echo deb https://get.docker.com/ubuntu docker main &gt; /etc/apt/sources.list.d/docker.list"
+sudo apt-get update
+sudo apt-get install lxc-docker
+
+
+# To verify that everything has worked as expected:
+
+sudo docker run -i -t ubuntu /bin/bash
+</code></pre>
+
+<p>I also installed docker-py <a href="https://github.com/docker/docker-py">https://github.com/docker/docker-py</a></p>
+
+<pre><code class="bash">sudo pip install docker-py
+</code></pre>
+
+<p>This is required for the docker module in ansible which allows running docker commands from an ansible playbook, I probably don&rsquo;t need this right away - but later I want to be able to manage multiple docker containers on remote servers.</p>
+
+<p>I installed ansible from git, following the instructions at <a href="http://docs.ansible.com/intro_installation.html#getting-ansible">http://docs.ansible.com/intro_installation.html#getting-ansible</a></p>
+
+<pre><code class="bash ">
+git clone git://github.com/ansible/ansible.git --recursive
+cd ./ansible
+source ./hacking/env-setup
+
+#Ansible also uses the following Python modules that need to be installed:
+
+sudo pip install paramiko PyYAML Jinja2 httplib2
+</code></pre>
+
+<p>Setup an Inventory file
+<code>bash
+echo "localhost ansible_connection=local" &gt; ~/ansible_hosts
+export ANSIBLE_HOSTS=~/ansible_hosts
+</code></p>
+
+<p>test with a ping command:
+<code>bash
+ansible all -m ping
+</code></p>
+
+<p>Those last steps are a slight variation on the official docs as I didn&rsquo;t want to use ssh locally - preferring the local connection which doesn&rsquo;t need passwords or keys to work, I&rsquo;ll come to that later.</p>
+
+<p>I created a Dockerfile which builds me a base image that just has
+ * sshd running
+ * the ssh port exposed
+ * ansible user added
+ * passwordless sudo for ansible user
+ * an authorised key for ansible user</p>
+
+<p>The file is</p>
+
+<pre><code class="Dockerfile"># base
+#
+# VERSION               0.0.1
+
+FROM centos:6
+MAINTAINER Sean Burlington &lt;sean@practicalweb.co.uk&gt;
+
+# setup sshd,  ensuring it runs through regular configs once - this does some initial setup
+RUN yum -y update &amp;&amp; yum -y install openssh-server
+RUN service sshd start &amp;&amp; service sshd stop
+
+# create ansible user with sudo and public key
+RUN yum -y install sudo
+RUN useradd ansible
+RUN echo 'ansible:D\N5Vlucg7,JlUhiDb&lt;N' | chpasswd
+ADD etc/sudoers/ansible /etc/sudoers.d/
+RUN mkdir -p /home/ansible/.ssh/
+ADD home/ansible/.ssh/authorized_keys /home/ansible/.ssh/
+RUN chown -R ansible:ansible /home/ansible/ &amp;&amp; chmod 700 /home/ansible/.ssh/ &amp;&amp; chmod 600 /home/ansible/.ssh/authorized_keys
+
+
+# set example env variable that will be visible in users shell
+RUN echo "export VISIBLE=now" &gt;&gt; /etc/profile
+
+# run sshd and expose it 
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
+</code></pre>
+
+<p>get this file and supporting code by</p>
+
+<pre><code class="bash ">git clone https://github.com/practicalweb/docker-ansible.git
+cd docker-ansible
+</code></pre>
+
+<p>Note that I don&rsquo;t include my public key there (it is gitigtnored)</p>
+
+<p>copy your by something like
+<code>bash
+cp ~/.ssh/id_rsa.pub base-docker/home/ansible/.ssh/authorized_keys
+</code></p>
+
+<p>build the image
+<code>
+sudo docker build -t base base-docker/
+</code></p>
+
+<p>I wrote a playbook that creates a container from the image, adds this host to the ansible inventory and then runs an ansible command to it</p>
+
+<pre><code class="YAML"># Docker / ansible hello world
+
+
+# Create a a docker container on localhost (this has an ssh server in the image)
+- hosts: localhost
+  sudo: yes
+  tasks:
+  - name: start container 
+    docker: image=base hostname=test name=test detach=False 
+
+# add container(s) to the hosts inventory
+  - name: add new hosts to inventory
+    add_host: hostname=""
+      groups=docker
+      ansible_ssh_host=""
+      ansible_ssh_port=22
+    when: item.State.Running == True
+    with_items: docker_containers
+
+
+# Now we can run ansible on the dockers container(s)
+- hosts: docker
+  sudo: yes
+  remote_user: ansible
+  tasks: 
+    - name: hello
+      shell: echo "hello world" 
+</code></pre>
+
+<p>run it like</p>
+
+<pre><code class="bash">export ANSIBLE_HOST_KEY_CHECKING=False
+ansible-playbook  --ask-sudo-pass docker1.playbook
+</code></pre>
+
+<p>I turn off host key checking since this is a new host and will always fail</p>
+
+<p>To clean up after creating containers - or you end up with lots of mess&hellip;</p>
+
+<p>To stop all docker containers</p>
+
+<pre><code class="bash ">sudo docker stop $(sudo docker ps -a -q)
+</code></pre>
+
+<p>To remove all docker containers</p>
+
+<pre><code class="bash">sudo docker rm $(sudo docker ps -a -q)
+</code></pre>
+
+<p>Well now I can build a base image, create an instance of it as a container, and run ansible there.</p>
+
+<p>Next steps are to run a more meaningful ansible playbook to setup my applications, and to link containers together so that apps can connect.</p>
+]]></content>
+  </entry>
+  
+</feed>

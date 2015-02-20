@@ -61,13 +61,6 @@ version &hellip;">
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -136,7 +129,7 @@ new_id=$(git rev-parse &ndash;short origin/branch)</p>
 
 <h1>email a nice log to myself (TODO - pull this back into jenkins)</h1>
 
-<p>git log &ndash;oneline &ndash;graph ${current_branch}..origin/$branch | mail -s &ldquo;updating $(hostname) from $current_branch $current_id to $branch $new_id&rdquo;   <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#58;&#109;&#101;&#x40;&#x65;&#120;&#97;&#109;&#112;&#108;&#101;&#x2e;&#x63;&#111;&#109;">&#x6d;&#101;&#64;&#x65;&#120;&#x61;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#109;</a></p>
+<p>git log &ndash;oneline &ndash;graph ${current_branch}..origin/$branch | mail -s &ldquo;updating $(hostname) from $current_branch $current_id to $branch $new_id&rdquo;   <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#111;&#x3a;&#109;&#101;&#x40;&#x65;&#x78;&#97;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;">&#109;&#x65;&#x40;&#101;&#120;&#97;&#x6d;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#109;</a></p>
 
 <h1>update the code to the latest on the dev branch</h1>
 
@@ -313,6 +306,10 @@ find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -326,10 +323,6 @@ find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -357,6 +350,19 @@ find sites/default/files/ -user $USER -type f -exec chmod 664 {} \;</p>
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>

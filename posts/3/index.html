@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="A few days ago I was notified by my ISP that my server was &quot;emitting a UDP-based denial of service attack &quot;, as a result the VM had been &hellip;">
+  <meta name="description" content="To use google plus comments on your site all you need to do is insert the following code on teh page where you want the comments to appear url should &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,13 +60,6 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -77,6 +70,64 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/19/how-to-use-google-comments-on-your-blog/">How to Use Google Comments on Your Blog</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-11-19T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To use google plus comments on your site all you need to do is insert the following code on teh page where you want the comments to appear</p>
+
+<p>url should be the full url to the page, then any comments in google plus with this url will appear to any user who can see them (ie public commnts or those from people in the viewers circles).</p>
+
+<p>width is just how wide you want the comment box</p>
+
+<p>BLOGGER This method is as far as I can see only officially supported for Blogger comments and only this value seems to work</p>
+
+<p>FILTERED_POSTMOD similarly seems to be just what people use - I didn&rsquo;t find docs for this so I&rsquo;m unsure if other values work</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://apis.google.com/js/plusone.js&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;g:comments</span>
+</span><span class='line'>    <span class="na">href=</span><span class="s">&quot;The url of the blog post&quot;</span>
+</span><span class='line'>    <span class="na">width=</span><span class="s">&quot;500&quot;</span>
+</span><span class='line'>    <span class="na">first_party_property=</span><span class="s">&quot;BLOGGER&quot;</span>
+</span><span class='line'>    <span class="na">view_type=</span><span class="s">&quot;FILTERED_POSTMOD&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/g:comments&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -651,130 +702,6 @@ sqlite3 ~/.Skype/${username}/main.db \
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/12/headless-vpn-on-linux-with-minimal-vpn-traffic-and-selective-dns/">Headless VPN on Linux With Minimal VPN Traffic and Selective DNS</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-03-12T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I needed to setup a VPN client connection on a headless system where the VPN is slow and so I want to route the minimal amount of traffic through it. I need DNS to use the VPN but only for one domain.</p>
-
-<p>This is my setup using pptp and dnsmasq (tested on centOS)</p>
-
-<p>Basic VPN config is here</p>
-
-<p><code>/etc/ppp/peers/office</code></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># written by pptpsetup
-</span><span class='line'>pty "pptp vpn.example.com --nolaunchpppd"
-</span><span class='line'>lock
-</span><span class='line'>noauth
-</span><span class='line'>nobsdcomp
-</span><span class='line'>nodeflate
-</span><span class='line'>refuse-eap
-</span><span class='line'>usepeerdns
-</span><span class='line'>defaultroute
-</span><span class='line'>name sean.burlington
-</span><span class='line'>remotename office
-</span><span class='line'>ipparam office
-</span><span class='line'>require-mppe-128</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Startup script adds a default route for the network I need to access via vpn and adds the DNS server to dnsmasq config</p>
-
-<p><code>/etc/ppp/ip-up.local</code></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">for</span> net in 192.168.128.0/17 <span class="p">;</span> <span class="k">do</span>
-</span><span class='line'>  /sbin/route -v add -net <span class="nv">$net</span> dev <span class="nv">$IFNAME</span>
-</span><span class='line'>  logger -t pppd <span class="s2">&quot;added route for $net&quot;</span>
-</span><span class='line'><span class="k">done</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
-</span><span class='line'>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;server=/example.com/${DNS1}&quot;</span> &gt;&gt; /etc/dnsmasq.conf
-</span><span class='line'>
-</span><span class='line'>service dnsmasq restart
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>When disconnecting VPN reset dnsmasq, in my case I need the public DNS for example.com when not on VPN</p>
-
-<p><code>/etc/ppp/ip-down.local</code></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
-</span><span class='line'>
-</span><span class='line'>cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
-</span><span class='line'>
-</span><span class='line'>service dnsmasq restart
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>My <code>/etc/resolv.conf</code> points first to localhost where dnsmaq runs, then to my router which provides the upstream DNS</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>nameserver 127.0.0.1
-</span><span class='line'>nameserver 192.168.0.1
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/4">&larr; Older</a>
@@ -792,6 +719,10 @@ sqlite3 ~/.Skype/${username}/main.db \
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -805,10 +736,6 @@ sqlite3 ~/.Skype/${username}/main.db \
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -836,6 +763,19 @@ sqlite3 ~/.Skype/${username}/main.db \
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>

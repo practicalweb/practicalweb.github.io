@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="The main svn server I&rsquo;m working on has finally upgraded to svn 1.5 - so easier merging is now possible - hooray. But we&rsquo;ve been seeing &hellip;">
+  <meta name="description" content="The music player banshee which is part of the default Ubuntu setup pops up a message each time a new track starts playing. To turn this off Open &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,13 +60,6 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -77,6 +70,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/19/how-to-turn-off-notifications-in-banshee/">How to Turn Off Notifications in Banshee</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-08-19T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The music player banshee which is part of the default Ubuntu setup pops up a message each time a new track starts playing.</p>
+
+<p>To turn this off</p>
+
+<p><ol>
+<li>Open Banshee</li>
+<li>Go to Edit, preferences, extensions</li>
+<li>Enable Notification Area Icon</li>
+<li>The Icon should now show up - right click on it</li>
+<li>Uncheck Show notifications</li>
+<li>Disable the Notification Area Icon again</li>
+<ol></p>
+
+<p>Very annoying - the option to turn off notifications is hidden on a menu you can&rsquo;t get to by default.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -976,42 +1011,6 @@ So now it all seems to be working an I can run all my tests overnight - all soft
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/05/05/programatically-delete-a-content-type-in-drupal/">Programatically Delete a Content Type in Drupal</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-05-05T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>&lt;?php</p>
-
-<p>$result = db_query(&ldquo;SELECT nid FROM node where type=&lsquo;mytype&rsquo;&rdquo;);
-while ($row = db_fetch_object($result)) {
-    node_delete($row->nid);
-}
-node_type_delete(&lsquo;mytype&rsquo;);
-?></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/8">&larr; Older</a>
@@ -1029,6 +1028,10 @@ node_type_delete(&lsquo;mytype&rsquo;);
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -1042,10 +1045,6 @@ node_type_delete(&lsquo;mytype&rsquo;);
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -1073,6 +1072,19 @@ node_type_delete(&lsquo;mytype&rsquo;);
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>

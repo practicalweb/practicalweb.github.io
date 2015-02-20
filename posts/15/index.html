@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I recently finished work on a project that really suffered from a lack of build tools. It was a large project, and while many of us were keen on &hellip;">
+  <meta name="description" content="As well as following standards such as those laid down by www.w3.org I always try and test websites I develop across a range of browsers. Despite &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,13 +60,6 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -77,6 +70,98 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/27/cross-platform-testing-with-selenium-and-virtualbox/">Cross Platform Testing With Selenium and VirtualBox</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-04-27T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+As well as following standards such as those laid down by www.w3.org I always try and test websites I develop across a range of browsers. Despite improvements in compatibility in recent years, browsers do still vary in implementation and even relatively minor browsers are still used by large numbers of people.
+</p>
+
+
+<p>
+However all this testing can be hard to keep on top of and sometimes I just have to push out what seems like a small code change with only limited testing.
+</p>
+
+
+<p>
+I&#8217;m aiming to automate as much testing as possible, this is a little more work up front - but makes re-running tests trivial and so more likely to happen.
+</p>
+
+
+<p>
+I use VirtualBox to run multiple environments, and am happy to find that the newer releases (2.1 and up) support improved networking.
+</p>
+
+
+<p>
+So I have installed <a href="http://seleniumhq.org/projects/remote-control/">Selenium RC</a> on a virtual machine, and by running this simple script I can test on Internet Explorer - from my Linux development machine.
+</p>
+
+
+<p>&lt;?php</p>
+
+<p>set_include_path(get_include_path() . PATH_SEPARATOR . &lsquo;./PEAR/&rsquo;);
+require_once &lsquo;Testing/Selenium.php&rsquo;;</p>
+
+<p>$selenium = new Testing_Selenium(&ldquo;*iexplore&rdquo;, &ldquo;<a href="http://www.google.com">http://www.google.com</a>&rdquo;, &lsquo;192.168.0.7&rsquo;);</p>
+
+<p>$selenium->start();</p>
+
+<p>$selenium->open(&ldquo;/&rdquo;);
+$selenium->type(&ldquo;q&rdquo;, &ldquo;hello world&rdquo;);
+$selenium->click(&ldquo;btnG&rdquo;);
+$selenium->waitForPageToLoad(10000);
+print (preg_match(&ldquo;/Google Search/&rdquo;, $selenium->getTitle())) ? &ldquo;pass\n&rdquo; : &ldquo;fail\n&rdquo;;
+$selenium->stop();</p>
+
+<p>?></p>
+
+<p>Note that I can specify which Virtual Machine to test on just by providing the appropriate IP address.</p>
+
+
+
+
+<p>This example is in PHP because that&#8217;s what I use, it requires the Pear package Testing_Selenium which I installed on Ubuntu by the command</p>
+
+
+<p><code>
+sudo pear install channel://pear.php.net/Testing_Selenium-0.4.3
+</code></p>
+
+<p>
+Now all I need to do is integrate this into my unit testing framework and add some scripts to start up and shut down the virtual machines.
+</p>
+
+
+
+
+<p>There is also Selenium Grid which is aimed at distributing tests across multiple machines in parallel - but as this is all running on one physical machine (my laptop) I don&#8217;t really want parallelisation here.</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -621,43 +706,6 @@ I came across this PDF slideshow from a talk on optimising PHP, it&#8217;s well 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/01/14/show-what-svn-update-is-about-to-do/">Show What Svn Update Is About to Do</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-01-14T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When you want to see what svn update is about to do you may try</p>
-
-<p><code>svn update &ndash;dry-run</code></p>
-
-<p>But this doesn&rsquo;t work.</p>
-
-<p>You can get the results you need by running</p>
-
-<p><code>svn status -u </code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/16">&larr; Older</a>
@@ -675,6 +723,10 @@ I came across this PDF slideshow from a talk on optimising PHP, it&#8217;s well 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -688,10 +740,6 @@ I came across this PDF slideshow from a talk on optimising PHP, it&#8217;s well 
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -719,6 +767,19 @@ I came across this PDF slideshow from a talk on optimising PHP, it&#8217;s well 
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>

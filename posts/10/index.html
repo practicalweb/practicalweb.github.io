@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I just found out the painful way that if you manually update a column which is normally calculated automatically as an auto_increment it seems to &hellip;">
+  <meta name="description" content="I need a user hook that sends password reset events. I created a very simple module to do this - but it doesn&rsquo;t work. I think this is because &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,13 +60,6 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -77,6 +70,70 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/03/29/drupal-hook_user-reset/">Drupal Hook_user Reset</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-03-29T00:00:00+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I need a user hook that sends password reset events.</p>
+
+<p>I created a very simple module to do this - but it doesn&rsquo;t work.</p>
+
+<p>I think this is because user_pass_reset() calls drupal_goto() after a login link is used - and that this bypasses my extra form handler.</p>
+
+<p>and according to</p>
+
+<p><a href="http://www.advomatic.com/blogs/marco-carbone/drupal-privacy-configuring-your-site-to-work-without-cookies-for-anonymous-users">http://www.advomatic.com/blogs/marco-carbone/drupal-privacy-configuring-your-site-to-work-without-cookies-for-anonymous-users</a></p>
+
+<blockquote>
+form_alter on &#8216;user_pass_reset&#8217; doesn&#8217;t work reliably, due to how the one-time login form is implemented
+</blockquote>
+
+
+<p>&lt;?php</p>
+
+<p>function userresethook_form_alter(&amp;$form, &amp;$form_state, $form_id){
+  if ($form_id == &lsquo;user_pass_reset&rsquo;){
+    $form[&lsquo;#submit&rsquo;][] = &lsquo;userresethook_submit&rsquo;;
+  } else {
+    return;
+  }
+}</p>
+
+<p>//This doesn&rsquo;t get called!
+function userresethook_submit($form, &amp;$form_state){
+  global $user;
+  user_module_invoke(&lsquo;reset&rsquo;, $form, $user);
+}</p>
+
+<p>?></p>
+
+<p>This is a shame as this could be a useful hook and I prefer not to patch the user module (which is what I&rsquo;ve done for the time being).</p>
+
+<p>Am I missing something? Is my code wrong? Is there a better way&hellip;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -913,87 +970,6 @@ to re-run cron while it is already running.&quot;
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/03/programatic-block-creation-in-drupal/">Programatic Block Creation in Drupal</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-02-03T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>To remove static blocks and replace with as custom block.</p>
-
-
-
-
-<p>Implement hook_block specifying the default visibility and so on</p>
-
-
-<p>&lt;?php
-$blocks[&lsquo;random&rsquo;] = array(
-      &lsquo;info&rsquo; => t(&lsquo;Random&rsquo;),
-      &lsquo;weight&rsquo; => 0,
-      &lsquo;status&rsquo; => 1,
-      &lsquo;region&rsquo; => &lsquo;sidebar&rsquo;,
-      &lsquo;pages&rsquo;  => &lsquo;offers&rsquo;,
-      &lsquo;visibility&rsquo; => 0, // all pages except
-      &lsquo;cache&rsquo; => BLOCK_CACHE_PER_PAGE,
-    );</p>
-
-<p>?></p>
-
-<p>Create an update hook that deletes the old blocks and boxes (I&#8217;ve specified the ID as I know they won&#8217;t change on my site).</p>
-
-
-<p>&lt;?php</p>
-
-<p>function mymodule_update_6101(){</p>
-
-<pre><code>$items = array();
-$items[] = update_sql('DELETE FROM {boxes} WHERE bid in (2, 12,13)');
-$items[] = update_sql("DELETE FROM {blocks} WHERE module = 'block' AND delta in (2, 12, 13)");
-</code></pre>
-
-<p>// Update the &lsquo;blocks&rsquo; DB table with the blocks currently exported by modules.
-// It&rsquo;s a &ldquo;private&rdquo; function called when you visit
-// the admin/build/block/list/ page
-// calling it here causes the rehash which you otherwise have to visit the page to get
-    _block_rehash();</p>
-
-<p>// clear the cache
-    cache_clear_all();
-    return $items;
-}</p>
-
-<p>?></p>
-
-<p>When you run update.php your shiny new blocks should then be immediately available with no manual steps required.</p>
-
-
-
-
-<p>This makes it so much easier to test your upgrades.</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/11">&larr; Older</a>
@@ -1011,6 +987,10 @@ $items[] = update_sql("DELETE FROM {blocks} WHERE module = 'block' AND delta in 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -1024,10 +1004,6 @@ $items[] = update_sql("DELETE FROM {blocks} WHERE module = 'block' AND delta in 
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -1055,6 +1031,19 @@ $items[] = update_sql("DELETE FROM {blocks} WHERE module = 'block' AND delta in 
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>

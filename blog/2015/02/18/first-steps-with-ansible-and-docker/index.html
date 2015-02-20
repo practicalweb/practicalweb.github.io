@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>First Steps With Ansible and Docker - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="I&rsquo;ve been using puppet and vagrant for a while, due to client choices we&rsquo;re switching to ansible which I&rsquo;m less familiar with - and &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2015/02/18/first-steps-with-ansible-and-docker">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3381543-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">First Steps With Ansible and Docker</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-18T14:04:59+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:04 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&rsquo;ve been using puppet and vagrant for a while, due to client choices we&rsquo;re switching to ansible which I&rsquo;m less familiar with - and Docker has been on my to learn list for a while.</p>
+
+<p>I love vagrant - being able to bring up a VM locally that matches the production servers to a good degree is just brilliant, and being able to repeat deploys is invaluable in testing process.</p>
+
+<p>The limitation with VMs is that each one takes a lot of resources, and is slow to build.</p>
+
+<p>Linux containers are <em>much</em> lighter weight - being faster to create and using much less system resource to run, I&rsquo;m hoping to be able to run more servers at once inside my laptop.</p>
+
+<p>There is a nice quick demo of docker <a href="https://www.docker.com/tryit/">https://www.docker.com/tryit/</a></p>
+
+<p>On Ubuntu I installed the latest version via ppa following the notes from <a href="https://docs.docker.com/installation/ubuntulinux/">https://docs.docker.com/installation/ubuntulinux/</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># add the Docker repository key to your local keychain.</span>
+</span><span class='line'>sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+</span><span class='line'><span class="c"># Add the Docker repository to your apt sources list, update and install the lxc-docker package.</span>
+</span><span class='line'><span class="c"># You may receive a warning that the package isn&#39;t trusted. Answer yes to continue installation.</span>
+</span><span class='line'>
+</span><span class='line'>sudo sh -c <span class="s2">&quot;echo deb https://get.docker.com/ubuntu docker main &gt; /etc/apt/sources.list.d/docker.list&quot;</span>
+</span><span class='line'>sudo apt-get update
+</span><span class='line'>sudo apt-get install lxc-docker
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c"># To verify that everything has worked as expected:</span>
+</span><span class='line'>
+</span><span class='line'>sudo docker run -i -t ubuntu /bin/bash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I also installed docker-py <a href="https://github.com/docker/docker-py">https://github.com/docker/docker-py</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo pip install docker-py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is required for the docker module in ansible which allows running docker commands from an ansible playbook, I probably don&rsquo;t need this right away - but later I want to be able to manage multiple docker containers on remote servers.</p>
+
+<p>I installed ansible from git, following the instructions at <a href="http://docs.ansible.com/intro_installation.html#getting-ansible">http://docs.ansible.com/intro_installation.html#getting-ansible</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone git://github.com/ansible/ansible.git --recursive
+</span><span class='line'><span class="nb">cd</span> ./ansible
+</span><span class='line'><span class="nb">source</span> ./hacking/env-setup
+</span><span class='line'>
+</span><span class='line'><span class="c">#Ansible also uses the following Python modules that need to be installed:</span>
+</span><span class='line'>
+</span><span class='line'>sudo pip install paramiko PyYAML Jinja2 httplib2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Setup an Inventory file</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;localhost ansible_connection=local&quot;</span> &gt; ~/ansible_hosts
+</span><span class='line'><span class="nb">export </span><span class="nv">ANSIBLE_HOSTS</span><span class="o">=</span>~/ansible_hosts
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>test with a ping command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ansible all -m ping
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Those last steps are a slight variation on the official docs as I didn&rsquo;t want to use ssh locally - preferring the local connection which doesn&rsquo;t need passwords or keys to work, I&rsquo;ll come to that later.</p>
+
+<p>I created a Dockerfile which builds me a base image that just has
+ * sshd running
+ * the ssh port exposed
+ * ansible user added
+ * passwordless sudo for ansible user
+ * an authorised key for ansible user</p>
+
+<p>The file is</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='Dockerfile'><span class='line'><span class="c"># base</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># VERSION               0.0.1</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">FROM</span> centos:6
+</span><span class='line'><span class="k">MAINTAINER</span> Sean Burlington &lt;sean@practicalweb.co.uk&gt;
+</span><span class='line'>
+</span><span class='line'><span class="c"># setup sshd,  ensuring it runs through regular configs once - this does some initial setup</span>
+</span><span class='line'><span class="k">RUN</span> yum -y update <span class="o">&amp;&amp;</span> yum -y install openssh-server
+</span><span class='line'><span class="k">RUN</span> service sshd start <span class="o">&amp;&amp;</span> service sshd stop
+</span><span class='line'>
+</span><span class='line'><span class="c"># create ansible user with sudo and public key</span>
+</span><span class='line'><span class="k">RUN</span> yum -y install sudo
+</span><span class='line'><span class="k">RUN</span> useradd ansible
+</span><span class='line'><span class="k">RUN</span> <span class="nb">echo</span> <span class="s1">&#39;ansible:D\N5Vlucg7,JlUhiDb&lt;N&#39;</span> <span class="p">|</span> chpasswd
+</span><span class='line'><span class="k">ADD</span> etc/sudoers/ansible /etc/sudoers.d/
+</span><span class='line'><span class="k">RUN</span> mkdir -p /home/ansible/.ssh/
+</span><span class='line'><span class="k">ADD</span> home/ansible/.ssh/authorized_keys /home/ansible/.ssh/
+</span><span class='line'><span class="k">RUN</span> chown -R ansible:ansible /home/ansible/ <span class="o">&amp;&amp;</span> chmod <span class="m">700</span> /home/ansible/.ssh/ <span class="o">&amp;&amp;</span> chmod <span class="m">600</span> /home/ansible/.ssh/authorized_keys
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c"># set example env variable that will be visible in users shell</span>
+</span><span class='line'><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">&quot;export VISIBLE=now&quot;</span> &gt;&gt; /etc/profile
+</span><span class='line'>
+</span><span class='line'><span class="c"># run sshd and expose it </span>
+</span><span class='line'><span class="k">EXPOSE</span> <span class="m">22</span>
+</span><span class='line'><span class="k">CMD</span> <span class="o">[</span><span class="s2">&quot;/usr/sbin/sshd&quot;</span>, <span class="s2">&quot;-D&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>get this file and supporting code by</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone https://github.com/practicalweb/docker-ansible.git
+</span><span class='line'><span class="nb">cd </span>docker-ansible
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that I don&rsquo;t include my public key there (it is gitigtnored)</p>
+
+<p>copy your by something like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cp ~/.ssh/id_rsa.pub base-docker/home/ansible/.ssh/authorized_keys
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>build the image</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo docker build -t base base-docker/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I wrote a playbook that creates a container from the image, adds this host to the ansible inventory and then runs an ansible command to it</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='YAML'><span class='line'><span class="c1"># Docker / ansible hello world</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Create a a docker container on localhost (this has an ssh server in the image)</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">hosts</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">localhost</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">sudo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">tasks</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">start container</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">image=base hostname=test name=test detach=False</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># add container(s) to the hosts inventory</span>
+</span><span class='line'>  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">add new hosts to inventory</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">add_host</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hostname=&quot;&quot;</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">groups=docker</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">ansible_ssh_host=&quot;&quot;</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">ansible_ssh_port=22</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">when</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">item.State.Running == True</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">with_items</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker_containers</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Now we can run ansible on the dockers container(s)</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">hosts</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docker</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">sudo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">remote_user</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ansible</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">tasks</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hello</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">echo &quot;hello world&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>run it like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">ANSIBLE_HOST_KEY_CHECKING</span><span class="o">=</span>False
+</span><span class='line'>ansible-playbook  --ask-sudo-pass docker1.playbook
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I turn off host key checking since this is a new host and will always fail</p>
+
+<p>To clean up after creating containers - or you end up with lots of mess&hellip;</p>
+
+<p>To stop all docker containers</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo docker stop <span class="k">$(</span>sudo docker ps -a -q<span class="k">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To remove all docker containers</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo docker rm <span class="k">$(</span>sudo docker ps -a -q<span class="k">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Well now I can build a base image, create an instance of it as a container, and run ansible there.</p>
+
+<p>Next steps are to run a more meaningful ansible playbook to setup my applications, and to link containers together so that apps can connect.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-18T14:04:59+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:04 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ansible/'>ansible</a>, <a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/docker/'>docker</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2015/02/18/first-steps-with-ansible-and-docker/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2015/02/18/first-steps-with-ansible-and-docker/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/17/ubuntu-disk-encryption-password/" title="Previous Post: Ubuntu Disk Encryption password">&laquo; Ubuntu Disk Encryption password</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2015/02/18/first-steps-with-ansible-and-docker/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2015/02/18/first-steps-with-ansible-and-docker/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

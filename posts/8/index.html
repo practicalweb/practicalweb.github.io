@@ -9,7 +9,8 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="We had an old Drupal module which contained exported views, most of our sites uses features to manage view - so when they needed updating we wanted &hellip;">
+  <meta name="description" content="&lt;?php $result = db_query(&ldquo;SELECT nid FROM node where type=&lsquo;mytype&rsquo;&rdquo;);
+while ($row = db_fetch_object($result)) { &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,13 +61,6 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -77,6 +71,42 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/05/programatically-delete-a-content-type-in-drupal/">Programatically Delete a Content Type in Drupal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-05-05T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&lt;?php</p>
+
+<p>$result = db_query(&ldquo;SELECT nid FROM node where type=&lsquo;mytype&rsquo;&rdquo;);
+while ($row = db_fetch_object($result)) {
+    node_delete($row->nid);
+}
+node_type_delete(&lsquo;mytype&rsquo;);
+?></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -514,66 +544,6 @@ views_object_cache_clear('view', $view-&gt;name);
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/06/25/programatically-altering-a-cck-node-type/">Programatically Altering a CCK Node Type</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-06-25T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve found altering CCK node types as part of a fully scripted deployment phase to be quite challenging.</p>
-
-<p>The best I&rsquo;ve come up with is to use features for the main config changes and adding fields, but this won&rsquo;t remove any fields - but CCK provides functions for this.</p>
-
-<p>Oddly installing the features module doesn&rsquo;t make the database schema changes until after caches are cleared.</p>
-
-<p>The following code updates my CCK type, with new fields and settings.</p>
-
-<p>I want to change a text field to a link field - there doesn&rsquo;t seem to be a direct way to do this so I add the new link field in features, copy the data via SQL, then delete the old field.</p>
-
-<p>The one thing I can&rsquo;t see a way to do is to delete a field group.</p>
-
-<p>None of this is fully tested yet - I&rsquo;m writing up as I go and will update if I hit issues.</p>
-
-<p>&lt;?php</p>
-
-<p>// update CCK type via features module
-drupal_install_modules(array( &lsquo;features&rsquo;, &lsquo;mytype&rsquo;));</p>
-
-<p>// flush caches to make schema change take effect
-drupal_flush_all_caches();</p>
-
-<p>// copy data from old text field to link
-$items[] = update_sql(&ldquo;update content_type_mytype set field_mytype_link_url=field_mytype_url_value&rdquo;);</p>
-
-<p>// delete old text field
-content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytype&rsquo;, FALSE);</p>
-
-<p>// I&rsquo;d like to delete a group but THIS DOESN&rsquo;T WORK!
-//  content_field_instance_delete(&lsquo;group_groupname_info&rsquo;, &lsquo;mytype&rsquo;, TRUE);</p>
-
-<p>?></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/9">&larr; Older</a>
@@ -591,6 +561,10 @@ content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytyp
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -604,10 +578,6 @@ content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytyp
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -635,6 +605,19 @@ content_field_instance_delete(&lsquo;field_mytype_url_value&rsquo;, &lsquo;mytyp
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>

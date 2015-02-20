@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="This has been annoying to work out. The puppet apache module will by default create the document root for a virtualhost if it is not already defined &hellip;">
+  <meta name="description" content="I needed to setup a VPN client connection on a headless system where the VPN is slow and so I want to route the minimal amount of traffic through it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,13 +60,6 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -77,6 +70,130 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/12/headless-vpn-on-linux-with-minimal-vpn-traffic-and-selective-dns/">Headless VPN on Linux With Minimal VPN Traffic and Selective DNS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-12T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I needed to setup a VPN client connection on a headless system where the VPN is slow and so I want to route the minimal amount of traffic through it. I need DNS to use the VPN but only for one domain.</p>
+
+<p>This is my setup using pptp and dnsmasq (tested on centOS)</p>
+
+<p>Basic VPN config is here</p>
+
+<p><code>/etc/ppp/peers/office</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># written by pptpsetup
+</span><span class='line'>pty "pptp vpn.example.com --nolaunchpppd"
+</span><span class='line'>lock
+</span><span class='line'>noauth
+</span><span class='line'>nobsdcomp
+</span><span class='line'>nodeflate
+</span><span class='line'>refuse-eap
+</span><span class='line'>usepeerdns
+</span><span class='line'>defaultroute
+</span><span class='line'>name sean.burlington
+</span><span class='line'>remotename office
+</span><span class='line'>ipparam office
+</span><span class='line'>require-mppe-128</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Startup script adds a default route for the network I need to access via vpn and adds the DNS server to dnsmasq config</p>
+
+<p><code>/etc/ppp/ip-up.local</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">for</span> net in 192.168.128.0/17 <span class="p">;</span> <span class="k">do</span>
+</span><span class='line'>  /sbin/route -v add -net <span class="nv">$net</span> dev <span class="nv">$IFNAME</span>
+</span><span class='line'>  logger -t pppd <span class="s2">&quot;added route for $net&quot;</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
+</span><span class='line'>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;server=/example.com/${DNS1}&quot;</span> &gt;&gt; /etc/dnsmasq.conf
+</span><span class='line'>
+</span><span class='line'>service dnsmasq restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When disconnecting VPN reset dnsmasq, in my case I need the public DNS for example.com when not on VPN</p>
+
+<p><code>/etc/ppp/ip-down.local</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'>cp -f /etc/dnsmasq.orig /etc/dnsmasq.conf
+</span><span class='line'>
+</span><span class='line'>service dnsmasq restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>My <code>/etc/resolv.conf</code> points first to localhost where dnsmaq runs, then to my router which provides the upstream DNS</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>nameserver 127.0.0.1
+</span><span class='line'>nameserver 192.168.0.1
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -729,87 +846,6 @@ DAEMON_OPTS=&ldquo;-a :6081,:7081 \
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/12/changing-default-port-of-memcache-on-centos-6/">Changing Default Port of Memcache on Centos 6</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-11-12T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>One of those things that just took me a lot longer than I expected&#8230;</p>
-
-
-
-
-<p>Changing memcache port sdeems simple enough - just edit 
-/etc/sysconfig/memcached and change the PORT value</p>
-
-
-
-
-<p>BUT on a new centOS install memecache failed to start on any non-standard port.</p>
-
-
-<p>To see any error message I had to edit the file /etc/init.d/memcached</p></p>
-
-<p>and change the start line to </p>
-
-
-<p><code></p>
-
-<p>daemon &ndash;pidfile ${pidfile} memcached -d -v -p $PORT -u $USER  -m $CACHESIZE -c $MAXCONN -P ${pidfile} $OPTIONS
-</code></p>
-
-<p>Just adding the -v makes output verbose and I could see an error like </p>
-
-
-<p><code>
-memcache failed to listen on TCP port 11311 : Permission denied
-</code></p>
-
-<p>At this point I realised selinux was enabled by default, I tend to forget about this as it is so common for it to be disabled.</p>
-
-
-
-
-<p><p>In order to add a new allowed port I added the following packages to edit selinux rules<p></p>
-
-<p><code>policycoreutils-python
-setroubleshoot-server</code></p>
-
-<p><p>To check the name of the memcache port</p>
-<code>
-semanage port -l | grep memcache
-</code>
-<p>Then to allow the new port</p>
-<code>
-sudo semanage port -a -t memcache_port_t -p tcp 11311
-</code></p>
-
-<p><p>And now memcache works on the port I need for this project.</p></p>
-
-<p><p>Sadly I don&rsquo;t see any good puppet modules to help with this, and it still seems selinux is very commonly disabled as it is tricky to work with.</p></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/5">&larr; Older</a>
@@ -827,6 +863,10 @@ sudo semanage port -a -t memcache_port_t -p tcp 11311
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -840,10 +880,6 @@ sudo semanage port -a -t memcache_port_t -p tcp 11311
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -871,6 +907,19 @@ sudo semanage port -a -t memcache_port_t -p tcp 11311
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>

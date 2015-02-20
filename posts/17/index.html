@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Having just upgraded to Ubuntu 8.10 my key observation is that it's important to read the release notes first. http://www.ubuntu.com/getubuntu/ &hellip;">
+  <meta name="description" content="Version conflicts to be aware of Ubuntu 8.10 (Intrepid Ibex) now ships with Subversion 1.5  You can't use a svn 1.4 client and a svn 1.5 client on &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,13 +60,6 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -77,6 +70,94 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/02/eclipse-pdt-and-subversion/">Eclipse PDT and Subversion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-11-02T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>
+Version conflicts to be aware of
+</h2>
+
+
+<p>
+Ubuntu 8.10 (Intrepid Ibex) now ships with Subversion 1.5 
+</p>
+
+
+<p>
+You can&#8217;t use a svn 1.4 client and a svn 1.5 client on the same working copy.
+</p>
+
+
+<p>
+While the subversion integration in Eclipse is great I still prefer to do some things on the command line and some with kdesvn.
+</p>
+
+
+<p>
+Then you need to upgrade your subclipse plugin to subclipse 1.4
+</p>
+
+
+<p>
+If you can - then upgrade to Eclipse 3.4 
+</p>
+
+
+<p>
+But Eclipse 3.4 doesn&#8217;t run the latest stable version of PDT - and last time I tried to use an Integration build it was unusable - I may try again sometime but right now I want a small upgrade.
+</p>
+
+
+<p>
+I followed this instructions here http://subclipse.tigris.org/install.html
+</p>
+
+
+<p>
+But Eclipse reported a &quot;Network problem&quot;
+</p>
+
+
+<p>
+So I downloaded the zip file<br />
+http://subclipse.tigris.org/files/documents/906/43792/site-1.4.5.zip
+</p>
+
+
+<p>
+Unpacked it in a folder on my local webserver, pointed Eclipse at this location and the installation worked!
+</p>
+
+
+<p>
+Phew - I have a working Eclipse for PHP development on Ubuntu 8.10 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -700,155 +781,6 @@ It&#8217;s  also a small thank you for all the terrific work built up by the wh
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/07/24/install-runkit-for-unit-testing/">Install Runkit for Unit Testing</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-07-24T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Unit testing Drupal can be pretty challenging as it&#8217;s hard to isolate parts of the code.
-</p>
-
-
-<p>
-It seems :
-</p>
-
-
-<ul>
-    <li><a href="http://drupal.org/node/237959?mode=2&amp;sort=2">Unit Testing Plan</a></li>
-    <li><a href="http://www.lullabot.com/blog/drupalcon-simpletest-and-future-test-driven-development">Drupalcon: Simpletest and the Future of Test-Driven Development in Drupal</a></li>
-    <li>http://groups.drupal.org/node/9412</li>
-    <li><a href="http://dhubler.googlepages.com/drupalunittestingusingstandardtools">Drupal Unit Testing</a></li>
-    <li><a href="http://groups.drupal.org/node/10957">Unit testing plan</a></li>
-    <li><a href="http://www.workhabit.org/mock-function-testing-drupal">Mock function testing in Drupal</a></li>
-    <li><a href="http://www.phppatterns.com/docs/develop/simpletest_mock_functions">Mocking Functions in Simple Test</a></li>
-</ul>
-
-
-<p>
-that <a href="http://us.php.net/runkit">runkit</a> together with Drupal&#8217;s implementation of SimpleTest is the way to go..
-</p>
-
-
-<p>
-I found it a bit tricky to install on Linux (Ubuntu)
-</p>
-
-
-<p>
-Some windows installers seem to have it built in but for those of us who like our dev and live environments to be similar:
-</p>
-
-
-<p>
-Download runkit from cvs (I found the beta version to have bugs)
-</p>
-
-
-<p><code>
-sudo aptitude install php-pear
-sudo aptitude install php5-dev</p>
-
-<p>mkdir temp
-cd temp</p>
-
-<p>cvs -d:pserver:cvsread@cvs.php.net:/repository co pecl/runkit
-cvs -d:pserver:cvsread@cvs.php.net:/repository co pecl/runkit</p>
-
-<p>cd pecl/runkit
-phpize
-./configure
-make</p>
-
-<p>sudo  cp /home/sean/temp/pecl/runkit/modules/runkit.so /usr/lib/php5/20060613+lfs/
-</code></p>
-
-<p>
-edit /et/php5/apache2/php.ini
-</p>
-
-
-<p>
-add the line 
-</p>
-
-
-<p><code>
-extension=runkit.so
-</code></p>
-
-<p>
-restart apache 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<p>
-phpinfo() should now show
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-
-<h2><a name="module_runkit">runkit</a></h2>
-
-
-<table>
-    <tbody>
-        <tr class="h">
-            <th>runkit support</th><th>enabled</th>
-        </tr>
-        <tr class="h">
-            <th>version</th><th>1.0.0-dev</th>
-        </tr>
-        <tr class="h">
-            <th>Custom Superglobal support</th><th>enabled</th>
-        </tr>
-        <tr class="h">
-            <th>Sandbox Support</th><th>disable or unavailable</th>
-        </tr>
-        <tr class="h">
-            <th>Runtime Manipulation</th><th>enabled</th>
-        </tr>
-    </tbody>
-</table>
-
-
-
-
-<p>Now all I&#8217;ve got to do is use it to build some tests&#8230;</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/18">&larr; Older</a>
@@ -866,6 +798,10 @@ phpinfo() should now show
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -879,10 +815,6 @@ phpinfo() should now show
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -910,6 +842,19 @@ phpinfo() should now show
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>

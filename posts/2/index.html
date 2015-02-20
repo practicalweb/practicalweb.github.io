@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Recently I&rsquo;ve been reviewing security and realised I&rsquo;ve been relying too much on my routers firewall - which isn&rsquo;t even present if &hellip;">
+  <meta name="description" content="I&rsquo;ve been playing with some new toys. What motivated me was a desire to be better able to interpret load test data and performance metrics. I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,13 +60,6 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -77,6 +70,74 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/19/grafana/">Grafana</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-19T10:07:55+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:07 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been playing with some new toys.</p>
+
+<p>What motivated me was a desire to be better able to interpret load test data and performance metrics.</p>
+
+<p>I love graphs, for me the visualisation they provide allows me to recognise patterns and figure out cause/effects massively faster than any other way.</p>
+
+<p>In the past I&rsquo;ve mainly relied on Munin which is very easy to setup, and I&rsquo;ve even customised graphs. My most successful case was when two servers in a pool of four kept falling down, by graphing apache hits per second and severer load for all for servers on the same page - it provided convincing proof that the two servers which fell down did so under no extra load and at the exact same moment. It later turned out these two were VMs on the same host OS which was having previously unnoticed problems.</p>
+
+<p>This visualisation transformed a conversation from one of what could or couldn&rsquo;t be wrong to acceptance and how to fix it.</p>
+
+<p>But with Munin I had to define the graph and then collect the data - I had to wait for another outage.</p>
+
+<p>I wanted to be able to compose graphs on the fly to test hypotheses with existing data - grab the data now and define the graphs to visualise what I want to see after the fact.</p>
+
+<p>Enter <a href="http://play.grafana.org/">Grafana</a> I just love this tool, it allows me to compose graphs entirely on the fly, mixing and matching any data I want on the same graph, or multiple graphs on the same page.</p>
+
+<p>With the <a href="http://graphite.readthedocs.org/en/latest/functions.html#graphite.render.functions.timeShift">timeshift</a> function I can even put say this weeks and last weeks data on the same graph for easy comparison.</p>
+
+<p>I hope to work on some screenshots and maybe screencaps - the tool is so interactive it&rsquo;s hard to explain - for now go an play with it.</p>
+
+<p>Grafana works by calling the json API of graphite-web, one thing that threw me at first was the <a href="http://grafana.org/docs/#graphite-&amp;-elasticsearch-setup-example">initial config example</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="err">datasources:</span> <span class="p">{</span>
+</span><span class='line'>  <span class="err">graphite:</span> <span class="err">{</span>
+</span><span class='line'>    <span class="err">type:</span> <span class="err">&#39;graphite&#39;,</span>
+</span><span class='line'>    <span class="err">url:</span> <span class="nt">&quot;http://my.graphite.server.com:8080&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="p">}</span><span class="err">,</span>
+</span><span class='line'><span class="err">},</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I wasn&rsquo;t sure which server component I was meant to be connecting to on 8080, this is just the regular graphite-web service from apache - in my case on port 80.</p>
+
+<p>It&rsquo;s also worth noting that <a href="graphite%20cannot%20exist%20in%20a%20subdirctory">https://github.com/graphite-project/graphite-web/issues/223</a> at least not for the version I am running.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -713,64 +774,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/11/19/how-to-use-google-comments-on-your-blog/">How to Use Google Comments on Your Blog</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-11-19T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>To use google plus comments on your site all you need to do is insert the following code on teh page where you want the comments to appear</p>
-
-<p>url should be the full url to the page, then any comments in google plus with this url will appear to any user who can see them (ie public commnts or those from people in the viewers circles).</p>
-
-<p>width is just how wide you want the comment box</p>
-
-<p>BLOGGER This method is as far as I can see only officially supported for Blogger comments and only this value seems to work</p>
-
-<p>FILTERED_POSTMOD similarly seems to be just what people use - I didn&rsquo;t find docs for this so I&rsquo;m unsure if other values work</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://apis.google.com/js/plusone.js&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;/script&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;g:comments</span>
-</span><span class='line'>    <span class="na">href=</span><span class="s">&quot;The url of the blog post&quot;</span>
-</span><span class='line'>    <span class="na">width=</span><span class="s">&quot;500&quot;</span>
-</span><span class='line'>    <span class="na">first_party_property=</span><span class="s">&quot;BLOGGER&quot;</span>
-</span><span class='line'>    <span class="na">view_type=</span><span class="s">&quot;FILTERED_POSTMOD&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;/g:comments&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/3">&larr; Older</a>
@@ -788,6 +791,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -801,10 +808,6 @@
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -832,6 +835,19 @@
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>

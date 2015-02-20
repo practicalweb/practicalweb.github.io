@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="xdebug is an immensely powerful tool for exploring what your code really does. You can get a long way using print_r  but ultimately this always &hellip;">
+  <meta name="description" content="Debian has a very strict policy on free and legal software. This helps keep everyone honest, but sometimes a pragmatic approach is called for. MP3 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,13 +60,6 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -77,6 +70,78 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/22/installing-lame-on-debian/">Installing Lame on Debian</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-22T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Debian has a very strict policy on free and legal software. This helps keep everyone honest, but sometimes a pragmatic approach is called for. MP3 is a file format that is patent encumbered - but also in universal use. 
+</p>
+
+
+<p>
+I could use the supplied Ogg Vorbis tools but then my music wouldn&#8217;t work everywhere I want it to.
+</p>
+
+
+<p>
+So I want to install Lame which is only available in source.
+</p>
+
+
+<p>
+http://sourceforge.net/projects/lame/files/
+</p>
+
+
+<p>
+Download and extract 
+</p>
+
+
+<p><code>
+cd lame-398-2/</p>
+
+<h1>install a build environment by pulling in the build dependencies for something useful (I chose php)</h1>
+
+<p>sudo apt-get build-dep php5
+sudo aptitude install fakeroot</p>
+
+<h1>check build dependencies of lame</h1>
+
+<p>cat debian/control</p>
+
+<h1>and install them</h1>
+
+<p>sudo aptitude install nasm libsndfile1-dev
+chmod 700 debian/rules
+dpkg-buildpackage -rfakeroot -uc -b
+sudo dpkg -i ../lame_3.98.1_i386.deb ../libmp3lame0_3.98.1_i386.deb
+</code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -698,56 +763,6 @@ I&#8217;m definitely planning on using this for my next project. 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/06/22/drupal-schema-api-has-problems/">Drupal Schema API Has Problems</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-06-22T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-<a href="http://www.lullabot.com/articles/drupocalypse-now-or-dangerous-integer-handling-drupal-write-record">An interesting post from Lullabot today</a> on problems with Drupal&#8217;s Schema API and the <a href="http://www.google.co.uk/search?q=Twitpocalypse">Twitpocalypse</a>
-</p>
-
-
-<p>
-It turns out that <a href="http://drupal.org/node/333788">the Schema API doesn&#8217;t properly understand the difference between different types of integers</a> 
-</p>
-
-
-<p>I was already concerned that
-<a href="http://drupal.org/node/200953">Schema API lacks the &lsquo;time&rsquo; and &lsquo;date&rsquo; type</a></p>
-
-<p>
-I don&#8217;t really understand why the Drupal team has decided to try and roll it&#8217;s own database abstraction layer, and make it a core part of the system in the current state. 
-</p>
-
-
-<p>
-There seem to be <a href="http://drupal.org/project/issues/search/drupal?text=&amp;assigned=&amp;submitted=&amp;participant=&amp;status[]=Open&amp;priorities[]=1&amp;priorities[]=2&amp;categories[]=bug&amp;version[]=6.x&amp;component[]=database+system&amp;issue_tags=">quite a few bugs</a>
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/14">&larr; Older</a>
@@ -765,6 +780,10 @@ There seem to be <a href="http://drupal.org/project/issues/search/drupal?text=&a
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -778,10 +797,6 @@ There seem to be <a href="http://drupal.org/project/issues/search/drupal?text=&a
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -809,6 +824,19 @@ There seem to be <a href="http://drupal.org/project/issues/search/drupal?text=&a
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>

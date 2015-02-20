@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="One of the surprising things about Drupal is that it doesn't use object oriented coding. There's a good page in the Drupal documentation about this &hellip;">
+  <meta name="description" content="Unit testing Drupal can be pretty challenging as it's hard to isolate parts of the code. It seems : Unit Testing Plan Drupalcon: Simpletest and the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,13 +60,6 @@
   
 </ul>
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.practicalweb.co.uk" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Archives</a></li>
@@ -77,6 +70,155 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/24/install-runkit-for-unit-testing/">Install Runkit for Unit Testing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-07-24T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Unit testing Drupal can be pretty challenging as it&#8217;s hard to isolate parts of the code.
+</p>
+
+
+<p>
+It seems :
+</p>
+
+
+<ul>
+    <li><a href="http://drupal.org/node/237959?mode=2&amp;sort=2">Unit Testing Plan</a></li>
+    <li><a href="http://www.lullabot.com/blog/drupalcon-simpletest-and-future-test-driven-development">Drupalcon: Simpletest and the Future of Test-Driven Development in Drupal</a></li>
+    <li>http://groups.drupal.org/node/9412</li>
+    <li><a href="http://dhubler.googlepages.com/drupalunittestingusingstandardtools">Drupal Unit Testing</a></li>
+    <li><a href="http://groups.drupal.org/node/10957">Unit testing plan</a></li>
+    <li><a href="http://www.workhabit.org/mock-function-testing-drupal">Mock function testing in Drupal</a></li>
+    <li><a href="http://www.phppatterns.com/docs/develop/simpletest_mock_functions">Mocking Functions in Simple Test</a></li>
+</ul>
+
+
+<p>
+that <a href="http://us.php.net/runkit">runkit</a> together with Drupal&#8217;s implementation of SimpleTest is the way to go..
+</p>
+
+
+<p>
+I found it a bit tricky to install on Linux (Ubuntu)
+</p>
+
+
+<p>
+Some windows installers seem to have it built in but for those of us who like our dev and live environments to be similar:
+</p>
+
+
+<p>
+Download runkit from cvs (I found the beta version to have bugs)
+</p>
+
+
+<p><code>
+sudo aptitude install php-pear
+sudo aptitude install php5-dev</p>
+
+<p>mkdir temp
+cd temp</p>
+
+<p>cvs -d:pserver:cvsread@cvs.php.net:/repository co pecl/runkit
+cvs -d:pserver:cvsread@cvs.php.net:/repository co pecl/runkit</p>
+
+<p>cd pecl/runkit
+phpize
+./configure
+make</p>
+
+<p>sudo  cp /home/sean/temp/pecl/runkit/modules/runkit.so /usr/lib/php5/20060613+lfs/
+</code></p>
+
+<p>
+edit /et/php5/apache2/php.ini
+</p>
+
+
+<p>
+add the line 
+</p>
+
+
+<p><code>
+extension=runkit.so
+</code></p>
+
+<p>
+restart apache 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+phpinfo() should now show
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<h2><a name="module_runkit">runkit</a></h2>
+
+
+<table>
+    <tbody>
+        <tr class="h">
+            <th>runkit support</th><th>enabled</th>
+        </tr>
+        <tr class="h">
+            <th>version</th><th>1.0.0-dev</th>
+        </tr>
+        <tr class="h">
+            <th>Custom Superglobal support</th><th>enabled</th>
+        </tr>
+        <tr class="h">
+            <th>Sandbox Support</th><th>disable or unavailable</th>
+        </tr>
+        <tr class="h">
+            <th>Runtime Manipulation</th><th>enabled</th>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+<p>Now all I&#8217;ve got to do is use it to build some tests&#8230;</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -907,50 +1049,6 @@ There seems to be a Ubuntu bug which is displaying some settings multiple times 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/06/24/configure-squid-proxy-server-for-subversion-access/">Configure Squid Proxy Server for Subversion Access</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-06-24T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-To configure the Squid proxy server to work for subversion access you will need to tell it to recognise some non-standard methods.
-</p>
-
-
-<p>
-Add the following to squid.conf 
-</p>
-
-
-<p><code>extension_methods MKACTIVITY CHECKOUT REPORT MERGE</code></p>
-
-<p>
-Without these settings I could browse the repository - but I couldn&#8217;t commit to it. Now commit works too :-)
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/19">&larr; Older</a>
@@ -968,6 +1066,10 @@ Without these settings I could browse the repository - but I couldn&#8217;t comm
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
       </li>
     
@@ -981,10 +1083,6 @@ Without these settings I could browse the repository - but I couldn&#8217;t comm
     
       <li class="post">
         <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a>
       </li>
     
   </ul>
@@ -1012,6 +1110,19 @@ Without these settings I could browse the repository - but I couldn&#8217;t comm
 </section>
 
 
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 
   
 </aside>
