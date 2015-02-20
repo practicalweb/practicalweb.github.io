@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ansible | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/ansible/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-02-20T16:06:49+00:00</updated>
+  <updated>2015-02-20T16:13:44+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -27,6 +27,10 @@
 <p>Linux containers are <em>much</em> lighter weight - being faster to create and using much less system resource to run, I&rsquo;m hoping to be able to run more servers at once inside my laptop.</p>
 
 <p>There is a nice quick demo of docker <a href="https://www.docker.com/tryit/">https://www.docker.com/tryit/</a></p>
+
+<p>The steps below cover installing ansible and docker, building a simple docker image, and then using an ansible playbook to both create a container and then connect to that container. I just run a hello world at that point - but from there running any ansible code should be simple.</p>
+
+<hr />
 
 <p>On Ubuntu I installed the latest version via ppa following the notes from <a href="https://docs.docker.com/installation/ubuntulinux/">https://docs.docker.com/installation/ubuntulinux/</a></p>
 
@@ -121,7 +125,7 @@ CMD ["/usr/sbin/sshd", "-D"]
 cd docker-ansible
 </code></pre>
 
-<p>Note that I don&rsquo;t include my public key there (it is gitigtnored)</p>
+<p>Note that I don&rsquo;t include my public key there (it is gitignored)</p>
 
 <p>copy your by something like
 <code>bash
