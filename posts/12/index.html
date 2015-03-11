@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Drupal has a lot of great strengths and some weaknesses The following are the key areas of Drupal that (as a programmer) I would like to see improved &hellip;">
+  <meta name="description" content="I seem to be progressivly going Google, it started with search but for a long time I resisted the lure of Googles other treats. However since I got &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,183 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/25/going-google/">Going Google</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-11-25T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I seem to be progressivly going Google, it started with search but for a long time I resisted the lure of Googles other treats.
+</p>
+
+
+<p>
+However since I got an Android phone I&#8217;ve been getting slowly sucked in with accounts on Gmail, Picassa, Google, Calender, and now Google Apps 
+</p>
+
+
+<p>
+One thing I found out is that you <a href="http://www.google.com/support/forum/p/Google+Apps/thread?tid=5e6502d85823b15f&amp;hl=en&amp;fid=5e6502d85823b15f000479078747d294">can&#8217;t upgrade from a Gmail account to a Google Apps one</a> what you have to do is create a new account and do a lot of exporting/importing.
+</p>
+
+
+<p>
+A Google apps account allows you to use your own domain name for email, and manage all accounts at that domain but is otherwise not so different to a Gmail account.
+</p>
+
+
+<p>
+The lack of upgrade path is a pain but the actual account creation and migration process was easy; I had my email going to the new account within half an hour.
+</p>
+
+
+<p>
+The next snag was updating my Android phone to use the new account; there is no obvious way to do this but a bit of googling gave me the answer:
+</p>
+
+
+<p>
+Go to Setting &gt; Application &gt; Manage Application 
+</p>
+
+
+<p>
+Then for each of 
+</p>
+
+
+<ul>
+    <li>Gmail</li>
+    <li>Gmail storage</li>
+    <li>Google apps</li>
+    <li>Google search</li>
+</ul>
+
+
+<p>
+&quot;clear data&quot;
+</p>
+
+
+<p>
+You should shortly be prompted to enter your new account details.
+</p>
+
+
+<p>
+Make sure you have imported your contacts and calender to the new account before doing this so that your cleared data gets restored quickly. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/25/getting-calibre-working-on-debian-lenny/">Getting Calibre Working on Debian Lenny</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-11-25T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I recently bought a Sony e-reader, the main Linux package to support this is calibre but I found that it wouldn&#8217;t automatically sync my ebooks.
+</p>
+
+
+<p>
+ <a href="http://calibre.kovidgoyal.net/user_manual/faq.html#what-devices-does-app-support">The FAQ says </a>
+</p>
+
+
+<p>
+ &quot;The linux kernel can export two version of SYSFS, one of which is deprecated.&quot;
+</p>
+
+
+<p>
+Apparently Debian Lenny exports the deprecated version and you have to recompile the kernel to undo this.
+</p>
+
+
+<p>
+I wanted to make the minimum change possible to my system and continue using the packaging system : I follwed roughly the following steps:
+</p>
+
+
+<p><code>
+sudo aptitude install kernel-package ncurses-dev fakeroot wget bzip2 linux-source-2.6.26
+mkdir ~/linux
+cd ~/linux
+tar -xjf /usr/src/linux-source-2.6.26.tar.bz2
+cd linux-source-2.6.26
+cp /boot/config-2.6.26-2-686 .config
+make menuconfig
+</code></p>
+
+<p><p>
+In the config menu I selected
+<pre>
+General setup &ndash;>
+         [] Create deprecated sysfs layout for older userspace tools
+</pre>
+<p>And made sure I specified a custom revision to differentiate my custom package from the standard one</p></p>
+
+<p><code>
+make-kpkg &ndash;rootcmd fakeroot &ndash;initrd &ndash;revision=custom.001 kernel_image kernel_headers
+cd ..
+sudo dpkg -i linux*deb
+</code></p>
+
+<p><p>Then reboot ensuring the new kernel is loaded.</p></p>
+
+<p><p>I meant to write this up as I went but I&rsquo;m doing it a few days later so please take care if following them - and adjust to suit your kernel version etc.<p></p>
+
+<p><p>The above sounds like a pain but was actually fairly easy, and calibre is much better than the official Sony software which I tried on a Windows machine but it was slow and kept crashing.</p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1104,118 +1281,6 @@ http://us.php.net/manual/en/book.pcntl.php
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/23/hope-is-not-a-risk-management-strategy/">Hope Is Not a Risk Management Strategy</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-07-23T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-This is a great post by Cory Foy
-</p>
-
-
-<p>
-http://blog.cornetdesign.com/2009/06/hope-is-not-a-risk-management-strategy/
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/23/drupal-live-and-dev-sync/">Drupal Live and Dev Sync</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-07-23T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-When developing Drupal one often needs to pull recent copies of the live database into the dev environment.
-</p>
-
-
-<p>
-Loading a dump into the dev database will update any existing tables, add any new ones - but it won&#8217;t remove tables from the dev environment that re not in live.
-</p>
-
-
-<p>
-This causes problems with Drupal as module install and update hooks may need to create tables which don&#8217;t yet exist on live. 
-</p>
-
-
-<p>
-My solution which assumes you have .my.cnf set up to provide login locally is below.
-</p>
-
-
-<p><code></p>
-
-<h1>dump live db</h1>
-
-<p>ssh live &ldquo;mysqldump livedb | gzip > /tmp/livedb.sql.gz&rdquo;</p>
-
-<h1>download live db</h1>
-
-<p>scp live:/tmp/livedb.sql.gz /tmp</p>
-
-<h1>clean out dev db</h1>
-
-<p>mysql -BNe &ldquo;show tables&rdquo; devdb | awk &lsquo;{print &ldquo;drop table &rdquo; $1 &ldquo;;&rdquo;} | mysql devdb</p>
-
-<h1>copy live db to dev</h1>
-
-<p>zcat /tmp/livedb.sql.gz | mysql devdb</p>
-
-<h1>make sure test mails never go to real users!</h1>
-
-<p>echo &ldquo;update users set mail=&lsquo;<a href="&#109;&#97;&#x69;&#108;&#116;&#x6f;&#58;&#109;&#101;&#64;&#x65;&#120;&#x61;&#x6d;&#x70;&#108;&#x65;&#46;&#x63;&#x6f;&#x6d;">&#109;&#x65;&#x40;&#x65;&#120;&#97;&#x6d;&#112;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a>&rsquo;&rdquo; | mysql devdb
-</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/13">&larr; Older</a>
@@ -1233,6 +1298,14 @@ My solution which assumes you have .my.cnf set up to provide login locally is be
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
@@ -1242,14 +1315,6 @@ My solution which assumes you have .my.cnf set up to provide login locally is be
     
       <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
   </ul>

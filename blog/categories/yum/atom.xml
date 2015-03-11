@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Yum | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/yum/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-02-20T16:16:20+00:00</updated>
+  <updated>2015-03-11T22:20:35+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,28 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Local Yum Cache Repo]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2015/03/03/local-yum-cache-repo/"/>
+    <updated>2015-03-03T21:17:31+00:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2015/03/03/local-yum-cache-repo</id>
+    <content type="html"><![CDATA[<p>When I&rsquo;m working on ansible or docker with machine images that get rebuilt regularly it&rsquo;s a pain waiting for slow downloads</p>
+
+<p>Also if I want to work on teh train</p>
+
+<p>I&rsquo;m working on a process to setup a local repo with the stuff that I need</p>
+
+<p>This script downloads the rpms I have installed</p>
+
+<pre><code class="bash">yum install yum-utils &amp;&amp; sudo yumdownloader --destdir=./ $(rpm -qa --qf "%{NAME} ")
+</code></pre>
+
+<p>Next I need to drop them in a web dir, run createrepo and finally make sure this repo is enabled and prioritised in my test envs</p>
+
+<p>Writing this part up now even though I haven&rsquo;t finished - as I don&rsquo;t want to loose this info.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Vagrant / Puppet Project to Setup a RPM Build Server and Custom Yum Repository]]></title>

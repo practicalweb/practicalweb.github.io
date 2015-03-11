@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="To use google plus comments on your site all you need to do is insert the following code on teh page where you want the comments to appear url should &hellip;">
+  <meta name="description" content="We often work on large websites with strict change control practices and scheduled release cycles. Sometimes we also hand over the systems to the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,123 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/14/developing-for-ops/">Developing for Ops</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-14T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We often work on large websites with strict change control practices and scheduled release cycles. Sometimes we also hand over the systems to the client for production and don’t have direct access ourselves.</p>
+
+<p>Some bugs have a nasty habit of only occurring in production, this may be due to high load, odd/old browsers, changes in data, or just because test scenarios don’t cover every eventuality.</p>
+
+<p>What this means is that when we have a bug in production we can only understand it through the error logging we have already built into the system. If we need to put in place additional logging we usually lose the chance of actually fixing the bug for another release cycle.</p>
+
+<p>One of the real arts in this flow of development is to be pessimistic enough to assume that somehow something is going to go wrong, to remember that the people who see the bug will not be the developers who know the code, and that at this point (unlike during dev) we will have very limited access to the systems we might want to debug.</p>
+
+<p>One temptation is to log everything - but you soon find that doesn’t scale.</p>
+
+<p>The art of error messages is a bit like the art of commenting - especially for those errors that should never happen. You often don’t need to say exactly what went wrong, hopefully your compiler or runtime engine will do this along with a stacktrace or at least a line number. You need to say what it means to have this error - especially if it indicates a breakdown in business logic. It also helps to raise errors as early in the code flow as possible.</p>
+
+<p>When working on a large project with multiple teams it is especially helpful for errors to make clear whenever possible which team the bug belongs to. Clear error data like this can really cut down on the politics that can accompany a production bug and radically reduce the time to fix.</p>
+
+<p>For example let’s imagine that we are developing a website, we are responsible for the shopfront but we obtain product data from a feed. As well as all the bugs that can occur in our code there are likely to be a whole host of possible problems with the incoming data.</p>
+
+<p>What if we receive a null instead of the agreed object, what if the price is non numeric (or zero, or negative), what if an expected field is missing?</p>
+
+<p>You might display a product with zero price, fail to display it, or perhaps you do catch an error but the log just says something like “Notice:  Trying to get property of non-object”. The bug gets reported to the front end team - because that’s where the error appears. The front end team can’t see the production data.</p>
+
+<p>The politics here is that teams often blame each other, developers are generally optimistic that their code is good and pessimistic about other teams code. Therefore bugs get thrown over the wall too quick and then get thrown back - leaving bugs bouncing about with no fix.</p>
+
+<p>Now imagine you have explicit validation at the point you load third party data (or any place you have a boundary of responsibility like this). You log an error that points directly to the data feed, hopefully with the actual data that is wrong, perhaps even logging the request/response pair that led to it. This time you can give the data team enough info that they can quickly identify the problem. Conversely if you have missing products and no data errors - the impossible has happened - there is a bug in your own code. Now you get to be the hero and fix it.</p>
+
+<p>Remember, in development (where developers spend 95%) of their time this bug would be trivial, the developer would see the error, know which bit of code it related to, be able to view the data feed, and report the bug back to the data team. The trick is to remember it won’t be like this in production.</p>
+
+<p>In my experience it is well worth spending a chunk of time up front writing good generic error routines, that capture as much detail as possible, and 5 or 10 minutes every day looking at stubbed out error routines.</p>
+
+<p>This may add up to a non-trivial time investment - but you only have to save a few minor production bugs to get paid back plenty.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/19/merge-google-plus-accounts/">Merge Google Plus Accounts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-11-19T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you have a gmail account, you get a google plus account with it, many of end of with several of each. For mail this is usually what you want but for plus with it&#8217;s circles you usually just want one account and to split post by circle. Fortunately there is a way to redirect one account to another.</p>
+
+
+
+
+<p>This way anyone looking for you at the account you don&#8217;t really use or looking you up via an alternate email  gets redirected to your active account.</p>
+
+
+
+
+<p>First make sure you are only logged in to the google account you want to transfer your connections away from</p>
+
+
+
+
+<p>Go to <a href="https://www.google.com/settings/takeout/custom">Google takeout</a>, this is usually used to download backups of your data.</p>
+
+
+
+
+<p>On the google circles line is a little folder icon, the mousover text tells you this is to &quot;Transfer your google+ connections to another account&quot;</p>
+
+
+
+
+<p>Follow this link and you&#8217;ll have to log into your destination account.</p>
+
+
+
+
+<p>That should set up your transfer.</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -600,108 +717,6 @@ sqlite3 ~/.Skype/${username}/main.db \
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/18/jenkins-publish-over-ssh-parameterized/">Jenkins Publish Over Ssh - Parameterized</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-04-18T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>To have a jenkins job which acts on a remote server via ssh - and has a parameter to choose which server(s) to use.</p>
-
-
-
-
-<ol>
-<li>check <i>This build is parameterized</i></li>
-
-<li>Make the parameter name something like TARGET_SERVER</li>
-<li>add build step <i>Send files or execute commands over SSH</i></li>
-<li>Add server</li>
-<li>In server details click <i>advanced</i></li>
-<li>add a value for <i>Label</i></li>
-<li>at the end of the ssh section check <i>Parameterized publishing</i></li>
-<li>specify the  <i>Parameter name</i> from earlier (TARGET_SERVER)</li>
-
-</ol>
-
-
-
-
-<p><p>Now when you run the job supply a value for the TARGET_SERVER parameter that can be a regex, the job will run the ssh sections on any servers that have a matching label.<p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/25/git-files-with-local-changes-i-dont-want-committed/">Git Files With Local Changes I Don&#8217;t Want Committed</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-03-25T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&#8217;m working on a project where I find I want to semi-regularly adjust a config file for local testing, but want to be sure I don&#8217;t commit that file by mistake.</p>
-
-
-
-
-<p>Seems the best approach is</p>
-
-
-<p><code>git update-index &ndash;skip-worktree $filename</code></p>
-
-<p>This tells git to skip this file when I push, if the remote file changes it will warn me </p>
-
-
-
-
-<p>To switch back</p>
-
-
-<p><code>git update-index &ndash;no-skip-worktree $filename</code></p>
-
-<p>There is also a assume-unchanged option - but this is aimed more at performance and bug workarounds - it realy does assume the file is unchanged - which in my case is incorrect.</p>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/4">&larr; Older</a>
@@ -719,6 +734,14 @@ sqlite3 ~/.Skype/${username}/main.db \
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
@@ -728,14 +751,6 @@ sqlite3 ~/.Skype/${username}/main.db \
     
       <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
   </ul>

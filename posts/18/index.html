@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Unit testing Drupal can be pretty challenging as it's hard to isolate parts of the code. It seems : Unit Testing Plan Drupalcon: Simpletest and the &hellip;">
+  <meta name="description" content="Comments in code are widely used and generally (but not universally) accepted as a good thing. Databases can also accommodate comments - but these &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,138 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/31/adding-comments-to-the-database/">Adding Comments to the Database</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-07-31T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Comments in code are widely used and generally (but not universally) accepted as a good thing.</p>
+
+<p>Databases can also accommodate comments - but these seem to be very rarely used.</p>
+
+<p>I&rsquo;m of the opinion that database comments are very useful.</p>
+
+<p>It&rsquo;s often hard to determine the exact meaning of a column - maybe it would be ideal to rename the column but you don&rsquo;t want to risk breaking code.</p>
+
+<p>I&rsquo;ve also worked on a few projects where tables retain redundant columns just in case a query somewhere selects this column. Then every now and again a developer (like me) gets tripped up and thinks this column is meaningful.</p>
+
+<p>For a really simple table
+<code>
+Create Table: CREATE TABLE <code>phonebook</code> (
+  <code>number</code> int(11) NOT NULL COMMENT &lsquo;phone number&rsquo;,
+  <code>name</code> varchar(255) default NULL,
+  PRIMARY KEY  (<code>number</code>)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1
+</code></p>
+
+<p>To add a comment to a table
+<code>
+alter table phonebook comment=&lsquo;an example table&rsquo;
+</code></p>
+
+<p>To add a comment to a column
+repeat the existing column definition and add the comment at the end
+<code>
+alter table phonebook change column name name varchar(255) default NULL comment &lsquo;full name&rsquo;
+</code></p>
+
+<p>The comments are then displayed when you <code>show create table</code></p>
+
+<p>It&rsquo;s even easier to put the comments in at the start.</p>
+
+<p><code></p>
+
+<p>mysql&gt; create table phonebook (number int(11) primary key comment &lsquo;phone number&rsquo;, name varchar(255) comment &lsquo;full name&rsquo;) comment &lsquo;an example table&rsquo;;
+Query OK, 0 rows affected (0.05 sec)</p>
+
+<p> show create table phonebook\G
+<strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em> 1. row </em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong>
+       Table: phonebook
+Create Table: CREATE TABLE <code>phonebook</code> (
+  <code>number</code> int(11) NOT NULL COMMENT &lsquo;phone number&rsquo;,
+  <code>name</code> varchar(255) default NULL COMMENT &lsquo;full name&rsquo;,
+  PRIMARY KEY  (<code>number</code>)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT=&lsquo;an example table&rsquo;
+1 row in set (0.00 sec)</p>
+
+<p></code></p>
+
+<p>The above is an example based on MySQL.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/26/practicalweb-joins-drupal-association/">PracticalWeb Joins Drupal Association</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-07-26T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+PracticalWeb Ltd today joined the Drupal Association
+</p>
+
+
+<p>
+<a href="http://association.drupal.org/user/1084"><img src="/sites/default/files/u1/DA-organisation-120.png" alt="Drupal Association Membership Badge " width="120" height="120" /></a>
+</p>
+
+
+<p>
+The membership fee helps support the drupal.org infrastructure and marketing costs.
+</p>
+
+
+<p>
+It&#8217;s  also a small thank you for all the terrific work built up by the whole Drupal community.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -934,121 +1066,6 @@ try {
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/06/29/drupal-pager_query-function/">Drupal Pager_query Function</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-06-29T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve just been trying to get a paged query working with Drupal, and after a frustrating hour I realise the problem is that the function is case sensitive: see <a href="http://drupal.org/node/211925">http://drupal.org/node/211925</a><br />
-<br />
-Normally SQL keywords can be in any mixture of upper and lower case letters, Drupal has additional coding conventions which is great.<br />
-<br />
-In this case the coding convention is enforced by making a function silently fail if the programmer has failed to adhere to style guidelines.<br />
-<br />
-If you come across this &lsquo;feature&rsquo; please add your views to the above link.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/06/24/configuring-audio-for-skype-dell-inspiron-1525-ubuntu-8/">Configuring Audio for Skype Dell Inspiron 1525 Ubuntu 8</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-06-24T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-The audio controls for the Dell hardware are less than obvious; I didn&#8217;t even notice that there is a built in microphone.
-</p>
-
-
-<p>
-Below are screen grabs of the settings that work for me - giving audio at the right levels for skype calls.
-</p>
-
-
-<p>
-On the settings tab; ensure &quot;capture&quot; is enabled, &quot;digital&quot; seems to control the mic level - I found midway to be about right - higher levels caused distortion. 
-</p>
-
-
-<!--break-->
-
-
-<p>
-<img src="/sites/default/files/u1/inuput_0.png" alt="kmix input tab" title="kmix input tab" width="300" height="247" />
-</p>
-
-
-<p>
-Output: &quot;Master&quot; is the main volume control (which is the level affected by the inbuilt volume buttons).  
-</p>
-
-
-<p>
-<img src="/sites/default/files/u1/output_0.png" alt="kmix output" title="Kmix output" width="300" height="247" />
-</p>
-
-
-<p>
-On the settings tab ensure &#8216;analog loopback&#8217; is unchecked or you just get the microphone fed back into your headphones without being picked up by skype. This is the setting I messed at first. 
-</p>
-
-
-<p>
-Set &quot;Input Source&quot; to &quot;front Mic&quot; if you have an external microphone, or &quot;Mic&quot; to use the inbuilt one. 
-</p>
-
-
-<p>
-<img src="/sites/default/files/u1/settings_0.png" alt="kmix settings tab" title="kmix settings tab" width="300" height="247" /> 
-</p>
-
-
-<p>
-There seems to be a Ubuntu bug which is displaying some settings multiple times (like input source). I just used the first one and ignored the others. 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/19">&larr; Older</a>
@@ -1066,6 +1083,14 @@ There seems to be a Ubuntu bug which is displaying some settings multiple times 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
@@ -1075,14 +1100,6 @@ There seems to be a Ubuntu bug which is displaying some settings multiple times 
     
       <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
   </ul>

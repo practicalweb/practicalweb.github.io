@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I&rsquo;ve been using puppet and vagrant for a while, due to client choices we&rsquo;re switching to ansible which I&rsquo;m less familiar with - and &hellip;">
+  <meta name="description" content="When using jmeter on an ssl enabled site I was seeing an error SSL handshake alert: unrecognized_name error But I&rsquo;d read that since jmeter &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,97 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-11T22:10:36+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:10 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When using jmeter on an ssl enabled site I was seeing an error</p>
+
+<pre><code>SSL handshake alert: unrecognized_name error
+</code></pre>
+
+<p>But I&rsquo;d read that since jmeter version 2.4 ssl should work fine</p>
+
+<p>It turns out that</p>
+
+<p>Java 7 introduced a feature (SNI support) and can trigger this error in some circumstances.</p>
+
+<p>As workaround you can diusable this feayuire by setting the property  jsse.enableSNIExtension to false.</p>
+
+<p>and run jmeter like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>jmeter -Djsse.enableSNIExtension<span class="o">=</span><span class="nb">false</span> -t mytest.jmx
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-03T21:17:31+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>9:17 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When I&rsquo;m working on ansible or docker with machine images that get rebuilt regularly it&rsquo;s a pain waiting for slow downloads</p>
+
+<p>Also if I want to work on teh train</p>
+
+<p>I&rsquo;m working on a process to setup a local repo with the stuff that I need</p>
+
+<p>This script downloads the rpms I have installed</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum install yum-utils <span class="o">&amp;&amp;</span> sudo yumdownloader --destdir<span class="o">=</span>./ <span class="k">$(</span>rpm -qa --qf <span class="s2">&quot;%{NAME} &quot;</span><span class="k">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next I need to drop them in a web dir, run createrepo and finally make sure this repo is enabled and prioritised in my test envs</p>
+
+<p>Writing this part up now even though I haven&rsquo;t finished - as I don&rsquo;t want to loose this info.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -897,388 +988,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/19/debugging-with-maven-and-eclipse/">Debugging With Maven and Eclipse</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-19T16:11:44+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:11 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>To use eclipse with Maven you need to add the maven plugin to eclipse, it seems to be part of the Indigo update site so this should be straightforward.</p>
-
-<p>It&rsquo;s also at <a href="http://download.eclipse.org/technology/m2e/releases">http://download.eclipse.org/technology/m2e/releases</a></p>
-
-<p>More instructions at <a href="http://maven.apache.org/guides/mini/guide-ide-eclipse.html">http://maven.apache.org/guides/mini/guide-ide-eclipse.html</a></p>
-
-<p>To run the debugger you need to do two things: you need to tell maven to run surefire, and run a remote java debug listening to that surefire</p>
-
-<p>Setup a new &ldquo;Debug configuration&rdquo; > &ldquo;Remote Java Application&rdquo;</p>
-
-<p>It should look like</p>
-
-<p><img src="/images/eclipse/maven/surefire.png" alt="screenshot" /></p>
-
-<p>Next you need to run your maven code with the -Dmaven.surefire.debug</p>
-
-<p>You can do this by adding it to the debug config like this</p>
-
-<p><img src="/images/eclipse/maven/main-project.png" alt="screenshot" /></p>
-
-<p>I&rsquo;ve used the debug mode - but maybe a run configuration would work too</p>
-
-<p>An alternative is to run the maven project on command line</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mvn <span class="nb">test</span> -Dmaven.surefire.debug
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Generally if I&rsquo;m using eclipse I prefer to do everything in the IDE (I stands for integrated after all) and it&rsquo;s useful to have the console output in the same place</p>
-
-<p>Either way run the project to debug and maven will stop with output</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>Listening <span class="k">for</span> transport dt_socket at address: 5005
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and wait till your debugger is attached</p>
-
-<p>Now you have to start the remote application debug in eclipse</p>
-
-<p>Execution will now stop at breakpoints and you will be able top explore the stack and all variables set</p>
-
-<p><img src="/images/eclipse/maven/debug.png" alt="screenshot" /></p>
-
-<p>This is an incredibly powerful way to explore running code, <em>especially</em> if you are unfamiliar with it. Even if you are familiar a debugger session can often be very enlightening.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/19/graphite-statsd-slash-bucky-and-collectd/">Graphite Statsd/bucky and Collectd</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-19T10:09:23+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:09 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p>Graphite is a highly scalable real-time graphing system.</p></blockquote>
-
-<p>It took me a while to realise but the data input to graphite is <em>incredibly</em> simple</p>
-
-<p>The message input format is just</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>metric_path value timestamp\n
-</span><span class='line'>
-</span><span class='line'>So for example, "foo.bar.baz 42 74857843"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Wow: just a label the number you want to store and the timestamp it relates to.</p>
-
-<p>That&rsquo;s really basic, there is nothing there about what kind of data it is, no difference between something you want to count (say page hits) and a number you want to average (like load)</p>
-
-<p><a href="https://github.com/etsy/statsd/blob/master/docs/graphite.md">Configuring Graphite for StatsD</a> is a <em>very</em> important doc to read if you want to use these tools together.</p>
-
-<p>The default config in graphite keeps data at 1 minute resolution for 1 day <strong>and then discards it</strong> and if you are sending data to graphite every 10 seconds graphite has to figure out how to convert 6 data points (or some nulls and some data) to 1 data point for the minute.</p>
-
-<p>You really need the statsd specific config to ensure counts are not averaged and infrequent data is not dropped.</p>
-
-<p>I needed to install on Centos using just official and EPEL packages, I wanted to use collected to gather system metrics and while version 5 can log direct to graphite version 4 ships with Centos 6.5 and that can&rsquo;t log direct.</p>
-
-<p>In any case I wanted to use statsd to allow easy logging of custom data from production code, the original written by etsy is a node service and probably doesn&rsquo;t run with stock packages on Centos,</p>
-
-<p>Centos does provide a python-bucky package which acts both as a statsd server and as a bridge to collectd.</p>
-
-<p>The full list of packages I needed is</p>
-
-<ul>
-<li>graphite-web</li>
-<li>graphite-web-selinux</li>
-<li>python-carbon</li>
-<li>python-whisper</li>
-<li>collectd</li>
-<li>python-bucky</li>
-</ul>
-
-
-<p>Apache config</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-</pre></td><td class='code'><pre><code class='apache'><span class='line'><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nb">ServerName</span> graphite.example.com
-</span><span class='line'>
-</span><span class='line'>  <span class="c">## Vhost docroot</span>
-</span><span class='line'>  <span class="nb">DocumentRoot</span> <span class="s2">&quot;/var/www/html&quot;</span>
-</span><span class='line'>  <span class="c">## Alias declarations for resources outside the DocumentRoot</span>
-</span><span class='line'>  <span class="nb">Alias</span> <span class="sx">/grafana/</span> <span class="s2">&quot;/var/www/grafana/&quot;</span>
-</span><span class='line'>  <span class="nb">Alias</span> <span class="sx">/media/</span> <span class="s2">&quot;/usr/lib/python2.6/site-packages/django/contrib/admin/media/&quot;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  <span class="c">## Directories, there should at least be a declaration for /var/www/html</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  <span class="nt">&lt;Directory</span> <span class="s">&quot;/var/www/html&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nb">Options</span> Indexes FollowSymLinks MultiViews
-</span><span class='line'>    <span class="nb">AllowOverride</span> <span class="k">None</span>
-</span><span class='line'>    <span class="nb">Order</span> allow,deny
-</span><span class='line'>    <span class="nb">Allow</span> from <span class="k">all</span>
-</span><span class='line'>  <span class="nt">&lt;/Directory&gt;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c">## Load additional static includes</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  <span class="c">## Logging</span>
-</span><span class='line'>  <span class="nb">ErrorLog</span> <span class="s2">&quot;/var/log/httpd/graphite.example.com_error.log&quot;</span>
-</span><span class='line'>  <span class="nb">ServerSignature</span> <span class="k">Off</span>
-</span><span class='line'>  <span class="nb">CustomLog</span> <span class="s2">&quot;/var/log/httpd/graphite.example.com_access.log&quot;</span> combined
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  <span class="nb">WSGIImportScript</span> <span class="sx">/usr/share/graphite/graphite-web.wsgi</span> application-group=%{GLOBAL} process-group=%{GLOBAL}
-</span><span class='line'>  <span class="nb">WSGIScriptAlias</span> / <span class="s2">&quot;/usr/share/graphite/graphite-web.wsgi&quot;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c">## Custom fragment</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&lt;Location</span> <span class="s">&quot;/content/&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nb">SetHandler</span> <span class="k">None</span>
-</span><span class='line'>    <span class="nt">&lt;/Location&gt;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&lt;Location</span> <span class="s">&quot;/media/&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>        <span class="nb">SetHandler</span> <span class="k">None</span>
-</span><span class='line'>    <span class="nt">&lt;/Location&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;/VirtualHost&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Graphite Config</p>
-
-<p>Storage-schames.conf</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='apache'><span class='line'><span class="err">[carbon]</span>
-</span><span class='line'><span class="nb">pattern</span> = ^carbon\.
-</span><span class='line'><span class="nb">retentions</span> = <span class="m">60</span>:90d
-</span><span class='line'>
-</span><span class='line'><span class="err">[stats]</span>
-</span><span class='line'><span class="nb">pattern</span> = ^stats.*
-</span><span class='line'><span class="nb">retentions</span> = <span class="m">10</span>s:6h,1min:6d,10min:1800d
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="c"># unsure if this is redundant - does .* match stats_counts ?</span>
-</span><span class='line'><span class="err">[stats_counts]</span>
-</span><span class='line'><span class="nb">pattern</span> = ^stats_counts.*
-</span><span class='line'><span class="nb">retentions</span> = <span class="m">10</span>s:6h,1min:6d,10min:1800d
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="c"># collectd </span>
-</span><span class='line'><span class="err">[com]</span>
-</span><span class='line'><span class="nb">pattern</span> = ^com.*
-</span><span class='line'><span class="nb">retentions</span> = <span class="m">10</span>s:6h,1min:6d,10min:1800d
-</span><span class='line'>
-</span><span class='line'><span class="err">[default_1min_for_1day]</span>
-</span><span class='line'><span class="nb">pattern</span> = .*
-</span><span class='line'><span class="nb">retentions</span> = <span class="m">60</span>s:1d
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>storage-aggregation.conf</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='apache'><span class='line'><span class="err">[min]</span>
-</span><span class='line'><span class="nb">pattern</span> = \.lower$
-</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>.1
-</span><span class='line'><span class="nb">aggregationMethod</span> = <span class="k">min</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">[max]</span>
-</span><span class='line'><span class="nb">pattern</span> = \.upper(_\d+)?$
-</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>.1
-</span><span class='line'><span class="nb">aggregationMethod</span> = max
-</span><span class='line'>
-</span><span class='line'><span class="err">[sum]</span>
-</span><span class='line'><span class="nb">pattern</span> = \.sum$
-</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>
-</span><span class='line'><span class="nb">aggregationMethod</span> = sum
-</span><span class='line'>
-</span><span class='line'><span class="err">[count]</span>
-</span><span class='line'><span class="nb">pattern</span> = \.count$
-</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>
-</span><span class='line'><span class="nb">aggregationMethod</span> = sum
-</span><span class='line'>
-</span><span class='line'><span class="err">[count_legacy]</span>
-</span><span class='line'><span class="nb">pattern</span> = ^stats_counts.*
-</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>
-</span><span class='line'><span class="nb">aggregationMethod</span> = sum
-</span><span class='line'>
-</span><span class='line'><span class="err">[default_average]</span>
-</span><span class='line'><span class="nb">pattern</span> = .*
-</span><span class='line'><span class="nb">xFilesFactor</span> = <span class="m">0</span>.3
-</span><span class='line'><span class="nb">aggregationMethod</span> = average
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Statsd caught me out with a debug mode that <em>only</em> prints to stdout and doesn&rsquo;t actually log any data to graphite, I expected debug mode to print out data in addition to regular duties.</p>
-
-<p>I did need to make statsd listen on all networks instead of just localhost, and still need to wrap it properly as a service.</p>
-
-<p>Edit collectd.conf to enable the plugins you want, the only problem I had here was collectd silently dying if I had a config error.</p>
-
-<p>You need to setup an initial graphite users database</p>
-
-<p>More details at <a href="http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4">http://obfuscurity.com/2012/04/Unhelpful-Graphite-Tip-4</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>/usr/bin/python /usr/lib/python2.6/site-packages/graphite/manage.py syncdb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Writing this up now it all seems quite simple - but I haven&rsquo;t really found it so, I think the main problem has been understanding what graphite is actually doing, and not taking the trouble to optimise that config as a first step.</p>
-
-<p>Pages I found useful</p>
-
-<ul>
-<li><a href="https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/">https://kevinmccarthy.org/blog/2013/07/18/10-things-i-learned-deploying-graphite/</a></li>
-<li><a href="http://blog.pkhamre.com/2012/07/24/understanding-statsd-and-graphite/">http://blog.pkhamre.com/2012/07/24/understanding-statsd-and-graphite/</a></li>
-<li><a href="http://statsd.readthedocs.org/en/latest/types.html#counters">http://statsd.readthedocs.org/en/latest/types.html#counters</a></li>
-<li><a href="http://code.hootsuite.com/accurate-counting-with-graphite-and-statsd/">http://code.hootsuite.com/accurate-counting-with-graphite-and-statsd/</a></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1294,6 +1003,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
@@ -1303,14 +1020,6 @@
     
       <li class="post">
         <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/16/elk-gotchas/">ELK Gotchas</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a>
       </li>
     
   </ul>
