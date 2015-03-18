@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Installing Ubuntu on a new netbook proved remarkably easy once I got past a couple of hurdles BIOS settings - in order to install a new OS I needed &hellip;">
+  <meta name="description" content="The default configuration of varnish logs every request twice, once for the client and once for the backend communication edit the line in /etc/init. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,95 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/05/varnish-logs-twice/">Varnish Logs Twice</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-05T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The default configuration of varnish logs every request twice, once for the client and once for the backend communication</p>
+
+<p>edit the line in /etc/init.d/varnishncsa to something like</p>
+
+<p><code>
+DAEMON_OPTS=&ldquo;-c -a -w $logfile -D -P $pidfile&rdquo;
+</code></p>
+
+<p>from the varnishncsa man page</p>
+
+<blockquote>
+     -c          Include log entries which result from communication with a client.  If neither -b nor -c is specified, varnishncsa acts as if they both were.
+</blockquote>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/01/varnish-acl/">Varnish ACL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-01T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To setup an IP based access control list so that only allowed users may access the site.</p>
+
+<p><code>
+sub vcl_recv {</p>
+
+<p>  if (!(client.ip ~ testers)) {
+    error 403 &ldquo;Access Denied - server in test mode (IP not in ACL)&rdquo;;
+  }</p>
+
+<p>}</p>
+
+<p>acl testers {
+    &ldquo;localhost&rdquo;;
+    &ldquo;www.example.com&rdquo;;
+    &ldquo;192.168.0.1&rdquo;;
+}
+</code></p>
+
+<p>In my case I need to be able to test a dev site but don&rsquo;t want to make it public, we tried using password authentication but that made it harder to test varnish as the authentication headers affected caching.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -501,150 +590,6 @@ Error 503 Service Unavailable</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/05/13/varnish-caching-passing-a-hostname/">Varnish Caching - Passing a Hostname</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-05-13T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;m using varnish to cache a REST service that&rsquo;s slow enough to cause me grief in development.</p>
-
-<p>Out of the box it assumes you are caching your own server and that the client is already using the right host header.</p>
-
-<p>To specify that it should use a host header to match the backend I&rsquo;m using a config like</p>
-
-<p><code>
-backend default {
-        set backend.host = &ldquo;www.example.com&rdquo;;
-        set backend.port = &ldquo;80&rdquo;;</p>
-
-<p>}</p>
-
-<p>sub vcl_recv {
-        set req.http.host = &ldquo;www.example.com&rdquo;;
-}</p>
-
-<p></code></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/30/triggers-in-drupal/">Triggers in Drupal</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-04-30T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>To make a Drupal module that provides triggers you need to</p>
-
-<ol>
-
-<li>Use module_invoke_all at the point your code triggers an event. 
-
-<?php
-module_invoke_all('mymodule', $op, $arg1, $arg2, ....);
-?>
-
-This basically defines a hook that your module provides - it has to be called after the name of your module because of <a href="http://drupal.org/node/368573">a bug</a>
-
-</li>
-
-<!--break-->
-
-<li>Define your modules implementation of this hook to run any actions registered for it.
-
-<?php 
-
-function mymodule_mymodule($op, $arg1, $arg2...){
-   $aids = _trigger_get_hook_aids('mymodule', $op);
-   $context = array(
-     'hook' => &#8216;mymodule&#8217;,
-     &#8216;op&#8217; => $op,
-     &#8216;arg2&#8217; => $arg2,
-      (arg3 etc) 
-   );
-   actions_do(array_keys($aids), $arg1, $context);
-
-}
-
-?>
-
-You can wrap up as many arguments as you like in the context array, $op can be used to define related actions like the way the user module has op for insert, delete, update etc.
-
-$arg1 is passed by reference as the $object parameter to actions.
-
-</li>
-
-<li>Tell Drupal about your triggers by implementing hook_hook_info
-
-This adds the triggers on the triggers admin page
-
-<?php
-function mymodule_hook_info() {
-  return array(
-      'mymodule' => array(
-        &#8216;mymodule&#8217; => array(
-          &#8216;some_op&#8217; => array(
-            &#8216;runs when&#8217; => t(&#8216;Text to explain when the trigger runs&#8217;),
-           ),
-           &#8216;some_other_op&#8217; => array(
-             &#8216;runs when&#8217; => t(&#8216;more user text&#8217;),
-           ),
-         ),
-       ),
-   );
-}
-
-?>
-
-</li>
-
-<li>Now you can use the admin interface to run actions when your triggers fire.</li>
-
-</ol>
-
-
-<p>See <a href="http://drupal.org/node/375833">Writing triggers (Drupal 6.x)</a> for more details - I wrote this up as I found it helpful to approach the issue in reverse order to that page.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/10">&larr; Older</a>
@@ -662,6 +607,14 @@ function mymodule_hook_info() {
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/13/puppet-vs-ansible/">Puppet vs Ansible</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
       </li>
     
@@ -671,14 +624,6 @@ function mymodule_hook_info() {
     
       <li class="post">
         <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
   </ul>

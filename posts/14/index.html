@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Well having found the Definitive Guide to Symfony a bit uninspiring I've spent a bit of time on the &quot;Practical Symfony&quot; book - online. &hellip;">
+  <meta name="description" content="I'm working on an AJAX heavy site for a defined audience who all have JavaScript - so I have a form with no submit button that gets submitted by an &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/06/drupal-forms-require-a-submit-button/">Drupal Forms Require a Submit Button</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-06T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;m working on an AJAX heavy site for a defined audience who all have JavaScript - so I have a form with no submit button that gets submitted by an change handler. 
+</p>
+
+
+<p>
+Normally I&#8217;d make sure the site was fully accessible - but not on this project so I just got rid of the submit button. I got the JavaScript submit working only to find my Drupal form no longer worked.
+</p>
+
+
+<p>
+It seems that the Drupal submit handlers are not called if the form doesn&#8217;t have a submit button. I can&#8217;t see any reference to this in the Drupal API, but adding the  button back in and hiding it via CSS works fine.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/06/28/things-to-like-about-symfony-so-far/">Things to Like About Symfony So Far</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-06-28T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+A few days into learning Symfony and so far I&#8217;m keen on
+</p>
+
+
+<ul>
+    <li>configuration check to start with</li>
+    <li>good MVC separation</li>
+    <li>ability to generate initial MVC components from a database definition</li>
+    <li>form validation to match database constraints</li>
+    <li>wrapping various HTTP functions and globals in a request and response object</li>
+    <li>separate dev and prod environments</li>
+    <li>ajax integration - like defining a div as draggable in PHP </li>
+    <li> explicit support for initial and test data </li>
+</ul>
+
+
+<p>
+<br />
+Things not to like
+</p>
+
+
+<ul>
+    <li>well there are quite a lot of files</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -623,99 +725,6 @@ Simpletest has a built in webTestCase which allows you to perform some integrati
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/29/how-sure-are-you-that-your-code-doesnt-have-bugs/">How Sure Are You That Your Code Doesn&#8217;t Have Bugs?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-04-29T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There are times you really really want to be sure your code doesn&rsquo;t have any bugs at all.</p>
-
-<p>This is one of those times.</p>
-
-<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/yln_IGDuOCo&hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/yln_IGDuOCo&hl=en&fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>
-
-
-<p>I really hope they had a good set of tests running on thier software before doing that!</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/28/the-perils-of-virtualisation/">The Perils of Virtualisation</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-04-28T00:00:00+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I just read an interesting article about Windows 7 - it will include a virtual machine to run windows XP for backwards compatibility. 
-</p>
-
-
-<p>
-http://www.computerworld.com/action/article.do?command=viewArticleBasic&amp;articleId=9132177
-</p>
-
-
-<p>
-The article points out that this has the drawback of extra maintenance.
-</p>
-
-
-<p>
-I&#8217;d have to agree with this - it&#8217;s one of the big downsides of using virtual machines for testing -  with three virtual Windows&#8217; I find myslef constantly having to run updates.
-</p>
-
-
-<p>
-One of the big wins of Linux systems is centralised updates for all applications - having to update windows, office, flash, firefox, java - all separately is a real pain even when you only have one machine to look after. 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/15">&larr; Older</a>
@@ -733,6 +742,14 @@ One of the big wins of Linux systems is centralised updates for all applications
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/13/puppet-vs-ansible/">Puppet vs Ansible</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
       </li>
     
@@ -742,14 +759,6 @@ One of the big wins of Linux systems is centralised updates for all applications
     
       <li class="post">
         <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
   </ul>

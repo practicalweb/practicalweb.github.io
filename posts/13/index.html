@@ -9,8 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="
-This is a great post by Cory Foy http://blog.cornetdesign.com/2009/06/hope-is-not-a-risk-management-strategy/ &nbsp; ">
+  <meta name="description" content="Three interesting posts I've read recently http://www.contenthere.net/2009/08/fixed-bid-implementation-work-a-marriage-made-in-vegas.html Large &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +70,122 @@ This is a great post by Cory Foy http://blog.cornetdesign.com/2009/06/hope-is-n
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/08/04/website-costs-fixed-price-and-bugs/">Website Costs, Fixed Price, and Bugs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-08-04T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Three interesting posts I&#8217;ve read recently
+</p>
+
+
+<p>
+http://www.contenthere.net/2009/08/fixed-bid-implementation-work-a-marriage-made-in-vegas.html
+</p>
+
+
+<p>
+Large fixed bid projects are very hard to get right.
+</p>
+
+
+<p>
+http://www.teamlalala.com/blog/2008/11/12/how-much-do-websites-cost/
+</p>
+
+
+<p>
+How much do websites cost? Well it&#8217;s hard to say.
+</p>
+
+
+<p>
+http://www.codinghorror.com/blog/archives/001239.html
+</p>
+
+
+<p>
+You&#8217;re gonna have bugs - plan for it and log them so that you can analyse the most common ones and  target your budget effectively.  
+</p>
+
+
+<p>
+Developing websites is a real challenge, and putting a business process around it so that all parties make a fair profit is hard too. 
+</p>
+
+
+<p>
+But it&#8217;s an exciting business to be in and there are profits to be made. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/24/multi-threaded-php/">Multi-threaded PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-24T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+OK so it isn&#8217;t quite multi-threaded, but forking and controlling processes in the command line environment is still pretty powerful and something I&#8217;ve wanted to do on a couple of occasions. 
+</p>
+
+
+<p>
+http://brian.moonspot.net/php-fork
+</p>
+
+
+<p>
+http://us.php.net/manual/en/book.pcntl.php
+</p>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -175,7 +290,7 @@ My solution which assumes you have .my.cnf set up to provide login locally is be
 
 <h1>make sure test mails never go to real users!</h1>
 
-<p>echo &ldquo;update users set mail=&lsquo;<a href="&#109;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#109;&#x65;&#64;&#x65;&#x78;&#97;&#109;&#x70;&#108;&#x65;&#x2e;&#x63;&#x6f;&#109;">&#x6d;&#x65;&#x40;&#x65;&#120;&#x61;&#x6d;&#112;&#x6c;&#x65;&#46;&#x63;&#x6f;&#109;</a>&rsquo;&rdquo; | mysql devdb
+<p>echo &ldquo;update users set mail=&lsquo;<a href="&#109;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#x6d;&#101;&#x40;&#x65;&#120;&#x61;&#x6d;&#112;&#108;&#x65;&#x2e;&#99;&#x6f;&#109;">&#109;&#101;&#x40;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#99;&#111;&#109;</a>&rsquo;&rdquo; | mysql devdb
 </code></p>
 </div>
   
@@ -665,108 +780,6 @@ No filters, no cruft in the user interface, and it was quicker to develop!
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/06/drupal-forms-require-a-submit-button/">Drupal Forms Require a Submit Button</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-07-06T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;m working on an AJAX heavy site for a defined audience who all have JavaScript - so I have a form with no submit button that gets submitted by an change handler. 
-</p>
-
-
-<p>
-Normally I&#8217;d make sure the site was fully accessible - but not on this project so I just got rid of the submit button. I got the JavaScript submit working only to find my Drupal form no longer worked.
-</p>
-
-
-<p>
-It seems that the Drupal submit handlers are not called if the form doesn&#8217;t have a submit button. I can&#8217;t see any reference to this in the Drupal API, but adding the  button back in and hiding it via CSS works fine.
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/06/28/things-to-like-about-symfony-so-far/">Things to Like About Symfony So Far</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-06-28T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-A few days into learning Symfony and so far I&#8217;m keen on
-</p>
-
-
-<ul>
-    <li>configuration check to start with</li>
-    <li>good MVC separation</li>
-    <li>ability to generate initial MVC components from a database definition</li>
-    <li>form validation to match database constraints</li>
-    <li>wrapping various HTTP functions and globals in a request and response object</li>
-    <li>separate dev and prod environments</li>
-    <li>ajax integration - like defining a div as draggable in PHP </li>
-    <li> explicit support for initial and test data </li>
-</ul>
-
-
-<p>
-<br />
-Things not to like
-</p>
-
-
-<ul>
-    <li>well there are quite a lot of files</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/14">&larr; Older</a>
@@ -784,6 +797,14 @@ Things not to like
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/13/puppet-vs-ansible/">Puppet vs Ansible</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
       </li>
     
@@ -793,14 +814,6 @@ Things not to like
     
       <li class="post">
         <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-03-11T22:20:35+00:00</updated>
+  <updated>2015-03-18T15:01:06+00:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -25,11 +25,9 @@
 
 <p>But I&rsquo;d read that since jmeter version 2.4 ssl should work fine</p>
 
-<p>It turns out that</p>
+<p>It turns out that Java 7 introduced a feature (SNI support) and can trigger this error in some circumstances.</p>
 
-<p>Java 7 introduced a feature (SNI support) and can trigger this error in some circumstances.</p>
-
-<p>As workaround you can diusable this feayuire by setting the property  jsse.enableSNIExtension to false.</p>
+<p>As workaround you can disable this feature by setting the property  jsse.enableSNIExtension to false.</p>
 
 <p>and run jmeter like</p>
 

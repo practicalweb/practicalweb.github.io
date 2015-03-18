@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I&rsquo;ve just been trying to get a paged query working with Drupal, and after a frustrating hour I realise the problem is that the function is case &hellip;">
+  <meta name="description" content="Well the new version of Eclipse (3.4 or Ganymede) is out and I've been trying it out. So far I've just installed it, adding in the components I want &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,290 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/06/eclipse-3-4-ganymede-first-impressions/">Eclipse 3.4 (Ganymede) First Impressions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-07-06T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Well the new version of Eclipse (3.4 or Ganymede) is out and I&#8217;ve been trying it out. So far I&#8217;ve just installed it, adding in the components I want; and generally trying to see what&#8217;s new. 
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<div style="text-align: center">
+<img src="/sites/default/files/u1/eclipse-splash_0.png" alt="Eclipse Splash Screen" width="300" height="195" />
+</div>
+
+
+<h2>
+Installation 
+</h2>
+
+
+<p>
+I&#8217;m running Linux (Ubuntu 8.04) 
+</p>
+
+
+<p>
+Installing Eclipse 3.4 was a pain: it turns out that Eclipse requires web browser components form Firefox - and didn&#8217;t work with the default Ubuntu package that I had.  Once I found out that I needed to upgrade my xulrunner-1.9 package things were OK.
+</p>
+
+
+<p>
+If you have these problems see
+</p>
+
+
+<ul>
+    <li><a href="http://www.eclipse.org/swt/faq.php#browserlinux">www.eclipse.org/swt/faq.php</a></li>
+    <li><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=213194">bug 213194</a> (and it&#8217;s duplicates)</li>
+</ul>
+
+
+<p>
+Then I needed to install various components, the Eclipse  software updates management is much improved on earlier version, dependencies are resolved automatically. But I still found it hard to work out which packages provide which features. There was quite a lot of back and forth - install, test, install some more &#8230;
+</p>
+
+
+<p>
+Particularly tricky was the subversive svn connector. 
+</p>
+
+
+<h2>Core Eclipse</h2>
+
+
+<p>
+While there appear to be lots of small improvements (better updates UI, case preserving search and replace regex&#8230;) there doesn&#8217;t seem to be anything here to get me to upgrade in itself.
+</p>
+
+
+<h2>PDT - PHP Development</h2>
+
+
+<p>
+This isn&#8217;t actually part of Ganymede, but I downloaded and installed a nightly build as this is the part of Eclipse that I use the most heavily.
+</p>
+
+
+<p>
+Again the changes are incremental - but as this is stuff I use so much small changes can make a big difference.
+</p>
+
+
+<p>
+See <a href="http://wiki.eclipse.org/PDT/1.1_Plan">PDT 1.1 Plan</a>
+</p>
+
+
+<dl><dt>Mark Occurrences</dt>
+<dd>Select a variable or function and all other occurrences of this in the current editor are highlighted (those offscreen are shown in the &#8216;ruler&#8217;</dd>
+<dt>Better OO support</dt>
+<dd>I haven&#8217;t tested this out enough yet - but there seems to be better support for showing the relationship between classes</dd>
+<dt>Code Completion</dt><dt>
+<br />
+</dt><dd>Previous versions of PDT have relied almost entirely on doc comments for code completion, it looks like this version does a better job where there are no doc comments</dd>
+</dl>
+
+
+<p>
+This doesn&#8217;t look like a whole heap of changes, I&#8217;d really hoped for some better refactoring support, but what is there is welcome.
+</p>
+
+
+<h2>Subversive</h2>
+
+
+<p>
+I&#8217;ve always used subclipse before - after reading <a href="http://www.barneyb.com/barneyblog/2006/10/26/subclipse-vs-subversive/">subclipse-vs-subversive</a> and going with the recommendation - but that was a couple of years ago.
+</p>
+
+
+<p>
+Now subversive is a standard part of Eclipse - but annoyingly you do have to download the SVN connectors separately - and the documentation is clearly written by a non-english speaker.
+</p>
+
+
+<p>
+Adding the SVNKit component from Polarion finally got things working for me.
+</p>
+
+
+<p>
+It doesn&#8217;t look all that different so far - except it does recognise the trunk/tags/branches convention which is nice.
+</p>
+
+
+<h2>Mylyn</h2>
+
+
+<p>
+This does appear to have major advances with far deeper integration to Eclipse.
+</p>
+
+
+<blockquote>
+    Mylyn is a Task-Focused Interface for Eclipse that reduces information overload and makes multi-tasking easy.
+</blockquote>
+
+
+<p>
+If you haven&#8217;t used Mylyn yet - you&#8217;re missing out.
+</p>
+
+
+<p>
+Mylyn integrates with your task list or ticketing system, keeps track of the files you open for a task, filters out irrelevant info, reopens the right files if you re-open a task, and fills out half the ticket comment for you when you commit work.
+</p>
+
+
+<p>
+There&#8217;s too long a list of great stuff - see <a href="http://www.eclipse.org/mylyn/new/">Mylyn 3.0 new and noteworthy</a>
+</p>
+
+
+<h2>Communication Framework</h2>
+
+
+<p>
+This part of eclipse is completely new to me; I love the idea of being able to jointly edit a file with a colleague.
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<ul>
+    <li><a href="http://codesurgeonblog.com/2008/06/cola-real-time-shared-editing.html">screencast</a></li>
+    <li><a href="http://wiki.eclipse.org/RT_Shared_Editing">Real Time Shared Editing</a></li>
+    <li><a href="http://wiki.eclipse.org/DocShare_Plugin">Doc Share Plugin</a></li>
+    <li><a href="http://wiki.eclipse.org/ECF_Servers">ECF Servers</a></li>
+</ul>
+
+
+<p>
+I have yet to get this working (requires a suitable colleague and server).
+</p>
+
+
+<p>
+It&#8217;s also possible to run an IRC client inside eclipse (and several proprietary chat protocols) - though I&#8217;m less convinced this is useful.
+</p>
+
+
+<h2>Datatools</h2>
+
+
+<p>
+So far this seems like a step backwards, there is an SQL query builder (but I&#8217;m happy on the command line); but I found the new connection wizard really confusing, and while I have connected to a database - I can&#8217;t seem to browse the tables.
+</p>
+
+
+<h2>Web Tools</h2>
+
+
+<p>
+Seems like more incremental improvements, lots of little productivity gains.
+</p>
+
+
+<p>
+<a href="http://www.eclipse.org/webtools/releases/3.0.0/newandnoteworthy/sourceediting.php">webtools source code editing new and noteworthy</a>
+</p>
+
+
+<h2>Summary</h2>
+
+
+<p>
+So far it doesn&#8217;t seem like there are any compelling reasons to upgrade: if you&#8217;re happy with Eclipse as you have it - stay with it. If the upgrade path was easier maybe I&#8217;d have a different answer.
+</p>
+
+
+<p>
+Having got this far though the improvements look generally useful; I&#8217;ll go ahead and start using Ganymede for day-to-day use.
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/06/30/simpletest-expecting-exceptions/">SimpleTest - Expecting Exceptions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-06-30T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SimpleTest is a great testing framework for PHP, with a Drupal module available too.</p>
+
+<p>Many tests are based on assert statements, but this patterns doesn&rsquo;t work for functions which are expected to throw Exceptions. As at the time of writing Drupal&rsquo;s simpletest module doesn&rsquo;t catch exceptions and so the whole test run stalls.</p>
+
+<p>In that case the following patterns are often useful.</p>
+
+<p>&lt;?php
+try {
+  foo($good_input);
+  pass(&lsquo;Good input didn\&rsquo;t throw and exeption&rsquo;);
+} catch (MyException $e) {
+  $this->fail($e->getMessage());
+}</p>
+
+<p>try {
+  foo($bad_input);
+  $this->fail($e->getMessage());
+} catch (MyException $e) {
+  pass(&lsquo;Bad input correctly threw an exception&rsquo;);
+}
+?></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -541,123 +825,6 @@ and the Huawei E220 HSDPA Modem</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/06/03/drupal-api-module/">Drupal Api Module</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-06-03T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-The Drupal api module is very useful. It&#8217;s also quite strict in the formats it recognises.
-</p>
-
-
-<p>
-If you are having trouble getting it to reconise your doc-comments make sure you are following the Drupal coding standards
-</p>
-
-
-<p>
-<a href="http://drupal.org/coding-standards">drupal.org/coding-standards</a>
-</p>
-
-
-<!--break-->
-
-
-<p>
-In particular function declarations must be like
-</p>
-
-
-<p>&lt;?php
-function my_function($param) {
-?></p>
-
-<p>
-Any missing (or extra) spaces will cause the papi parser to ignore the function.
-</p>
-
-
-<p>
-You can also include html files in your documentation (just save them anywhere the api module has been set to index).
-</p>
-
-
-<p>
-The &lt;title&gt; will be used as the &quot;docblock title&quot; and the &lt;body&gt; of the html will be displayed formatted within your site template.<br/>I haven&#8217;t figured out yet where/if the &quot;docblock title&quot; is displayed</p>
-
-
-<p>Again the parser is quite strict - you must have an &lt;h1&gt; element in the page.</p>
-
-
-<p>Everything up untill the end of the first &lt;h1&gt; element is ignored (which seems odd to me) - and the rest as the body of the documentation.  
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/06/02/linkedin/">Linkedin</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-06-02T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I just created a profile for myself on linkedin - a much better designed site than facebook.  
-</p>
-
-
-<p>
-Read more about me there 
-</p>
-
-
-<p>
-<a href="http://www.linkedin.com/in/seanburlington">www.linkedin.com/in/seanburlington</a>
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/20">&larr; Older</a>
@@ -675,6 +842,14 @@ Read more about me there
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/13/puppet-vs-ansible/">Puppet vs Ansible</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
       </li>
     
@@ -684,14 +859,6 @@ Read more about me there
     
       <li class="post">
         <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="To use eclipse with Maven you need to add the maven plugin to eclipse, it seems to be part of the Indigo update site so this should be &hellip;">
+  <meta name="description" content="To convert data from munin/rrd to graphite/whisper you need to use the rrdwhisper tool which in centos is part of the python-whisper package. If you &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,145 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/28/import-data-to-graphite-from-munin/">Import Data to Graphite From Munin</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-28T18:26:44+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>6:26 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To convert data from munin/rrd to graphite/whisper you need to use the <code>rrdwhisper</code> tool which in centos is part of the python-whisper package.</p>
+
+<p>If you want to change the data retention/resolution properties in graphite you will also need to resize the files as well.</p>
+
+<p>Note that Graphites reads from /etc/carbon/storage-aggregation.conf and /etc/carbon/storage-schemas.conf to select the retention and aggregation policies for <em>new</em> data, but since these are set in the file at creation time editing the config file has no effect on existing files (or those created with whisper2rrd).</p>
+
+<p>Recent data is stored at 10 second intervals, when it becomes older 6 lots of 10 second data get aggregated to make a one minute interval. I think this aggregation also happens on newer data if I select say data for the last 2 days since this time period include data at the lower resolution - all the data I get is at this lower resolution.</p>
+
+<p>When this data is aggregated it can be averaged; in my case I&rsquo;m measuring how long something takes - and average is right. But say I was counting something then I&rsquo;d want to know the total over a minute - sum - not average, and if I was recording peaks then I&rsquo;d want the max.</p>
+
+<p>The xFilesFactor as I understand it tells graphite to ignore all the data for an interval if there are too many nulls, but since my original data is at a lower resolution I have loads of nulls and don&rsquo;t want to ignore anything - so I&rsquo;m setting this to zero and my import seems to work well at different scales and on both old and new data.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">for</span> rrd in *rrd <span class="p">;</span> <span class="k">do</span>
+</span><span class='line'>    rrd2whisper --xFilesFactor<span class="o">=</span>0.0 --aggregationMethod<span class="o">=</span>average <span class="nv">$rrd</span>
+</span><span class='line'>    whisper-resize  --xFilesFactor<span class="o">=</span>0.0 --aggregationMethod<span class="o">=</span>average --nobackup <span class="k">${</span><span class="nv">rrd</span><span class="p">%.rrd</span><span class="k">}</span>_42.wsp   10s:6h 1min:6d 10min:1800d
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span> -d /var/lib/carbon/whisper/munin <span class="o">]</span> <span class="o">||</span> sudo -u carbon mkdir -p /var/lib/carbon/whisper/munin
+</span><span class='line'>sudo mv *wsp /var/lib/carbon/whisper/munin
+</span><span class='line'>sudo chown -R carbon:carbon  /var/lib/carbon/whisper/munin
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This script excerpt deals with the basic conversion - I also needed to convert the long filenames munin used to a nested directory structure used by graphite.</p>
+
+<p>That conversion will depend on your use case - if you look at the files stored under /var/lib/carbon/whisper and /var/lib/munin you should be able to see the pattern.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/25/how-to-log-from-jmeter-to-statsd/">How to Log From Jmeter to Statsd</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-25T19:57:40+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>7:57 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In order to log from Jmeter to statsd you need to add <a href="https://github.com/tim-group/java-statsd-client/releases/download/v3.0.1/java-statsd-client-3.0.1.jar">a statsd library</a> to the jmeter /lib path</p>
+
+<p>Then have a beanshell on the thread group setup a statsd object for use by the threads</p>
+
+<p>store this in the props variable - JMeterProperties (class java.util.Properties)</p>
+
+<p>Note that <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Properties.html">the docs</a> say</p>
+
+<blockquote><p>Because Properties inherits from Hashtable, the put and putAll methods can be applied to a Properties object. Their use is strongly discouraged as they allow the caller to insert entries whose keys or values are not Strings. The setProperty method should be used instead. If the store or save method is called on a &ldquo;compromised&rdquo; Properties object that contains a non-String key or value, the call will fail. Similarly, the call to the propertyNames or list method will fail if it is called on a &ldquo;compromised&rdquo; Properties object that contains a non-String key.</p></blockquote>
+
+<p>However I didn&rsquo;t find a better place to put the statsd object yet since the ctx variable is thread specific</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.timgroup.statsd.StatsDClient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.timgroup.statsd.NonBlockingStatsDClient</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">StatsDClient</span> <span class="n">statsd</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">NonBlockingStatsDClient</span><span class="o">(</span><span class="s">&quot;jmeter.test&quot;</span><span class="o">,</span> <span class="s">&quot;statsd.exapmle.com&quot;</span><span class="o">,</span> <span class="mi">8125</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">props</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&quot;statsd&quot;</span><span class="o">,</span> <span class="n">statsd</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now on the Sampler you want to record data for add a beanshell post processor</p>
+
+<p>You can retrieve the statsd connection from the props variable, and obtain the request time taken from the prev variable which is a org.apache.jmeter.samplers.SampleResult</p>
+
+<p>Once we have the pieces together logging the request time to statsd is simple</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">com.timgroup.statsd.StatsDClient</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.timgroup.statsd.NonBlockingStatsDClient</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">StatsDClient</span> <span class="n">statsd</span> <span class="o">=</span> <span class="o">(</span><span class="n">StatsDClient</span><span class="o">)</span> <span class="n">props</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;statsd&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">statsd</span><span class="o">.</span><span class="na">recordExecutionTime</span><span class="o">(</span><span class="s">&quot;loadtime&quot;</span><span class="o">,</span> <span class="n">prev</span><span class="o">.</span><span class="na">getTime</span><span class="o">());</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I&rsquo;ve put an example test plan on github <a href="https://github.com/practicalweb/jmeter-statsd-demo">https://github.com/practicalweb/jmeter-statsd-demo</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -867,178 +1006,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/21/migrating-from-drupal-5-to-octopress/">Migrating From Drupal 5 to Octopress</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-10-21T15:41:17+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>3:41 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been running this blog (or some version of it) for almost 10 years now.</p>
-
-<p>I write to help clarify my own thoughts, or to note down technical details of a task that I have struggled to figure out. I often found myself coming back and have saved many hours of trying to figure out the same thing again a year or more later.</p>
-
-<p>For a long time this site was running Drupal 5, I set it up at a time when I was getting to know Drupal, starting out as an independant, and had plenty of time to spend on it. At the time this was a very useful excercise, installing lots of modules, and writing some code was good experience. But when Drupal 6 came out and I was busy <a href="/blog/2008/07/18/time-to-upgrade-to-drupal-6}">it wasnt worth upgrading</a>, then when drupal 7 was released and Drupal 5 no longer supported, upgrading was even more difficult as I would have had to upgrade in two steps. Besides Drupal didn&rsquo;t seem like such a good fit for my blog any more.</p>
-
-<p>I don&rsquo;t want to have to apply security updates on a site I&rsquo;m not getting paid for: so a static html site is a great fit for me.</p>
-
-<p>I lose integrated comments, but spam had already killed those for me - I&rsquo;ll try disqus and see how that goes (the need to enable comments in the yaml for each post threw me at first).</p>
-
-<p>Search was useful - but I can grep the source files myself.</p>
-
-<p>I had all sorts of Drupal plugins before - but really I don&rsquo;t think they were very important.</p>
-
-<p>Jekyll seems great, especially because with github&rsquo;s patronage it seems unlikely to become unsupported; and at the end of the day it is just a bunch of simple files so importing to another system should be easy.</p>
-
-<p>Exporting from Drupal 5 needed a <a href="https://github.com/practicalweb/jekyll-import/commit/cfa72281147fd37ce527d2dab1f3ae916e066b04">small patch on the importer</a> without this the categories were seen as some kind of binary object in yaml. The import reads direct from the database, so doesn&rsquo;t run all Drupal&rsquo;s filters and I suspect a drupal export module from drupal would do a much better job. I still need to pull over some old comments and formatting could do with a tidy up, but I need to move to a system that gets me writing new content, and not worry too much about the old.</p>
-
-<p>Jekyll itself didn&rsquo;t use tags in the way I wanted - I find the ability to cross link from one post to similar ones very useful so I am using Octopress which seem to do what I want out of the box.</p>
-
-<p>To get the content in Octopress I just did</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cp jekyll/mysite/_posts/* octopress/source/_posts
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I have switched from pygments highlighter to linguist (this seems to be what github use and supports code highlighting well)</p>
-
-<p>I added a twitter aside for which I just copy pasted the twitter widget into <code>source/_includes/asides/twitter.html</code> and enabled this in _config.yml</p>
-
-<p>I&rsquo;m not a ruby coder, so instaling all the required ruby gems and figuring out how to run a modified version of the jekyll importer took a little while, in the end I think it was just a case of getting all the gems installed that I needed. I didn&rsquo;t blog soon enough!</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/14/static-export-of-drupal-site/">Static Export of Drupal Site</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-10-14T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve exported this site from Drupal using wget to create a static html version like</p>
-
-<pre><code>wget  --mirror -p  -e robots=off --base=./ -k -P ./ http://localhost/
-</code></pre>
-
-<p>Then rsync to the server and use mod rewrite to retain the paged links like frontpage?page=4</p>
-
-<p>I&rsquo;ve had some trouble getting mod rewrite to work, it seems that getting apache to serve content from filenames containing question marks is tricky.</p>
-
-<p>in apache 2.4 this worked</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='ApacheConf'><span class='line'><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
-</span><span class='line'>   <span class="nb">ServerName</span> practicalweb.localhost
-</span><span class='line'>   <span class="nb">DocumentRoot</span> <span class="sx">/home/sean/rescue/localhost</span>
-</span><span class='line'>   <span class="nb">RewriteEngine</span> <span class="k">on</span>
-</span><span class='line'>   <span class="nb">LogLevel</span> <span class="k">alert</span> rewrite:trace3
-</span><span class='line'>     <span class="nt">&lt;Directory</span> <span class="s">/home/sean/rescue/localhost</span><span class="nt">&gt;</span>
-</span><span class='line'>       <span class="nb">RewriteCond</span> %{QUERY_STRING} !=&amp;quot;&amp;quot;
-</span><span class='line'>       <span class="nb">RewriteRule</span> ^(.*) <span class="sx">/home/sean/rescue/localhost/</span>$1\%3F%{QUERY_STRING}? [L]
-</span><span class='line'>
-</span><span class='line'>       <span class="nb">Options</span> Indexes FollowSymLinks MultiViews
-</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">All</span>
-</span><span class='line'>      <span class="nb">Require</span> <span class="k">all</span> granted
-</span><span class='line'>   <span class="nt">&lt;/Directory&gt;</span>
-</span><span class='line'><span class="nt">&lt;/VirtualHost&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But on apache 2.2 (which my server runs I) needed an external redirect</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='ApacheConf'><span class='line'><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nb">DocumentRoot</span> <span class="sx">/var/www/practicalweb</span>
-</span><span class='line'>  <span class="nb">RewriteEngine</span> <span class="k">on</span>
-</span><span class='line'>  <span class="nb">RewriteCond</span> %{QUERY_STRING} !=&amp;quot;&amp;quot;
-</span><span class='line'>  <span class="nb">RewriteRule</span> ^(.*) $1\%3F%{QUERY_STRING}? [last,noescape,R]
-</span><span class='line'>  <span class="nt">&lt;Directory</span> <span class="s">/</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nb">Options</span> FollowSymLinks
-</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">None</span>
-</span><span class='line'>  <span class="nt">&lt;/Directory&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;Directory</span> <span class="s">/var/www/practicalweb</span><span class="nt">&gt;</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="nb">Options</span> <span class="k">None</span>
-</span><span class='line'>      <span class="nb">AllowOverride</span> <span class="k">None</span>
-</span><span class='line'>      <span class="nb">Order</span> allow,deny
-</span><span class='line'>      <span class="nb">allow</span> from <span class="k">all</span>
-</span><span class='line'>  <span class="nt">&lt;/Directory&gt;</span>
-</span><span class='line'><span class="nt">&lt;/VirtualHost&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It still basically works - but users see a slightly changed URL which isn&rsquo;t quite what I wanted.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/3">&larr; Older</a>
@@ -1056,6 +1023,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/13/puppet-vs-ansible/">Puppet vs Ansible</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
       </li>
     
@@ -1065,14 +1040,6 @@
     
       <li class="post">
         <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
   </ul>

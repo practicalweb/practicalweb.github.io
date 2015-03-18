@@ -9,9 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I’ve just been working on a site that uses sIFR
-to incorporate a specific font into the design - this works very well
-generally but we had a problem &hellip;">
+  <meta name="description" content="I’ve just had cause to restore a two year old backup of a database I haven’t used in a while Since then postgresql (on Debian at least) has added the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +70,134 @@ generally but we had a problem &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/01/16/restoring-an-old-postgresql-database/">Restoring an Old Postgresql Database</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-01-16T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I’ve just had cause to restore a two year old backup of a database I haven’t used in a while</p>
+
+<div class="post-entry">
+<p>
+Since then postgresql (on Debian at least) has added the option to
+have multiple ‘clusters’ and multple versions running on the same
+machine.
+</p>
+<p>
+Fortunately the old version (7.4) was still available<br />
+</p>
+<p>
+Steps
+</p>
+<ul>
+    <li>restore /var/lib/postgresql/data</li>
+    <li>restore /etc/postgresql</li>
+    <li>mkdir /var/lib/postgresql/7.4</li>
+    <li>mv /var/lib/postgresql/data /var/lib/postgresql/7.4/</li>
+    <li>chown -R postgres.postgres  /var/lib/postgresql/7.4/</li>
+    <li>pg_createcluster 7.4 data (this moves the old data into the new structure)</li>
+    <li>pg_upgradecluster 7.4 data (upgrade the data to the latest postgres version installed)</li>
+</ul>
+<p>
+Other issues: my old data was in a character set I didn’t have installed as I now use UTF8
+</p>
+<p>
+I had to add en_GB ISO-8859-1 to /etc/locale.gen
+</p>
+<p>
+and run locale-gen
+</p>
+<p>
+But I now have access to my old data in both old and new server
+versions (I’ll probably delete the old one but it might be useful for
+testing)
+</p>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/01/11/creating-a-patch-from-cvs/">Creating a Patch From Cvs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-01-11T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>specifically
+I wanted to create a patch equal to the changes between two versions of
+Drupal - but it turns out that a packaging script adds some info to
+releases that isn’t in the cvs version so this doesn’t quite do what I
+wanted.</p>
+
+<div class="post-entry">
+<p>
+it’s still useful though …
+</p>
+<ul>
+    <li>checkout the current version</li>
+    <li>generate the patch as a diff between the previos version and this one</li>
+    <li>optionally run a diff to compare the two versions (cvs and svn) to check they are the same</li>
+</ul>
+<p>
+<br />
+cvs -z6 -d:pserver:anonymous:anonymous@cvs.drupal.org:/cvs/drupal checkout -d drupal5 -r DRUPAL-5-6 drupal
+</p>
+<p>
+cd drupal<br />
+cvs diff -N -u -rDRUPAL-5-5 -r DRUPAL-5-6 &gt; ../drupal-5-5-to-5-6.txt<br />
+cd ..<br />
+diff -r drupal-cvs/ drupal | grep -v .svn | grep -v CVS | less<br />
+</p>
+<p>
+In eclipse open the svn drupal project - go to teams - apply patch
+</p>
+<p>
+and (except for the packaging stuff) you have an updated drupal for your svn repository.
+</p>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -946,182 +1072,6 @@ mail to this address is accepted without spam scanning
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2005/02/23/how-to-create-your-own-wayback-machine/">How to Create Your Own Wayback Machine</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2005-02-23T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2005</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I’ve long been impressed with the <a href="http://www.archive.org/">wayback machine</a> and found it very useful to find things that have disappeared from the rest of the Internet.
-</p>
-
-
-<p>
-I use <a href="http://www.cvshome.org/">cvs</a> a lot in software
-development and find it a real life saver to be able to restore any
-file I have been working on at any point in it’s history. This really
-helps me to find out when and why things went wrong, saving me from
-making the same mistakes again.
-</p>
-
-
-<p>
-What I wanted was a system that would give me some of this functionality - but for file structures outside of my direct control.
-</p>
-
-
-<p>
-Here is my recipe:
-</p>
-
-
-<p>
-Install <a href="http://namazu.org/%7Esatoru/pdumpfs/">pdumpfs</a> (you are running Linux/Unix aren’t you?)
-</p>
-
-
-<p>
-pdumpfs is a simple daily backup system written in Ruby (ruby(1)),
-which is similar to Plan9’s dumpfs that preserves every daily snapshot.
-</p>
-
-
-<p>
-Back up your home directory with pdumpfs, and you can retrieve any past day’s snapshot of any file.
-</p>
-
-
-<p>
-pdumpfs constructs each day’s snapshot in the directory named YYYY/MM/DD under the destination directory.  All<br />
-source files are copied to the snapshot directory for the first time, and on and after the second time, pdumpfs<br />
-copies only updated or newly created files and stores unchanged files as hard links to the files of the previous<br />
-day’s snapshot to save disk space.
-</p>
-
-
-<p>
-Set up a cron job to run pdumpfs /sourcedir /backupdir
-</p>
-
-
-<p>
-That gives you the archive to work with - I wanted to back up a website be able to access each days archive directly.<br />
-To do this I used Apache’s VirtualDocumentRoot directive together with
-a wildcard DNS record so that I access any days archive from a url like
-http://20050223.wayback/ (where the number is the date as YYYYMMDD).<br />
-My Apache config looks like:
-</p>
-
-
-<pre>
-NameVirtualHost *:80
-&lt;VirtualHost *:80&gt;
-ServerName *.wayback
-UseCanonicalName Off
-# this log format can be split per-virtual-host based on the first field
-LogFormat &quot;%V %h %l %u %t &quot;%r&quot; %s %b&quot; vcommon
-CustomLog /var/log/apache2/wayback-access.log vcommon
-VirtualDocumentRoot /var/www/wayback/%1.1%1.2%1.3%1.4/%1.5%1.6/%1.7%1.8/origdirname
-&lt;/VirtualHost&gt;
-</pre>
-
-
-<p>
-My wildcard DNS entry is just <br />
-*.wayback  IN A 127.0.0.1<br />
-In the zone file for my local domain (if it wasn’t my local domain I’d
-need to specify the fully qualified name of the server in the apache
-config.
-</p>
-
-
-<p>
-Altogether this creates an archive where each days version of the
-website is under /somedir/YYYY/MM/DD/website/, the wildcard DNS means
-that any request to YYYYMMDD.wayback is sent to the right server,
-wildcard server name will always match, the virtual document root reads
-the first part of the server name and interprets it in the form needed
-to get the right path. Hey presto we’ve gone back in time and see the
-website as it was then!
-</p>
-
-
-<p>
-More about Apache’s <a href="http://httpd.apache.org/docs-2.0/mod/mod_vhost_alias.html#interpol">Directory Name Interpolation</a>, <a href="http://httpd.apache.org/docs-2.0/vhosts/mass.html">Dynamically configured mass virtual hosting</a>, and <a href="http://httpd.apache.org/docs-2.0/mod/mod_log_config.html#formats">Custom Log Formats</a>.
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2005/02/03/css-bugs-in-msie6/">CSS Bugs in MSIE6</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2005-02-03T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2005</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>At work we recently redesigned our website:
-the old design was created in front page and made heavy use of tables, font tags, fixed size divs and a smattering of css.
-The new design is pure CSS using CSS hacks to workaround bugs in various browsers.</p>
-
-<p>The old design had only ever been tested in MSIE and was a little quirky in other browsers, tables based layouts always seem to look more or less the same though. Mind you when there was a problem it would take me hours of trwling through nested tables to find and fix it.</p>
-
-<p>Having lived with this design for a while I have found it to be a little more fragile (in MSIE) in some ways: put an oversized image in the wrong place and the menu which should float to the right drops to the bottom of the page.</p>
-
-<p>The worst problem turned out to be a bug in the way MSIE calculates the size of italic text.</p>
-
-<p>www.positioniseverything.net/explorer/italicbug-ie.html</p>
-
-<p>Now I have found this bug I can easily work around it by avoiding excessive italics (italics tend to look rubbish anyway) or adding the odd bit of white space.</p>
-
-<p>I have also found problems with some divs - if there isn’t enough content -tthe content is all invisible untill you scroll down and then scroll back.</p>
-
-<p>Adding a line-height : 1.1em rule to the containg div fixes it</p>
-
-<p>www.dracos.co.uk/web/css/ie6floatbug/</p>
-
-<p>On the whole I am happy with the CSS design and spend less time fixing layout problems, our site has a much more consistent look and feel, editors don’t have to get involved in layout issues and the whole design can be tweaked accross the site easily.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/23">&larr; Older</a>
@@ -1139,6 +1089,14 @@ The new design is pure CSS using CSS hacks to workaround bugs in various browser
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/13/puppet-vs-ansible/">Puppet vs Ansible</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
       </li>
     
@@ -1148,14 +1106,6 @@ The new design is pure CSS using CSS hacks to workaround bugs in various browser
     
       <li class="post">
         <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/17/ubuntu-disk-encryption-password/">Ubuntu Disk Encryption Password</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/16/git-integration-branch-based-workflow/">Git Integration Branch Based Workflow</a>
       </li>
     
   </ul>
