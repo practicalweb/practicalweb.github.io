@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Api | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/api/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-03-18T15:01:06+00:00</updated>
+  <updated>2015-04-23T12:12:07+01:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -65,18 +65,15 @@
 
 <p>This is basically what the UI form submit does.</p>
 
-<p>&lt;?php</p>
+<pre><code class="php">
+function delete_view($name) {
 
-<p>function delete_view($name) {</p>
+    $view = views_ui_cache_load($name);
+    $view-&gt;delete();
+    views_object_cache_clear('view', $view-&gt;name);
 
-<pre><code>$view = views_ui_cache_load($name);
-$view-&gt;delete();
-views_object_cache_clear('view', $view-&gt;name);
+}
 </code></pre>
-
-<p>}</p>
-
-<p>?></p>
 ]]></content>
   </entry>
   

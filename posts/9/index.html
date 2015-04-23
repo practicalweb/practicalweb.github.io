@@ -245,18 +245,22 @@ I wasn&#8217;t impressed with Windows though - very slow to get up and running (
 
 <p>This is basically what the UI form submit does.</p>
 
-<p>&lt;?php</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">function</span> <span class="nf">delete_view</span><span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nv">$view</span> <span class="o">=</span> <span class="nx">views_ui_cache_load</span><span class="p">(</span><span class="nv">$name</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$view</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">();</span>
+</span><span class='line'>  <span class="nx">views_object_cache_clear</span><span class="p">(</span><span class="s1">&#39;view&#39;</span><span class="p">,</span> <span class="nv">$view</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>function delete_view($name) {</p>
-
-<pre><code>$view = views_ui_cache_load($name);
-$view-&gt;delete();
-views_object_cache_clear('view', $view-&gt;name);
-</code></pre>
-
-<p>}</p>
-
-<p>?></p>
 </div>
   
   

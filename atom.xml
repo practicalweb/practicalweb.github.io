@@ -4,7 +4,7 @@
   <title><![CDATA[PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-03-18T15:01:06+00:00</updated>
+  <updated>2015-04-23T12:12:07+01:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -69,23 +69,25 @@
 
 <p>Ansible is easier to get started with</p>
 
-<p>Puppet sequencing can be hard - and occasionaly you get buigs appearing in odd places where there was a dependency that you hadn&rsquo;t noticed - but thinsg happened to work OK untill some change</p>
+<p>Puppet sequencing can be hard - and occasionally you get bugs appearing in odd places where there was a dependency that you hadn&rsquo;t noticed - but things happened to work OK untill some change</p>
 
-<p>Puppet is faster - especially for a long set of config with a single chnage to apply.</p>
+<p>Puppet is faster - especially for a long set of config with a single change to apply.</p>
 
-<p>Much nicer audit trail pushing puppet code to a branch - nice envs, hiera allows easy seperation of data and code</p>
+<p>Much nicer audit trail pushing puppet code to a branch - nice having a branch per env, hiera allows easy separation of data and code</p>
 
-<p>Puppet has noce logs - which can show the diff of any confg change</p>
+<p>Puppet has good logs - which can show the diff of any config change and are easy to centralise.</p>
 
 <p>Puppet requires software on the server and a service or cronjob, Ansible needs ssh and full sudo access: it doesn&rsquo;t run commands in quite the regular way and the only way to allow it to work seems to be to allow unrestricted sudo access (a password may be used)</p>
 
-<p>I really don&rsquo;t like running ansible from a local dev env, too easy to run uncommitted code that otehrs can&rsquo;t see, no cenrtal autit trail, and easy to accidentaly use the wrong inventory and push chnages to teh wrong place</p>
+<p>I really don&rsquo;t like running ansible from a local dev env, too easy to run uncommitted code that others can&rsquo;t see, no central audit trail, and easy to accidentally use the wrong inventory and push chnages to teh wrong place</p>
 
-<p>I get the impression that it is harder with puppet than with ansible to reuse code quite as well - I feel like I&rsquo;m going to be bitten by ansibles strict sequencing - but so far it&rsquo;s OK</p>
+<p>I get the impression that it is harder with puppet than with ansible to reuse code quite as well - I feel like I&rsquo;m going to be bitten by Ansible&rsquo;s strict sequencing - but so far it&rsquo;s OK</p>
 
 <p>Ansible gives you the ability run run a multi-machine deploy which puppet doesn&rsquo;t (you&rsquo;d use mcollective for this)</p>
 
 <p>Much richer ecosystem of puppet modules than ansible ones at the time of writing.</p>
+
+<p>I haven&rsquo;t used ansible tower,</p>
 ]]></content>
   </entry>
   
