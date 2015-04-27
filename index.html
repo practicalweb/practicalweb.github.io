@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="git stash is a great way to save work switch branch and then get back your half completed work from earlier But I work on many projects, am often &hellip;">
+  <meta name="description" content="It took me a while to figure out how to setup elasticsearch for grafana annotations, and I wanted a small page to allow me to add annotations Mostly &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,146 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-04-27T21:43:55+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:43 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It took me a while to figure out how to setup elasticsearch for grafana annotations, and I wanted a small page to allow me to add annotations</p>
+
+<p>Mostly I figure we&rsquo;ll add a line to deploy scripts to track versions - but I&rsquo;d like to be able to manually annotate outages</p>
+
+<div><script src='https://gist.github.com/29af780a56e09e3055ed.js?file=grafana-elasticsearch-annotations.html'></script>
+<noscript><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script src=&quot;moment.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;moment-timezone.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+
+$(document).ready(function(){
+    $(&quot;#annotate&quot;).click(function(){
+var stuff=JSON.stringify({
+          &quot;when_it_happened&quot;: $(&quot;#when_it_happened&quot;).val(),
+ &quot;title&quot; : $(&quot;#title&quot;).val(),
+ &quot;description&quot; : $(&quot;#description&quot;).val(),
+        });
+
+        $.post(&quot;http://graphite.example.com:9200/events/prod/&quot;,
+        stuff,
+        function(data,status){
+            alert(&quot;Data: &quot; + JSON.stringify(data) + &quot;\nStatus: &quot; + status);
+        });
+    });
+});
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Add an annotation to grafana&lt;/h1&gt;
+
+&lt;form&gt;
+&lt;p&gt;&lt;label for=&quot;title&quot;&gt; Title &lt;input  id=&quot;title&quot; type=&quot;text&quot; /&gt;&lt;/label&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for=&quot;description&quot;&gt; Description &lt;input  id=&quot;description&quot; type=&quot;text&quot; /&gt;&lt;/label&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for=&quot;when_it_happened&quot;&gt; Date/time &lt;input  id=&quot;when_it_happened&quot; type=&quot;text&quot; /&gt;&lt;/label&gt; time is in UTC&lt;/p&gt;
+&lt;p&gt;&lt;input id=&quot;annotate&quot; type=&quot;button&quot; value=&quot;Annotate!&quot; /&gt;&lt;/p&gt;
+&lt;/form&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+var today = new Date();
+var hour = today.getUTCHours();
+if (hour &lt; 10) {
+  hour = &quot;0&quot; + hour;
+}
+var minute = today.getUTCMinutes();
+if (minute &lt; 10) {
+  minute = &quot;0&quot; + minute;
+}
+
+//jQuery('#when_it_happened').datetimepicker({format:'Y-m-d\\TH:i:00.000\\Z', defaultTime : hour + ':' + minute });
+
+var now = moment.tz('UTC').format('YYYY-MM-DD\\THH:mm:00.000\\Z');  
+jQuery('#when_it_happened').val(now)
+&lt;/script&gt;
+&lt;p&gt;To setup the correct mapping on the server I run the following&lt;/p&gt;
+ 
+&lt;pre&gt;
+# delete all
+curl -XDELETE  &quot;http://graphite.example.com:9200/events/&quot;
+ 
+# create mapping
+curl -XPUT graphite.example.com:9200/events -d '{
+    &quot;settings&quot;: {
+        &quot;index.number_of_shards&quot;: 1,
+        &quot;index.number_of_replicas&quot;: 0
+    },
+    &quot;mappings&quot;: {
+        &quot;prod&quot;: {
+            &quot;_timestamp&quot;: {
+                &quot;enabled&quot;: &quot;true&quot;
+            },
+            &quot;properties&quot;: {
+                &quot;title&quot;: {
+                  &quot;type&quot;: &quot;string&quot;
+                },
+                &quot;description&quot;: {
+                  &quot;type&quot;: &quot;string&quot;
+                },
+                &quot;when_it_happened&quot;: {
+                    &quot;type&quot;: &quot;date&quot;,
+                    &quot;format&quot;: &quot;yyyy-MM-dd'&quot;'T'&quot;'HH:mm:ss.SSSZ&quot;
+                }
+            }
+        }
+    }
+}
+'
+# test creating a record
+curl -XPOST graphite.example.com:9200/events/prod/ -d '{
+    &quot;when_it_happened&quot;: &quot;2015-04-27T18:30:14.000Z&quot;, &quot;title&quot; : &quot;fake deploy&quot;, &quot;description&quot; : &quot;Imagine that a deploy happened here&quot;
+}
+'
+
+# check mapping
+GET &quot;http://graphite.example.com:9200/events/_mapping?pretty=true&quot;
+
+# test search
+curl -XPOST  &quot;http://graphite.example.com:9200/events/_search?pretty=true&quot; -d '{&quot;fields&quot;:[&quot;when_it_happened&quot;],&quot;query&quot;:{&quot;filtered&quot;:{&quot;query&quot;:{&quot;bool&quot;:{&quot;should&quot;:[{&quot;query_string&quot;:{&quot;query&quot;:&quot;*&quot;}}]}},&quot;filter&quot;:{&quot;bool&quot;:{&quot;must&quot;:[{&quot;range&quot;:{&quot;when_it_happened&quot;:{&quot;from&quot;:&quot;now-8y&quot;,&quot;to&quot;:&quot;now+8y&quot;}}}]}}}},&quot;size&quot;:100}'
+
+ 
+&lt;/pre&gt;
+ 
+&lt;/body&gt;
+&lt;/html&gt;
+
+</code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -805,166 +945,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-03T11:34:35+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>11:34 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I need to use a VPN which was suffering packet fragmentation due to the overhead involved (actually I use a VPN to connect to a network which then has another VPN connection to a third network).</p>
-
-<p>To determine the largest MTU size which didn&rsquo;t lead to fragmentation I just ran variations on</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ping -M <span class="k">do</span> -s <span class="m">1327</span> server.example.com
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>-M do</code> prohibits fragmentation so the ping will fail if the packet size is too large</p>
-
-<p>I tried larger/ smaller values till I found the largest number that worked.</p>
-
-<p>Network Manager didn&rsquo;t give me a GUI to set MTU on the VPN connection (it does for ethernet)</p>
-
-<p>So I needed a script in /etc/network/if-up.d/</p>
-
-<p>I called mine like myvpn-mtu (owned by root and executable)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#! /bin/sh</span>
-</span><span class='line'><span class="c"># set low MTU for my VPN otherwise I get packet fragmentation</span>
-</span><span class='line'><span class="nb">set</span> -e
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CONNECTION_ID&quot;</span> <span class="o">=</span> myvpn <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="s2">&quot;$MODE&quot;</span> <span class="o">=</span> start <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-</span><span class='line'>  /sbin/ifconfig <span class="nv">$IFACE</span> mtu 1327
-</span><span class='line'><span class="k">fi</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="nb">exit </span>0
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Substitute &ldquo;myvpn&rdquo; here for your connection name</p>
-
-<p>The script env has the following variables (I&rsquo;ve anonymised some variables)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">ADDRFAM</span><span class="o">=</span>NetworkManager
-</span><span class='line'><span class="nv">CONNECTION_ID</span><span class="o">=</span>xxxxxxxxxxxxxx
-</span><span class='line'><span class="nv">CONNECTION_UUID</span><span class="o">=</span>xxxxxxx-xxxxx-xxxxx-xxxx-xxxxx
-</span><span class='line'><span class="nv">DEVICE_IFACE</span><span class="o">=</span>wlan0
-</span><span class='line'><span class="nv">DEVICE_IP_IFACE</span><span class="o">=</span>wlan0
-</span><span class='line'><span class="nv">DHCP4_BROADCAST_ADDRESS</span><span class="o">=</span>192.168.0.255
-</span><span class='line'><span class="nv">DHCP4_DHCP_LEASE_TIME</span><span class="o">=</span>86400
-</span><span class='line'><span class="nv">DHCP4_DHCP_MESSAGE_TYPE</span><span class="o">=</span>5
-</span><span class='line'><span class="nv">DHCP4_DHCP_REBINDING_TIME</span><span class="o">=</span>75600
-</span><span class='line'><span class="nv">DHCP4_DHCP_RENEWAL_TIME</span><span class="o">=</span>43200
-</span><span class='line'><span class="nv">DHCP4_DHCP_SERVER_IDENTIFIER</span><span class="o">=</span>192.168.0.1
-</span><span class='line'><span class="nv">DHCP4_DOMAIN_NAME</span><span class="o">=</span>xxx
-</span><span class='line'><span class="nv">DHCP4_DOMAIN_NAME_SERVERS</span><span class="o">=</span>192.168.0.1
-</span><span class='line'><span class="nv">DHCP4_EXPIRY</span><span class="o">=</span>1417685250
-</span><span class='line'><span class="nv">DHCP4_HOST_NAME</span><span class="o">=</span>xxx
-</span><span class='line'><span class="nv">DHCP4_IP_ADDRESS</span><span class="o">=</span>192.168.0.209
-</span><span class='line'><span class="nv">DHCP4_NETWORK_NUMBER</span><span class="o">=</span>192.168.0.0
-</span><span class='line'><span class="nv">DHCP4_ROUTERS</span><span class="o">=</span>192.168.0.1
-</span><span class='line'><span class="nv">DHCP4_SUBNET_MASK</span><span class="o">=</span>255.255.255.0
-</span><span class='line'><span class="nv">IFACE</span><span class="o">=</span>tun0
-</span><span class='line'><span class="nv">IP4_ADDRESS_0</span><span class="o">=</span>192.168.0.209/24 192.168.0.1
-</span><span class='line'><span class="nv">IP4_DOMAINS</span><span class="o">=</span>xxx
-</span><span class='line'><span class="nv">IP4_NAMESERVERS</span><span class="o">=</span>192.168.0.1
-</span><span class='line'><span class="nv">IP4_NUM_ADDRESSES</span><span class="o">=</span>1
-</span><span class='line'><span class="nv">IP4_NUM_ROUTES</span><span class="o">=</span>0
-</span><span class='line'><span class="nv">LOGICAL</span><span class="o">=</span>tun0
-</span><span class='line'><span class="nv">METHOD</span><span class="o">=</span>NetworkManager
-</span><span class='line'><span class="nv">MODE</span><span class="o">=</span>start
-</span><span class='line'><span class="nv">PHASE</span><span class="o">=</span>post-up
-</span><span class='line'><span class="nv">PWD</span><span class="o">=</span>/
-</span><span class='line'><span class="nv">VERBOSITY</span><span class="o">=</span>0
-</span><span class='line'><span class="nv">VPN_IP4_ADDRESS_0</span><span class="o">=</span>192.168.1.48/24 x.x.x.x
-</span><span class='line'><span class="nv">VPN_IP4_NAMESERVERS</span><span class="o">=</span>x.x.x.x
-</span><span class='line'><span class="nv">VPN_IP4_NUM_ADDRESSES</span><span class="o">=</span>1
-</span><span class='line'><span class="nv">VPN_IP4_NUM_ROUTES</span><span class="o">=</span>28
-</span><span class='line'><span class="nv">VPN_IP4_ROUTE_0</span><span class="o">=</span>192.168.1.0/24 0.0.0.0 0
-</span><span class='line'><span class="nv">VPN_IP4_ROUTE_1</span><span class="o">=</span>192.168.2.0/24 0.0.0.0 0
-</span><span class='line'><span class="nv">VPN_IP4_ROUTE_2</span><span class="o">=</span>192.168.3.0/24 0.0.0.0 0
-</span><span class='line'><span class="nv">VPN_IP4_ROUTE_3</span><span class="o">=</span>192.168.4.0/24 0.0.0.0 0
-</span><span class='line'><span class="nv">VPN_IP_IFACE</span><span class="o">=</span>tun0
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -980,6 +960,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -993,10 +977,6 @@
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

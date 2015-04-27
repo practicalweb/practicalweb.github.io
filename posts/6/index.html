@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="This script makes sure the dev site is clean, emails a log summary of updates about to be applied, updates the site and emails me so I know what &hellip;">
+  <meta name="description" content="One liner to grab a git log summarising what will change when you push teh next release. For this to work you need to keep the deployed tag in &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,39 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/07/16/git-log-of-live-site-vs-master/">Git Log of Live Site vs Master</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-07-16T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>One liner to grab a git log summarising what will change when you push teh next release.</p>
+
+<p>For this to work you need to keep the deployed tag in VERSION.TXT</p>
+
+<p><code>git log &ndash;oneline &ndash;graph $(GET <a href="http://www.example.com/VERSION.TXT">http://www.example.com/VERSION.TXT</a>)..$(git describe &ndash;abbrev=0 &ndash;tags origin/master)</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/07/12/script-to-email-git-log-as-part-of-a-dev-deploy/">Script to Email Git Log as Part of a Dev Deploy</a></h1>
     
     
@@ -105,7 +138,7 @@
 <p>git stash
 git checkout master
 git fetch
-git log &ndash;oneline master..origin/master | mail -s &ldquo;site updated &rdquo; <a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#111;&#58;&#109;&#101;&#64;&#x65;&#120;&#x61;&#109;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#109;">&#109;&#x65;&#64;&#x65;&#120;&#x61;&#x6d;&#x70;&#108;&#101;&#46;&#99;&#x6f;&#x6d;</a>
+git log &ndash;oneline master..origin/master | mail -s &ldquo;site updated &rdquo; <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#109;&#x65;&#64;&#x65;&#x78;&#97;&#x6d;&#112;&#x6c;&#x65;&#46;&#99;&#x6f;&#109;">&#109;&#x65;&#x40;&#x65;&#120;&#97;&#x6d;&#x70;&#x6c;&#x65;&#46;&#99;&#111;&#109;</a>
 mit merge origin/master
 ./build.sh</p>
 
@@ -657,138 +690,6 @@ EOF
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/15/export-from-git-for-drupal-site-releases/">Export From Git for Drupal Site Releases</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-11-15T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;m used to how svn export works, and have used this in a number of release scripts.</p>
-
-<p>Git doesn&rsquo;t quite have an equivalent</p>
-
-<p>There is</p>
-
-<p><code>git archive</code></p>
-
-<p>Which creates a tarball rather than a set of files, and while you can export a subset of the repository you still get the full path in the tarball.</p>
-
-<p>and</p>
-
-<p><code>git checkout-index</code></p>
-
-<p>Which creates a set of files (these can be locate outside the working copy) but requires a local repository.</p>
-
-<p>Also I&rsquo;m using github which doesn&rsquo;t support the remote repository option of git archive and their ready made tarball doesn&rsquo;t seem to work via wget on a private project (P.S. I since discovered the githaub tarbal works with wget if you pass params on the query string like ?login=${user}&amp;token=${token} )</p>
-
-<p>What I really wanted was a script I could hand to the sysadmin, that he could run on any server without needing a local git repository.</p>
-
-<p>In the end I have instead written a script that packages the tarball I want and uploads that to a server he can access it from.</p>
-
-<p>&lt;?php</p>
-
-<h1>!/bin/bash -ex</h1>
-
-<h1>pass a valid release tag as a parameter to this script to create an release tarball and upload to skunkworks</h1>
-
-<h1>this works on the local git repo - which must be up to date!</h1>
-
-<p>git archive   $1 www > /tmp/${1}.tar
-cd /tmp
-tar -xf ${1}.tar
-rm ${1}.tar
-rm -Rf www/sites/default/
-mv www $1
-tar -czf ${1}.tar.gz $1
-rm -Rf $1</p>
-
-<p>scp ${1}.tar.gz dev.server.foo:/var/www/releases</p>
-
-<p>?></p>
-
-<p> Then there is another script that downloads and unpacks this to upgrade our site.</p>
-
-<p>&lt;?php</p>
-
-<h1>!/bin/bash -ex</h1>
-
-<h1>parameter is release tag</h1>
-
-<h1>tag has been released and uploaded to skunkworks</h1>
-
-<h1>live site is backed up</h1>
-
-<h1>live site docroot is /var/www/public_html</h1>
-
-<h1>each release is at /var/www/$release</h1>
-
-<h1>symlink points /var/www/public_html to current release</h1>
-
-<h1>sites/default is common to every release - stored as /var/www/sites-default</h1>
-
-<h1>symlink added to each release to point to this</h1>
-
-<p>export COLUMNS=80</p>
-
-<p>release=$1</p>
-
-<p>cd /var/www/</p>
-
-<p>wget <a href="http://dev.server.foo/releases/$">http://dev.server.foo/releases/$</a>{release}.tar.gz</p>
-
-<p>tar -xzf ${release}.tar.gz</p>
-
-<p>cd ${release}</p>
-
-<p>ln -s /var/www/sites-default sites/default</p>
-
-<p>drush -y vset site_offline_message &ldquo;<p>Site offline for upgrade</p>&rdquo;
-drush -y vset site_offline 1</p>
-
-<p>drush -y updb</p>
-
-<p>drush cc all</p>
-
-<h1>if the current user is a member of the www-data or apache group we can make the files owned by this group</h1>
-
-<h1>as long as apache has umask 002 files should now be writable by us and apache</h1>
-
-<p>groups | grep www-data > /dev/null &amp;&amp; find sites/default/files/ ! -group www-data -exec chgrp www-data {} \;
-groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group apache -exec chgrp apache {} \;</p>
-
-<p>cd ..</p>
-
-<p>rm public_html</p>
-
-<p>ln -s ${release} public_html</p>
-
-<p>cd ${release}</p>
-
-<p>drush -y &ndash;uri=www.foo.com vset site_offline 0</p>
-
-<p>?></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/7">&larr; Older</a>
@@ -806,6 +707,10 @@ groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group a
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -819,10 +724,6 @@ groups | grep apache > /dev/null &amp;&amp; find sites/default/files/ ! -group a
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

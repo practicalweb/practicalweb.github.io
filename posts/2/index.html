@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="To convert data from munin/rrd to graphite/whisper you need to use the rrdwhisper tool which in centos is part of the python-whisper package. If you &hellip;">
+  <meta name="description" content="I need to use a VPN which was suffering packet fragmentation due to the overhead involved (actually I use a VPN to connect to a network which then &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,166 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/03/specifying-mtu-for-a-vpn-connection-in-networkmanager/">Specifying MTU for a VPN Connection in NetworkManager</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-12-03T11:34:35+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>11:34 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I need to use a VPN which was suffering packet fragmentation due to the overhead involved (actually I use a VPN to connect to a network which then has another VPN connection to a third network).</p>
+
+<p>To determine the largest MTU size which didn&rsquo;t lead to fragmentation I just ran variations on</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ping -M <span class="k">do</span> -s <span class="m">1327</span> server.example.com
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>-M do</code> prohibits fragmentation so the ping will fail if the packet size is too large</p>
+
+<p>I tried larger/ smaller values till I found the largest number that worked.</p>
+
+<p>Network Manager didn&rsquo;t give me a GUI to set MTU on the VPN connection (it does for ethernet)</p>
+
+<p>So I needed a script in /etc/network/if-up.d/</p>
+
+<p>I called mine like myvpn-mtu (owned by root and executable)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#! /bin/sh</span>
+</span><span class='line'><span class="c"># set low MTU for my VPN otherwise I get packet fragmentation</span>
+</span><span class='line'><span class="nb">set</span> -e
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$CONNECTION_ID&quot;</span> <span class="o">=</span> myvpn <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="s2">&quot;$MODE&quot;</span> <span class="o">=</span> start <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span><span class='line'>  /sbin/ifconfig <span class="nv">$IFACE</span> mtu 1327
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nb">exit </span>0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Substitute &ldquo;myvpn&rdquo; here for your connection name</p>
+
+<p>The script env has the following variables (I&rsquo;ve anonymised some variables)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">ADDRFAM</span><span class="o">=</span>NetworkManager
+</span><span class='line'><span class="nv">CONNECTION_ID</span><span class="o">=</span>xxxxxxxxxxxxxx
+</span><span class='line'><span class="nv">CONNECTION_UUID</span><span class="o">=</span>xxxxxxx-xxxxx-xxxxx-xxxx-xxxxx
+</span><span class='line'><span class="nv">DEVICE_IFACE</span><span class="o">=</span>wlan0
+</span><span class='line'><span class="nv">DEVICE_IP_IFACE</span><span class="o">=</span>wlan0
+</span><span class='line'><span class="nv">DHCP4_BROADCAST_ADDRESS</span><span class="o">=</span>192.168.0.255
+</span><span class='line'><span class="nv">DHCP4_DHCP_LEASE_TIME</span><span class="o">=</span>86400
+</span><span class='line'><span class="nv">DHCP4_DHCP_MESSAGE_TYPE</span><span class="o">=</span>5
+</span><span class='line'><span class="nv">DHCP4_DHCP_REBINDING_TIME</span><span class="o">=</span>75600
+</span><span class='line'><span class="nv">DHCP4_DHCP_RENEWAL_TIME</span><span class="o">=</span>43200
+</span><span class='line'><span class="nv">DHCP4_DHCP_SERVER_IDENTIFIER</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">DHCP4_DOMAIN_NAME</span><span class="o">=</span>xxx
+</span><span class='line'><span class="nv">DHCP4_DOMAIN_NAME_SERVERS</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">DHCP4_EXPIRY</span><span class="o">=</span>1417685250
+</span><span class='line'><span class="nv">DHCP4_HOST_NAME</span><span class="o">=</span>xxx
+</span><span class='line'><span class="nv">DHCP4_IP_ADDRESS</span><span class="o">=</span>192.168.0.209
+</span><span class='line'><span class="nv">DHCP4_NETWORK_NUMBER</span><span class="o">=</span>192.168.0.0
+</span><span class='line'><span class="nv">DHCP4_ROUTERS</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">DHCP4_SUBNET_MASK</span><span class="o">=</span>255.255.255.0
+</span><span class='line'><span class="nv">IFACE</span><span class="o">=</span>tun0
+</span><span class='line'><span class="nv">IP4_ADDRESS_0</span><span class="o">=</span>192.168.0.209/24 192.168.0.1
+</span><span class='line'><span class="nv">IP4_DOMAINS</span><span class="o">=</span>xxx
+</span><span class='line'><span class="nv">IP4_NAMESERVERS</span><span class="o">=</span>192.168.0.1
+</span><span class='line'><span class="nv">IP4_NUM_ADDRESSES</span><span class="o">=</span>1
+</span><span class='line'><span class="nv">IP4_NUM_ROUTES</span><span class="o">=</span>0
+</span><span class='line'><span class="nv">LOGICAL</span><span class="o">=</span>tun0
+</span><span class='line'><span class="nv">METHOD</span><span class="o">=</span>NetworkManager
+</span><span class='line'><span class="nv">MODE</span><span class="o">=</span>start
+</span><span class='line'><span class="nv">PHASE</span><span class="o">=</span>post-up
+</span><span class='line'><span class="nv">PWD</span><span class="o">=</span>/
+</span><span class='line'><span class="nv">VERBOSITY</span><span class="o">=</span>0
+</span><span class='line'><span class="nv">VPN_IP4_ADDRESS_0</span><span class="o">=</span>192.168.1.48/24 x.x.x.x
+</span><span class='line'><span class="nv">VPN_IP4_NAMESERVERS</span><span class="o">=</span>x.x.x.x
+</span><span class='line'><span class="nv">VPN_IP4_NUM_ADDRESSES</span><span class="o">=</span>1
+</span><span class='line'><span class="nv">VPN_IP4_NUM_ROUTES</span><span class="o">=</span>28
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_0</span><span class="o">=</span>192.168.1.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_1</span><span class="o">=</span>192.168.2.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_2</span><span class="o">=</span>192.168.3.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP4_ROUTE_3</span><span class="o">=</span>192.168.4.0/24 0.0.0.0 0
+</span><span class='line'><span class="nv">VPN_IP_IFACE</span><span class="o">=</span>tun0
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -966,46 +1126,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-10-22T16:31:31+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>4:31 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In this case to turn on comments in all posts for this blog</p>
-
-<p>All files that don&rsquo;t have comments at the start of a line get &ldquo;comments: true&rdquo; inserted on the 5th line</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">for</span> f in * <span class="p">;</span> <span class="k">do</span> grep -q <span class="s2">&quot;^comments&quot;</span> <span class="nv">$f</span> <span class="o">||</span> sed -i <span class="s1">&#39;5 i\</span>
-</span><span class='line'><span class="s1">comments: true&#39;</span> <span class="nv">$f</span> <span class="p">;</span> <span class="k">done</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Maybe Octopress has a way to globally enable comments - but I didn&rsquo;t find it and this was quick</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/3">&larr; Older</a>
@@ -1023,6 +1143,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -1036,10 +1160,6 @@
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

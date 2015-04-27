@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Drupal has a couple of modules which allow you to produce your own tinyurl.com type website - complete with your own tracking etc. This has been &hellip;">
+  <meta name="description" content="I&rsquo;ve been working on a couple of open data projects recently - which has been very rewarding. A couple of people have asked for some code so I& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,146 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/02/23/accessing-ckan-data-from-php/">Accessing CKAN Data From PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-02-23T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been working on a couple of open data projects recently - which has been very rewarding.</p>
+
+<p>A couple of people have asked for some code so I&rsquo;ve knocked up a quick version of the sort of thing I&rsquo;ve been working on.</p>
+
+<p>This code requires PHP 5.1 for the JSON functions but doesn&rsquo;t need any extra libraries (pecl_http can give better error messages but is a bit of a pain to install).</p>
+
+<p>The Notes field in packages returns output in Markdown format - you can convert this to HTMl with a parser available at <a href="http://michelf.com/projects/php-markdown">http://michelf.com/projects/php-markdown</a></p>
+
+<p>This isn&rsquo;t production code so please test before using.</p>
+
+<p>&lt;?php</p>
+
+<p>class Ckan {
+    private  $url = &lsquo;<a href="http://www.ckan.net/">http://www.ckan.net/</a>&rsquo;;
+    private $errors = array(
+                              &lsquo;400&rsquo;  =>   &lsquo;Bad Request&rsquo;,
+                              &lsquo;403&rsquo;  =>   &lsquo;Not Authorized&rsquo;,
+                              &lsquo;404&rsquo;  =>   &lsquo;Not Found&rsquo;,
+                              &lsquo;500&rsquo;  =>   &lsquo;Internal Server Error&rsquo;,
+    );</p>
+
+<pre><code>public function __construct($url=null){
+    if ($url){
+        $this-&gt;url=$url;
+    }
+}
+
+private function transfer($url){
+
+    $ch = curl_init($this-&gt;url . $url);
+
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    $result = curl_exec($ch);
+    $info = curl_getinfo($ch);
+    curl_close($ch);
+    if ($info['http_code'] != 200){
+        throw new CkanException($this-&gt;error_codes["$info[http_code]"]);
+    }
+    if (!$result){
+        throw new CkanException("No Result");
+    }
+    return json_decode($result);
+}
+
+public function search($keyword){
+    $results = $this-&gt;transfer('api/search/package/?all_fields=1&amp;q=' . urlencode($keyword));
+    if (!$results-&gt;count){
+        throw new CkanException("Search Error");
+    }
+    return $results;
+}
+
+public function getPackage($package){
+    $package = $this-&gt;transfer('api/rest/package/' . urlencode($package));
+    if (!$package-&gt;name){
+        throw new CkanException("Package Load Error");
+    }
+    return $package;
+}
+
+
+public function getPackageList(){
+    $list =  $this-&gt;transfer('api/rest/package/');
+    if (!is_array($list)){
+        throw new CkanException("Package List Error");
+    }
+    return $list;
+}
+
+public function getGroup($group){
+    $group = $this-&gt;transfer('api/rest/group/' . urlencode($group) );
+    if (!$group-&gt;name){
+        throw new CkanException("Group Error");
+    }
+    return $group;
+}
+
+public function getGroupList(){
+    $groupList = $this-&gt;transfer('api/rest/group/');
+    if (!is_array($groupList)){
+        throw new CkanException("Group List Error");
+    }
+    return $groupList;
+}
+</code></pre>
+
+<p>}</p>
+
+<p>class CkanException extends Exception{}</p>
+
+<p>?></p>
+
+<p>Test with</p>
+
+<p>&lt;?php</p>
+
+<p>require_once(&ldquo;ckan.php&rdquo;);</p>
+
+<p>$ckan = new Ckan();</p>
+
+<p>$data = $ckan->getPackage(&lsquo;edmonton-data&rsquo;);</p>
+
+<p>print_r($data);</p>
+
+<p>?></p>
+
+<p>I&rsquo;m keeping this file and a Drupal module that uses it on Github at:</p>
+
+<p><a href="http://github.com/practicalweb/drupal-ckan">http://github.com/practicalweb/drupal-ckan</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -634,65 +774,6 @@ Since my project was using a JSON class anyway I decided to get Drush working us
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/12/30/cvs-for-subversion-users/">CVS for Subversion Users</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-12-30T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve been using version control for a long time, but I haven&#8217;t used CVS much since the first day I tried Subversion.
-</p>
-
-
-<p>
-(Git seems great but isn&#8217;t the same kind of drop-in upgrade that CVS to Subversion was)
-</p>
-
-
-<p>
-Things I forgot
-</p>
-
-
-<ul>
-    <li>CVS doesn&#8217;t do the nice recursive add that subversion does<br />
-    At the start of a project you need to run <br />
-    cvs import </li>
-    <li>CVS expands keywords by default - this is a problem if like me you want to merge in changes from someone else CVS repository as both sites have changes teh keywords<br />
-    Disable keyword changing by updating with<br />
-    cvs up -d -ko</li>
-    <li>CVS doesn&#8217;t add back deleted directories<br />
-    cvs up -d </li>
-    <li>CVS doesn&#8217;t have a nice equivilant of svn status<br />
-    cvs -q up <br />
-    Not quite the same as it will update stuff - but it does tell you which local files have changed</li>
-    <li>Tagging seems OK but doesn&#8217;t quite do the same thing<br />
-    cvs tag</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/12">&larr; Older</a>
@@ -710,6 +791,10 @@ Things I forgot
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -723,10 +808,6 @@ Things I forgot
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

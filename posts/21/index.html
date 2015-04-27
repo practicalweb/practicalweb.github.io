@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="With any sizeable project maintaining good documentation is a challenge - it's all to easy to skimp on documentation, or to start with good &hellip;">
+  <meta name="description" content="Using doc-comments in Eclipse really helps productivity by providing lots of tool-tip help and auto completion. A colleague recently pointed out &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/18/doc-comments-and-auto-completion-in-eclipse/">Doc-comments and Auto-completion in Eclipse</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-05-18T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Using <a href="http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.pkg.html">doc-comments</a> in Eclipse really helps productivity by providing lots of tool-tip help and auto completion.
+</p>
+
+
+<p>
+A colleague recently pointed out that Eclipse can auto-complete object properties (as long as you use the @property tag). I&#8217;ve found this really helpful and have been creating objects to return pass around - and found it a vwery neat way of working.
+</p>
+
+
+<p>
+I&#8217;ve also been writing functions that may be used on the command line via <a href="http://drupal.org/project/drush">drush</a>, Drupal cron, or via pages.
+</p>
+
+
+<p>
+A pleasant side effect of this is that the MVC pattern is starting to appear much clearer within Drupal. The Controller may be cron, drush, or the menu system, this calls the Model, and triggers a theme function for the View.
+</p>
+
+
+<p>
+Thanks to <a href="http://www.nobleprog.co.uk/">Bernard at NobelProg</a>
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -748,68 +800,6 @@ especially of note:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/01/17/apc-back-ups-cs-500ei-and-debian-etch/">APC Back-UPS CS 500Ei and Debian Etch</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-01-17T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Just got a new UPS and it’s working nicely :-)</p>
-
-<div class="post-entry">
-<p>
-Running on Debian Etch I had to upgrade the NUT package but this
-worked very simply by bringing in the one from Lenny (in testing)
-</p>
-<p>
-added to /etc/apt/sources.list<br />
-deb-src http://ftp.uk.debian.org/debian/ lenny main contrib non-free
-</p>
-<p>
-then ran<br />
-apt-get build-dep nut
-</p>
-<p>
-as normal user<br />
-apt-get source nut<br />
-cd to nut dir<br />
-dpkg-buildpackage -rfakeroot -uc -b
-</p>
-<p>
-then as root installed the .deb created 
-</p>
-<p>
-After that it was just a case of reading the docs and configuring.
-</p>
-<p>
-I’m using the UPS for my desktop and monitor - it’s drawing 25% load
-with a predicted battery runtime of about 45minutes (which I don’t
-quite believe)
-</p>
-</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/22">&larr; Older</a>
@@ -827,6 +817,10 @@ quite believe)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -840,10 +834,6 @@ quite believe)
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

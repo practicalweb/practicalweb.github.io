@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Javascript | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-04-23T12:12:07+01:00</updated>
+  <updated>2015-04-27T21:55:10+01:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,124 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Add Annotations to Grafana via Elasticsearch]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/"/>
+    <updated>2015-04-27T21:43:55+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch</id>
+    <content type="html"><![CDATA[<p>It took me a while to figure out how to setup elasticsearch for grafana annotations, and I wanted a small page to allow me to add annotations</p>
+
+<p>Mostly I figure we&rsquo;ll add a line to deploy scripts to track versions - but I&rsquo;d like to be able to manually annotate outages</p>
+
+<p><div><script src='https://gist.github.com/29af780a56e09e3055ed.js?file=grafana-elasticsearch-annotations.html'></script>
+<noscript><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script src=&quot;moment.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;moment-timezone.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+
+$(document).ready(function(){
+    $(&quot;#annotate&quot;).click(function(){
+var stuff=JSON.stringify({
+          &quot;when_it_happened&quot;: $(&quot;#when_it_happened&quot;).val(),
+ &quot;title&quot; : $(&quot;#title&quot;).val(),
+ &quot;description&quot; : $(&quot;#description&quot;).val(),
+        });
+
+        $.post(&quot;http://graphite.example.com:9200/events/prod/&quot;,
+        stuff,
+        function(data,status){
+            alert(&quot;Data: &quot; + JSON.stringify(data) + &quot;\nStatus: &quot; + status);
+        });
+    });
+});
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Add an annotation to grafana&lt;/h1&gt;
+
+&lt;form&gt;
+&lt;p&gt;&lt;label for=&quot;title&quot;&gt; Title &lt;input  id=&quot;title&quot; type=&quot;text&quot; /&gt;&lt;/label&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for=&quot;description&quot;&gt; Description &lt;input  id=&quot;description&quot; type=&quot;text&quot; /&gt;&lt;/label&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for=&quot;when_it_happened&quot;&gt; Date/time &lt;input  id=&quot;when_it_happened&quot; type=&quot;text&quot; /&gt;&lt;/label&gt; time is in UTC&lt;/p&gt;
+&lt;p&gt;&lt;input id=&quot;annotate&quot; type=&quot;button&quot; value=&quot;Annotate!&quot; /&gt;&lt;/p&gt;
+&lt;/form&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+var today = new Date();
+var hour = today.getUTCHours();
+if (hour &lt; 10) {
+  hour = &quot;0&quot; + hour;
+}
+var minute = today.getUTCMinutes();
+if (minute &lt; 10) {
+  minute = &quot;0&quot; + minute;
+}
+
+//jQuery('#when_it_happened').datetimepicker({format:'Y-m-d\\TH:i:00.000\\Z', defaultTime : hour + ':' + minute });
+
+var now = moment.tz('UTC').format('YYYY-MM-DD\\THH:mm:00.000\\Z');  
+jQuery('#when_it_happened').val(now)
+&lt;/script&gt;
+&lt;p&gt;To setup the correct mapping on the server I run the following&lt;/p&gt;
+ 
+&lt;pre&gt;
+# delete all
+curl -XDELETE  &quot;http://graphite.example.com:9200/events/&quot;
+ 
+# create mapping
+curl -XPUT graphite.example.com:9200/events -d '{
+    &quot;settings&quot;: {
+        &quot;index.number_of_shards&quot;: 1,
+        &quot;index.number_of_replicas&quot;: 0
+    },
+    &quot;mappings&quot;: {
+        &quot;prod&quot;: {
+            &quot;_timestamp&quot;: {
+                &quot;enabled&quot;: &quot;true&quot;
+            },
+            &quot;properties&quot;: {
+                &quot;title&quot;: {
+                  &quot;type&quot;: &quot;string&quot;
+                },
+                &quot;description&quot;: {
+                  &quot;type&quot;: &quot;string&quot;
+                },
+                &quot;when_it_happened&quot;: {
+                    &quot;type&quot;: &quot;date&quot;,
+                    &quot;format&quot;: &quot;yyyy-MM-dd'&quot;'T'&quot;'HH:mm:ss.SSSZ&quot;
+                }
+            }
+        }
+    }
+}
+'
+# test creating a record
+curl -XPOST graphite.example.com:9200/events/prod/ -d '{
+    &quot;when_it_happened&quot;: &quot;2015-04-27T18:30:14.000Z&quot;, &quot;title&quot; : &quot;fake deploy&quot;, &quot;description&quot; : &quot;Imagine that a deploy happened here&quot;
+}
+'
+
+# check mapping
+GET &quot;http://graphite.example.com:9200/events/_mapping?pretty=true&quot;
+
+# test search
+curl -XPOST  &quot;http://graphite.example.com:9200/events/_search?pretty=true&quot; -d '{&quot;fields&quot;:[&quot;when_it_happened&quot;],&quot;query&quot;:{&quot;filtered&quot;:{&quot;query&quot;:{&quot;bool&quot;:{&quot;should&quot;:[{&quot;query_string&quot;:{&quot;query&quot;:&quot;*&quot;}}]}},&quot;filter&quot;:{&quot;bool&quot;:{&quot;must&quot;:[{&quot;range&quot;:{&quot;when_it_happened&quot;:{&quot;from&quot;:&quot;now-8y&quot;,&quot;to&quot;:&quot;now+8y&quot;}}}]}}}},&quot;size&quot;:100}'
+
+ 
+&lt;/pre&gt;
+ 
+&lt;/body&gt;
+&lt;/html&gt;
+
+</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Drupal and TinyMCE]]></title>

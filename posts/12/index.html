@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="It's great that Amazon actually offer a version of thier MP3 downloader for Linux - just a shame that it doesn't work for many distributions. &hellip;">
+  <meta name="description" content="I've been using version control for a long time, but I haven't used CVS much since the first day I tried Subversion. (Git seems great but isn't the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/12/30/cvs-for-subversion-users/">CVS for Subversion Users</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-12-30T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been using version control for a long time, but I haven&#8217;t used CVS much since the first day I tried Subversion.
+</p>
+
+
+<p>
+(Git seems great but isn&#8217;t the same kind of drop-in upgrade that CVS to Subversion was)
+</p>
+
+
+<p>
+Things I forgot
+</p>
+
+
+<ul>
+    <li>CVS doesn&#8217;t do the nice recursive add that subversion does<br />
+    At the start of a project you need to run <br />
+    cvs import </li>
+    <li>CVS expands keywords by default - this is a problem if like me you want to merge in changes from someone else CVS repository as both sites have changes teh keywords<br />
+    Disable keyword changing by updating with<br />
+    cvs up -d -ko</li>
+    <li>CVS doesn&#8217;t add back deleted directories<br />
+    cvs up -d </li>
+    <li>CVS doesn&#8217;t have a nice equivilant of svn status<br />
+    cvs -q up <br />
+    Not quite the same as it will update stuff - but it does tell you which local files have changed</li>
+    <li>Tagging seems OK but doesn&#8217;t quite do the same thing<br />
+    cvs tag</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1176,83 +1235,6 @@ Testing is better than not testing - but having gotten into testing I&#8217;ve f
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/09/04/drupal-has-no-api/">Drupal Has No API</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-09-04T00:00:00+01:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I&#8217;ve been using Drupal for a couple of years now, and know my way around it pretty well.
-</p>
-
-
-<p>
-One of my biggest frustrations though is that it doesn&#8217;t really have an API.
-</p>
-
-
-<p>
-Much of the functionality is only really available through the application, you can do things pretty easily by pointing and clicking, but try and automate part of this and you have to step through code, find form handlers, copy-paste parts of the functions and work out what parameters are required.
-</p>
-
-
-<p>
-The example I found most recently was creating a translated version of a page.
-</p>
-
-
-<p>
-My client is using a translation agency, we send them XML, they translate it and return the translated text in XML. 
-</p>
-
-
-<p>
-So I start with an English page, send off an XML version, and when I get the XML translation back I need to add a new node related to the original.
-</p>
-
-
-<p>
-But Drupal has no function &quot;translation_add()&quot; instead the functionality is embedded in &quot;translation_nodapi()&quot;.
-</p>
-
-
-<p>
-If Drupal had an API there would be a well thought out set of functions to add, delete, and update translations of a node.
-</p>
-
-
-<p>
-The name of Drupal&#8217;s documentation site http://api.drupal.org/ is misleading, this is just general documentation of Drupal functions, it isn&#8217;t an API. 
-</p>
-
-
-<p>
-&nbsp;
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/13">&larr; Older</a>
@@ -1270,6 +1252,10 @@ The name of Drupal&#8217;s documentation site http://api.drupal.org/ is misleadi
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -1283,10 +1269,6 @@ The name of Drupal&#8217;s documentation site http://api.drupal.org/ is misleadi
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="The default configuration of varnish logs every request twice, once for the client and once for the backend communication edit the line in /etc/init. &hellip;">
+  <meta name="description" content="It wasn&rsquo;t immediately obvious to me What I needed to do to get blutooth audio working was to install the blueman package After that &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,41 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/06/ubuntu-10-04-bluetooth-audio/">Ubuntu 10.04 Bluetooth Audio</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-10-06T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It wasn&rsquo;t immediately obvious to me</p>
+
+<p>What I needed to do to get blutooth audio working was to install the blueman package</p>
+
+<p>After that configuration via GUI was pretty straightforward</p>
+
+<p>Now I have fantastic sound via my bluetooth enabled HIFI :-)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -541,59 +576,6 @@ Error 503 Service Unavailable</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/05/14/install-drupal-modules-programatically/">Install Drupal Modules Programatically</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-05-14T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In order to make releases repeatable, to be able to test updates and share work will colleagues it is really useful to install new modules (and disable old ones) in update hooks.</p>
-
-<p>This way one just has to update the code, then run update.php and you have the latest version of the site.</p>
-
-<p>It also makes it easy to pull in a copy of the live database and check that the update still works (because it&rsquo;s easy you actually find yourself doing it).</p>
-
-<p>Well that&rsquo;s the logic, but it wasn&rsquo;t entirely obvious to me how to do this.</p>
-
-<p>The function module_enable() looks handy - but this doesn&rsquo;t run install hooks.</p>
-
-<p>drupal_install_modules() is actually what you need - but you also need to clear the cache after installing.</p>
-
-<p>&lt;?php</p>
-
-<p>function mymodule_update_6103(){
-    $items = array();
-    drupal_install_modules(array( &lsquo;path_redirect&rsquo;, &lsquo;tagadelic&rsquo;));
-    module_disable(array(&lsquo;oldmodule&rsquo;));
-    drupal_flush_all_caches();
-    return $items;
-}</p>
-
-<p>?></p>
-
-<p>It would be nicer still if I returned something useful in the $items array &hellip;</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/10">&larr; Older</a>
@@ -611,6 +593,10 @@ Error 503 Service Unavailable</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -624,10 +610,6 @@ Error 503 Service Unavailable</p>
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

@@ -9,7 +9,8 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I’ve just had cause to restore a two year old backup of a database I haven’t used in a while Since then postgresql (on Debian at least) has added the &hellip;">
+  <meta name="description" content="Just got a new UPS and it’s working nicely :-) Running on Debian Etch I had to upgrade the NUT package but this
+worked very simply by bringing in the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +71,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/01/17/apc-back-ups-cs-500ei-and-debian-etch/">APC Back-UPS CS 500Ei and Debian Etch</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-01-17T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Just got a new UPS and it’s working nicely :-)</p>
+
+<div class="post-entry">
+<p>
+Running on Debian Etch I had to upgrade the NUT package but this
+worked very simply by bringing in the one from Lenny (in testing)
+</p>
+<p>
+added to /etc/apt/sources.list<br />
+deb-src http://ftp.uk.debian.org/debian/ lenny main contrib non-free
+</p>
+<p>
+then ran<br />
+apt-get build-dep nut
+</p>
+<p>
+as normal user<br />
+apt-get source nut<br />
+cd to nut dir<br />
+dpkg-buildpackage -rfakeroot -uc -b
+</p>
+<p>
+then as root installed the .deb created 
+</p>
+<p>
+After that it was just a case of reading the docs and configuring.
+</p>
+<p>
+I’m using the UPS for my desktop and monitor - it’s drawing 25% load
+with a predicted battery runtime of about 45minutes (which I don’t
+quite believe)
+</p>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1020,58 +1083,6 @@ Even when it wasn’t working I could see apache trying to map requests to tomca
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2005/03/05/spamassassin-and-fetchmail-without-delays-for-local-clients/">Spamassassin and Fetchmail Without Delays for Local Clients</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2005-03-05T00:00:00+00:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2005</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Most of my mail is delivered by smtp directly to me, but my
-secondary max records cause some mail to be delivered to a POP3
-mailbox- this is then retrieved using spamassasin.
-</p>
-
-
-<p>
-This works very well generally - I get my mail very quickly and implement spam/virus filtering.<br />
-The only problem is that many spammers deliberately target secondary
-mail servers as being less likely to have spam filtering, so I still
-filter mail received vi fetchmail even though this is seen by my mail
-server as local mail.
-</p>
-
-
-<p>
-In order to allow my mail client to deliver to the server without
-waiting for the spam scan I have configured the server to listen on two
-local ip addresses (127.0.0.1 and 127.0.0.17) fetchmail delivers to the
-first which is filtered - my mail client delivers to the second - and
-mail to this address is accepted without spam scanning
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/23">&larr; Older</a>
@@ -1089,6 +1100,10 @@ mail to this address is accepted without spam scanning
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -1102,10 +1117,6 @@ mail to this address is accepted without spam scanning
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

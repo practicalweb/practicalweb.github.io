@@ -9,7 +9,8 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="The Drupal api module is very useful. It's also quite strict in the formats it recognises. If you are having trouble getting it to reconise your doc &hellip;">
+  <meta name="description" content="After an upgrade I found my 3G USB modem wasn&rsquo;t loading properly. For some reason the airprime module was connection to ttyUSB0
+making it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +71,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/06/04/3g-usb-modem-upgrade-problems/">3G USB Modem - Upgrade Problems</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-06-04T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>After an upgrade I found my 3G USB modem wasn&rsquo;t loading properly.</p>
+
+<p>For some reason the airprime module was connection to ttyUSB0
+making it unavailable.</p>
+
+<p>To fix this I just added the airprime module to the blacklisting in</p>
+
+<p><code>
+/etc/modprobe.d/blacklist
+</code></p>
+
+<!--break-->
+
+
+<p>I&rsquo;m running Ubuntu 8.04 (Hardy Heron)
+Linux 2.6.24-16-generic
+and the Huawei E220 HSDPA Modem</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -924,58 +970,6 @@ function fopen_utf8($filename){
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/05/18/doc-comments-and-auto-completion-in-eclipse/">Doc-comments and Auto-completion in Eclipse</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-05-18T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-Using <a href="http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.pkg.html">doc-comments</a> in Eclipse really helps productivity by providing lots of tool-tip help and auto completion.
-</p>
-
-
-<p>
-A colleague recently pointed out that Eclipse can auto-complete object properties (as long as you use the @property tag). I&#8217;ve found this really helpful and have been creating objects to return pass around - and found it a vwery neat way of working.
-</p>
-
-
-<p>
-I&#8217;ve also been writing functions that may be used on the command line via <a href="http://drupal.org/project/drush">drush</a>, Drupal cron, or via pages.
-</p>
-
-
-<p>
-A pleasant side effect of this is that the MVC pattern is starting to appear much clearer within Drupal. The Controller may be cron, drush, or the menu system, this calls the Model, and triggers a theme function for the View.
-</p>
-
-
-<p>
-Thanks to <a href="http://www.nobleprog.co.uk/">Bernard at NobelProg</a>
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/21">&larr; Older</a>
@@ -993,6 +987,10 @@ Thanks to <a href="http://www.nobleprog.co.uk/">Bernard at NobelProg</a>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -1006,10 +1004,6 @@ Thanks to <a href="http://www.nobleprog.co.uk/">Bernard at NobelProg</a>
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

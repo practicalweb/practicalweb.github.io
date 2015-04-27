@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="This took me a little while to figure out how to get the right parameters I used password instead of API key and account ID instead of tenant ID &hellip;">
+  <meta name="description" content="I wanted to trigger multiple jenkins servers from a github hook. I found this pull request which led me to look at the API useful docs http:// &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/07/github-jenkins-hook-multiple-endpoints-and-api/">Github Jenkins Hook - Multiple Endpoints and API</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-08-07T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I wanted to trigger multiple jenkins servers from a github hook.</p>
+
+<p>I found <a href="https://github.com/github/github-services/pull/604M/">this pull request</a> which led me to look at the API</p>
+
+<p>useful docs</p>
+
+<ul>
+<li><a href="http://developer.github.com/v3/repos/hooks">http://developer.github.com/v3/repos/hooks</a></li>
+<li><a href="https://gist.github.com/caspyin/2288960">https://gist.github.com/caspyin/2288960</a></li>
+</ul>
+
+
+<p>My code</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>  curl --user <span class="s2">&quot;me:mypassword&quot;</span> --request POST --data @jenkins.json  https://api.github.com/repos/myorg/myproject/hooks
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>here jenkins.json is like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jenkins&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nt">&quot;active&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>      <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span class='line'>        <span class="s2">&quot;push&quot;</span>
+</span><span class='line'>      <span class="p">],</span>
+</span><span class='line'>      <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nt">&quot;jenkins_hook_url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://jenkins.mydomain/github-webhook/&quot;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What I found was that this just replaces my jenkins hook - which isn&rsquo;t what I wanted.</p>
+
+<p>But the more I looked at the service hooks the more it looked like the jenkins one just passes a standard payload to a url, which is the same as the generic webhook, so I tried adding the jenkins webhook URL as a standard webhook ( you are allowed multiples of these) and that seems to work.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -574,66 +649,6 @@ current_branch=${current_branch##refs/heads/}</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/26/git-submodules-and-subtrees/">Git Submodules and Subtrees</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-11-26T00:00:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Git has the concept of both submodules and subtrees, there seem to be some problems with each solution, nether being well loved as far as I can see.</p>
-
-
-
-
-<p>Both add significant complexity to a project, and require extra care - but the alternative is monolithic projects or a lot of copy-pasting.</p>
-
-
-
-
-<p>Submodules allow another git repo to be nested inside the main one, you can then commit to either repo from the same filesystem.<br />
-The &#8220;parent&#8221; repo references a specific tag/branch of the child one - it&#8217;s just this reference which is committed (and can be updated) in the parent.<br />
-Commits in the parent relating to changes in subtree just show the ID changing and any message made when committing an updated version of the module. You can see commit history for the submodule when you are in that directory.
-</p>
-
-
-<p>The downside here being that neither a regular checkout nor a github tarball includes the child repo which adds overhead to dev build and server deploys.</p>
-
-
-
-
-<p>Subtrees allow an additional external reference to be added and checked out as a subdirectory, this time the whole subdirectory is committed to the parent - but not the reference.<br />
-The local repo does hold a reference and this allows the child repo to be merged in (preserving any local patches).<br />
-The downside here is that the external reference has to be added manually to any repo that needs it, you don&#8217;t see the submodule history in the parent.</p>
-
-
-
-
-<p>There&#8217;s a good article here <a href="http://codingkilledthecat.wordpress.com/2012/04/28/why-your-company-shouldnt-use-git-submodules/">http://codingkilledthecat.wordpress.com/2012/04/28/why-your-company-shouldnt-use-git-submodules</a> which basically says to use another tool - but that has it&#8217;s own set of problems.</p>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/5">&larr; Older</a>
@@ -651,6 +666,10 @@ The downside here is that the external reference has to be added manually to any
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -664,10 +683,6 @@ The downside here is that the external reference has to be added manually to any
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

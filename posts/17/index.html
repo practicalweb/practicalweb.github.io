@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="While creating websites I often find the need to manipulate files in all sorts of ad-hoc ways. Things that are hard to do by hand, but you don&rsquo; &hellip;">
+  <meta name="description" content="Kdesvn and Kompare are two very nice tools providing rich GUI's for svn and file comparison respectively. In order to show the difference between &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/01/kdesvn-and-kompare/">Kdesvn and Kompare</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-12-01T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Kdesvn and Kompare are two very nice tools providing rich GUI&#8217;s for svn and file comparison respectively. 
+</p>
+
+
+<p>
+In order to show the difference between two revisions using Kompare, change the default external diff settings to:
+kompare %1 %2
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -769,70 +812,6 @@ I wonder if version 3 would be any slower anyway - it might even be faster. In 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/08/07/drupal-multisite-with-shared-tables/">Drupal Multisite With Shared Tables</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-08-07T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Drupal allows you to create multiple sites sharing some or all of the same code and optionally sharing some database tables.</p>
-
-<p>The documentation for the Drupal settings file
-<a href="http://api.drupal.org/api/file/sites/default/settings.php/5/source">http://api.drupal.org/api/file/sites/default/settings.php/5/source</a></p>
-
-<p>includes the following</p>
-
-<p>&lt;?php
-/<em>
- * To have all database names prefixed, set $db_prefix as a string:
- *
- *   $db_prefix = &lsquo;main<em>&rsquo;;
- *
- * To provide prefixes for specific tables, set $db_prefix as an array.
- * The array&rsquo;s keys are the table names and the values are the prefixes.
- * The &lsquo;default&rsquo; element holds the prefix for any tables not specified
- * elsewhere in the array. Example:
- *
- *   $db_prefix = array(
- *     &lsquo;default&rsquo;   => &lsquo;main</em>&rsquo;,
- *     &lsquo;users&rsquo;     => &lsquo;shared<em>&rsquo;,
- *     &lsquo;sessions&rsquo;  => &lsquo;shared</em>&rsquo;,
- *     &lsquo;role&rsquo;      => &lsquo;shared<em>&rsquo;,
- *     &lsquo;authmap&rsquo;   => &lsquo;shared</em>&rsquo;,
- *     &lsquo;sequences&rsquo; => &lsquo;shared_&rsquo;,
- *   );
- </em>/
-?></p>
-
-<p>This allows you to have several related sites which might (for example) share user tables so that users have single sign on, while having different tables for content.</p>
-
-<p>Note that to get this functionality the sites have to share a single database.</p>
-
-<p>I&rsquo;ve never quite seen the point of multi site Drupal installs for unrelated projects, in theory this could save on upgrade work - but in practice I&rsquo;d rather have the greater control that separate install gives you.</p>
-
-<p>For a family of websites I can see a multi site install with some shared data being a really powerful and effective solution.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/18">&larr; Older</a>
@@ -850,6 +829,10 @@ I wonder if version 3 would be any slower anyway - it might even be faster. In 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -863,10 +846,6 @@ I wonder if version 3 would be any slower anyway - it might even be faster. In 
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>

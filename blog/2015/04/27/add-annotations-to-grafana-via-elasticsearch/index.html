@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Add Annotations to Grafana via Elasticsearch - PracticalWeb Ltd</title>
+  <meta name="author" content="Sean Burlington">
+
+  
+  <meta name="description" content="It took me a while to figure out how to setup elasticsearch for grafana annotations, and I wanted a small page to allow me to add annotations Mostly &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.practicalweb.co.uk/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="PracticalWeb Ltd" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3381543-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">PracticalWeb Ltd</a></h1>
+  
+    <h2>Websites that work for you.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Add Annotations to Grafana via Elasticsearch</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-04-27T21:43:55+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:43 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>It took me a while to figure out how to setup elasticsearch for grafana annotations, and I wanted a small page to allow me to add annotations</p>
+
+<p>Mostly I figure we&rsquo;ll add a line to deploy scripts to track versions - but I&rsquo;d like to be able to manually annotate outages</p>
+
+<div><script src='https://gist.github.com/29af780a56e09e3055ed.js?file=grafana-elasticsearch-annotations.html'></script>
+<noscript><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script src=&quot;moment.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;moment-timezone.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+
+$(document).ready(function(){
+    $(&quot;#annotate&quot;).click(function(){
+var stuff=JSON.stringify({
+          &quot;when_it_happened&quot;: $(&quot;#when_it_happened&quot;).val(),
+ &quot;title&quot; : $(&quot;#title&quot;).val(),
+ &quot;description&quot; : $(&quot;#description&quot;).val(),
+        });
+
+        $.post(&quot;http://graphite.example.com:9200/events/prod/&quot;,
+        stuff,
+        function(data,status){
+            alert(&quot;Data: &quot; + JSON.stringify(data) + &quot;\nStatus: &quot; + status);
+        });
+    });
+});
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Add an annotation to grafana&lt;/h1&gt;
+
+&lt;form&gt;
+&lt;p&gt;&lt;label for=&quot;title&quot;&gt; Title &lt;input  id=&quot;title&quot; type=&quot;text&quot; /&gt;&lt;/label&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for=&quot;description&quot;&gt; Description &lt;input  id=&quot;description&quot; type=&quot;text&quot; /&gt;&lt;/label&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for=&quot;when_it_happened&quot;&gt; Date/time &lt;input  id=&quot;when_it_happened&quot; type=&quot;text&quot; /&gt;&lt;/label&gt; time is in UTC&lt;/p&gt;
+&lt;p&gt;&lt;input id=&quot;annotate&quot; type=&quot;button&quot; value=&quot;Annotate!&quot; /&gt;&lt;/p&gt;
+&lt;/form&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+var today = new Date();
+var hour = today.getUTCHours();
+if (hour &lt; 10) {
+  hour = &quot;0&quot; + hour;
+}
+var minute = today.getUTCMinutes();
+if (minute &lt; 10) {
+  minute = &quot;0&quot; + minute;
+}
+
+//jQuery('#when_it_happened').datetimepicker({format:'Y-m-d\\TH:i:00.000\\Z', defaultTime : hour + ':' + minute });
+
+var now = moment.tz('UTC').format('YYYY-MM-DD\\THH:mm:00.000\\Z');  
+jQuery('#when_it_happened').val(now)
+&lt;/script&gt;
+&lt;p&gt;To setup the correct mapping on the server I run the following&lt;/p&gt;
+ 
+&lt;pre&gt;
+# delete all
+curl -XDELETE  &quot;http://graphite.example.com:9200/events/&quot;
+ 
+# create mapping
+curl -XPUT graphite.example.com:9200/events -d '{
+    &quot;settings&quot;: {
+        &quot;index.number_of_shards&quot;: 1,
+        &quot;index.number_of_replicas&quot;: 0
+    },
+    &quot;mappings&quot;: {
+        &quot;prod&quot;: {
+            &quot;_timestamp&quot;: {
+                &quot;enabled&quot;: &quot;true&quot;
+            },
+            &quot;properties&quot;: {
+                &quot;title&quot;: {
+                  &quot;type&quot;: &quot;string&quot;
+                },
+                &quot;description&quot;: {
+                  &quot;type&quot;: &quot;string&quot;
+                },
+                &quot;when_it_happened&quot;: {
+                    &quot;type&quot;: &quot;date&quot;,
+                    &quot;format&quot;: &quot;yyyy-MM-dd'&quot;'T'&quot;'HH:mm:ss.SSSZ&quot;
+                }
+            }
+        }
+    }
+}
+'
+# test creating a record
+curl -XPOST graphite.example.com:9200/events/prod/ -d '{
+    &quot;when_it_happened&quot;: &quot;2015-04-27T18:30:14.000Z&quot;, &quot;title&quot; : &quot;fake deploy&quot;, &quot;description&quot; : &quot;Imagine that a deploy happened here&quot;
+}
+'
+
+# check mapping
+GET &quot;http://graphite.example.com:9200/events/_mapping?pretty=true&quot;
+
+# test search
+curl -XPOST  &quot;http://graphite.example.com:9200/events/_search?pretty=true&quot; -d '{&quot;fields&quot;:[&quot;when_it_happened&quot;],&quot;query&quot;:{&quot;filtered&quot;:{&quot;query&quot;:{&quot;bool&quot;:{&quot;should&quot;:[{&quot;query_string&quot;:{&quot;query&quot;:&quot;*&quot;}}]}},&quot;filter&quot;:{&quot;bool&quot;:{&quot;must&quot;:[{&quot;range&quot;:{&quot;when_it_happened&quot;:{&quot;from&quot;:&quot;now-8y&quot;,&quot;to&quot;:&quot;now+8y&quot;}}}]}}}},&quot;size&quot;:100}'
+
+ 
+&lt;/pre&gt;
+ 
+&lt;/body&gt;
+&lt;/html&gt;
+
+</code></pre></noscript></div>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Burlington</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-04-27T21:43:55+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:43 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/elasticsearch/'>elasticsearch</a>, <a class='category' href='/blog/categories/grafana/'>grafana</a>, <a class='category' href='/blog/categories/graphite/'>graphite</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.practicalweb.co.uk/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/" data-via="seanburlington" data-counturl="http://www.practicalweb.co.uk/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/03/18/git-stash-save-message/" title="Previous Post: git stash save message">&laquo; git stash save message</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/13/puppet-vs-ansible/">Puppet vs Ansible</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+     <h1>Twitter</h1>
+            <a class="twitter-timeline"  href="https://twitter.com/seanburlington" data-widget-id="524302229054832640">Tweets by @seanburlington</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+          
+ </section>
+
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101485141680594541671?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<script>
+  (function() {
+    var cx = '006368662332329297011:kk0vbscc1zc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
+
+<p>UK registered company number 06427950</p>
+
+</footer>
+  
+
+
+
+<script type="text/javascript">
+// sean 3
+
+      var disqus_shortname = 'practicalweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.practicalweb.co.uk/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/';
+        var disqus_url = 'http://www.practicalweb.co.uk/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

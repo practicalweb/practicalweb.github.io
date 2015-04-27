@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Jenkins | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/jenkins/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-04-23T12:12:07+01:00</updated>
+  <updated>2015-04-27T21:55:10+01:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -140,7 +140,7 @@ new_id=$(git rev-parse &ndash;short origin/branch)</p>
 
 <h1>email a nice log to myself (TODO - pull this back into jenkins)</h1>
 
-<p>git log &ndash;oneline &ndash;graph ${current_branch}..origin/$branch | mail -s &ldquo;updating $(hostname) from $current_branch $current_id to $branch $new_id&rdquo;   <a href="&#x6d;&#97;&#x69;&#108;&#116;&#x6f;&#x3a;&#x6d;&#101;&#x40;&#x65;&#x78;&#97;&#109;&#112;&#x6c;&#x65;&#x2e;&#x63;&#111;&#x6d;">&#x6d;&#101;&#64;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#x63;&#x6f;&#109;</a></p>
+<p>git log &ndash;oneline &ndash;graph ${current_branch}..origin/$branch | mail -s &ldquo;updating $(hostname) from $current_branch $current_id to $branch $new_id&rdquo;   <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#x6f;&#58;&#109;&#x65;&#x40;&#x65;&#x78;&#97;&#x6d;&#112;&#x6c;&#x65;&#46;&#x63;&#111;&#109;">&#109;&#101;&#x40;&#x65;&#x78;&#97;&#109;&#x70;&#x6c;&#x65;&#x2e;&#99;&#x6f;&#109;</a></p>
 
 <h1>update the code to the latest on the dev branch</h1>
 

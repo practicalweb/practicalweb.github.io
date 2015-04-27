@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I&rsquo;ve been running this blog (or some version of it) for almost 10 years now. I write to help clarify my own thoughts, or to note down technical &hellip;">
+  <meta name="description" content="In this case to turn on comments in all posts for this blog All files that don&rsquo;t have comments at the start of a line get &ldquo;comments: true &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/22/insert-line-to-all-files-when-missing/">Insert Line to All Files When Missing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-22T16:31:31+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>4:31 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In this case to turn on comments in all posts for this blog</p>
+
+<p>All files that don&rsquo;t have comments at the start of a line get &ldquo;comments: true&rdquo; inserted on the 5th line</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">for</span> f in * <span class="p">;</span> <span class="k">do</span> grep -q <span class="s2">&quot;^comments&quot;</span> <span class="nv">$f</span> <span class="o">||</span> sed -i <span class="s1">&#39;5 i\</span>
+</span><span class='line'><span class="s1">comments: true&#39;</span> <span class="nv">$f</span> <span class="p">;</span> <span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Maybe Octopress has a way to globally enable comments - but I didn&rsquo;t find it and this was quick</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -748,81 +788,6 @@ sqlite3 ~/.Skype/${username}/main.db \
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/07/github-jenkins-hook-multiple-endpoints-and-api/">Github Jenkins Hook - Multiple Endpoints and API</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-08-07T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I wanted to trigger multiple jenkins servers from a github hook.</p>
-
-<p>I found <a href="https://github.com/github/github-services/pull/604M/">this pull request</a> which led me to look at the API</p>
-
-<p>useful docs</p>
-
-<ul>
-<li><a href="http://developer.github.com/v3/repos/hooks">http://developer.github.com/v3/repos/hooks</a></li>
-<li><a href="https://gist.github.com/caspyin/2288960">https://gist.github.com/caspyin/2288960</a></li>
-</ul>
-
-
-<p>My code</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>  curl --user <span class="s2">&quot;me:mypassword&quot;</span> --request POST --data @jenkins.json  https://api.github.com/repos/myorg/myproject/hooks
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>here jenkins.json is like</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'>    <span class="p">{</span>
-</span><span class='line'>      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jenkins&quot;</span><span class="p">,</span>
-</span><span class='line'>      <span class="nt">&quot;active&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>      <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span class='line'>        <span class="s2">&quot;push&quot;</span>
-</span><span class='line'>      <span class="p">],</span>
-</span><span class='line'>      <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nt">&quot;jenkins_hook_url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://jenkins.mydomain/github-webhook/&quot;</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>What I found was that this just replaces my jenkins hook - which isn&rsquo;t what I wanted.</p>
-
-<p>But the more I looked at the service hooks the more it looked like the jenkins one just passes a standard payload to a url, which is the same as the generic webhook, so I tried adding the jenkins webhook URL as a standard webhook ( you are allowed multiples of these) and that seems to work.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/4">&larr; Older</a>
@@ -840,6 +805,10 @@ sqlite3 ~/.Skype/${username}/main.db \
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/18/git-stash-save-message/">Git Stash Save Message</a>
       </li>
     
@@ -853,10 +822,6 @@ sqlite3 ~/.Skype/${username}/main.db \
     
       <li class="post">
         <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/18/first-steps-with-ansible-and-docker/">First Steps With Ansible and Docker</a>
       </li>
     
   </ul>
