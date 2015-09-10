@@ -629,19 +629,28 @@ sudo grub-install --recheck --root-directory=/mnt /dev/sdZ
   </header>
 
 
-  <div class="entry-content"><p><code>
-$new_branch=$1 # passed as param</p>
+  <div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$new_branch</span><span class="o">=</span><span class="nv">$1</span> <span class="c"># passed as param</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">current_branch</span><span class="o">=</span><span class="s2">&quot;$(git symbolic-ref HEAD 2&gt;/dev/null)&quot;</span>
+</span><span class='line'><span class="nv">current_branch</span><span class="o">=</span><span class="k">${</span><span class="nv">current_branch</span><span class="p">##refs/heads/</span><span class="k">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">current_id</span><span class="o">=</span><span class="k">$(</span>git rev-parse --short origin/<span class="nv">$current_branch</span><span class="k">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">new_id</span><span class="o">=</span><span class="k">$(</span>git rev-parse --short origin/<span class="nv">$new_branch</span><span class="k">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">last_tag</span><span class="o">=</span><span class="k">$(</span>git describe --abbrev<span class="o">=</span><span class="m">0</span> --tags<span class="k">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>current_branch=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
-current_branch=${current_branch##refs/heads/}</p>
-
-<p>current_id=$(git rev-parse &ndash;short origin/$current_branch)</p>
-
-<p>new_id=$(git rev-parse &ndash;short origin/$new_branch)</p>
-
-<p>last_tag=$(git describe &ndash;abbrev=0 &ndash;tags)</p>
-
-<p></code></p>
 </div>
   
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Git | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-04-27T21:55:10+01:00</updated>
+  <updated>2015-09-10T17:19:01+01:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -199,19 +199,17 @@ stash@{3}: On master: feature xyz
     <link href="http://www.practicalweb.co.uk/blog/2013/02/05/mini-scripts-to-obtain-git-id-branch-tag/"/>
     <updated>2013-02-05T00:00:00+00:00</updated>
     <id>http://www.practicalweb.co.uk/blog/2013/02/05/mini-scripts-to-obtain-git-id-branch-tag</id>
-    <content type="html"><![CDATA[<p><code>
-$new_branch=$1 # passed as param</p>
+    <content type="html"><![CDATA[<pre><code class="bash">$new_branch=$1 # passed as param
 
-<p>current_branch=&ldquo;$(git symbolic-ref HEAD 2>/dev/null)&rdquo;
-current_branch=${current_branch##refs/heads/}</p>
+current_branch="$(git symbolic-ref HEAD 2&gt;/dev/null)"
+current_branch=${current_branch##refs/heads/}
 
-<p>current_id=$(git rev-parse &ndash;short origin/$current_branch)</p>
+current_id=$(git rev-parse --short origin/$current_branch)
 
-<p>new_id=$(git rev-parse &ndash;short origin/$new_branch)</p>
+new_id=$(git rev-parse --short origin/$new_branch)
 
-<p>last_tag=$(git describe &ndash;abbrev=0 &ndash;tags)</p>
-
-<p></code></p>
+last_tag=$(git describe --abbrev=0 --tags)
+</code></pre>
 ]]></content>
   </entry>
   
