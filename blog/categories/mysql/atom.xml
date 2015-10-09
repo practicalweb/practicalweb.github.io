@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mysql | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/mysql/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-09-10T17:19:01+01:00</updated>
+  <updated>2015-10-09T17:23:39+01:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,32 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu Mysql Root Password Reset (Init File Not Found)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/"/>
+    <updated>2015-10-09T17:13:21+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found</id>
+    <content type="html"><![CDATA[<p>If you don&rsquo;t use the mysql root account very often and change passwords reasonably frequently you may (like me) find that you no longer know the mysql root password on a dev box.</p>
+
+<p>The mysql site has a reasonable guide here <a href="https://dev.mysql.com/doc/refman/5.0/en/resetting-permissions.html#resetting-permissions-unix">https://dev.mysql.com/doc/refman/5.0/en/resetting-permissions.html#resetting-permissions-unix</a></p>
+
+<p>But there always seems to be something additional, this time for me it was apparmor preventing mysql from reading my reset file</p>
+
+<p>to reset I had to
+ look in /etc/apparmor.d/usr.sbin.mysqld and identify /etc/mysql/conf.d/ as a good place to place a reset init file</p>
+
+<pre><code class="bash">sudo su
+service stop mysql
+echo "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('MyNewPass');" &gt; /etc/mysql/conf.d/mysql-init
+mysqld_safe --init-file=/etc/mysql/conf.d/mysql-init &amp;
+# check password works
+# stop mysql 
+service start mysql
+rm /etc/mysql/conf.d/mysql-init
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[MySQL AUTO_INCREMENT Updates]]></title>
@@ -215,43 +241,6 @@ http://drupal.org/node/146843
 
 <p>
 &nbsp;
-</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[MySQL Restore Is Very Slow]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2008/08/04/mysql-restore-is-very-slow/"/>
-    <updated>2008-08-04T00:00:00+01:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2008/08/04/mysql-restore-is-very-slow</id>
-    <content type="html"><![CDATA[<p>
-It seems there is a bug in MySQL which is causing restores to run very slowly (hours instead of minutes)
-</p>
-
-
-<p>
-<a href="http://bugs.mysql.com/bug.php?id=33057">http://bugs.mysql.com/bug.php?id=33057</a>
-</p>
-
-
-<p>
-The bug is fixed in <a href="http://dev.mysql.com/doc/refman/5.0/en/releasenotes-cs-5-0-67.html">release 5.0.67</a>
-</p>
-
-
-<p>
-But Ubuntu hasn&#8217;t updated yet&#8230;.
-</p>
-
-
-<p>
-Fortunately this bug is specific to the command line client. 
-</p>
-
-
-<p>
-Workaround: use the MySQL Administrator GUI instead. 
 </p>
 
 ]]></content>

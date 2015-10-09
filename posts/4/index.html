@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I wanted to trigger multiple jenkins servers from a github hook. I found this pull request which led me to look at the API useful docs http:// &hellip;">
+  <meta name="description" content="I used to use subversion and svnmerge a lot, and there's just one thing I miss about it. Now svnmerge is a tool to bolt on merge tracking to svn, and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/15/blocking-git-commits-from-future-merges/">Blocking Git Commits From Future Merges</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-08-15T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I used to use subversion and <a href="http://www.orcaware.com/svn/wiki/Svnmerge.py">svnmerge</a> a lot, and there&#8217;s just one thing I miss about it. Now svnmerge is a tool to bolt on merge tracking to svn, and gits merge tracking is vastly better in many ways. But the one thing that svnmerge allowed me to do that was cool and doesn&#8217;t have a real equivalent in git is to block commits</p>
+
+
+
+
+<p>I use release branches as well as feature branches, so for each release we support we have a barcnh, new features are developed in feature branches off this - and merged back to it when complete. The branch for release x gets merged forwards to release x+1 periodically - to ensure that any features or bugfixes make it to the latest release.</p>
+
+
+
+
+<p>Sometimes we make a commit to an older release that we don&#8217;t want to merge forwards to newer releases - typically this is a quick and dirty bugfix/workaround that is superseded by a proper fix in the next release.</p>
+
+
+
+
+<p>Svnmerge allowed you to &quot;block&quot; these commits so that they did not get merged forwards, with git you could cherry-pick around these commits - but you&#8217;d loose the ability to do regular merges.</p>
+
+
+
+
+<p><p>What you can do it git is to merge the commit - but keep the files unchanged, this looks a bit weird but works OK.<p></p>
+
+<p><code>git cherry-pick -e &ndash;strategy=ours $hash</code></p>
+
+<p><p>The strategy=ours bit means keep the code as it was in this branch. -e lets you edit the commit message to indicate it isn&rsquo;t a normal merge</p></p>
+
+<p><p>Now sometimes this doesn&rsquo;t seem to work, git complains that the commit is empty, I think this is when there is a conflict - in this case the only way I have worked around it is to do a regular cherry-pick and resolve the conflict manually - effectively undoing the commit. Then <code>commit &ndash;allow-empty</code></p>
+
+<p></p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -608,56 +665,6 @@ sudo grub-install --recheck --root-directory=/mnt /dev/sdZ
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/05/mini-scripts-to-obtain-git-id-branch-tag/">Mini Scripts to Obtain Git Id/branch/tag</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-02-05T00:00:00+00:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$new_branch</span><span class="o">=</span><span class="nv">$1</span> <span class="c"># passed as param</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">current_branch</span><span class="o">=</span><span class="s2">&quot;$(git symbolic-ref HEAD 2&gt;/dev/null)&quot;</span>
-</span><span class='line'><span class="nv">current_branch</span><span class="o">=</span><span class="k">${</span><span class="nv">current_branch</span><span class="p">##refs/heads/</span><span class="k">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">current_id</span><span class="o">=</span><span class="k">$(</span>git rev-parse --short origin/<span class="nv">$current_branch</span><span class="k">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">new_id</span><span class="o">=</span><span class="k">$(</span>git rev-parse --short origin/<span class="nv">$new_branch</span><span class="k">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">last_tag</span><span class="o">=</span><span class="k">$(</span>git describe --abbrev<span class="o">=</span><span class="m">0</span> --tags<span class="k">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/5">&larr; Older</a>
@@ -675,6 +682,10 @@ sudo grub-install --recheck --root-directory=/mnt /dev/sdZ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/">Ubuntu Mysql Root Password Reset (Init File Not Found)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
       </li>
     
@@ -688,10 +699,6 @@ sudo grub-install --recheck --root-directory=/mnt /dev/sdZ
     
       <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
       </li>
     
   </ul>

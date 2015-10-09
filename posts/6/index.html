@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="One liner to grab a git log summarising what will change when you push teh next release. For this to work you need to keep the deployed tag in &hellip;">
+  <meta name="description" content="I've been looking into gitflow recently, it's an interesting set of scripts to facilitate a succesful git branching model which some of the people I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,98 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/01/why-i-dont-like-gitflow/">Why I Don&#8217;t Like Gitflow</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-08-01T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+I&#8217;ve been looking into <a href="https://github.com/nvie/gitflow/">gitflow</a> recently, it&#8217;s an interesting set of scripts to facilitate <a href="http://nvie.com/posts/a-successful-git-branching-model/">a succesful git branching model</a> which some of the people I work with rave about.
+</p>
+
+
+<p>
+In the end I&#8217;ve decided I don&#8217;t like the tool or the model, though both are interesting.
+</p>
+
+
+<p>
+I think this is because I&#8217;m used to working in fairly large teams where we may have some people working on one release and others working on the next, in this situation I want release branches that are fairly long lived, and to create topic branches from them.
+</p>
+
+
+<p>
+In fact in one project we dropped the master branch altogether and just used a series or release barnches, always merging the older release branches into the newer (further from launch) ones. 
+</p>
+
+
+<p>
+The other main reason is that gitflow hides some of the mechanics of git in a way that seems to me to hinder peoples understanding of what they are doing, it&#8217;s a shame it down&#8217;t output the git commands it uses - that would allow people to use it to get started then move on later if they want.
+</p>
+
+
+<p>
+The commands also seem very slow to me which is odd when you are used to git being fast.
+</p>
+
+
+<p>
+Documentation on gitflow seems sparse, with some commands incomplete (git flow support * , gitflow feature checkout)
+</p>
+
+
+<p>
+ The best I could find is the source, and particularly the &quot;summary&quot; bits
+</p>
+
+
+<p>
+ <a href="https://github.com/nvie/gitflow/blob/develop/git-flow-release#L177">https://github.com/nvie/gitflow/blob/develop/git-flow-release#L177</a>
+</p>
+
+
+<p>
+The project wiki does have some addiutional info on command line options 
+</p>
+
+
+<p>
+ <a href="https://github.com/nvie/gitflow/wiki/Command-Line-Arguments">https://github.com/nvie/gitflow/wiki/Command-Line-Arguments</a>
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+
+<p>
+&nbsp;
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -138,7 +230,7 @@
 <p>git stash
 git checkout master
 git fetch
-git log &ndash;oneline master..origin/master | mail -s &ldquo;site updated &rdquo; <a href="&#x6d;&#x61;&#105;&#108;&#x74;&#x6f;&#58;&#x6d;&#101;&#x40;&#101;&#x78;&#x61;&#x6d;&#112;&#108;&#x65;&#46;&#x63;&#111;&#x6d;">&#109;&#x65;&#64;&#101;&#x78;&#x61;&#x6d;&#112;&#108;&#101;&#46;&#x63;&#111;&#109;</a>
+git log &ndash;oneline master..origin/master | mail -s &ldquo;site updated &rdquo; <a href="&#109;&#97;&#105;&#108;&#x74;&#111;&#x3a;&#x6d;&#101;&#x40;&#101;&#x78;&#97;&#109;&#x70;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#109;&#101;&#64;&#x65;&#x78;&#x61;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#111;&#109;</a>
 mit merge origin/master
 ./build.sh</p>
 
@@ -645,51 +737,6 @@ The .htaccess had been configured to serve drupal 404 pages, but in this case Dr
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/01/20/verbose-remote-ssh-with-echo/">Verbose Remote Ssh (With Echo)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-01-20T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I usually manage website deployment with bash scripts that run remote commands on the servers</p>
-
-<p>In order that I can see what is going on and debug any errors verbose output is useful.</p>
-
-<p>Running &ldquo;bash -ex&rdquo; causes each line to be output as it progresses and halt on any error so that you don&rsquo;t miss it.</p>
-
-<p>within the remote command &ldquo;set -x&rdquo; cuase bash to echo all commands</p>
-
-<p><code></p>
-
-<h1>!/bin/bash -ex</h1>
-
-<p>ssh -T user@server &lt;&lt; EOF
-set -x
-echo foo > /dev/null
-EOF
-</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/7">&larr; Older</a>
@@ -707,6 +754,10 @@ EOF
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/">Ubuntu Mysql Root Password Reset (Init File Not Found)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
       </li>
     
@@ -720,10 +771,6 @@ EOF
     
       <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
       </li>
     
   </ul>

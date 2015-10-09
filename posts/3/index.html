@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="In this case to turn on comments in all posts for this blog All files that don&rsquo;t have comments at the start of a line get &ldquo;comments: true &hellip;">
+  <meta name="description" content="Creating your own base box for vagrant is a great thing to do, you get to undestand exactly what is on that box and to choose exactly what base OS &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/">Creating New Vagrant Base Boxes With Veewee</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-28T16:08:14+00:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:08 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Creating your own base box for vagrant is a great thing to do, you get to undestand exactly what is on that box and to choose exactly what base OS you use.</p>
+
+<p>After all one of the big draws of vagrant is keeping your dev environment close to what production looks like - and for that you need to know what is in the base box.</p>
+
+<p>When I first started using vagrant I wrote a post <a href="/blog/2012/10/16/how-to-build-a-centos-6-base-box-for-vagrant/">How to build a Centos 6 base Box for vagrant</a> whcih details the manual steps needed. At the time I was busy learning puppet, vagrant and related tools - veewee was just one tool too many and a manual build seemed the best way to get my head around what a base box was.</p>
+
+<p>While the base box isn&rsquo;t something I have needed to repeat much, it is beneficial to update the base image from time to time and here veewee is brilliant. It also makes shareing the reponnsbibility for the base box within a team easy.</p>
+
+<p>Here&rsquo;s what I did</p>
+
+<ul>
+<li>fork <a href="https://github.com/jedi4ever/veewee">https://github.com/jedi4ever/veewee</a> (in my case to a private repo)</li>
+<li>check that out</li>
+<li>install veewee according to its install notes</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox tenplates <span class="p">|</span> grep -i centos
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This told me that the template I wanted was CentOS-6.5-x86_64-minimal</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox define centos65 CentOS-6.5-x86_64-minimal
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now I made some edits to customise the base box how I wanted</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vim definitions/centos65/definition.rb <span class="c"># comment out the chef line</span>
+</span><span class='line'>vim definitions/centos65/cleanup.sh <span class="c"># remove build packages like gcc</span>
+</span><span class='line'>vim definitions/centos65/vagrant.sh <span class="c"># remove insecure vagrant key and add your own public key</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Build</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox build centos65
+</span><span class='line'>veewee vbox <span class="nb">export </span>centos65
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>add to my local vagrant so I can test</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vagrant box add centos65 ./centos65.box
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now I can copy the base box to a team-accessible server</p>
+
+<p>And push my custom definition to my veewee fork so anyone from the team can build an updated box.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vim .gitignore <span class="c"># remove definitions/*</span>
+</span><span class='line'>git add .gitignore
+</span><span class='line'>git add definitions/
+</span><span class='line'>git commit -m <span class="s2">&quot;added my definition&quot;</span>
+</span><span class='line'>git push
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -731,63 +833,6 @@ sqlite3 ~/.Skype/${username}/main.db \
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/15/blocking-git-commits-from-future-merges/">Blocking Git Commits From Future Merges</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-08-15T00:00:00+01:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I used to use subversion and <a href="http://www.orcaware.com/svn/wiki/Svnmerge.py">svnmerge</a> a lot, and there&#8217;s just one thing I miss about it. Now svnmerge is a tool to bolt on merge tracking to svn, and gits merge tracking is vastly better in many ways. But the one thing that svnmerge allowed me to do that was cool and doesn&#8217;t have a real equivalent in git is to block commits</p>
-
-
-
-
-<p>I use release branches as well as feature branches, so for each release we support we have a barcnh, new features are developed in feature branches off this - and merged back to it when complete. The branch for release x gets merged forwards to release x+1 periodically - to ensure that any features or bugfixes make it to the latest release.</p>
-
-
-
-
-<p>Sometimes we make a commit to an older release that we don&#8217;t want to merge forwards to newer releases - typically this is a quick and dirty bugfix/workaround that is superseded by a proper fix in the next release.</p>
-
-
-
-
-<p>Svnmerge allowed you to &quot;block&quot; these commits so that they did not get merged forwards, with git you could cherry-pick around these commits - but you&#8217;d loose the ability to do regular merges.</p>
-
-
-
-
-<p><p>What you can do it git is to merge the commit - but keep the files unchanged, this looks a bit weird but works OK.<p></p>
-
-<p><code>git cherry-pick -e &ndash;strategy=ours $hash</code></p>
-
-<p><p>The strategy=ours bit means keep the code as it was in this branch. -e lets you edit the commit message to indicate it isn&rsquo;t a normal merge</p></p>
-
-<p><p>Now sometimes this doesn&rsquo;t seem to work, git complains that the commit is empty, I think this is when there is a conflict - in this case the only way I have worked around it is to do a regular cherry-pick and resolve the conflict manually - effectively undoing the commit. Then <code>commit &ndash;allow-empty</code></p>
-
-<p></p></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/4">&larr; Older</a>
@@ -805,6 +850,10 @@ sqlite3 ~/.Skype/${username}/main.db \
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/">Ubuntu Mysql Root Password Reset (Init File Not Found)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
       </li>
     
@@ -818,10 +867,6 @@ sqlite3 ~/.Skype/${username}/main.db \
     
       <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
       </li>
     
   </ul>

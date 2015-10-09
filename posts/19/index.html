@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Interesting report on the state of mobile internet We offer that mobile Internet is today at a point of sufficient mass to sustain a chain reaction &hellip;">
+  <meta name="description" content="When creating a Drupal theme it is tempting to start with one of the existing themes (Zen and Garland are often used) but I would argue against this &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,76 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/12/keep-your-drupal-theme-simple/">Keep Your Drupal Theme Simple</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-07-12T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+When creating a Drupal theme it is tempting to start with one of the existing themes (Zen and Garland are often used) but I would argue against this approach.
+</p>
+
+
+<p>
+If you start from another theme it feels good at the beginning; after all you start from a position where your site looks good. But the more customisations you make, the more you find that the old theme just adds complexity to your existing theme.
+</p>
+
+
+<p>
+The way Drupal works is that each module can add it&#8217;s own CSS: so tabs, menu trees, filters and so on all come with some sensible styling by default. If you want it to look different you not only have to create the CSS to make it look how you want - you have to make sure this overrides the default rules.
+</p>
+
+
+<p>
+So CSS in Drupal isn&#8217;t simple - don&#8217;t add to the complexity more than you need to.
+</p>
+
+
+<!--break-->
+
+
+<p>
+Start with a blank theme, make only the changes you need.
+</p>
+
+
+<p>
+That way you understand more of the CSS your site uses, changes are much easier to make, and bugs are less likely.
+</p>
+
+
+<p>
+This site is an example of that approach, the main stylesheet is less than 300 lines of code. IE6 specific code, and print style are only another 40 lines each.
+</p>
+
+
+<p>
+More complex themes benefit even more from initial simplicity, the complexity can then be built up systematically without fighting another designers plans.
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -731,120 +801,6 @@ These instructions are for squid3 and provide for Basic authentication which is 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/06/06/three-co-uk-3g-usb-modem-filtering/">three.co.uk 3G USB Modem - Filtering</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-06-06T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Three are definately putting a transparent proxy between me and the network.</p>
-
-<p>I just got this error message</p>
-
-<blockquote>
-Network Error (tcp_error)
-
-A communication error occurred: &#8220;Connection refused&#8221;
-The Web Server may be down, too busy, or experiencing other problems preventing it from responding to requests. You may wish to try again at a later time.
-
-For assistance, contact your network support team. 
-</blockquote>
-
-
-<p>Which isn&rsquo;t coming from my web browser (which has a different error page for this problem).</p>
-
-<p>And it isn&rsquo;t coming from the remote server as the message is that it couldn&rsquo;t connect!</p>
-
-<!--break-->
-
-
-<p>This is most definately filtering.</p>
-
-<p>I&rsquo;ve written a small script that outputs text after a couple of minutes. Over a normal ADSL connection it works fine.</p>
-
-<p>But over three&rsquo;s network I get the following results</p>
-
-<p>(using telnet to ensure there is no other program in the way)</p>
-
-<p><code></p>
-
-<p>telnet www.practicalweb.co.uk 80
-Trying 80.68.94.158&hellip;
-Connected to www.practicalweb.co.uk.
-Escape character is &lsquo;^]&rsquo;.
-GET /test.php HTTP/1.1
-host: www.practicalweb.co.uk</p>
-
-<p>HTTP/1.1 503 Service Unavailable
-Cache-Control: no-cache
-Pragma: no-cache
-Content-Type: text/html; charset=utf-8
-Connection: close
-Content-Length: 732</p>
-
-<p><HTML><HEAD>
-<TITLE>Network Error</TITLE>
-</HEAD>
-<BODY>
-<FONT face="Helvetica">
-<big><strong></strong></big><BR>
-</FONT></p>
-
-<blockquote>
-<TABLE border=0 cellPadding=1 width="80%">
-<TR><TD>
-<FONT face="Helvetica">
-<big>Network Error (tcp_error)</big>
-<BR>
-<BR>
-</FONT>
-</TD></TR>
-<TR><TD>
-<FONT face="Helvetica">
-A communication error occurred: ""
-</FONT>
-</TD></TR>
-<TR><TD>
-<FONT face="Helvetica">
-The Web Server may be down, too busy, or experiencing other problems preventing it from responding to requests. You may wish to try again at a later time.
-</FONT>
-</TD></TR>
-<TR><TD>
-<FONT face="Helvetica" SIZE=2>
-<BR>
-For assistance, contact your network support team.
-</FONT>
-</TD></TR>
-</TABLE>
-</blockquote>
-
-
-<p></FONT>
-</BODY></HTML>
-Connection closed by foreign host.
-</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/20">&larr; Older</a>
@@ -862,6 +818,10 @@ Connection closed by foreign host.
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/">Ubuntu Mysql Root Password Reset (Init File Not Found)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
       </li>
     
@@ -875,10 +835,6 @@ Connection closed by foreign host.
     
       <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
       </li>
     
   </ul>

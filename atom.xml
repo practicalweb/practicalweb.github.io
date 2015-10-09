@@ -4,7 +4,7 @@
   <title><![CDATA[PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2015-09-10T17:19:01+01:00</updated>
+  <updated>2015-10-09T17:23:39+01:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -12,6 +12,43 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu Mysql Root Password Reset (Init File Not Found)]]></title>
+    <link href="http://www.practicalweb.co.uk/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/"/>
+    <updated>2015-10-09T17:13:21+01:00</updated>
+    <id>http://www.practicalweb.co.uk/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found</id>
+    <content type="html"><![CDATA[<p>If you don&rsquo;t use the mysql root account very often and change passwords reasonably frequently you may (like me) find that you no longer know the mysql root password on a dev box.</p>
+
+<p>The mysql site has a reasonable guide here <a href="https://dev.mysql.com/doc/refman/5.0/en/resetting-permissions.html#resetting-permissions-unix">https://dev.mysql.com/doc/refman/5.0/en/resetting-permissions.html#resetting-permissions-unix</a></p>
+
+<p>But there always seems to be something additional, this time for me it was apparmor preventing mysql from reading my reset file</p>
+
+<p>to reset I had to
+ look in /etc/apparmor.d/usr.sbin.mysqld and identify /etc/mysql/conf.d/ as a good place to place a reset init file</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo su
+</span><span class='line'>service stop mysql
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;SET PASSWORD FOR &#39;root&#39;@&#39;localhost&#39; = PASSWORD(&#39;MyNewPass&#39;);&quot;</span> &gt; /etc/mysql/conf.d/mysql-init
+</span><span class='line'>mysqld_safe --init-file<span class="o">=</span>/etc/mysql/conf.d/mysql-init <span class="p">&amp;</span>
+</span><span class='line'><span class="c"># check password works</span>
+</span><span class='line'><span class="c"># stop mysql </span>
+</span><span class='line'>service start mysql
+</span><span class='line'>rm /etc/mysql/conf.d/mysql-init
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Add Annotations to Grafana via Elasticsearch]]></title>
@@ -1457,88 +1494,6 @@ curl -XPOST  &quot;http://graphite.example.com:9200/events/_search?pretty=true&q
     <content type="html"><![CDATA[<p>Since I&rsquo;ve moved to a static site I&rsquo;m saving myself some hosting fees and moved to <a href="https://help.github.com/categories/github-pages-basics/">Github Pages</a></p>
 
 <p>It&rsquo;s free and fast, saves me from managing a server.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Creating New Vagrant Base Boxes With Veewee]]></title>
-    <link href="http://www.practicalweb.co.uk/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee/"/>
-    <updated>2014-10-28T16:08:14+00:00</updated>
-    <id>http://www.practicalweb.co.uk/blog/2014/10/28/creating-new-vagrant-base-boxes-with-veewee</id>
-    <content type="html"><![CDATA[<p>Creating your own base box for vagrant is a great thing to do, you get to undestand exactly what is on that box and to choose exactly what base OS you use.</p>
-
-<p>After all one of the big draws of vagrant is keeping your dev environment close to what production looks like - and for that you need to know what is in the base box.</p>
-
-<p>When I first started using vagrant I wrote a post <a href="http://www.practicalweb.co.uk/blog/2012/10/16/how-to-build-a-centos-6-base-box-for-vagrant/">How to build a Centos 6 base Box for vagrant</a> whcih details the manual steps needed. At the time I was busy learning puppet, vagrant and related tools - veewee was just one tool too many and a manual build seemed the best way to get my head around what a base box was.</p>
-
-<p>While the base box isn&rsquo;t something I have needed to repeat much, it is beneficial to update the base image from time to time and here veewee is brilliant. It also makes shareing the reponnsbibility for the base box within a team easy.</p>
-
-<p>Here&rsquo;s what I did</p>
-
-<ul>
-<li>fork <a href="https://github.com/jedi4ever/veewee">https://github.com/jedi4ever/veewee</a> (in my case to a private repo)</li>
-<li>check that out</li>
-<li>install veewee according to its install notes</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox tenplates <span class="p">|</span> grep -i centos
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This told me that the template I wanted was CentOS-6.5-x86_64-minimal</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox define centos65 CentOS-6.5-x86_64-minimal
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now I made some edits to customise the base box how I wanted</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>vim definitions/centos65/definition.rb <span class="c"># comment out the chef line</span>
-</span><span class='line'>vim definitions/centos65/cleanup.sh <span class="c"># remove build packages like gcc</span>
-</span><span class='line'>vim definitions/centos65/vagrant.sh <span class="c"># remove insecure vagrant key and add your own public key</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Build</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>veewee vbox build centos65
-</span><span class='line'>veewee vbox <span class="nb">export </span>centos65
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>add to my local vagrant so I can test</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>vagrant box add centos65 ./centos65.box
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now I can copy the base box to a team-accessible server</p>
-
-<p>And push my custom definition to my veewee fork so anyone from the team can build an updated box.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>vim .gitignore <span class="c"># remove definitions/*</span>
-</span><span class='line'>git add .gitignore
-</span><span class='line'>git add definitions/
-</span><span class='line'>git commit -m <span class="s2">&quot;added my definition&quot;</span>
-</span><span class='line'>git push
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 ]]></content>
   </entry>
   

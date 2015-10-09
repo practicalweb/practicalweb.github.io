@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I want the drupal user uploaded files to be manageable by both apache and a non-root user In my case I&rsquo;m using hudson to rebuild the site with &hellip;">
+  <meta name="description" content="I wasn&rsquo;t 100% clear from the docs how to implement rollup rules in selenium ui-elements and searching the web didn&rsquo;t return much - so &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,123 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/06/02/selenium-ui-elements-rollups/">Selenium UI-Elements Rollups</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-06-02T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I wasn&rsquo;t 100% clear from the docs how to implement rollup rules in selenium ui-elements and searching the web didn&rsquo;t return much - so here&rsquo;s an example in case it&rsquo;s helpful to others.</p>
+
+<p>Add this to the user-extensions.js file</p>
+
+<p><code>
+var manager = new RollupManager();</p>
+
+<p>manager.addRollupRule({
+    name: &lsquo;compare_product&rsquo;
+    , description: &lsquo;gets to the reults on a compare product page&rsquo;
+    , args: [
+        {
+          name: &lsquo;term&rsquo;
+        , description: &lsquo;the aliased term name of the category&rsquo;
+        }
+        , {
+            name: &lsquo;provider&rsquo;
+          , description: &lsquo;the provider name&rsquo;
+          }
+        , {
+            name: &lsquo;product&rsquo;
+          , description: &lsquo;the product name&rsquo;
+          }
+    ]
+    , commandMatchers: [
+        {
+            command: &lsquo;click.+&rsquo;
+            , target: &lsquo;starRatingsCompareProduct::search_go\(.+&rsquo;
+        }
+    ]
+    , getExpandedCommands: function(args) {
+        var commands = [];</p>
+
+<pre><code>    commands.push({
+        command: 'open'
+            , target: '/star-ratings/find-star-ratings/'+args.term
+    });
+
+    commands.push({
+        command: 'selectAndWait'
+            , target: 'edit-provider'
+    , value: args.provider
+    });
+
+    commands.push({
+          command: 'pause'
+        , target: '1000'
+    });
+    commands.push({
+          command: 'selectAndWait'
+        , target: 'edit-product'
+        , value: args.product
+    });
+    commands.push({
+          command: 'waitForElementPresent'
+        , target: 'star-ratings-badge'
+    });
+    commands.push({
+          command: 'clickAndWait'
+        , target: 'edit-same-rating'
+    });
+    commands.push({
+          command: 'waitForTextPresent'
+        , target: 'Products with the same Star Rating'
+    });
+    return commands;
+}
+</code></pre>
+
+<p>});</p>
+
+<p></code></p>
+
+<p>Then you can use it in selenium as below</p>
+
+<p><code>
+<tr>
+    <td>rollup</td>
+    <td>compare_product</td>
+    <td>term=buy-let-insurance, provider=Cactus Cover, product=Residential Let</td>
+</tr></p>
+
+<p></code></p>
+
+<p>This avoids me repeating chunks of code that I would otherwise need to get the page to the point at which I want to test it.</p>
+
+<p>NB I&rsquo;ve kind of ignored the commandmatcher bit for the time being (this is a nicety to help the IDE notice a rollup while recording - it&rsquo;s a required field - but doesn&rsquo;t have to be useful).</p>
+
+<p><b>This blog post sponsored by www.defaqto.com (they like their team to give back to the community)</b></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -890,58 +1007,6 @@ function my_views_uninstall() {
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/10/09/backport-small-changes-to-stable-releases/">&#8220;Backport Small Changes to Stable Releases&#8221;</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2010-10-09T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2010</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve found the recent thread on distribution support very interesting.</p>
-
-<p>An I&rsquo;m especially excited by the prospects hinted at here</p>
-
-<p><a href="http://drupal.org/node/933846#comment-3545110">http://drupal.org/node/933846#comment-3545110</a></p>
-
-<blockquote>
-#42
-webchick - October 7, 2010 - 21:40
-
-For those who haven&#8217;t read it, http://buytaert.net/8-steps-for-drupal-8 is worth a read. In it, step 6 is &#8220;Backport small changes to stable releases&#8221;. Drupal 7 is the first release we&#8217;ve been able to entertain the idea, since we have a testing framework with 25K tests and a version-specific dependency system. What the boundaries are of such changes isn&#8217;t quite defined yet, because Dries and I have kept pretty busy with, you know, getting Drupal 7 out the door. :P~
-
-</blockquote>
-
-
-<p>For a long time I&rsquo;ve felt that Drupal could get a great deal more engagement from contractors, freelances and other somewhat mercenary entities (myself included) if contributions could have an impact on a smaller timescale.</p>
-
-<p>By allowing changes to core within major releases it potentially becomes possible to contribute patches that get released within months rather than years.</p>
-
-<p>On this timescale it becomes much easier to justify the time spent to a client as there is a reasonable change of it benifitting thier project.</p>
-
-<p><a href="http://drupal.org/node/200953#comment-1674372>I submitted a patch</a> that&rsquo;s actually in Drupal 7 - I may get to use in within 2 years of writing it - but that&rsquo;s several clients on.</p>
-
-<p>I think it&rsquo;s especially an opportunity to flesh out the API and add missing functions</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/9">&larr; Older</a>
@@ -959,6 +1024,10 @@ For those who haven&#8217;t read it, http://buytaert.net/8-steps-for-drupal-8 is
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/">Ubuntu Mysql Root Password Reset (Init File Not Found)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
       </li>
     
@@ -972,10 +1041,6 @@ For those who haven&#8217;t read it, http://buytaert.net/8-steps-for-drupal-8 is
     
       <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
       </li>
     
   </ul>

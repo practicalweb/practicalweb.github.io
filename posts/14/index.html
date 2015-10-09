@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I've been working on a Drupal project to build a CMS for the production and management of very specific content. The emphasis is all on the backend &hellip;">
+  <meta name="description" content="When the web first started everything was in Times New Roman, black on grey with few images. Things have moved on a long way since then, but there &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,87 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/17/web-fonts-with-font-face/">Web Fonts With @font-face</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-17T00:00:00+01:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+When the web first started everything was in Times New Roman, black on grey with few images.
+</p>
+
+
+<p>
+Things have moved on a long way since then, but there are still very few fonts. I&#8217;ve worked on many sites that have tried to overcome this by various routes.
+</p>
+
+
+<ul>
+    <li>Creating an image of headline text in the desired font<br />
+    This can look good but offers poor accessibility and it&#8217;s hard to update</li>
+    <li><a href="http://www.mikeindustries.com/blog/sifr/">SiFR</a> - uses JavaScript and flash to add fonts<br />
+    It can work well - but performs badly if overused, and can cause problems with z-ordering on some systems</li>
+    <li><a href="http://www.w3.org/TR/css3-fonts/#the-font-face-rule">@font-face</a> Part of the CSS standard which allows you to provide font files for download.</li>
+</ul>
+
+
+<p>
+@font-face has a great deal of potential as the end users browser automatically downloads the font definition and renders whatever font you specify without any plug-ins or even JavaScript required.
+</p>
+
+
+<p>
+However, this is actually quite old technology - I tried to use it back in the days of Internet Explorer 5 and Netscape Navigator.
+</p>
+
+
+<p>
+Then as now there were competing standards for downloadable font files.
+</p>
+
+
+<p>
+At the time both browsers only offered a web specific font format which didn&#8217;t look good enough to use.
+</p>
+
+
+<p>
+However; Firefox 3.5 and Safari 4 now support regular TTF and OTF fonts and these look great.
+</p>
+
+
+<p>
+There is still the problem that most good fonts are supplied under license - which prevents you providing them for download. 
+</p>
+
+
+<p>
+But with two major browsers providing a good implementation for standard font file we can hope that it won&#8217;t be too much longer before the problem is solved. 
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -675,111 +756,6 @@ function node_add_title_set_title(&amp;$form, &amp;$form_state) {
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/05/12/testing-php/">Testing PHP</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-05-12T00:00:00+01:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-I had fun this weekend at the <a href="http://www.phplondon.org/" mce_href="http://www.phplondon.org/">PHP London</a> Test Fest, it was a great opportunity to learn something new and meet some great programmers.
-</p>
-
-
-<p>
-The tests our team took on were based around the <a href="http://www.php.net/%7Ehelly/php/ext/spl/main.html" mce_href="http://www.php.net/~helly/php/ext/spl/main.html">SPL</a> <a href="http://uk.php.net/manual/en/spl.iterators.php" mce_href="http://uk.php.net/manual/en/spl.iterators.php">iterators</a> I hadn&#8217;t used this part of PHP before and it was a great way to learn about it, especially as many of the functions we tested aren&#8217;t documented yet.
-</p>
-
-
-<p>
-What we did was :
-</p>
-
-
-<ol>
-    <li>Take a copy of <a href="http://www.php.net/anoncvs.php" mce_href="http://www.php.net/anoncvs.php">PHP source code <br>
-    </a></li>
-    <li>extract this and run ./configure</li>
-    <li> create a short script to run tests</li>
-    <li>and another to run the checked out version of PHO</li>
-    <li> Check the <a href="http://gcov.php.net/PHP_5_3/lcov_html/spl/spl_iterators.c.gcov.php" mce_href="http://gcov.php.net/PHP_5_3/lcov_html/spl/spl_iterators.c.gcov.php">test coverage reports</a></li>
-    <li>Find an untested section of code (in red)</li>
-    <li>Figure out what it does</li>
-    <li>Write a test to run this part of code</li>
-    <li>go to 5 </li>
-</ol>
-
-
-<p>
-More details on how to write tests are at http://qa.php.net/write-test.php&nbsp;
-</p>
-
-
-<p>
-I found the hardest bit was interpreting the C source code of PHP - this was made much easier by the mentors at the test fest, and once pointed in the right direction we were able to get going easily enough.
-</p>
-
-
-<p>
-This does give me another reason to read this book: <br /><a href="/review/extending-and-embedding-php" mce_href="/review/extending-and-embedding-php"><img src="http://ecx.images-amazon.com/images/I/415rN3jdDvL._SL160_.jpg" mce_src="http://ecx.images-amazon.com/images/I/415rN3jdDvL._SL160_.jpg" alt="Extending and Embedding PHP Sara Golemon" width="125" height="160"></a>
-</p>
-
-
-<p>
-One thing I didn&#8217;t figure out on the day - in order to regenerate the coverage reports and check that the new tests do add coverage I needed to&nbsp; 
-</p>
-
-
-<p><code>
-aptitude install lcov</p>
-
-<p>make lcov TESTS=./path-to tests
-</code></p>
-
-<p>
-NB you can either run all tests or just a subdirectory
-</p>
-
-
-<p>
-The script to run tests was 
-</p>
-
-
-<p><code></p>
-
-<h1>!/bin/bash</h1>
-
-<p>export TEST_PHP_EXECUTABLE=/path-to/php5.3-200905081030/sapi/cli/php
-$TEST_PHP_EXECUTABLE /path-to/php5.3-200905081030/run-tests.php $*
-</code></p>
-
-<p>
-I also created an alias to sapi/cli/php so that I could run the tests as simple PHP scripts
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/15">&larr; Older</a>
@@ -797,6 +773,10 @@ I also created an alias to sapi/cli/php so that I could run the tests as simple 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/">Ubuntu Mysql Root Password Reset (Init File Not Found)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
       </li>
     
@@ -810,10 +790,6 @@ I also created an alias to sapi/cli/php so that I could run the tests as simple 
     
       <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
       </li>
     
   </ul>

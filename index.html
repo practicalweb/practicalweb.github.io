@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="It took me a while to figure out how to setup elasticsearch for grafana annotations, and I wanted a small page to allow me to add annotations Mostly &hellip;">
+  <meta name="description" content="If you don&rsquo;t use the mysql root account very often and change passwords reasonably frequently you may (like me) find that you no longer know &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/">Ubuntu Mysql Root Password Reset (Init File Not Found)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-10-09T17:13:21+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:13 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you don&rsquo;t use the mysql root account very often and change passwords reasonably frequently you may (like me) find that you no longer know the mysql root password on a dev box.</p>
+
+<p>The mysql site has a reasonable guide here <a href="https://dev.mysql.com/doc/refman/5.0/en/resetting-permissions.html#resetting-permissions-unix">https://dev.mysql.com/doc/refman/5.0/en/resetting-permissions.html#resetting-permissions-unix</a></p>
+
+<p>But there always seems to be something additional, this time for me it was apparmor preventing mysql from reading my reset file</p>
+
+<p>to reset I had to
+ look in /etc/apparmor.d/usr.sbin.mysqld and identify /etc/mysql/conf.d/ as a good place to place a reset init file</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo su
+</span><span class='line'>service stop mysql
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;SET PASSWORD FOR &#39;root&#39;@&#39;localhost&#39; = PASSWORD(&#39;MyNewPass&#39;);&quot;</span> &gt; /etc/mysql/conf.d/mysql-init
+</span><span class='line'>mysqld_safe --init-file<span class="o">=</span>/etc/mysql/conf.d/mysql-init <span class="p">&amp;</span>
+</span><span class='line'><span class="c"># check password works</span>
+</span><span class='line'><span class="c"># stop mysql </span>
+</span><span class='line'>service start mysql
+</span><span class='line'>rm /etc/mysql/conf.d/mysql-init
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -886,65 +943,6 @@ curl -XPOST  &quot;http://graphite.example.com:9200/events/_search?pretty=true&q
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/03/non-root-packet-capture-in-wireshark/">Non-root Packet Capture in Wireshark</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-03T12:04:46+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>12:04 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There are lots of blogs about this already - but I didn&rsquo;t quite understand at first so here&rsquo;s my take &hellip;</p>
-
-<p>Wireshark is a large and somewhat vulnerable program - best not to run it as root (especially as you may be looking a suspicious traffic)</p>
-
-<p>It uses dumpcap for the actual packet capture which is the only bit that needs elevated privileges.</p>
-
-<p>Since linux kernel 2.2 we don&rsquo;t even need root for this bit - we can set file permissions to allow non root user to capture packets.</p>
-
-<p>If you don&rsquo;t want to allow just any user on your system to do this first make sure only a chosen group can even run dumpcap</p>
-
-<p>I decided to use the sudo group - but you could make a new one.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo chgrp sudo /usr/bin/dumpcap
-</span><span class='line'>sudo chmod <span class="m">750</span> /usr/bin/dumpcap
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now only members of the sudo group (who are already the users I trust) can run this program.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo setcap cap_net_raw,cap_net_admin<span class="o">=</span>eip /usr/bin/dumpcap
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This allows the program to gain elevated network rights without being run by root.</p>
-
-<p>Note that any chmod action seems to undo the setcap so perform the changes in this order.</p>
-
-<p>Now I can run wireshark as my regular user and have full functionality.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -960,6 +958,10 @@ curl -XPOST  &quot;http://graphite.example.com:9200/events/_search?pretty=true&q
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/">Ubuntu Mysql Root Password Reset (Init File Not Found)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
       </li>
     
@@ -973,10 +975,6 @@ curl -XPOST  &quot;http://graphite.example.com:9200/events/_search?pretty=true&q
     
       <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
       </li>
     
   </ul>

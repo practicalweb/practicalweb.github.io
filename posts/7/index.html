@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I&rsquo;m used to how svn export works, and have used this in a number of release scripts. Git doesn&rsquo;t quite have an equivalent There is git &hellip;">
+  <meta name="description" content="I usually manage website deployment with bash scripts that run remote commands on the servers In order that I can see what is going on and debug any &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/20/verbose-remote-ssh-with-echo/">Verbose Remote Ssh (With Echo)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-01-20T00:00:00+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I usually manage website deployment with bash scripts that run remote commands on the servers</p>
+
+<p>In order that I can see what is going on and debug any errors verbose output is useful.</p>
+
+<p>Running &ldquo;bash -ex&rdquo; causes each line to be output as it progresses and halt on any error so that you don&rsquo;t miss it.</p>
+
+<p>within the remote command &ldquo;set -x&rdquo; cuase bash to echo all commands</p>
+
+<p><code></p>
+
+<h1>!/bin/bash -ex</h1>
+
+<p>ssh -T user@server &lt;&lt; EOF
+set -x
+echo foo > /dev/null
+EOF
+</code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -604,123 +649,6 @@ Selenium only lets me pass two parameters and really I want three (locator, css 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/06/02/selenium-ui-elements-rollups/">Selenium UI-Elements Rollups</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-06-02T00:00:00+01:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I wasn&rsquo;t 100% clear from the docs how to implement rollup rules in selenium ui-elements and searching the web didn&rsquo;t return much - so here&rsquo;s an example in case it&rsquo;s helpful to others.</p>
-
-<p>Add this to the user-extensions.js file</p>
-
-<p><code>
-var manager = new RollupManager();</p>
-
-<p>manager.addRollupRule({
-    name: &lsquo;compare_product&rsquo;
-    , description: &lsquo;gets to the reults on a compare product page&rsquo;
-    , args: [
-        {
-          name: &lsquo;term&rsquo;
-        , description: &lsquo;the aliased term name of the category&rsquo;
-        }
-        , {
-            name: &lsquo;provider&rsquo;
-          , description: &lsquo;the provider name&rsquo;
-          }
-        , {
-            name: &lsquo;product&rsquo;
-          , description: &lsquo;the product name&rsquo;
-          }
-    ]
-    , commandMatchers: [
-        {
-            command: &lsquo;click.+&rsquo;
-            , target: &lsquo;starRatingsCompareProduct::search_go\(.+&rsquo;
-        }
-    ]
-    , getExpandedCommands: function(args) {
-        var commands = [];</p>
-
-<pre><code>    commands.push({
-        command: 'open'
-            , target: '/star-ratings/find-star-ratings/'+args.term
-    });
-
-    commands.push({
-        command: 'selectAndWait'
-            , target: 'edit-provider'
-    , value: args.provider
-    });
-
-    commands.push({
-          command: 'pause'
-        , target: '1000'
-    });
-    commands.push({
-          command: 'selectAndWait'
-        , target: 'edit-product'
-        , value: args.product
-    });
-    commands.push({
-          command: 'waitForElementPresent'
-        , target: 'star-ratings-badge'
-    });
-    commands.push({
-          command: 'clickAndWait'
-        , target: 'edit-same-rating'
-    });
-    commands.push({
-          command: 'waitForTextPresent'
-        , target: 'Products with the same Star Rating'
-    });
-    return commands;
-}
-</code></pre>
-
-<p>});</p>
-
-<p></code></p>
-
-<p>Then you can use it in selenium as below</p>
-
-<p><code>
-<tr>
-    <td>rollup</td>
-    <td>compare_product</td>
-    <td>term=buy-let-insurance, provider=Cactus Cover, product=Residential Let</td>
-</tr></p>
-
-<p></code></p>
-
-<p>This avoids me repeating chunks of code that I would otherwise need to get the page to the point at which I want to test it.</p>
-
-<p>NB I&rsquo;ve kind of ignored the commandmatcher bit for the time being (this is a nicety to help the IDE notice a rollup while recording - it&rsquo;s a required field - but doesn&rsquo;t have to be useful).</p>
-
-<p><b>This blog post sponsored by www.defaqto.com (they like their team to give back to the community)</b></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/8">&larr; Older</a>
@@ -738,6 +666,10 @@ var manager = new RollupManager();</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/">Ubuntu Mysql Root Password Reset (Init File Not Found)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
       </li>
     
@@ -751,10 +683,6 @@ var manager = new RollupManager();</p>
     
       <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
       </li>
     
   </ul>

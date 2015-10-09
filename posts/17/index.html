@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="Kdesvn and Kompare are two very nice tools providing rich GUI's for svn and file comparison respectively. In order to show the difference between &hellip;">
+  <meta name="description" content="OK - so I'm a heretic. This is absolutely against the accepted Drupal Dogma. What's great about Drupal is that you can achieve most things without &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,79 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/01/why-you-should-hack-drupal-core/">Why You Should Hack Drupal Core</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-12-01T00:00:00+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+OK - so I&#8217;m a heretic.
+</p>
+
+
+<p>
+This is absolutely against the accepted Drupal Dogma.
+</p>
+
+
+<p>
+What&#8217;s great about Drupal is that you can achieve most things without hacking the core codebase; this means that every Drupal installation has the same base and any good developer who knows Drupal can take over the site.
+</p>
+
+
+<p>
+But &#8230;.
+</p>
+
+
+<p>
+There are things you cannot achieve by writing modules or theming. 
+</p>
+
+
+<p>
+For example: Drupal has a &quot;database connection failure&quot; page which it displays if database fails, this page cannot be themed and shows the Drupal logo. If you want to show a custom page you have to hack core- modules and themes don&#8217;t get loaded unless the databases says so.
+</p>
+
+
+<p>
+Some suggest logging a support query - or supplying a patch for Drupal - but since feature requests are not accepted for released versions of Drupal this seems somewhat futile to me. <br />
+This is especially the case if you have been using Drupal as a framework - the API is not backwards compatible so you cannot reasonably upgrade.  
+</p>
+
+
+<p>
+The only downside to hacking core is that you have to maintain this change through Drupal upgrades.
+</p>
+
+
+<p>
+My prefered way to upgrade Drupal is by keeping each release in subversion in a separate folder from my project, then I merge the changes between Drupal releases to my site. This is easy, keeps a good record of changes, and retains my hacks.
+</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -723,95 +796,6 @@ $ svnversion .
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/10/05/number-crunching-database-vs-oop/">Number Crunching : Database vs OOP</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-10-05T00:00:00+01:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-For the last few months I&#8217;ve been working on a project that is part website and part data processing.
-</p>
-
-
-<p>
-In theory the website is the bulk of the project, but in practice processing the data has taken a disproportionate amount of resources.
-</p>
-
-
-<p>
-Data exchange with another organisation is always tricky - and in this case we have incoming data that doesn&#8217;t conform to specification, business rules that change, and a daily data import to run.
-</p>
-
-
-<p>
-The code I&#8217;ve been working on has been through a couple of versions, and now I have in mind a third 
-</p>
-
-
-<ol>
-    <li>process data from file a line at a time, comparing each record with the database individually</li>
-    <li>load all data from file into a temporary table, apply all rules as SQL updates to the whole table - joined to other tables where comparisons are needed.</li>
-    <li>load all data from file into a temporary table, retrieving data joined with the comparison data - process in batches say 1000 lines at a time.</li>
-</ol>
-
-
-<p>
-Version 1 was impossibly slow, and it was bad code we inherited so it had to go.
-</p>
-
-
-<p>
-Version 2 is much faster, but as the business rules are documented per record and we&#8217;re performing set based operations it has proved very hard to verify that the code matches the required logic.  It&#8217;s also very hard to unit test as all the logic is performed in the database.
-</p>
-
-
-<p>
-Version 3 probably won&#8217;t get written now - as is the way of programming - you always learn how you&#8217;d do it next time.
-</p>
-
-
-<p>
-I have one colleague in particular who thinks that the database should do the heavy lifting as that is what it is optimised for, and to an extent I agree. But the more I get into unit testing the more I want to write code that neatly packages up logic in a testable way.
-</p>
-
-
-<p>
-It has also become apparent just how important it is to have code that follows business rules in a clear way. It&#8217;s not enough that the output should be right. I recently handed this code to a very capable developer - he&#8217;s normally so polite - but trying to reconcile a flowchart with a long series of SQL queries tested his patience.
-</p>
-
-
-<p>
-In the end leaning so hard on the database has made the system much harder to read, test, change, and maintain.
-</p>
-
-
-<p>
-I wonder if version 3 would be any slower anyway - it might even be faster. In fact version 3 could be run multithreaded - or split into multiple processes&#8230;. 
-</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/18">&larr; Older</a>
@@ -829,6 +813,10 @@ I wonder if version 3 would be any slower anyway - it might even be faster. In 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/09/ubuntu-mysql-root-password-reset-init-file-not-found/">Ubuntu Mysql Root Password Reset (Init File Not Found)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/27/add-annotations-to-grafana-via-elasticsearch/">Add Annotations to Grafana via Elasticsearch</a>
       </li>
     
@@ -842,10 +830,6 @@ I wonder if version 3 would be any slower anyway - it might even be faster. In 
     
       <li class="post">
         <a href="/blog/2015/03/11/ssl-problems-in-jmeter-and-java-1-dot-7/">SSL Problems in Jmeter and Java 1.7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/local-yum-cache-repo/">Local Yum Cache Repo</a>
       </li>
     
   </ul>
