@@ -9,7 +9,7 @@
   <meta name="author" content="Sean Burlington">
 
   
-  <meta name="description" content="I've been working on a Drupal project to build a CMS for the production and management of very specific content. The emphasis is all on the backend &hellip;">
+  <meta name="description" content="I&rsquo;ve been working on a Drupal project to build a CMS for the production and management of very specific content. The emphasis is all on the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -89,98 +89,76 @@
   </header>
 
 
-<div class="entry-content"><p>
-I&#8217;ve been working on a Drupal project to build a CMS for the production and management of very specific content.
-</p>
+<div class="entry-content"><p>I&rsquo;ve been working on a Drupal project to build a CMS for the production and management of very specific content.</p>
+
+<p>The emphasis is all on the  backend system, with tight field size limits (character count including markup) and restricted input (specified tags only).</p>
+
+<p>Becuase of this I needed to use TinyMCE fully - restricting the  valid_elements set, and adding event handlers for paste, and keyup.</p>
+
+<p>I also had to do this in a moderately deeply nested form.</p>
+
+<p>While I tried quite hard to do this within the Drupal WYSIWYG module  <a href="http://drupal.org/node/488034">http://drupal.org/node/488034</a> it became clear that the project developer and I had incompatible goals. He wanted all features to be available only where they work on all Rich Text Editors, I wanted to use a feature only available in one.</p>
+
+<p>Initially I tried just patching the module, but in the end I just couldn&rsquo;t get it working with multiple tinyMCE configurations in one form. This is supposed to be possible but the documentation is limited</p>
+
+<ul>
+<li><a href="http://drupal.org/node/358316">http://drupal.org/node/358316</a></li>
+<li><a href="http://api.drupal.org/api/function/filter_form/6">http://api.drupal.org/api/function/filter_form/6</a></li>
+<li><a href="http://groups.drupal.org/node/8911">http://groups.drupal.org/node/8911</a></li>
+</ul>
 
 
-<p>
-The emphasis is all on the  backend system, with tight field size limits (character count including markup) and restricted input (specified tags only).
-</p>
+<p>Part of the problem is that WYSIWYG works by detecting input filters which requires you to use them (I didn&rsquo;t want to) and using filters means you get &lsquo;help text&rsquo; - using multiple filters means users get to choose which one.</p>
+
+<p>You can theme some of this cruft away - but then where&rsquo;s the benefit   of the easy to use GUI?</p>
+
+<p>So I fell back to using TinyMCE directly, found out there is a nice jquery plugin <a href="http://tinymce.moxiecode.com/examples/example_23.php">http://tinymce.moxiecode.com/examples/example_23.php</a></p>
+
+<p>And got my form up and running exactly as I wanted it in short order.</p>
+
+<p>All I had to do was assign a class to the fields I wanted to be rich text editable,  create my settings, and adapt an existing character counter.</p>
+
+<p>The settings look like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">single</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">valid_elements</span>                    <span class="o">:</span> <span class="s1">&#39;b,i&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">theme_advanced_buttons1</span>           <span class="o">:</span> <span class="s2">&quot;bold,italic,cleanup&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">theme_advanced_buttons2</span>           <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">theme_advanced_buttons3</span>           <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">theme_advanced_statusbar_location</span> <span class="o">:</span> <span class="s2">&quot;bottom&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">theme_advanced_toolbar_location</span>   <span class="o">:</span> <span class="s2">&quot;top&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">theme</span>                             <span class="o">:</span> <span class="s2">&quot;advanced&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">theme_advanced_resizing</span>           <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">plugins</span>                           <span class="o">:</span> <span class="s2">&quot;maxlength,safari&quot;</span><span class="p">,</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>
-Becuase of this I needed to use TinyMCE fully - restricting the  valid_elements set, and adding event handlers for paste, and keyup.
-</p>
+<p> TinyMCE is enabled by the lines</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'> <span class="nx">$</span><span class="p">().</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;textarea.mceSingle&#39;</span><span class="p">).</span><span class="nx">tinymce</span><span class="p">(</span><span class="nx">single</span><span class="p">);</span>
+</span><span class='line'>        <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;textarea.mceEditor&#39;</span><span class="p">).</span><span class="nx">tinymce</span><span class="p">(</span><span class="nx">welcome</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>
-I also had to do this in a moderately deeply nested form.
-</p>
-
-
-<p>
-While I tried quite hard to do this within the Drupal WYSIWYG module  http://drupal.org/node/488034 it became clear that the project developer and I had incompatible goals. He wanted all features to be available only where they work on all Rich Text Editors, I wanted to use a feature only available in one.
-</p>
-
-
-<p>
-Initially I tried just patching the module, but in the end I just couldn&#8217;t get it working with multiple tinyMCE configurations in one form. This is supposed to be possible but the documentation is limited  http://drupal.org/node/358316 http://api.drupal.org/api/function/filter_form/6 http://groups.drupal.org/node/8911
-</p>
-
-
-<p>
-Part of the problem is that WYSIWYG works by detecting input filters which requires you to use them (I didn&#8217;t want to) and using filters means you get &#8216;help text&#8217; - using multiple filters means users get to choose which one. 
-</p>
-
-
-<p>
-You can theme some of this cruft away - but then where&#8217;s the benefit   of the easy to use GUI?  
-</p>
-
-
-<p>
-So I fell back to using TinyMCE directly, found out there is a nice jquery plugin http://tinymce.moxiecode.com/examples/example_23.php
-</p>
-
-
-<p>
-And got my form up and running exactly as I wanted it in short order.
-</p>
-
-
-<p>
-All I had to do was assign a class to the fields I wanted to be rich text editable,  create my settings, and adapt an existing character counter.
-</p>
-
-
-<p>
-The settings look like
-</p>
-
-
-<p><p>
-<code></p>
-
-<p>var single = {
-    valid_elements                    : &lsquo;b,i&rsquo;,
-    theme_advanced_buttons1           : &ldquo;bold,italic,cleanup&rdquo;,
-    theme_advanced_buttons2           : &ldquo;&rdquo;,
-    theme_advanced_buttons3           : &ldquo;&rdquo;,
-    theme_advanced_statusbar_location : &ldquo;bottom&rdquo;,
-    theme_advanced_toolbar_location   : &ldquo;top&rdquo;,
-    theme                             : &ldquo;advanced&rdquo;,
-    theme_advanced_resizing           : true,
-    plugins                           : &ldquo;maxlength,safari&rdquo;,
-};
-</code>
-<p>
- TinyMCE is enabled by the lines
-</p>
-<code>
- $().ready(function() {
-        $(&lsquo;textarea.mceSingle&rsquo;).tinymce(single);
-        $(&lsquo;textarea.mceEditor&rsquo;).tinymce(welcome);
-});
-</code><p>
-No filters, no cruft in the user interface, and it was quicker to develop!
-</p>
-<p>
-&nbsp;
-</p>
-<p>
-<br />
-</p></p>
+<p>No filters, no cruft in the user interface, and it was quicker to develop!</p>
 </div>
 
 
@@ -308,7 +286,7 @@ No filters, no cruft in the user interface, and it was quicker to develop!
     </div>
   </div>
   <footer role="contentinfo">
-<p>&copy; copyright 2015 - PracticalWeb Ltd all rights reserved</p>
+<p>&copy; copyright 2016 - PracticalWeb Ltd all rights reserved</p>
 
 <p>UK registered company number 06427950</p>
 
