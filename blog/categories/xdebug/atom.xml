@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Xdebug | PracticalWeb Ltd]]></title>
   <link href="http://www.practicalweb.co.uk/blog/categories/xdebug/atom.xml" rel="self"/>
   <link href="http://www.practicalweb.co.uk/"/>
-  <updated>2016-02-03T12:14:15+00:00</updated>
+  <updated>2016-04-05T15:29:32+01:00</updated>
   <id>http://www.practicalweb.co.uk/</id>
   <author>
     <name><![CDATA[Sean Burlington]]></name>
@@ -27,11 +27,9 @@
 <ul>
 <li>start a debuging session within eclipse as normal</li>
 <li>ensure that the query string ?XDEBUG_SESSION_START=ECLIPSE_DBGP is appended to all requests by editing the WSDL file so that the address looks like
-<code>
-<soap:address location="http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP"/>
-</code>
-</li>
-
+<code>xml
+&lt;soap:address location="http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP"/&gt;
+</code></li>
 <li>make requests via soapui</li>
 </ul>
 

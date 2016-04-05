@@ -937,12 +937,16 @@ function my_views_uninstall() {
 
 <ul>
 <li>start a debuging session within eclipse as normal</li>
-<li>ensure that the query string ?XDEBUG_SESSION_START=ECLIPSE_DBGP is appended to all requests by editing the WSDL file so that the address looks like
-<code>
-<soap:address location="http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP"/>
-</code>
-</li>
+<li>ensure that the query string ?XDEBUG_SESSION_START=ECLIPSE_DBGP is appended to all requests by editing the WSDL file so that the address looks like</li>
+</ul>
 
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;soap:address</span> <span class="na">location=</span><span class="s">&quot;http://dev.example.com/soap_server.php?XDEBUG_SESSION_START=ECLIPSE_DBGP&quot;</span><span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
 <li>make requests via soapui</li>
 </ul>
 
